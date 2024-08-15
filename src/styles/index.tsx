@@ -1,6 +1,7 @@
 import { ThemeProvider } from "styled-components";
-import { ConfigProvider, theme } from "antd";
+import { ConfigProvider } from "antd";
 import GlobalStyle from "./GlobalStyle";
+import theme from "./theme";
 
 interface StylesProps {
     children: React.ReactNode;
@@ -13,6 +14,12 @@ const Styles = ({ children }: StylesProps) => {
                 token: {
                     colorPrimary: "#4A7DFF", //#4A7DFF
                     fontFamily: "Pretendard",
+                },
+                components: {
+                    Typography: {
+                        titleMarginBottom: "10px",
+                        titleMarginTop: 0,
+                    },
                 },
             }}
         >
