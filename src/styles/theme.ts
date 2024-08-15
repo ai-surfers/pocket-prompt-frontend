@@ -1,15 +1,20 @@
 import { css, keyframes } from "styled-components";
 
-/** 컬러 코드 나오면 추가 될 예정 */
 const colors = {
     white: "#FFFFFF",
     black: "#1E1E1E",
     gray: "#94A3B8",
-    light_gray: "#F3F4F6",
+    light_gray: "#F9F9F9",
     deep_gray: "#727272",
-    main: "#070944",
-    main_light: "#5D5A88",
-    main_gray: "#9CA3AF",
+    main: "#206BFF",
+    pink01: "#FFD6E7",
+    pink02: "#FF77B0",
+    yellow: "#FFD74A",
+    light_main: "#E2E5FF",
+    main_blue: "#206BFF",
+    sub_blue: "#8E85FF",
+    sub_blue01: "#B7CBFF",
+    sub_purple: "#D4D1FB",
     G_01: "#F8F8F8",
     G_02: "#EBE9EA",
     G_03: "#ECEEF4",
@@ -23,100 +28,89 @@ const colors = {
     G_11: "#848485",
     G_12: "#EEEEEE",
     G_13: "#F3F4F6",
+    G_14: "#D9D9D9",
+    G_15: "#E6E6E6",
 };
 
 /** 폰트 결정 시 수정 될 예정 */
 const fonts = {
     title: css`
-        font-family: Suit;
-        font-size: 20px;
+        font-family: Pretendard;
+        font-size: 24px;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 700;
         line-height: 160%;
-        text-align: center;
-    `,
-    subtitle: css`
-        font-family: Suit;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 160%;
-    `,
-    button: css`
-        font-family: Suit;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 100%;
-        text-align: center;
-    `,
-    modal: css`
-        font-family: Suit;
-        font-size: 14px;
-        font-style: normal;
-        line-height: 160%; /* 1.8rem */
-        text-align: center;
-    `,
-    h2: css`
-        font-family: Suit;
-        font-size: 20px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 160%; /* 1.8rem */
-    `,
-    h3: css`
-        font-family: Suit;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 160%; /* 1.8rem */
-    `,
-    input: css`
-        font-family: Suit;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 160%; /* 1.8rem */
-    `,
-    placeholder: css`
-        font-family: Suit;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 300;
-        line-height: 130%; /* 1.8rem */
-    `,
-    select: css`
-        font-family: Suit;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 300;
-        line-height: 100%;
-    `,
-    option: css`
-        font-family: Suit;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 300;
-        line-height: 100%;
-    `,
-    tab: css`
-        font-family: Suit;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 100%;
     `,
     heading_01: css`
-        font-family: Suit;
+        font-family: Pretendard;
         font-size: 16px;
         font-style: normal;
         font-weight: 700;
         line-height: 125%;
     `,
-    description: css`
-        font-family: "Suit";
-        font-size: 1rem;
+    heading_02: css`
+        font-family: Pretendard;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+    `,
+    footer: css`
+        font-family: Pretendard;
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    `,
+    subheading_02: css`
+        font-family: Pretendard;
+        font-size: 18px;
+        font-style: normal;
         font-weight: 500;
+        line-height: normal;
+    `,
+    subheading_03: css`
+        font-family: Pretendard;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    `,
+    heading_03: css`
+        font-family: Pretendard;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 160%; /* 32px */
+    `,
+    heading_04: css`
+        font-family: Pretendard;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 160%; /* 32px */
+    `,
+    title_01: css`
+        font-family: Pretendard;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 160%; /* 32px */
+    `,
+    p_01: css`
+        font-family: Pretendard;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 160%; /* 32px */
+    `,
+    footer_01: css`
+        text-align: center;
+        font-family: Pretendard;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: normal;
     `,
 };
 
@@ -155,6 +149,22 @@ const mixins = {
                 box-shadow: 0px 0px 50px 30px #d1d5db;
                 animation: ${moveRight} 1s infinite linear;
             }
+        `;
+    },
+    slideup: () => {
+        const slideUp = keyframes`
+      0% {
+        opacity: 0;
+        transform: translateY(100%);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    `;
+
+        return css`
+            animation: ${slideUp} 0.5s ease-in-out;
         `;
     },
 };
