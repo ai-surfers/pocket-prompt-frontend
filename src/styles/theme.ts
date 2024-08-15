@@ -151,20 +151,58 @@ const mixins = {
             }
         `;
     },
-    slideup: () => {
+    slideUp: () => {
         const slideUp = keyframes`
-      0% {
-        opacity: 0;
-        transform: translateY(100%);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    `;
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        `;
 
         return css`
             animation: ${slideUp} 0.5s ease-in-out;
+        `;
+    },
+    fadeIn: () => {
+        const fadeIn = keyframes`
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      `;
+
+        return css`
+            animation: ${fadeIn} 0.5s ease-in-out;
+        `;
+    },
+    slideUpWFadeIn: () => {
+        const slideUp = keyframes`
+                from {
+                    transform: translateY(20px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            `;
+        const fadeIn = keyframes`
+            from {
+            opacity: 0;
+            }
+            to {
+            opacity: 1;
+            }
+        `;
+
+        return css`
+            animation: ${fadeIn} 0.5s ease-in-out, ${slideUp} 0.5s ease-in-out;
         `;
     },
 };
