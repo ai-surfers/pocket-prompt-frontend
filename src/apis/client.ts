@@ -1,14 +1,30 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-const BASE_URL = import.meta.env.BASE_URL;
-
-export const axiosApi = axios.create({
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+export const API = axios.create({
     baseURL: BASE_URL,
     headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
     },
 });
+
+/**
+ *  헤더 토큰 추가
+ */
+API.interceptors.request.use(
+    async (config) => {
+        const accessToken = window.localStorage.getItem("access_token");
+        console.log(accessToken);
+        if (accessToken) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
+        }
+
+        console.log(`${config.url} -- ✈ `, config.data || "");
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
 export interface BaseResponse<T> {
     success: boolean;
@@ -21,7 +37,7 @@ export const GET = async <T>(
     url: string,
     config?: AxiosRequestConfig
 ): Promise<AxiosResponse<BaseResponse<T>>> => {
-    return axiosApi.get(url, config);
+    return API.get(url, config);
 };
 
 export const POST = async <T>(
@@ -29,14 +45,14 @@ export const POST = async <T>(
     data?: any,
     config?: AxiosRequestConfig
 ): Promise<AxiosResponse<BaseResponse<T>>> => {
-    return axiosApi.post(url, data, config);
+    return API.post(url, data, config);
 };
 
 export const DELETE = async <T>(
     url: string,
     config?: AxiosRequestConfig
 ): Promise<AxiosResponse<BaseResponse<T>>> => {
-    return axiosApi.delete(url, config);
+    return API.delete(url, config);
 };
 
 export const PUT = async <T>(
@@ -44,7 +60,7 @@ export const PUT = async <T>(
     data?: any,
     config?: AxiosRequestConfig
 ): Promise<AxiosResponse<BaseResponse<T>>> => {
-    return axiosApi.put(url, data, config);
+    return API.put(url, data, config);
 };
 
 export const PATCH = async <T>(
@@ -52,5 +68,5 @@ export const PATCH = async <T>(
     data?: any,
     config?: AxiosRequestConfig
 ): Promise<AxiosResponse<BaseResponse<T>>> => {
-    return axiosApi.patch(url, data, config);
+    return API.patch(url, data, config);
 };
