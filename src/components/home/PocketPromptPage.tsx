@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import videoGif from "../assets/pocket-prompt-demo-video.gif";
+import videoGif from "../../assets/pocket-prompt-demo-video.gif";
 
 const PageContainer = styled.div`
     padding: 2rem 4rem;

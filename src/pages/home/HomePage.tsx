@@ -1,4 +1,4 @@
-import PocketPromptPage from "../../components/PocketPromptPage";
+import PocketPromptPage from "../../components/home/PocketPromptPage";
 
 export default function HomePage() {
     return (
