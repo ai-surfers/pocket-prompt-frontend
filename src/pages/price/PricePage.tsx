@@ -4,7 +4,7 @@ import { Typography } from "antd";
 import FAQ from "../../components/price/FAQ";
 import Explain from "../../components/price/Explain";
 import Footer from "../../components/price/Footer";
-import Plan from "../../components/price/Plan";
+import Plan from "../../components/price/Plan/Plan";
 
 const { Title, Text } = Typography;
 
