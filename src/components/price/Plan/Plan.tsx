@@ -3,7 +3,11 @@ import { Segmented, Typography } from "antd";
 import { useMemo, useState } from "react";
 import { PLAN_DATA } from "./PlanData";
 import PlanCard from "./PlanCard";
+import PortOne from "@portone/browser-sdk/v2";
 const { Text } = Typography;
+
+const PORTONE_STORE_ID = import.meta.env.VITE_PORTONE_STORE_ID;
+const PORTONE_CHANNEL_KEY = import.meta.env.VITE_PORTONE_CHANNEL_KEY;
 
 export default function Plan() {
     const [billingCycle, setBillingCycle] = useState("월간");
@@ -19,8 +23,22 @@ export default function Plan() {
             console.log("무시");
         } else {
             console.log("결제!");
+            requestBillingKey();
         }
     };
+
+    async function requestBillingKey() {
+        const issueResponse = await PortOne.requestIssueBillingKey({
+            storeId: PORTONE_STORE_ID,
+            channelKey: PORTONE_CHANNEL_KEY,
+            billingKeyMethod: "CARD",
+        });
+
+        console.log("issueResponse", issueResponse);
+        if (issueResponse?.code != null) {
+            return alert(issueResponse.message);
+        }
+    }
 
     const plans = useMemo(() => {
         return billingCycle === "연간" ? PLAN_DATA.annual : PLAN_DATA.monthly;
