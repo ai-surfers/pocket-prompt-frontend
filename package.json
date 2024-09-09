@@ -10,6 +10,8 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@portone/browser-sdk": "^0.0.9",
+        "@tanstack/react-query": "^5.55.4",
         "antd": "^5.20.1",
         "axios": "^1.7.4",
         "react": "^18.3.1",
