@@ -4,10 +4,21 @@ import styled from "styled-components";
 export default function Header() {
     return (
         <HeaderContainer>
-            <HeaderLeftContainer>
-                <SvgLogoPrimary style={{ width: 30 }} />
-            </HeaderLeftContainer>
-            <HeaderRightContainer></HeaderRightContainer>
+            <HeaderWrapper>
+                <HeaderLeftContainer>
+                    <SvgLogoPrimary style={{ width: "40px" }} />
+
+                    <TabBarContainer>
+                        <HeaderText>프롬프트 대백과</HeaderText>
+                        <HeaderText active>Extension</HeaderText>
+                        <HeaderText>Pricing</HeaderText>
+                    </TabBarContainer>
+                </HeaderLeftContainer>
+
+                <HeaderRightContainer>
+                    <LoginButton>로그인</LoginButton>
+                </HeaderRightContainer>
+            </HeaderWrapper>
         </HeaderContainer>
     );
 }
@@ -15,21 +26,65 @@ export default function Header() {
 const HeaderContainer = styled.header`
     width: 100%;
     background: #fff;
-    border: 1px solid black;
 
-    ${({ theme }) => theme.mixins.flexBox("row", "space-between")};
-    height: 52px;
-    padding: 0px 120px;
+    height: 60px;
 
-    opacity: var(--sds-size-stroke-border);
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(40px);
+    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.02);
 
     position: fixed;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
+
+    z-index: 10;
 `;
 
-const HeaderLeftContainer = styled.div``;
-const HeaderRightContainer = styled.div``;
+const HeaderWrapper = styled.div`
+    width: 100%;
+    height: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 5px;
+
+    ${({ theme }) => theme.mixins.flexBox("row", "space-between")};
+    flex-wrp: wrap;
+`;
+
+const HeaderText = styled.div<{ active?: boolean }>`
+    ${({ theme, active }) =>
+        active ? theme.fonts.b2_16_semi : theme.fonts.b2_16_reg};
+    color: ${({ theme, active }) =>
+        active ? theme.colors.primary : theme.colors.G_400};
+
+    cursor: pointer;
+    height: 100%;
+`;
+
+const TabBarContainer = styled.div`
+    ${({ theme }) => theme.mixins.flexBox()};
+    gap: 30px;
+
+    margin-left: 60px;
+`;
+
+const HeaderLeftContainer = styled.div`
+    ${({ theme }) => theme.mixins.flexBox()};
+`;
+
+const HeaderRightContainer = styled.div`
+    ${({ theme }) => theme.mixins.flexBox()};
+    gap: 10px;
+`;
+
+const LoginButton = styled.div`
+    border-radius: 12px;
+    padding: 10px 12px;
+
+    ${({ theme }) => theme.fonts.b3_14_semi};
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.white};
+
+    cursor: pointer;
+`;
