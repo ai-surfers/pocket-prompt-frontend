@@ -56,7 +56,7 @@ export default function Plan() {
         }
 
         const request: SubscriptionRequest = {
-            billingKey: issueResponse?.billingKey,
+            billing_key: issueResponse?.billingKey,
             payment_gateway: "tosspayments",
             user_tier: planType,
         };
