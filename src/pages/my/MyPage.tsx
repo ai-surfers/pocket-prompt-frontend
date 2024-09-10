@@ -4,6 +4,7 @@ import { Card, Button, Table, Typography, Space } from "antd";
 import { Wrapper } from "@/layouts/Layout";
 import { useUser } from "@/hooks/useUser";
 import { useNavigate } from "react-router-dom";
+import { useGetPaymetns } from "@/hooks/queries/payments/useGetPayments";
 
 const { Title, Text } = Typography;
 
@@ -49,6 +50,10 @@ export default function MyPage() {
         resetUserState();
         navigate("/", { replace: true });
     }
+
+    const { data } = useGetPaymetns();
+
+    console.log(">> data", data);
     return (
         <Container>
             <Wrapper>
