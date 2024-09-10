@@ -5,7 +5,7 @@ import { BaseResponse, POST } from "../../../apis/client";
  * SubscriptionRequest
  */
 export interface SubscriptionRequest {
-    billingKey: string;
+    billing_key: string;
     payment_gateway: string;
     user_tier: string;
 }

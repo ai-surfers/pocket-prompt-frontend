@@ -2,115 +2,85 @@ import { css, keyframes } from "styled-components";
 
 const colors = {
     white: "#FFFFFF",
-    black: "#1E1E1E",
-    gray: "#94A3B8",
-    light_gray: "#F9F9F9",
-    deep_gray: "#727272",
-    main: "#206BFF",
-    pink01: "#FFD6E7",
-    pink02: "#FF77B0",
-    yellow: "#FFD74A",
-    light_main: "#E2E5FF",
-    main_blue: "#206BFF",
-    sub_blue: "#8E85FF",
-    sub_blue01: "#B7CBFF",
-    sub_purple: "#D4D1FB",
-    G_01: "#F8F8F8",
-    G_02: "#EBE9EA",
-    G_03: "#ECEEF4",
-    G_04: "#D3CFD1",
-    G_05: "#CAC6C8",
-    G_06: "#BDBDBD",
-    G_07: "#757373",
-    G_08: "#868384",
-    G_09: "#686566",
-    G_10: "#BDBDBD",
-    G_11: "#848485",
-    G_12: "#EEEEEE",
-    G_13: "#F3F4F6",
-    G_14: "#D9D9D9",
-    G_15: "#E6E6E6",
+    black: "#060812",
+    G_900: "#181B29",
+    G_800: "#202232",
+    G_700: "#2E3040",
+    G_600: "#3E4151",
+    G_500: "#5B5F70",
+    G_400: "#818491",
+    G_300: "#C5C7CF",
+    G_200: "#DEE0E8",
+    G_100: "#F1F2F6",
+    G_50: "#F7F8F9",
+    primary: "#7580EA",
+    primary_dark: "#535DBF",
+    primary_light: "#9EADFC",
+    primary_xlight: "#CEDEFF",
 };
 
 /** 폰트 결정 시 수정 될 예정 */
 const fonts = {
-    title: css`
+    h1_24_bold: css`
+        /* h1_24/bold */
         font-family: Pretendard;
         font-size: 24px;
         font-style: normal;
         font-weight: 700;
-        line-height: 160%;
+        line-height: 144%; /* 34.56px */
+        letter-spacing: -0.48px;
     `,
-    heading_01: css`
+    h1_24_semi: css`
+        /* h1_24/semi */
+        font-family: Pretendard;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 144%; /* 34.56px */
+        letter-spacing: -0.48px;
+    `,
+    b2_16_semi: css`
+        /* b2_16/semi */
         font-family: Pretendard;
         font-size: 16px;
         font-style: normal;
-        font-weight: 700;
-        line-height: 125%;
+        font-weight: 600;
+        line-height: 150%; /* 24px */
     `,
-    heading_02: css`
+    b2_16_reg: css`
+        /* b2_16/reg */
         font-family: Pretendard;
-        font-size: 18px;
+        font-size: 16px;
         font-style: normal;
-        font-weight: 700;
-        line-height: normal;
+        font-weight: 400;
+        line-height: 150%; /* 24px */
     `,
-    footer: css`
+    b3_14_semi: css`
+        /* b3_14/semi */
         font-family: Pretendard;
-        font-size: 0.75rem;
+        font-size: 14px;
         font-style: normal;
         font-weight: 600;
-        line-height: normal;
+        line-height: 150%; /* 21px */
+        letter-spacing: -0.28px;
     `,
-    subheading_02: css`
+    b3_14_med: css`
+        /* b3_14/med */
         font-family: Pretendard;
-        font-size: 18px;
+        font-size: 14px;
         font-style: normal;
         font-weight: 500;
-        line-height: normal;
+        line-height: 150%; /* 21px */
+        letter-spacing: -0.28px;
     `,
-    subheading_03: css`
-        font-family: Pretendard;
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-    `,
-    heading_03: css`
-        font-family: Pretendard;
-        font-size: 20px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 160%; /* 32px */
-    `,
-    heading_04: css`
-        font-family: Pretendard;
-        font-size: 20px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 160%; /* 32px */
-    `,
-    title_01: css`
-        font-family: Pretendard;
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 160%; /* 32px */
-    `,
-    p_01: css`
+    b3_14_reg: css`
+        /* b3_14/reg */
         font-family: Pretendard;
         font-size: 14px;
         font-style: normal;
         font-weight: 400;
-        line-height: 160%; /* 32px */
-    `,
-    footer_01: css`
-        text-align: center;
-        font-family: Pretendard;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 300;
-        line-height: normal;
+        line-height: 150%; /* 21px */
+        letter-spacing: -0.28px;
     `,
 };
 

@@ -1,9 +1,10 @@
+import { Wrapper } from "@/layouts/Layout";
 import PocketPromptPage from "../../components/home/PocketPromptPage";
 
 export default function HomePage() {
     return (
-        <div>
+        <Wrapper>
             <PocketPromptPage />
-        </div>
+        </Wrapper>
     );
 }

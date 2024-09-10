@@ -14,7 +14,8 @@ export const API = axios.create({
  */
 API.interceptors.request.use(
     async (config) => {
-        const accessToken = window.localStorage.getItem("access_token");
+        const accessToken = window.localStorage.getItem("ACCESS_TOKEN");
+
         console.log(accessToken);
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
@@ -28,9 +29,8 @@ API.interceptors.request.use(
 
 export interface BaseResponse<T> {
     success: boolean;
-    errorCode: string | null;
-    message: string;
-    result: T;
+    detail: string;
+    data: T;
 }
 
 export const GET = async <T>(
