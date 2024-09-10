@@ -1,8 +1,25 @@
 import SvgLogoPrimary from "@/assets/svg/LogoPrimary";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth, PROVIDER } from "@/apis/firebase";
 
 export default function Header() {
+    function handleLogin() {
+        signInWithPopup(auth, PROVIDER)
+            .then((result) => {
+                const credential =
+                    GoogleAuthProvider.credentialFromResult(result);
+                const token = credential?.accessToken;
+                const user = result.user;
+
+                console.log("로그인 성공", token, user);
+            })
+            .catch((error) => {
+                console.error("error", error);
+            });
+    }
+
     return (
         <HeaderContainer>
             <HeaderWrapper>
@@ -22,7 +39,7 @@ export default function Header() {
                 </HeaderLeftContainer>
 
                 <HeaderRightContainer>
-                    <LoginButton>로그인</LoginButton>
+                    <LoginButton onClick={handleLogin}>로그인</LoginButton>
                 </HeaderRightContainer>
             </HeaderWrapper>
         </HeaderContainer>
