@@ -5,6 +5,7 @@ import { Wrapper } from "@/layouts/Layout";
 import { useUser } from "@/hooks/useUser";
 import { useNavigate } from "react-router-dom";
 import { useGetPaymetns } from "@/hooks/queries/payments/useGetPayments";
+import { usePutPayments } from "@/hooks/mutations/payments/usePutPayments";
 
 const { Title, Text } = Typography;
 
@@ -49,6 +50,22 @@ export default function MyPage() {
         window.localStorage.removeItem("ACCESS_TOKEN");
         resetUserState();
         navigate("/", { replace: true });
+    }
+
+    const { mutate: unsubscription } = usePutPayments({
+        onSuccess(res) {
+            console.log(">> 구독 취소 성공", res);
+        },
+        onError(e) {
+            console.error(">> 구독 취소 실패", e);
+        },
+    });
+
+    function handleUnsubscription() {
+        if (confirm("구독을 취소하시겠습니까?")) {
+            console.log("yes");
+            unsubscription();
+        }
     }
 
     const { data } = useGetPaymetns();
@@ -96,7 +113,11 @@ export default function MyPage() {
                         />
                     </Card>
 
-                    <CancelButton type="primary" danger>
+                    <CancelButton
+                        type="primary"
+                        danger
+                        onClick={handleUnsubscription}
+                    >
                         구독 취소
                     </CancelButton>
 
