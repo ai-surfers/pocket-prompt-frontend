@@ -34,8 +34,8 @@ export default PricePage;
 const PricePageContainer = styled.div`
     ${({ theme }) => theme.mixins.flexBox("column")};
     padding: 50px 40px;
-    max-width: 1080px;
     margin: 0 auto;
+    background-color: #f9f9f9;
 `;
 
 const Labeled = styled.div`
