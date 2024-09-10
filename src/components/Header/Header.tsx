@@ -1,5 +1,6 @@
 import SvgLogoPrimary from "@/assets/svg/LogoPrimary";
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 
 export default function Header() {
     return (
@@ -9,9 +10,14 @@ export default function Header() {
                     <SvgLogoPrimary style={{ width: "40px" }} />
 
                     <TabBarContainer>
-                        <HeaderText>프롬프트 대백과</HeaderText>
-                        <HeaderText active>Extension</HeaderText>
-                        <HeaderText>Pricing</HeaderText>
+                        <StyledNavLink to="/">프롬프트 대백과</StyledNavLink>
+                        <ExternalLink
+                            href="https://chromewebstore.google.com/detail/pocket-prompt/ffinlaeadcgbhecidamekinhbfkdhodd"
+                            target="_blank"
+                        >
+                            Extension
+                        </ExternalLink>
+                        <StyledNavLink to="/price">Pricing</StyledNavLink>
                     </TabBarContainer>
                 </HeaderLeftContainer>
 
@@ -52,14 +58,35 @@ const HeaderWrapper = styled.div`
     flex-wrp: wrap;
 `;
 
-const HeaderText = styled.div<{ active?: boolean }>`
-    ${({ theme, active }) =>
-        active ? theme.fonts.b2_16_semi : theme.fonts.b2_16_reg};
-    color: ${({ theme, active }) =>
-        active ? theme.colors.primary : theme.colors.G_400};
-
+const StyledNavLink = styled(NavLink)`
+    ${({ theme }) => theme.fonts.b2_16_reg};
+    color: ${({ theme }) => theme.colors.G_400};
     cursor: pointer;
     height: 100%;
+    text-decoration: none;
+
+    &.active {
+        ${({ theme }) => theme.fonts.b2_16_semi};
+        color: ${({ theme }) => theme.colors.primary};
+    }
+`;
+
+const ExternalLink = styled.a`
+    ${({ theme }) => theme.fonts.b2_16_reg};
+    color: ${({ theme }) => theme.colors.G_400};
+    cursor: pointer;
+    height: 100%;
+    text-decoration: none;
+
+    &:hover {
+        ${({ theme }) => theme.fonts.b2_16_semi};
+        color: ${({ theme }) => theme.colors.primary};
+    }
+
+    &:focus {
+        ${({ theme }) => theme.fonts.b2_16_reg};
+        color: ${({ theme }) => theme.colors.G_400};
+    }
 `;
 
 const TabBarContainer = styled.div`
