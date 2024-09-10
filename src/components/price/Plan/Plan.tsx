@@ -18,9 +18,11 @@ export default function Plan() {
 
     const { mutate: subscription } = usePostPayments({
         onSuccess(res) {
+            alert("정기결제가 등록되었습니다.");
             console.log("usePostPayments - success", res);
         },
         onError(e) {
+            alert(e.message);
             console.error("usePostPayments - error", e);
         },
     });
