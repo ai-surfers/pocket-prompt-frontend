@@ -11,11 +11,15 @@ const { Title, Text } = Typography;
 const PricePage: React.FC = () => {
     return (
         <PricePageContainer>
-            <Title level={3}>당신의 생산성을 위한 최고의 AI 도구 패키지</Title>
-            <Title level={5}>생성형 AI와 함께하는 포켓 프롬프트</Title>
+            <Title level={1} style={{ fontWeight: 700 }}>
+                당신의 생산성을 위한 최고의 AI 도구 패키지
+            </Title>
+            <Title level={4}>생성형 AI와 함께하는 포켓 프롬프트</Title>
 
             <Labeled>
-                <Text>연간 구독 시 2개월 무료!</Text>
+                <Text style={{ fontSize: "18px" }}>
+                    연간 구독 시 2개월 무료!
+                </Text>
             </Labeled>
 
             <Plan />
@@ -42,8 +46,8 @@ const Labeled = styled.div`
     width: 100%;
     background: #fadb14;
     border-radius: 10px;
-    padding: 5px 0;
+    padding: 10px 0;
     ${({ theme }) => theme.mixins.flexBox()};
 
-    margin-top: 5px;
+    margin-top: 10px;
 `;

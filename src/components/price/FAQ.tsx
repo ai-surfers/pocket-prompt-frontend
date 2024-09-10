@@ -7,7 +7,6 @@ interface FAQItem {
     children: React.ReactNode;
 }
 
-const FAQ_TEXT = "아니오아니오아니오아니오";
 const FAQ_ITEMS: FAQItem[] = [
     {
         key: "1",
@@ -58,4 +57,5 @@ export default function FAQ() {
 const StyledCollapse = styled(Collapse)`
     width: 100%;
     margin-bottom: 20px;
+    font-size: 14px;
 `;
