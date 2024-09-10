@@ -64,6 +64,24 @@ const fonts = {
         line-height: 150%; /* 21px */
         letter-spacing: -0.28px;
     `,
+    b3_14_med: css`
+        /* b3_14/med */
+        font-family: Pretendard;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 150%; /* 21px */
+        letter-spacing: -0.28px;
+    `,
+    b3_14_reg: css`
+        /* b3_14/reg */
+        font-family: Pretendard;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%; /* 21px */
+        letter-spacing: -0.28px;
+    `,
 };
 
 /* 믹스인 */

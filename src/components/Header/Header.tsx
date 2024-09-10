@@ -5,6 +5,7 @@ import { useUser } from "@/hooks/useUser";
 import LoginButton from "./LoginButton/LoginButton";
 import { useEffect } from "react";
 import { getUser } from "@/apis/auth/auth";
+import User from "./User/User";
 
 export default function Header() {
     const { setUser, resetUserState, userData } = useUser();
@@ -49,21 +50,7 @@ export default function Header() {
                 </HeaderLeftContainer>
 
                 <HeaderRightContainer>
-                    {userData.isLogin ? (
-                        <>
-                            <img
-                                src={userData.user?.picture}
-                                style={{
-                                    width: "24px",
-                                    height: "24px",
-                                    borderRadius: "50%",
-                                }}
-                            />
-                            <div>{userData.user?.nickname}</div>
-                        </>
-                    ) : (
-                        <LoginButton />
-                    )}
+                    {userData.isLogin ? <User /> : <LoginButton />}
                 </HeaderRightContainer>
             </HeaderWrapper>
         </HeaderContainer>
