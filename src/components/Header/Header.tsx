@@ -93,7 +93,7 @@ const HeaderWrapper = styled.div`
     height: 100%;
     max-width: 1080px;
     margin: 0 auto;
-    padding: 0 50px;
+    padding: 0 20px;
 
     ${({ theme }) => theme.mixins.flexBox("row", "space-between")};
     flex-wrp: wrap;
