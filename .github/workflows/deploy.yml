@@ -32,7 +32,7 @@ jobs:
               run: yarn install
 
             - name: Build
-              run: yarn build
+              run: yarn build:dev
 
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v2

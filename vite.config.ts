@@ -19,4 +19,5 @@ export default defineConfig({
             { find: "@components", replacement: "/src/components" },
         ],
     },
+    envDir: "./pocket-prompt-frontend-envs/",
 });
