@@ -54,9 +54,11 @@ export default function MyPage() {
 
     const { mutate: unsubscription } = usePutPayments({
         onSuccess(res) {
+            alert("구독이 성공적으로 취소되었습니다.");
             console.log(">> 구독 취소 성공", res);
         },
         onError(e) {
+            alert(e.message);
             console.error(">> 구독 취소 실패", e);
         },
     });
