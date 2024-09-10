@@ -6,11 +6,20 @@ export default function Layout() {
     return (
         <LayoutContainer>
             <Header />
-            <Outlet />
+
+            <Wrapper>
+                <Outlet />
+            </Wrapper>
         </LayoutContainer>
     );
 }
 
 const LayoutContainer = styled.div`
     position: relative;
+`;
+
+const Wrapper = styled.div`
+    width: 100%;
+    height: 100%;
+    padding-top: 60px;
 `;
