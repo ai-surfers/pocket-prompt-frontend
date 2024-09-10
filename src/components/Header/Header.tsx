@@ -3,21 +3,50 @@ import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, PROVIDER } from "@/apis/firebase";
+import { getUser, login } from "@/apis/auth/auth";
+import { useUser } from "@/hooks/useUser";
 
 export default function Header() {
-    function handleLogin() {
-        signInWithPopup(auth, PROVIDER)
-            .then((result) => {
-                const credential =
-                    GoogleAuthProvider.credentialFromResult(result);
-                const token = credential?.accessToken;
-                const user = result.user;
+    const { setUser, setAccessToken, resetUserState, userData } = useUser();
 
-                console.log("로그인 성공", token, user);
-            })
-            .catch((error) => {
-                console.error("error", error);
-            });
+    async function handleLogin() {
+        const res1 = await signInWithPopup(auth, PROVIDER);
+
+        const credential = GoogleAuthProvider.credentialFromResult(res1);
+        const token = credential?.accessToken;
+        const user = res1.user;
+        console.log("로그인 결과", token, user);
+
+        if (!token) {
+            alert("로그인 실패");
+            return;
+        }
+
+        const res2 = await login(token);
+        const { success: success2, data } = res2.data;
+
+        if (!success2) {
+            alert("API 실패");
+            return;
+        }
+
+        // 성공 시, 액세스 토큰 저장 후, 유저 조회
+        window.localStorage.setItem("ACCESS_TOKEN", data.access_token);
+
+        const res3 = await getUser();
+        const { success: success3, data: userData } = res3.data;
+
+        if (!success3) {
+            alert("유저 조회 실패");
+
+            window.localStorage.removeItem("ACCESS_TOKEN");
+            resetUserState();
+            return;
+        }
+
+        // 성공, 저장하고 홈으로 이동
+        setAccessToken(data.access_token);
+        setUser(userData);
     }
 
     return (
@@ -39,7 +68,21 @@ export default function Header() {
                 </HeaderLeftContainer>
 
                 <HeaderRightContainer>
-                    <LoginButton onClick={handleLogin}>로그인</LoginButton>
+                    {userData.isLogin ? (
+                        <>
+                            <img
+                                src={userData.user?.picture}
+                                style={{
+                                    width: "24px",
+                                    height: "24px",
+                                    borderRadius: "50%",
+                                }}
+                            />
+                            <div>{userData.user?.nickname}</div>
+                        </>
+                    ) : (
+                        <LoginButton onClick={handleLogin}>로그인</LoginButton>
+                    )}
                 </HeaderRightContainer>
             </HeaderWrapper>
         </HeaderContainer>
@@ -69,7 +112,7 @@ const HeaderWrapper = styled.div`
     height: 100%;
     max-width: 1080px;
     margin: 0 auto;
-    padding: 0 5px;
+    padding: 0 50px;
 
     ${({ theme }) => theme.mixins.flexBox("row", "space-between")};
     flex-wrp: wrap;
