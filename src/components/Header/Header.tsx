@@ -1,9 +1,12 @@
+import SvgLogoPrimary from "@/assets/svg/LogoPrimary";
 import styled from "styled-components";
 
 export default function Header() {
     return (
         <HeaderContainer>
-            <HeaderLeftContainer></HeaderLeftContainer>
+            <HeaderLeftContainer>
+                <SvgLogoPrimary style={{ width: 30 }} />
+            </HeaderLeftContainer>
             <HeaderRightContainer></HeaderRightContainer>
         </HeaderContainer>
     );
