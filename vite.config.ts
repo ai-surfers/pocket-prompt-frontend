@@ -13,7 +13,6 @@ export default defineConfig({
             },
         }),
     ],
-    base: "/pocket-prompt-frontend/",
     resolve: {
         alias: [
             { find: "@", replacement: "/src" },
