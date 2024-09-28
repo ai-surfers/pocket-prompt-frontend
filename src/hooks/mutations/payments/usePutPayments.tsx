@@ -1,5 +1,5 @@
+import { BaseResponse, PUT } from "@/apis/client";
 import { useMutation } from "@tanstack/react-query";
-import { BaseResponse, POST } from "../../../apis/client";
 
 /**
  * UnsubscriptionResponse
@@ -13,7 +13,7 @@ export interface UnsubscriptionResponse {
  *  정기결제 취소하기
  */
 export const unsubscription = async () => {
-    const res = await POST<UnsubscriptionResponse>(`/unsubscription`);
+    const res = await PUT<UnsubscriptionResponse>(`/unsubscription`);
     return res.data;
 };
 
