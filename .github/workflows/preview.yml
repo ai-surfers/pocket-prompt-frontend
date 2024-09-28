@@ -1,3 +1,4 @@
+# [Reference] https://vitejs.dev/guide/static-deploy.html
 name: Deploy to Github Pages
 
 on:
@@ -6,9 +7,13 @@ on:
             - opened
             - reopened
             - synchronize
+    workflow_dispatch:
 
 jobs:
     Deploy:
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
         runs-on: ubuntu-latest
 
         steps:
@@ -17,6 +22,11 @@ jobs:
               with:
                   submodules: recursive
                   token: ${{ secrets.ACTION_TOKEN }}
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
 
             - name: Cache node modules
               uses: actions/cache@v3
@@ -31,16 +41,17 @@ jobs:
               if: steps.cache.outputs.cache-hit != 'true'
               run: yarn install
 
-            # PUBLIC_URL=/pocket-prompt-frontend/
-            - name: Set PUBLIC_URL
-              run: |
-                  PUBLIC_URL=$(echo $GITHUB_REPOSITORY | sed -r 's/^.+\/(.+)$/\/\1\//')
-                  echo PUBLIC_URL=$PUBLIC_URL > .env
-
             - name: Build
               run: yarn build:dev
 
-            - uses: peaceiris/actions-gh-pages@v3
+            - name: Setup Pages
+              uses: actions/configure-pages@v4
+
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
               with:
-                  github_token: ${{ secrets.ACTION_TOKEN }}
-                  publish_dir: ./dist
+                  path: "./dist"
+
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
