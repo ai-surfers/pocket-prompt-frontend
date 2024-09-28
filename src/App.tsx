@@ -6,6 +6,7 @@ import queryClient from "./apis/queryClient";
 import { RecoilRoot } from "recoil";
 
 function App() {
+    console.log(`🍀 Environment - ${import.meta.env.MODE}`);
     return (
         <Styles>
             <RecoilRoot>

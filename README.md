@@ -1,50 +1,38 @@
-# React + TypeScript + Vite
+# 🌐 Pocker Prompt Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+포켓 프롬프트 웹버전
 
-Currently, two official plugins are available:
+## 환경 설정
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1️⃣ .env 서브모듈로 관리
 
-## Expanding the ESLint configuration
+해당 레포지토리는 서브모듈로 환경 변수를 관리하고 있다 [pocket-prompt-frontend-envs](https://github.com/ai-surfers/pocket-prompt-frontend-envs/tree/da5bd9dc2ef2651be0a47ab7dabccba57d937ea3)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+> 🔥 주의 <br/>
+> 처음 서브모듈을 받을 때는 `git submodule update --init --recursive` 명령어를 수행해 주어야 한다
 
-- Configure the top-level `parserOptions` property like this:
+> ✔️ 수정 방법
+>
+> 1. 해당 레포지토리에서 파일 수정
+> 2. `git submodule update --remote` 명령어로 서브모듈 최신화
+> 3. 최신화 내용 커밋
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### 2️⃣ 실행 가이드
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+1. `yarn install`
+2. `yarn dev` 혹은 `yarn prod`
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+<br/>
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## 배포
+
+> 🔥 주의 <br/>현재는 프로덕션 배포룰만 세팅된 상태입니다
+
+-   **Production 배포**
+
+    -   AWS S3 + CloudFront 사용
+    -   **트리거 - `main`** 브랜치 merge 시
+
+-   **Preview 배포** ~~작업중~~
+    -   Github Pages
+    -   **트리거 -** Pull Request open 시
