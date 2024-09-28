@@ -3,7 +3,6 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
-    "homepage": "https://ai-surfers.github.io/resp",
     "scripts": {
         "dev": "vite",
         "prod": "vite --mode production",
