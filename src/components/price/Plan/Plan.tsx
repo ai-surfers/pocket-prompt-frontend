@@ -8,12 +8,14 @@ import {
     SubscriptionRequest,
     usePostPayments,
 } from "../../../hooks/mutations/payments/usePostPayments";
+import { useUser } from "@/hooks/useUser";
 const { Text } = Typography;
 
 const PORTONE_STORE_ID = import.meta.env.VITE_PORTONE_STORE_ID;
 const PORTONE_CHANNEL_KEY = import.meta.env.VITE_PORTONE_CHANNEL_KEY;
 
 export default function Plan() {
+    const { userData } = useUser();
     const [billingCycle, setBillingCycle] = useState("월간");
 
     const { mutate: subscription } = usePostPayments({
@@ -33,6 +35,11 @@ export default function Plan() {
 
     const handleStartClick = (planType: string) => {
         console.log(`선택된 요금제: ${planType}, 주기: ${billingCycle}`);
+
+        if (!userData.isLogin) {
+            alert("로그인 후 이용 가능합니다.");
+            return;
+        }
 
         if (planType === "free") {
             console.log("무시");
