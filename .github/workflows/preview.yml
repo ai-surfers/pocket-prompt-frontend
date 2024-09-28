@@ -1,0 +1,46 @@
+name: Deploy to Github Pages (Preview)
+
+on:
+    pull_request:
+        types:
+            - opened
+            - reopened
+            - synchronize
+
+jobs:
+    Deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout source code
+              uses: actions/checkout@v2
+              with:
+                  submodules: recursive
+                  token: ${{ secrets.ACTION_TOKEN }}
+
+            - name: Cache node modules
+              uses: actions/cache@v3
+              with:
+                  path: node_modules
+                  key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.OS }}-build-
+                      ${{ runner.OS }}-
+
+            - name: Install Dependencies
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: yarn install
+
+            # PUBLIC_URL=/pocket-prompt-frontend/
+            - name: Set PUBLIC_URL
+              run: |
+                  PUBLIC_URL=$(echo $GITHUB_REPOSITORY | sed -r 's/^.+\/(.+)$/\/\1\//')
+                  echo PUBLIC_URL=$PUBLIC_URL > .env
+
+            - name: Build
+              run: yarn build:dev
+
+            - uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./dist
