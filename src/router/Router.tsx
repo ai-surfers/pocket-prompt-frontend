@@ -4,6 +4,7 @@ import Layout from "@/layouts/Layout";
 import HomePage from "@/pages/home/HomePage";
 import PricePage from "@/pages/price/PricePage";
 import MyPage from "@/pages/my/MyPage";
+import ExtensionPage from "@/pages/extension/ExtensionPage";
 
 const router = createBrowserRouter([
     {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <HomePage />,
+            },
+            {
+                path: "/extension",
+                element: <ExtensionPage />,
             },
             {
                 path: "/price",
