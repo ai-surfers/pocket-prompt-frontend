@@ -19,10 +19,12 @@ ${reset}
 
  :root {
   --vh: 100%;
+  width: 100%;
  }
 
  html, body{
   overflow-x :  hidden;
+
  }
 
  /* .react-loading-skeleton {
