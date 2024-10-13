@@ -4,7 +4,7 @@ export const Extension4Container = styled.div`
     position: relative;
     display: flex;
     justify-content: center;
-    height: 553px;
+    height: 540px;
     width: 100%;
     background: var(--primary_normal, #ffffff);
 `;
