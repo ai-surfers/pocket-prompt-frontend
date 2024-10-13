@@ -1,5 +1,10 @@
 import type { SVGProps } from "react";
-const SvgLogoPrimary = (props: SVGProps<SVGSVGElement>) => (
+
+interface LogoPrimaryProps extends SVGProps<SVGSVGElement> {
+    color?: string;
+}
+
+const SvgLogoPrimary = ({ color = "#7580EA", ...props }: LogoPrimaryProps) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -11,7 +16,7 @@ const SvgLogoPrimary = (props: SVGProps<SVGSVGElement>) => (
             height={421.428}
             x={240.244}
             y={184.499}
-            fill="#7580EA"
+            fill={color}
             rx={47.251}
         />
         <rect
@@ -19,14 +24,14 @@ const SvgLogoPrimary = (props: SVGProps<SVGSVGElement>) => (
             height={434.795}
             x={171.168}
             y={134.315}
-            fill="#7580EA"
+            fill={color}
             stroke="#fff"
             strokeWidth={13.367}
             rx={53.934}
         />
         <path
-            fill="#7580EA"
-            stroke="#7580EA"
+            fill={color}
+            stroke={color}
             strokeWidth={0.639}
             d="M178.171 188.249c0-25.92 21.012-46.932 46.932-46.932h267.542c25.92 0 46.932 21.012 46.932 46.932v230.827H178.171z"
         />
@@ -35,7 +40,7 @@ const SvgLogoPrimary = (props: SVGProps<SVGSVGElement>) => (
             d="M358.016 224.505c2.477 69.253 57.845 124.819 126.85 127.304-69.005 2.486-124.373 58.052-126.85 127.305-2.477-69.253-57.845-124.819-126.85-127.305 69.005-2.485 124.373-58.051 126.85-127.304"
         />
         <path
-            stroke="#7580EA"
+            stroke={color}
             strokeWidth={17.834}
             d="M642.979 141.754c30.052 33.722 32.02 89.77 6.514 155.885-25.316 65.626-76.899 138.585-149.048 202.881-72.149 64.297-150.543 107.17-218.64 124.791-68.605 17.752-124.056 9.368-154.108-24.354s-32.02-89.77-6.515-155.885c25.317-65.626 76.9-138.585 149.048-202.881 72.149-64.297 150.543-107.17 218.64-124.791 68.605-17.752 124.057-9.368 154.109 24.354Z"
         />

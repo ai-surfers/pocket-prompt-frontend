@@ -38,7 +38,7 @@ export default function Header() {
                     <SvgLogoPrimary style={{ width: "40px" }} />
 
                     <TabBarContainer>
-                        <StyledNavLink to="/">프롬프트 대백과</StyledNavLink>
+                        <StyledNavLink to="/">Home</StyledNavLink>
                         <StyledNavLink to="/extension">Extension</StyledNavLink>
                         <StyledNavLink to="/price">Pricing</StyledNavLink>
                     </TabBarContainer>
@@ -56,7 +56,7 @@ const HeaderContainer = styled.header`
     width: 100%;
     background: #fff;
 
-    height: 60px;
+    height: 52px;
 
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(40px);
