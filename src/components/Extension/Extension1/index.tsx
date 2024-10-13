@@ -28,7 +28,7 @@ const Extension1 = () => {
                         Extension
                     </MainTitle>
                     <DownloadButton
-                        href="https://chromewebstore.google.com/detail/pocket-prompt/jgjgjgjgjgjgjgjgjgjgjgjgjgjgjgjg"
+                        href="https://chromewebstore.google.com/detail/pocket-prompt/ffinlaeadcgbhecidamekinhbfkdhodd?utm_source=official_website&utm_medium=download_button&utm_campaign=extension_landing_page"
                         target="_blank"
                     >
                         <DownloadButtonText>
