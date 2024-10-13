@@ -7,7 +7,7 @@ import PortOne from "@portone/browser-sdk/v2";
 import {
     SubscriptionRequest,
     usePostPayments,
-} from "../../../hooks/mutations/payments/usePostPayments";
+} from "@/hooks/mutations/payments/usePostPayments";
 import { useUser } from "@/hooks/useUser";
 const { Text } = Typography;
 
