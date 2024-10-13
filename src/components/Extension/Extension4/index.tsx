@@ -10,6 +10,7 @@ import {
     PromptUsageDemoBlur,
 } from "./styles";
 import PromptUsagedemoImage from "@/assets/images/extension/prompt-usage-demo.png";
+import SpeechBalloonPromptImage from "@/assets/images/extension/speech-balloon-prompt.png";
 
 const Extension4 = () => {
     return (
@@ -26,7 +27,10 @@ const Extension4 = () => {
                     </Title>
                 </TitleWrap>
                 <SpeechBalloonWrap>
-                    <SpeechBalloon></SpeechBalloon>
+                    <SpeechBalloon
+                        src={SpeechBalloonPromptImage}
+                        alt="말풍선 프롬프트"
+                    />
                 </SpeechBalloonWrap>
                 <div style={{ position: "relative" }}>
                     <PromptUsageDemo

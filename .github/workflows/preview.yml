@@ -1,0 +1,74 @@
+name: Cloudflare Pages Preview
+
+on:
+    pull_request:
+        types:
+            - opened
+            - reopened
+            - synchronize
+        branches: [main, develop]
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+    deployments: write
+    pull-requests: write
+
+jobs:
+    Deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout source code
+              uses: actions/checkout@v2
+              with:
+                  submodules: recursive
+                  token: ${{ secrets.ACTION_TOKEN }}
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+
+            - name: Cache node modules
+              uses: actions/cache@v3
+              with:
+                  path: node_modules
+                  key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.OS }}-build-
+                      ${{ runner.OS }}-
+
+            - name: Install Dependencies
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: yarn install
+
+            - name: Build
+              run: yarn build:dev
+
+            - name: Publish to Cloudflare Pages
+              uses: cloudflare/pages-action@v1
+              id: cloudflare
+              with:
+                  apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+                  projectName: pocket-prompt-frontend
+                  directory: dist
+                  gitHubToken: ${{ secrets.ACTION_TOKEN }}
+
+            - name: Comment PR
+              uses: mshick/add-pr-comment@v2
+              with:
+                  message-id: cloudflare-preview
+                  message: |
+                      ### 👀 Preview Success! 
+
+                      |  Name | Link |
+                      |---------------------------------|------------------------|
+                      |<span aria-hidden="true">🔨</span> Latest commit | ${{ github.sha }} |
+                      |<span aria-hidden="true">🔍</span> Latest deploy log | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |
+                      |<span aria-hidden="true">🖇️</span> Deploy Preview Url | [${{ steps.cloudflare.outputs.url }}](${{ steps.cloudflare.outputs.url }}) |
+                      |<span aria-hidden="true">🌳</span> Environment | ${{ steps.cloudflare.outputs.environment }} |
+                      ---

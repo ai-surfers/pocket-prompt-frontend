@@ -52,14 +52,11 @@ export const SpeechBalloonWrap = styled.div`
     height: 333px;
 `;
 
-export const SpeechBalloon = styled.div`
-    width: 460px;
+export const SpeechBalloon = styled.img`
+    width: 500px;
     height: 333px;
-    border-radius: 28px 28px 0px 28px;
-    background: var(--primary-20, #e3e6fb);
-    padding: 20px 24px;
     margin-right: 58px;
-`; // 말풍선 부분은 이미지로 넣기
+`;
 
 export const PromptUsageDemo = styled.img`
     width: 255px;

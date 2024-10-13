@@ -1,3 +1,3 @@
 [submodule "pocket-prompt-frontend-envs"]
 	path = pocket-prompt-frontend-envs
-	url = https://github.com/ai-surfers/pocket-prompt-frontend-envs.git
+	url = git@github.com:ai-surfers/pocket-prompt-frontend-envs.git

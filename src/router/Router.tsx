@@ -16,16 +16,16 @@ const router = createBrowserRouter([
                 element: <HomePage />,
             },
             {
+                path: "/extension",
+                element: <ExtensionPage />,
+            },
+            {
                 path: "/price",
                 element: <PricePage />,
             },
             {
                 path: "/my",
                 element: <MyPage />,
-            },
-            {
-                path: "/extension",
-                element: <ExtensionPage />,
             },
         ],
     },
