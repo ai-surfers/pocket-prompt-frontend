@@ -82,14 +82,16 @@ const HeaderWrapper = styled.div`
 `;
 
 const StyledNavLink = styled(NavLink)`
-    ${({ theme }) => theme.fonts.b2_16_reg};
+    ${({ theme }) => theme.fonts.body2};
+    ${({ theme }) => theme.fonts.regular};
+
     color: ${({ theme }) => theme.colors.G_400};
     cursor: pointer;
     height: 100%;
     text-decoration: none;
 
     &.active {
-        ${({ theme }) => theme.fonts.b2_16_semi};
+        ${({ theme }) => theme.fonts.semibold};
         color: ${({ theme }) => theme.colors.primary};
     }
 `;

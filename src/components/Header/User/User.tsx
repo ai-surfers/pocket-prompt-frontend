@@ -28,6 +28,8 @@ const UserImage = styled.img`
 `;
 
 const UserNickname = styled.div`
-    ${({ theme }) => theme.fonts.b3_14_reg};
+    ${({ theme }) => theme.fonts.body3};
+    ${({ theme }) => theme.fonts.regular};
+
     color: ${({ theme }) => theme.colors.black};
 `;
