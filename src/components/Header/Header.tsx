@@ -39,12 +39,7 @@ export default function Header() {
 
                     <TabBarContainer>
                         <StyledNavLink to="/">프롬프트 대백과</StyledNavLink>
-                        <ExternalLink
-                            href="https://chromewebstore.google.com/detail/pocket-prompt/ffinlaeadcgbhecidamekinhbfkdhodd"
-                            target="_blank"
-                        >
-                            Extension
-                        </ExternalLink>
+                        <StyledNavLink to="/extension">Extension</StyledNavLink>
                         <StyledNavLink to="/price">Pricing</StyledNavLink>
                     </TabBarContainer>
                 </HeaderLeftContainer>
@@ -96,24 +91,6 @@ const StyledNavLink = styled(NavLink)`
     &.active {
         ${({ theme }) => theme.fonts.b2_16_semi};
         color: ${({ theme }) => theme.colors.primary};
-    }
-`;
-
-const ExternalLink = styled.a`
-    ${({ theme }) => theme.fonts.b2_16_reg};
-    color: ${({ theme }) => theme.colors.G_400};
-    cursor: pointer;
-    height: 100%;
-    text-decoration: none;
-
-    &:hover {
-        ${({ theme }) => theme.fonts.b2_16_semi};
-        color: ${({ theme }) => theme.colors.primary};
-    }
-
-    &:focus {
-        ${({ theme }) => theme.fonts.b2_16_reg};
-        color: ${({ theme }) => theme.colors.G_400};
     }
 `;
 
