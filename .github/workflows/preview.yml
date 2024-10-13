@@ -1,5 +1,4 @@
-# [Reference] https://vitejs.dev/guide/static-deploy.html
-name: Deploy to Github Pages
+name: Cloudflare Pages Preview
 
 on:
     pull_request:
@@ -7,6 +6,7 @@ on:
             - opened
             - reopened
             - synchronize
+        branches: [main, develop]
     workflow_dispatch:
 
 permissions:
@@ -16,9 +16,6 @@ permissions:
 
 jobs:
     Deploy:
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
         runs-on: ubuntu-latest
 
         steps:
@@ -49,14 +46,27 @@ jobs:
             - name: Build
               run: yarn build:dev
 
-            - name: Setup Pages
-              uses: actions/configure-pages@v4
-
-            - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
+            - name: Publish to Cloudflare Pages
+              uses: cloudflare/pages-action@v1
+              id: cloudflare
               with:
-                  path: "./dist"
+                  apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+                  projectName: pocket-prompt-frontend
+                  directory: dist
+                  gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v4
+            - name: Comment PR
+              uses: mshick/add-pr-comment@v2
+              with:
+                  message-id: cloudflare-preview
+                  message: |
+                      ### 👀 Preview Success! 
+
+                      |  Name | Link |
+                      |---------------------------------|------------------------|
+                      |<span aria-hidden="true">🔨</span> Latest commit | ${{ github.sha }} |
+                      |<span aria-hidden="true">🔍</span> Latest deploy log | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |
+                      |<span aria-hidden="true">🖇️</span> Deploy Preview Url | [${{ steps.cloudflare.outputs.url }}](${{ steps.cloudflare.outputs.url }}) |
+                      |<span aria-hidden="true">🌳</span> Environment | ${{ steps.cloudflare.outputs.environment }} |
+                      ---
