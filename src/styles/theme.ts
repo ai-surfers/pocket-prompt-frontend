@@ -19,8 +19,63 @@ const colors = {
     primary_xlight: "#CEDEFF",
 };
 
-/** 폰트 결정 시 수정 될 예정 */
 const fonts = {
+    // 명칭
+    header1: css`
+        font-size: 24px;
+        line-height: 144%; /* 34.56px */
+        letter-spacing: -0.48px;
+    `,
+    header2: css`
+        font-size: 20px;
+        line-height: 144%; /* 28.8px */
+        letter-spacing: -0.4px;
+    `,
+    body1: css`
+        font-size: 18px;
+        line-height: 150%; /* 27px */
+        letter-spacing: -0.36px;
+    `,
+    body2: css`
+        font-size: 16px;
+        line-height: 150%; /* 24px */
+    `,
+    body3: css`
+        font-size: 14px;
+        line-height: 150%; /* 21px */
+        letter-spacing: -0.28px;
+    `,
+    caption1: css`
+        font-size: 12px;
+        line-height: 150%; /* 18px */
+    `,
+    caption2: css`
+        font-size: 11px;
+        line-height: 150%; /* 16.5px */
+    `,
+    // 볼드
+    bold: css`
+        font-family: Pretendard;
+        font-style: normal;
+        font-weight: 700;
+    `,
+    semibold: css`
+        font-family: Pretendard;
+        font-style: normal;
+        font-weight: 600;
+    `,
+    medium: css`
+        font-family: Pretendard;
+        font-style: normal;
+        font-weight: 500;
+    `,
+    regular: css`
+        font-family: Pretendard;
+        font-style: normal;
+        font-weight: 400;
+    `,
+
+    /** 조합으로 쓰고 싶은 경우, 명칭_크기_볼드 순으로 작성 */
     h1_24_bold: css`
         /* h1_24/bold */
         font-family: Pretendard;
@@ -29,58 +84,6 @@ const fonts = {
         font-weight: 700;
         line-height: 144%; /* 34.56px */
         letter-spacing: -0.48px;
-    `,
-    h1_24_semi: css`
-        /* h1_24/semi */
-        font-family: Pretendard;
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 144%; /* 34.56px */
-        letter-spacing: -0.48px;
-    `,
-    b2_16_semi: css`
-        /* b2_16/semi */
-        font-family: Pretendard;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 150%; /* 24px */
-    `,
-    b2_16_reg: css`
-        /* b2_16/reg */
-        font-family: Pretendard;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 150%; /* 24px */
-    `,
-    b3_14_semi: css`
-        /* b3_14/semi */
-        font-family: Pretendard;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 150%; /* 21px */
-        letter-spacing: -0.28px;
-    `,
-    b3_14_med: css`
-        /* b3_14/med */
-        font-family: Pretendard;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 150%; /* 21px */
-        letter-spacing: -0.28px;
-    `,
-    b3_14_reg: css`
-        /* b3_14/reg */
-        font-family: Pretendard;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 150%; /* 21px */
-        letter-spacing: -0.28px;
     `,
 };
 
