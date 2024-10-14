@@ -8,6 +8,7 @@ export interface SubscriptionRequest {
   billing_key: string;
   payment_gateway: string;
   user_plan: string;
+  subscription_type: string;
 }
 
 /**
