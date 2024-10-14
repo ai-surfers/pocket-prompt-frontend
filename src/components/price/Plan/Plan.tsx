@@ -66,7 +66,7 @@ export default function Plan() {
       billing_key: issueResponse?.billingKey,
       payment_gateway: "tosspayments",
       user_plan: planType,
-      subscription_type: billingCycle,
+      subscription_type: billingCycle === "월간" ? "monthly" : "yearly",
     };
 
     subscription(request);
