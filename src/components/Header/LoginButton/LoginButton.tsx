@@ -54,7 +54,8 @@ const Button = styled.div`
     border-radius: 12px;
     padding: 10px 12px;
 
-    ${({ theme }) => theme.fonts.b3_14_semi};
+    ${({ theme }) => theme.fonts.body3};
+    ${({ theme }) => theme.fonts.semibold};
     background: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.white};
 

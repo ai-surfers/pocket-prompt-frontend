@@ -19,10 +19,12 @@ ${reset}
 
  :root {
   --vh: 100%;
+  width: 100%;
  }
 
  html, body{
   overflow-x :  hidden;
+
  }
 
  /* .react-loading-skeleton {
@@ -30,6 +32,9 @@ ${reset}
 } */
  
 #root, body, html {
+    font-family: Pretendard;
+    font-style: normal;
+
     scrollbar-width: none; /* 파이어폭스 스크롤바 숨김 */
     margin: 0 auto;
     padding: 0;

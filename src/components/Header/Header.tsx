@@ -1,4 +1,3 @@
-import SvgLogoPrimary from "@/assets/svg/LogoPrimary";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { useUser } from "@/hooks/useUser";
@@ -6,6 +5,7 @@ import LoginButton from "./LoginButton/LoginButton";
 import { useEffect } from "react";
 import { getUser } from "@/apis/auth/auth";
 import User from "./User/User";
+import { Logo } from "@/assets/svg";
 
 export default function Header() {
     const { setUser, resetUserState, userData } = useUser();
@@ -35,10 +35,10 @@ export default function Header() {
         <HeaderContainer>
             <HeaderWrapper>
                 <HeaderLeftContainer>
-                    <SvgLogoPrimary style={{ width: "40px" }} />
+                    <Logo style={{ width: "40px" }} />
 
                     <TabBarContainer>
-                        <StyledNavLink to="/">프롬프트 대백과</StyledNavLink>
+                        <StyledNavLink to="/">Home</StyledNavLink>
                         <StyledNavLink to="/extension">Extension</StyledNavLink>
                         <StyledNavLink to="/price">Pricing</StyledNavLink>
                     </TabBarContainer>
@@ -56,7 +56,7 @@ const HeaderContainer = styled.header`
     width: 100%;
     background: #fff;
 
-    height: 60px;
+    height: 52px;
 
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(40px);
@@ -82,14 +82,16 @@ const HeaderWrapper = styled.div`
 `;
 
 const StyledNavLink = styled(NavLink)`
-    ${({ theme }) => theme.fonts.b2_16_reg};
+    ${({ theme }) => theme.fonts.body2};
+    ${({ theme }) => theme.fonts.regular};
+
     color: ${({ theme }) => theme.colors.G_400};
     cursor: pointer;
     height: 100%;
     text-decoration: none;
 
     &.active {
-        ${({ theme }) => theme.fonts.b2_16_semi};
+        ${({ theme }) => theme.fonts.semibold};
         color: ${({ theme }) => theme.colors.primary};
     }
 `;

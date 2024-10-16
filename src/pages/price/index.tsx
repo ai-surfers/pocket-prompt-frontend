@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { Typography } from "antd";
-import FAQ from "../../components/price/FAQ";
-import Explain from "../../components/price/Explain";
-import Footer from "../../components/price/Footer";
-import Plan from "../../components/price/Plan/Plan";
 import { Wrapper } from "@/layouts/Layout";
+import Plan from "@/pages/price/components/Plan/Plan";
+import Explain from "@/pages/price/components/Explain";
+import FAQ from "@/pages/price/components/FAQ";
+import Footer from "@/pages/price/components/Footer";
 
 const { Title, Text } = Typography;
 
