@@ -39,6 +39,14 @@ const Footer: React.FC = () => {
                     </NavLink>
                     <Divider>|</Divider>
                     <NavLink
+                        href="https://pocket-prompt.notion.site/121d02185fca808ab505d697ad99ee04"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        서비스 이용약관
+                    </NavLink>
+                    <Divider>|</Divider>
+                    <NavLink
                         href="https://pocket-prompt.notion.site/6dc9bbd2599a46d3bbcac24a18848770"
                         target="_blank"
                         rel="noopener noreferrer"
