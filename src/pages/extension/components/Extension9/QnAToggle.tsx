@@ -13,19 +13,16 @@ interface Props {
     answer: React.ReactNode;
 }
 const QnAToggle = ({ question, answer }: Props) => {
-    const [opened, setOpend] = useState(true);
+    const [opened, setOpend] = useState(false);
 
     return (
         <ToggleContainer>
-            <ToggleHeader>
+            <ToggleHeader onClick={() => setOpend(!opened)}>
                 <ToggleHeaderTitle>
                     <span>Q.</span>
                     {question}
                 </ToggleHeaderTitle>
-                <img
-                    src={opened ? ArrowUp : ArrowDown}
-                    onClick={() => setOpend(!opened)}
-                />
+                <img src={opened ? ArrowUp : ArrowDown} />
             </ToggleHeader>
             <ToggleContent opened={opened}>
                 <span>A.</span>

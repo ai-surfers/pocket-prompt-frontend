@@ -32,6 +32,7 @@ export const ToggleHeader = styled.div`
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    cursor: pointer;
 `;
 
 export const ToggleHeaderTitle = styled.span`
