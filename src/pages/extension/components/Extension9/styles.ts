@@ -79,13 +79,3 @@ export const ToggleContentText = styled.p`
         text-decoration: underline;
     }
 `;
-
-export const AddtionalText = styled.p`
-    padding-top: 40px;
-    color: var(--gray-400, #818491);
-    font-family: Pretendard;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 150%; /* 18px */
-`;
