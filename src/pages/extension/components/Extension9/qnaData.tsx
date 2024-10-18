@@ -22,9 +22,14 @@ export const qnaData = [
         answer: (
             <>
                 <li>
-                    <a>프롬프트 추가하기 가이드</a>에 자세한 예시와 함께 친절한
-                    가이드를 작성해두었습니다. 천천히 읽으면서 따라해보시면 금방
-                    익숙해지길거예요!
+                    <a
+                        href="https://pocket-prompt.notion.site/da477857a0cc44888b06dd23cf6682ff?utm_source=official_website&utm_medium=prompt_upload_guide_qna&utm_campaign=extension_landing_page"
+                        target="_blank"
+                    >
+                        프롬프트 추가하기 가이드
+                    </a>
+                    에 자세한 예시와 함께 친절한 가이드를 작성해두었습니다.
+                    천천히 읽으면서 따라해보시면 금방 익숙해지길거예요!
                 </li>
                 <li>
                     그래도 어려우면 다른 사람들이 작성한 프롬프트를 참고해
