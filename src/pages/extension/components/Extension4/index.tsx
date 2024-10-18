@@ -8,9 +8,11 @@ import {
     SpeechBalloon,
     PromptUsageDemo,
     PromptUsageDemoBlur,
+    SpeechBallonMouseImage,
 } from "./styles";
 import PromptUsagedemoImage from "@/assets/images/extension/prompt-usage-demo.png";
 import SpeechBalloonPromptImage from "@/assets/images/extension/speech-balloon-prompt.png";
+import MouseImage from "@/assets/images/extension/mouse-image.png";
 
 const Extension4 = () => {
     return (
@@ -31,6 +33,7 @@ const Extension4 = () => {
                         src={SpeechBalloonPromptImage}
                         alt="말풍선 프롬프트"
                     />
+                    <SpeechBallonMouseImage src={MouseImage} alt="마우스" />
                 </SpeechBalloonWrap>
                 <div style={{ position: "relative" }}>
                     <PromptUsageDemo

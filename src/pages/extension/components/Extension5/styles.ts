@@ -9,7 +9,9 @@ export const Extension5Container = styled.div`
     background: var(--primary_normal, #7580ea);
 `;
 
-export const Extension5Wrap = styled.div``;
+export const Extension5Wrap = styled.div`
+    position: relative;
+`;
 
 export const ContentWrap = styled.div`
     margin-top: 72px;
@@ -54,4 +56,11 @@ export const AIPlatformsIconWrap = styled.div`
 export const AIPlatformsIcon = styled.img`
     height: 98px;
     object-fit: contain;
+`;
+
+export const LogoImage = styled.img`
+    position: absolute;
+    top: -17px;
+    left: 194px;
+    opacity: 0.2;
 `;
