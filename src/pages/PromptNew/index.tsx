@@ -1,4 +1,5 @@
 import Input from "@/components/common/Input/Input";
+import Textarea from "@/components/common/Textarea/Textarea";
 import { Wrapper } from "@/layouts/Layout";
 import { Flex, Select } from "antd";
 import { useState } from "react";
@@ -6,6 +7,7 @@ import styled from "styled-components";
 
 export default function PromptNewPage() {
     const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
 
     return (
         <Container>
@@ -64,7 +66,12 @@ export default function PromptNewPage() {
                                 있도록 설명을 입력해주세요!
                             </InputDescription>
 
-                            <Textarea placeholder="예시: 주제와 청중을 입력하면 근사한 파워포인트 초안을 만들어주는 프롬프트" />
+                            <Textarea
+                                placeholder="예시: 주제와 청중을 입력하면 근사한 파워포인트 초안을 만들어주는 프롬프트"
+                                value={description}
+                                onChange={(val) => setDescription(val)}
+                                count={100}
+                            />
                         </InputBox>
 
                         <InputBox>
@@ -83,7 +90,10 @@ export default function PromptNewPage() {
 
                             <Textarea
                                 placeholder="예시: [주제]를 주제로 한 파워포인트의 초안을 작성해줘.
-총 10슬라이드로 이루어져있고, 청중은 [청중]을 대상으로 고려해줘."
+총 10 슬라이드로 이루어져있고, 청중은 [청중]을 대상으로 고려해줘."
+                                value={description}
+                                onChange={(val) => setDescription(val)}
+                                disabled
                             />
                         </InputBox>
 
@@ -238,23 +248,6 @@ const Button = styled.button`
     margin-top: 60px;
 
     ${({ theme }) => theme.fonts.b2_16_semi};
-`;
-
-const Textarea = styled.textarea`
-    width: 100%;
-    min-height: 87px;
-    padding: 11px 12px;
-    ${({ theme }) => theme.mixins.flexBox()};
-    ${({ theme }) => theme.fonts.b3_14_reg};
-    border-radius: 8px;
-    border: 1px solid ${({ theme }) => theme.colors.primary_20};
-    background: ${({ theme }) => theme.colors.white};
-    margin-top: 8px;
-    resize: vertical;
-
-    &::placeholder {
-        color: ${({ theme }) => theme.colors.primary_60};
-    }
 `;
 
 const ExampleBox = styled.div<{ height?: string }>`
