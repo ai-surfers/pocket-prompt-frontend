@@ -1,8 +1,12 @@
+import Input from "@/components/common/Input/Input";
 import { Wrapper } from "@/layouts/Layout";
 import { Flex, Select } from "antd";
+import { useState } from "react";
 import styled from "styled-components";
 
 export default function PromptNewPage() {
+    const [title, setTitle] = useState("");
+
     return (
         <Container>
             <Title>나만의 프롬프트 등록하기</Title>
@@ -40,7 +44,11 @@ export default function PromptNewPage() {
                                     <InputTitleTag>필수</InputTitleTag>
                                 </InputTitleTagBox>
                             </InputTitleBox>
-                            <Input placeholder="프롬프트의 제목을 입력해주세요." />
+                            <Input
+                                placeholder="프롬프트의 제목을 입력해주세요."
+                                value={title}
+                                onChange={(val) => setTitle(val)}
+                            />
                         </InputBox>
 
                         <InputBox>
@@ -230,21 +238,6 @@ const Button = styled.button`
     margin-top: 60px;
 
     ${({ theme }) => theme.fonts.b2_16_semi};
-`;
-
-const Input = styled.input`
-    width: 100%;
-    padding: 11px 12px;
-    ${({ theme }) => theme.mixins.flexBox()};
-    ${({ theme }) => theme.fonts.b3_14_reg};
-    border-radius: 8px;
-    border: 1px solid ${({ theme }) => theme.colors.primary_20};
-    background: ${({ theme }) => theme.colors.white};
-    margin-top: 8px;
-
-    &::placeholder {
-        color: ${({ theme }) => theme.colors.primary_60};
-    }
 `;
 
 const Textarea = styled.textarea`

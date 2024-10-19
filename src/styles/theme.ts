@@ -164,6 +164,14 @@ const fonts = {
         font-weight: 600;
         line-height: 150%; /* 1.125rem */
     `,
+    c1_12_reg: css`
+        /* c1_12/reg */
+        font-family: Pretendard;
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%; /* 1.125rem */
+    `,
 };
 
 /* 믹스인 */
