@@ -2,10 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { Typography } from "antd";
 import { Wrapper } from "@/layouts/Layout";
-import Plan from "@/pages/price/components/Plan/Plan";
-import Explain from "@/pages/price/components/Explain";
-import FAQ from "@/pages/price/components/FAQ";
-import Footer from "@/pages/price/components/Footer";
+import Plan from "@/pages/Price/components/Plan/Plan";
+import Explain from "@/pages/Price/components/Explain";
+import FAQ from "@/pages/Price/components/FAQ";
+import Footer from "@/pages/Price/components/Footer";
 
 const { Title, Text } = Typography;
 
