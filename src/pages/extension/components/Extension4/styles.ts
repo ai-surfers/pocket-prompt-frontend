@@ -45,11 +45,20 @@ export const Title = styled.h2`
 `;
 
 export const SpeechBalloonWrap = styled.div`
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 500px;
     height: 333px;
+`;
+
+export const SpeechBallonMouseImage = styled.img`
+    position: absolute;
+    width: 113px;
+    height: 96px;
+    bottom: -47px;
+    right: 78px;
 `;
 
 export const SpeechBalloon = styled.img`
