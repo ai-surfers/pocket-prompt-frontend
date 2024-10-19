@@ -17,6 +17,17 @@ const colors = {
     primary_dark: "#535DBF",
     primary_light: "#9EADFC",
     primary_xlight: "#CEDEFF",
+    primary_100: "#7580EA",
+    primary_90: "#BBC0F5",
+    primary_80: "#9199EE",
+    primary_70: "#9FA7F1",
+    primary_60: "#ACB3F2",
+    primary_50: "#BBC0F5",
+    primary_40: "#C8CCF7",
+    primary_30: "#D6D9F9",
+    primary_20: "#E3E6FB",
+    primary_10: "#F2F3FD",
+    primary_5: "#F8F8FE",
 };
 
 const fonts = {
@@ -84,6 +95,74 @@ const fonts = {
         font-weight: 700;
         line-height: 144%; /* 34.56px */
         letter-spacing: -0.48px;
+    `,
+    h1_24_semi: css`
+        /* h1_24/semi */
+        font-family: Pretendard;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 144%; /* 34.56px */
+        letter-spacing: -0.48px;
+    `,
+    h1_24_med: css`
+        font-family: Pretendard;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 144%; /* 34.56px */
+        letter-spacing: -0.48px;
+    `,
+    h1_24_reg: css`
+        font-family: Pretendard;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 144%; /* 34.56px */
+        letter-spacing: -0.48px;
+    `,
+    h2_20_bold: css`
+        /* h2_20/bold */
+        font-family: Pretendard;
+        font-size: 1.25rem;
+        line-height: 144%; /* 28.8px */
+        letter-spacing: -0.4px;
+        font-style: normal;
+        font-weight: 700;
+    `,
+    b1_18_bold: css`
+        /* b1_18/bold */
+        font-family: Pretendard;
+        font-size: 1.125rem;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 150%; /* 1.6875rem */
+        letter-spacing: -0.0225rem;
+    `,
+    b2_16_semi: css`
+        /* b2_16/semi */
+        font-family: Pretendard;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 150%; /* 1.5rem */
+    `,
+    b3_14_reg: css`
+        /* b3_14/reg */
+        font-family: Pretendard;
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%; /* 1.3125rem */
+        letter-spacing: -0.0175rem;
+    `,
+    c1_12_semi: css`
+        /* c1_12/semi */
+        font-family: Pretendard;
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 150%; /* 1.125rem */
     `,
 };
 
