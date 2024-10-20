@@ -21,9 +21,9 @@
         "jsx": "react-jsx",
 
         /* 절대 경로 */
-        "baseUrl": "./src",
+        "baseUrl": ".",
         "paths": {
-            "@/*": ["./*"]
+            "@/*": ["./src/*"]
         }
     },
     "include": ["src", "**/*.ts", "**/*.tsx", "vite.config.ts"]
