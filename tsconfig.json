@@ -12,8 +12,8 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
 
-        /* Node mode */
-        "moduleResolution": "node",
+        /* Bundler mode */
+        "moduleResolution": "bundler",
         "allowImportingTsExtensions": true,
         "isolatedModules": true,
         "moduleDetection": "force",
