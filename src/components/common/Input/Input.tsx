@@ -14,7 +14,7 @@ export default function Input({
     count,
     disabled = false,
 }: InputProps) {
-    function handleChange(e) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const value = e.target.value;
 
         if (count && value.length > count) return;
