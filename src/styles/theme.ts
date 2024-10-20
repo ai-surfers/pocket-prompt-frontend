@@ -147,6 +147,24 @@ const fonts = {
         font-weight: 600;
         line-height: 150%; /* 1.5rem */
     `,
+    b3_14_semi: css`
+        /* b3_14/semi */
+        font-family: Pretendard;
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 150%; /* 1.3125rem */
+        letter-spacing: -0.0175rem;
+    `,
+    b3_14_med: css`
+        /* b3_14/med */
+        font-family: Pretendard;
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 150%; /* 1.3125rem */
+        letter-spacing: -0.0175rem;
+    `,
     b3_14_reg: css`
         /* b3_14/reg */
         font-family: Pretendard;

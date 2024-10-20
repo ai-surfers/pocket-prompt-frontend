@@ -1,13 +1,15 @@
 import Input from "@/components/common/Input/Input";
 import Textarea from "@/components/common/Textarea/Textarea";
+import Toggle from "@/components/common/Toggle/Toggle";
 import { Wrapper } from "@/layouts/Layout";
-import { Flex, Select } from "antd";
+import { Flex, Select, Space } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
 
 export default function PromptNewPage() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [visible, setVisible] = useState("Public");
 
     return (
         <Container>
@@ -20,7 +22,7 @@ export default function PromptNewPage() {
                 <Box flex="3">
                     <BoxTitle>내 프롬프트 미리보기</BoxTitle>
 
-                    <Flex vertical gap={30}>
+                    <Flex vertical gap={30} style={{ marginTop: "24px" }}>
                         <Flex vertical gap={6}>
                             <ExampleBox>
                                 프롬프트 제목이 이곳에 표시됩니다.
@@ -36,9 +38,16 @@ export default function PromptNewPage() {
                     </Flex>
                 </Box>
                 <Box flex="7" border="primary_50">
-                    <BoxTitle>내 프롬프트 입력하기</BoxTitle>
+                    <Flex justify="space-between" align="center">
+                        <BoxTitle>내 프롬프트 입력하기</BoxTitle>
+                        <Toggle
+                            items={["Public", "Private"]}
+                            value={visible}
+                            onChange={(val) => setVisible(val)}
+                        />
+                    </Flex>
 
-                    <InputBoxContainer>
+                    <InputBoxContainer style={{ marginTop: "9px" }}>
                         <InputBox>
                             <InputTitleBox>
                                 <InputTitle>프롬프트 제목</InputTitle>
@@ -50,6 +59,7 @@ export default function PromptNewPage() {
                                 placeholder="프롬프트의 제목을 입력해주세요."
                                 value={title}
                                 onChange={(val) => setTitle(val)}
+                                count={300}
                             />
                         </InputBox>
 
@@ -70,7 +80,7 @@ export default function PromptNewPage() {
                                 placeholder="예시: 주제와 청중을 입력하면 근사한 파워포인트 초안을 만들어주는 프롬프트"
                                 value={description}
                                 onChange={(val) => setDescription(val)}
-                                count={100}
+                                count={4000}
                             />
                         </InputBox>
 
@@ -202,7 +212,6 @@ const Box = styled.div<{ flex: string; border?: string }>`
 
 const BoxTitle = styled.div`
     ${({ theme }) => theme.fonts.h2_20_bold};
-    margin-bottom: 24px;
 `;
 
 const InputBoxContainer = styled.div`
