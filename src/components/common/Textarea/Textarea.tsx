@@ -70,6 +70,7 @@ const TextareaContainer = styled.div<{ $length: number; $disabled?: boolean }>`
         css`
             background: ${theme.colors.G_100};
             border: 1px solid ${theme.colors.G_100};
+            pointer-events: none;
         `}
 `;
 

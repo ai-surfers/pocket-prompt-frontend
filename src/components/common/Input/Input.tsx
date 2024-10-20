@@ -67,6 +67,7 @@ const InputContainer = styled.div<{ $length: number; $disabled?: boolean }>`
             background: ${theme.colors.G_100};
             border: 1px solid ${theme.colors.G_100};
             color: ${theme.colors.G_300};
+            pointer-events: none;
         `}
 `;
 
