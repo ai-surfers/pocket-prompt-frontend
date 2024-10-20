@@ -5,6 +5,7 @@ import HomePage from "@/pages/home";
 import PricePage from "@/pages/price";
 import MyPage from "@/pages/my";
 import ExtensionPage from "@/pages/extension";
+import PromptNewPage from "@/pages/promptNew";
 
 const router = createBrowserRouter([
     {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
             {
                 path: "/my",
                 element: <MyPage />,
+            },
+            {
+                path: "/prompt-new",
+                element: <PromptNewPage />,
             },
         ],
     },
