@@ -23,7 +23,7 @@
         /* 절대 경로 */
         "baseUrl": ".",
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": ["src/*"]
         }
     },
     "include": ["src", "**/*.ts", "**/*.tsx", "vite.config.ts"]
