@@ -2,7 +2,6 @@
 // 제가 Front-end를 아예 모릅니다 아마 처음부터 갈아 엎어야 할거예요...
 // Footer를 급하게 작성했습니다. 발퍼블 죄송합니다 🙏
 
-import React from "react";
 import LogoImage from "@/assets/images/logo-white.png";
 import {
     CompanyName,
