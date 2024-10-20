@@ -6,11 +6,12 @@ import PricePage from "@/pages/price";
 import MyPage from "@/pages/my";
 import ExtensionPage from "@/pages/extension";
 import PromptNewPage from "@/pages/promptNew";
+import FooterLayout from "@/layouts/FooterLayout";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Layout />,
+        element: <FooterLayout />,
         children: [
             {
                 path: "/",
@@ -24,13 +25,19 @@ const router = createBrowserRouter([
                 path: "/price",
                 element: <PricePage />,
             },
-            {
-                path: "/my",
-                element: <MyPage />,
-            },
+        ],
+    },
+    {
+        path: "/",
+        element: <Layout />,
+        children: [
             {
                 path: "/prompt-new",
                 element: <PromptNewPage />,
+            },
+            {
+                path: "/my",
+                element: <MyPage />,
             },
         ],
     },
