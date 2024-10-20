@@ -1,4 +1,6 @@
+import { IcInfoCircle } from "@/assets/svg";
 import Input from "@/components/common/Input/Input";
+import Text from "@/components/common/Text/Text";
 import Textarea from "@/components/common/Textarea/Textarea";
 import Toggle from "@/components/common/Toggle/Toggle";
 import { AIPlatforms, Categories } from "@/core/Prompt";
@@ -22,33 +24,45 @@ export default function PromptNewPage() {
 
     return (
         <Container>
-            <Title>나만의 프롬프트 등록하기</Title>
-            <Description>
-                실시간으로 미리보기 화면을 보면서 등록하는 나만의 프롬프트
-            </Description>
+            <Text font="large_32_bold" style={{ marginTop: "40px" }}>
+                나만의 프롬프트 등록하기
+            </Text>
 
-            <BoxContainer>
+            <Text font="h2_20_reg" color="G_400">
+                실시간으로 미리보기 화면을 보면서 등록하는 나만의 프롬프트
+            </Text>
+
+            <Flex
+                justify="space-between"
+                align="stretch"
+                gap={16}
+                style={{ marginTop: "32px" }}
+            >
                 <Box flex="3">
-                    <BoxTitle>내 프롬프트 미리보기</BoxTitle>
+                    <Text font="h2_20_bold">내 프롬프트 미리보기</Text>
 
                     <Flex vertical gap={30} style={{ marginTop: "24px" }}>
                         <Flex vertical gap={6}>
-                            <ExampleBox>
+                            <ExampleBox font="b3_14_reg" color="G_300">
                                 프롬프트 제목이 이곳에 표시됩니다.
                             </ExampleBox>
-                            <ExampleBox>
+                            <ExampleBox font="b3_14_reg" color="G_300">
                                 프롬프트 설명이 이곳에 표시됩니다.
                             </ExampleBox>
                         </Flex>
 
-                        <ExampleBox height="532px">
+                        <ExampleBox
+                            height="532px"
+                            font="b3_14_reg"
+                            color="G_300"
+                        >
                             프롬프트 내용에 따른 미리보기가 이곳에 표시됩니다.
                         </ExampleBox>
                     </Flex>
                 </Box>
                 <Box flex="7" border="primary_50">
                     <Flex justify="space-between" align="center">
-                        <BoxTitle>내 프롬프트 입력하기</BoxTitle>
+                        <Text font="h2_20_bold">내 프롬프트 입력하기</Text>
                         <Toggle
                             items={["Public", "Private"]}
                             value={visible}
@@ -56,14 +70,16 @@ export default function PromptNewPage() {
                         />
                     </Flex>
 
-                    <InputBoxContainer style={{ marginTop: "9px" }}>
+                    <Flex vertical gap={32} style={{ marginTop: "9px" }}>
                         <InputBox>
-                            <InputTitleBox>
-                                <InputTitle>프롬프트 제목</InputTitle>
-                                <InputTitleTagBox>
-                                    <InputTitleTag>필수</InputTitleTag>
-                                </InputTitleTagBox>
-                            </InputTitleBox>
+                            <Flex gap={12}>
+                                <Text font="b1_18_bold">프롬프트 제목</Text>
+                                <Flex gap={8}>
+                                    <Text font="c1_12_semi" color="primary_100">
+                                        필수
+                                    </Text>
+                                </Flex>
+                            </Flex>
                             <Input
                                 placeholder="프롬프트의 제목을 입력해주세요."
                                 value={title}
@@ -74,17 +90,19 @@ export default function PromptNewPage() {
                         </InputBox>
 
                         <InputBox>
-                            <InputTitleBox>
-                                <InputTitle>프롬프트 설명</InputTitle>
-                                <InputTitleTagBox>
-                                    <InputTitleTag>필수</InputTitleTag>
-                                </InputTitleTagBox>
-                            </InputTitleBox>
+                            <Flex gap={12}>
+                                <Text font="b1_18_bold">프롬프트 설명</Text>
+                                <Flex gap={8}>
+                                    <Text font="c1_12_semi" color="primary_100">
+                                        필수
+                                    </Text>
+                                </Flex>
+                            </Flex>
 
-                            <InputDescription>
+                            <Text font="b3_14_reg" color="G_400">
                                 다른 사람들이 프롬프트를 더 쉽게 이해할 수
                                 있도록 설명을 입력해주세요!
-                            </InputDescription>
+                            </Text>
 
                             <Textarea
                                 placeholder="예시: 주제와 청중을 입력하면 근사한 파워포인트 초안을 만들어주는 프롬프트"
@@ -95,18 +113,27 @@ export default function PromptNewPage() {
                         </InputBox>
 
                         <InputBox>
-                            <InputTitleBox>
-                                <InputTitle>프롬프트 템플릿</InputTitle>
+                            <Flex gap={12}>
+                                <Text font="b1_18_bold">프롬프트 템플릿</Text>
 
-                                <InputTitleTagBox>
-                                    <InputTitleTag>필수</InputTitleTag>
-                                </InputTitleTagBox>
-                            </InputTitleBox>
+                                <Flex gap={8}>
+                                    <Text font="c1_12_semi" color="primary_100">
+                                        필수
+                                    </Text>
+                                </Flex>
+                            </Flex>
 
-                            <InputDescription>
+                            <Text font="b3_14_reg" color="G_400">
                                 [주제], [청중] 처럼 다른 사용자들에게 입력 받고
                                 싶은 항목을 대괄호로 감싸주세요.
-                            </InputDescription>
+                            </Text>
+
+                            <Flex gap={4} justify="end">
+                                <Text font="b3_14_reg" color="primary_100">
+                                    어떻게 작성해야 할지 모르겠다면?
+                                </Text>
+                                <IcInfoCircle width={20} />
+                            </Flex>
 
                             <Textarea
                                 placeholder="예시: [주제]를 주제로 한 파워포인트의 초안을 작성해줘.
@@ -119,16 +146,24 @@ export default function PromptNewPage() {
 
                         <Flex style={{ width: "100%" }} gap={16}>
                             <InputBox style={{ flex: 1 }}>
-                                <InputTitleBox>
-                                    <InputTitle>사용한 AI</InputTitle>
+                                <Flex gap={12}>
+                                    <Text font="b1_18_bold">사용한 AI</Text>
 
-                                    <InputTitleTagBox>
-                                        <InputTitleTag>필수</InputTitleTag>
-                                        <InputTitleTag>
+                                    <Flex gap={8}>
+                                        <Text
+                                            font="c1_12_semi"
+                                            color="primary_100"
+                                        >
+                                            필수
+                                        </Text>
+                                        <Text
+                                            font="c1_12_semi"
+                                            color="primary_100"
+                                        >
                                             복수 선택 가능
-                                        </InputTitleTag>
-                                    </InputTitleTagBox>
-                                </InputTitleBox>
+                                        </Text>
+                                    </Flex>
+                                </Flex>
 
                                 <Select
                                     placeholder="사용한 AI를 선택해주세요."
@@ -139,16 +174,24 @@ export default function PromptNewPage() {
                             </InputBox>
 
                             <InputBox style={{ flex: 1 }}>
-                                <InputTitleBox>
-                                    <InputTitle>분야</InputTitle>
+                                <Flex gap={12}>
+                                    <Text font="b1_18_bold">분야</Text>
 
-                                    <InputTitleTagBox>
-                                        <InputTitleTag>필수</InputTitleTag>
-                                        <InputTitleTag>
+                                    <Flex gap={8}>
+                                        <Text
+                                            font="c1_12_semi"
+                                            color="primary_100"
+                                        >
+                                            필수
+                                        </Text>
+                                        <Text
+                                            font="c1_12_semi"
+                                            color="primary_100"
+                                        >
                                             최대 5개 선택 가능
-                                        </InputTitleTag>
-                                    </InputTitleTagBox>
-                                </InputTitleBox>
+                                        </Text>
+                                    </Flex>
+                                </Flex>
 
                                 <Select
                                     placeholder="프롬프트의 분야를 선택해주세요."
@@ -159,11 +202,11 @@ export default function PromptNewPage() {
                                 />
                             </InputBox>
                         </Flex>
-                    </InputBoxContainer>
+                    </Flex>
 
                     <Button>프롬프트 등록 완료하기</Button>
                 </Box>
-            </BoxContainer>
+            </Flex>
         </Container>
     );
 }
@@ -174,27 +217,6 @@ const Container = styled(Wrapper)`
     padding-left: 40px;
     padding-right: 40px;
     padding-bottom: 40px;
-`;
-
-const Title = styled.div`
-    font-size: 32px;
-    line-height: 144%; /* 46.08px */
-    letter-spacing: -0.64px;
-    ${({ theme }) => theme.fonts.bold};
-
-    margin-top: 40px;
-`;
-const Description = styled.div`
-    ${({ theme }) => theme.fonts.header2};
-    ${({ theme }) => theme.fonts.regular};
-
-    color: ${({ theme }) => theme.colors.G_400};
-`;
-
-const BoxContainer = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row", "space-between", "stretch")};
-    gap: 16px;
-    margin-top: 32px;
 `;
 
 const Box = styled.div<{ flex: string; border?: string }>`
@@ -208,41 +230,8 @@ const Box = styled.div<{ flex: string; border?: string }>`
     padding: 20px;
 `;
 
-const BoxTitle = styled.div`
-    ${({ theme }) => theme.fonts.h2_20_bold};
-`;
-
-const InputBoxContainer = styled.div`
-    ${({ theme }) =>
-        theme.mixins.flexBox("column", "flex-start", "flex-start")};
-    gap: 32px;
-`;
 const InputBox = styled.div`
     width: 100%;
-`;
-
-const InputTitleBox = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row", "flex-start")};
-    gap: 12px;
-`;
-
-const InputTitle = styled.div`
-    ${({ theme }) => theme.fonts.b1_18_bold};
-`;
-
-const InputTitleTag = styled.div`
-    ${({ theme }) => theme.fonts.c1_12_semi};
-    color: ${({ theme }) => theme.colors.primary_100};
-`;
-
-const InputTitleTagBox = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row")};
-    gap: 8px;
-`;
-
-const InputDescription = styled.div`
-    ${({ theme }) => theme.fonts.b3_14_reg};
-    color: ${({ theme }) => theme.colors.G_400};
 `;
 
 const Button = styled.button`
@@ -257,12 +246,13 @@ const Button = styled.button`
     ${({ theme }) => theme.fonts.b2_16_semi};
 `;
 
-const ExampleBox = styled.div<{ height?: string }>`
+const ExampleBox = styled(Text)<{ height?: string }>`
     width: 100%;
     min-height: ${({ height }) => (height ? height : 0)};
     border-radius: 8px;
     background: ${({ theme }) => theme.colors.G_50};
     padding: 11px 12px;
+
     ${({ theme }) => theme.fonts.b3_14_reg};
     color: ${({ theme }) => theme.colors.G_300};
 `;
