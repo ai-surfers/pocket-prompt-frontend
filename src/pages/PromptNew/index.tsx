@@ -1,4 +1,5 @@
 import { IcInfoCircle } from "@/assets/svg";
+import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
 import Textarea from "@/components/common/Textarea/Textarea";
@@ -204,7 +205,14 @@ export default function PromptNewPage() {
                         </Flex>
                     </Flex>
 
-                    <Button>프롬프트 등록 완료하기</Button>
+                    <Button
+                        size={52}
+                        width="100%"
+                        style={{ marginTop: "60px" }}
+                        type="disabled"
+                    >
+                        프롬프트 등록 완료하기
+                    </Button>
                 </Box>
             </Flex>
         </Container>
@@ -234,17 +242,17 @@ const InputBox = styled.div`
     width: 100%;
 `;
 
-const Button = styled.button`
-    width: 100%;
-    padding: 14px 16px;
-    ${({ theme }) => theme.mixins.flexBox()};
-    border-radius: 12px;
-    background: ${({ theme }) => theme.colors.G_100};
-    color: ${({ theme }) => theme.colors.G_300};
-    margin-top: 60px;
+// const Button = styled.button`
+//     width: 100%;
+//     padding: 14px 16px;
+//     ${({ theme }) => theme.mixins.flexBox()};
+//     border-radius: 12px;
+//     background: ${({ theme }) => theme.colors.G_100};
+//     color: ${({ theme }) => theme.colors.G_300};
+//     margin-top: 60px;
 
-    ${({ theme }) => theme.fonts.b2_16_semi};
-`;
+//     ${({ theme }) => theme.fonts.b2_16_semi};
+// `;
 
 const ExampleBox = styled(Text)<{ height?: string }>`
     width: 100%;
