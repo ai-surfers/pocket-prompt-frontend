@@ -1,11 +1,20 @@
 import Input from "@/components/common/Input/Input";
 import Textarea from "@/components/common/Textarea/Textarea";
 import Toggle from "@/components/common/Toggle/Toggle";
+import { AIPlatforms, Categories } from "@/core/Prompt";
 import { Wrapper } from "@/layouts/Layout";
-import { Flex, Select, Space } from "antd";
+import { Flex, Select } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
 
+const CATEGORY = Object.entries(Categories).map(([key, value]) => ({
+    key: key,
+    value: value.ko,
+}));
+const AI = Object.entries(AIPlatforms).map(([key, value]) => ({
+    key: key,
+    value: value,
+}));
 export default function PromptNewPage() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -60,6 +69,7 @@ export default function PromptNewPage() {
                                 value={title}
                                 onChange={(val) => setTitle(val)}
                                 count={300}
+                                disabled
                             />
                         </InputBox>
 
@@ -123,17 +133,9 @@ export default function PromptNewPage() {
                                 <Select
                                     placeholder="사용한 AI를 선택해주세요."
                                     style={{ width: "100%", marginTop: "8px" }}
-                                >
-                                    <Select.Option value="chatgpt">
-                                        ChatGPT
-                                    </Select.Option>
-                                    <Select.Option value="claude">
-                                        Claude
-                                    </Select.Option>
-                                    <Select.Option value="gemini">
-                                        Gemini
-                                    </Select.Option>
-                                </Select>
+                                    mode="multiple"
+                                    options={AI}
+                                />
                             </InputBox>
 
                             <InputBox style={{ flex: 1 }}>
@@ -151,14 +153,10 @@ export default function PromptNewPage() {
                                 <Select
                                     placeholder="프롬프트의 분야를 선택해주세요."
                                     style={{ width: "100%", marginTop: "8px" }}
-                                >
-                                    <Select.Option value="branding">
-                                        브랜딩
-                                    </Select.Option>
-                                    <Select.Option value="blog">
-                                        블로그
-                                    </Select.Option>
-                                </Select>
+                                    options={CATEGORY}
+                                    mode="multiple"
+                                    maxCount={5}
+                                />
                             </InputBox>
                         </Flex>
                     </InputBoxContainer>
