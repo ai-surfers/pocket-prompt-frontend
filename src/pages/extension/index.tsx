@@ -1,12 +1,12 @@
-import Extension1 from "@/pages/Extension/components/Extension1";
-import Extension2 from "@/pages/Extension/components/Extension2";
-import Extension3 from "@/pages/Extension/components/Extension3";
-import Extension4 from "@/pages/Extension/components/Extension4";
-import Extension5 from "@/pages/Extension/components/Extension5";
-import Extension6 from "@/pages/Extension/components/Extension6";
-import Extension7 from "@/pages/Extension/components/Extension7";
-import Extension8 from "@/pages/Extension/components/Extension8";
-import Extension9 from "@/pages/Extension/components/Extension9";
+import Extension1 from "./components/Extension1";
+import Extension2 from "./components/Extension2";
+import Extension3 from "./components/Extension3";
+import Extension4 from "./components/Extension4";
+import Extension5 from "./components/Extension5";
+import Extension6 from "./components/Extension6";
+import Extension7 from "./components/Extension7";
+import Extension8 from "./components/Extension8";
+import Extension9 from "./components/Extension9";
 import { ExtensionPageContainer } from "@/pages/Extension/styles";
 
 const ExtensionPage = () => {

@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
-import Layout from "@/layouts/Layout";
-import LayoutWithFooter from "@/layouts/LayoutWithFooter";
-import ExtensionPage from "@/pages/Extension";
-import HomePage from "@/pages/Home";
-import MyPage from "@/pages/My";
-import PricePage from "@/pages/Price";
-import PromptNewPage from "@/pages/PromptNew";
+import Layout from "../layouts/Layout";
+import LayoutWithFooter from "../layouts/LayoutWithFooter";
+import ExtensionPage from "../pages/Extension";
+import HomePage from "../pages/Home";
+import MyPage from "../pages/My";
+import PricePage from "../pages/Price";
+import PromptNewPage from "../pages/PromptNew";
 
 const router = createBrowserRouter([
     {
