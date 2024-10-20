@@ -40,7 +40,7 @@ export default function PromptNewPage() {
                 gap={16}
                 style={{ marginTop: "32px" }}
             >
-                <Box flex="3">
+                <Box $flex="3">
                     <Text font="h2_20_bold">내 프롬프트 미리보기</Text>
 
                     <Flex vertical gap={30} style={{ marginTop: "24px" }}>
@@ -54,7 +54,7 @@ export default function PromptNewPage() {
                         </Flex>
 
                         <ExampleBox
-                            height="532px"
+                            $height="532px"
                             font="b3_14_reg"
                             color="G_300"
                         >
@@ -62,7 +62,7 @@ export default function PromptNewPage() {
                         </ExampleBox>
                     </Flex>
                 </Box>
-                <Box flex="7" border="primary_50">
+                <Box $flex="7" $border="primary_50">
                     <Flex justify="space-between" align="center">
                         <Text font="h2_20_bold">내 프롬프트 입력하기</Text>
                         <Toggle
@@ -167,20 +167,20 @@ const Container = styled(Wrapper)`
     padding-bottom: 40px;
 `;
 
-const Box = styled.div<{ flex: string; border?: string }>`
-    flex: ${({ flex }) => flex};
+const Box = styled.div<{ $flex: string; $border?: string }>`
+    flex: ${({ $flex }) => $flex};
 
     border-radius: 16px;
     border: 1.5px solid
-        ${({ border, theme }) =>
-            border ? theme.colors[border] : theme.colors.G_100};
+        ${({ $border, theme }) =>
+            $border ? theme.colors[$border] : theme.colors.G_100};
     background: #fff;
     padding: 20px;
 `;
 
-const ExampleBox = styled(Text)<{ height?: string }>`
+const ExampleBox = styled(Text)<{ $height?: string }>`
     width: 100%;
-    min-height: ${({ height }) => (height ? height : 0)};
+    min-height: ${({ $height }) => ($height ? $height : 0)};
     border-radius: 8px;
     background: ${({ theme }) => theme.colors.G_50};
     padding: 11px 12px;

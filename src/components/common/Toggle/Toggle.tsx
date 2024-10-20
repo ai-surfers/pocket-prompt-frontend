@@ -7,7 +7,7 @@ interface ToggleProps {
     onChange: (value: string) => void;
 }
 export default function Toggle({ items, value, onChange }: ToggleProps) {
-    const activeIndex = useMemo(() => {
+    const $activeIndex = useMemo(() => {
         return items.indexOf(value);
     }, [value, items]);
 
@@ -18,8 +18,8 @@ export default function Toggle({ items, value, onChange }: ToggleProps) {
     return (
         <ToggleContainer>
             <SlideBackground
-                activeIndex={activeIndex}
-                itemCount={items.length}
+                $activeIndex={$activeIndex}
+                $itemcount={items.length}
             />
             {items.map((it) => (
                 <Item
@@ -51,13 +51,13 @@ interface ItemProps {
 }
 const Item = ({ active, children, onClick }: PropsWithChildren<ItemProps>) => {
     return (
-        <ItemContainer active={active} onClick={onClick}>
+        <ItemContainer $active={active} onClick={onClick}>
             {children}
         </ItemContainer>
     );
 };
 
-const ItemContainer = styled.div<{ active?: boolean }>`
+const ItemContainer = styled.div<{ $active?: boolean }>`
     ${({ theme }) => theme.mixins.flexBox()}
     flex: 1;
     border-radius: 6px;
@@ -67,27 +67,30 @@ const ItemContainer = styled.div<{ active?: boolean }>`
     ${({ theme }) => theme.fonts.b3_14_med};
     z-index: 1;
 
-    ${({ theme, active }) =>
-        active &&
+    ${({ theme, $active }) =>
+        $active &&
         css`
             ${theme.fonts.b3_14_semi}
             color: ${theme.colors.primary_100};
         `};
 `;
 
-const SlideBackground = styled.div<{ activeIndex: number; itemCount: number }>`
+const SlideBackground = styled.div<{
+    $activeIndex: number;
+    $itemcount: number;
+}>`
     position: absolute;
     top: 4px;
     left: 4px;
     z-index: 0;
 
     height: calc(100% - 8px);
-    width: ${({ itemCount }) => `calc((100% - 12px) / ${itemCount})`};
+    width: ${({ $itemcount }) => `calc((100% - 12px) / ${$itemcount})`};
     border-radius: 6px;
 
     background: ${({ theme }) => theme.colors.white};
     box-shadow: 0px 0px 64px 0px rgba(117, 128, 234, 0.6);
 
     transition: transform 0.3s ease;
-    transform: translateX(${({ activeIndex }) => `${activeIndex * 101}%`});
+    transform: translateX(${({ $activeIndex }) => `${$activeIndex * 101}%`});
 `;
