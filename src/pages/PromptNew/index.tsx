@@ -6,6 +6,7 @@ import Textarea from "@/components/common/Textarea/Textarea";
 import Toggle from "@/components/common/Toggle/Toggle";
 import { AIPlatforms, Categories } from "@/core/Prompt";
 import { Wrapper } from "@/layouts/Layout";
+import FormItem from "@/pages/PromptNew/components/FormItem";
 import { Flex, Select } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
@@ -72,15 +73,7 @@ export default function PromptNewPage() {
                     </Flex>
 
                     <Flex vertical gap={32} style={{ marginTop: "9px" }}>
-                        <InputBox>
-                            <Flex gap={12}>
-                                <Text font="b1_18_bold">프롬프트 제목</Text>
-                                <Flex gap={8} align="center">
-                                    <Text font="c1_12_semi" color="primary_100">
-                                        필수
-                                    </Text>
-                                </Flex>
-                            </Flex>
+                        <FormItem title="프롬프트 제목" tags={["필수"]}>
                             <Input
                                 placeholder="프롬프트의 제목을 입력해주세요."
                                 value={title}
@@ -88,47 +81,26 @@ export default function PromptNewPage() {
                                 count={300}
                                 disabled
                             />
-                        </InputBox>
+                        </FormItem>
 
-                        <InputBox>
-                            <Flex gap={12}>
-                                <Text font="b1_18_bold">프롬프트 설명</Text>
-                                <Flex gap={8} align="center">
-                                    <Text font="c1_12_semi" color="primary_100">
-                                        필수
-                                    </Text>
-                                </Flex>
-                            </Flex>
-
-                            <Text font="b3_14_reg" color="G_400">
-                                다른 사람들이 프롬프트를 더 쉽게 이해할 수
-                                있도록 설명을 입력해주세요!
-                            </Text>
-
+                        <FormItem
+                            title="프롬프트 설명"
+                            tags={["필수"]}
+                            description=" 다른 사람들이 프롬프트를 더 쉽게 이해할 수 있도록 설명을 입력해주세요!"
+                        >
                             <Textarea
                                 placeholder="예시: 주제와 청중을 입력하면 근사한 파워포인트 초안을 만들어주는 프롬프트"
                                 value={description}
                                 onChange={(val) => setDescription(val)}
                                 count={4000}
                             />
-                        </InputBox>
+                        </FormItem>
 
-                        <InputBox>
-                            <Flex gap={12}>
-                                <Text font="b1_18_bold">프롬프트 템플릿</Text>
-
-                                <Flex gap={8} align="center">
-                                    <Text font="c1_12_semi" color="primary_100">
-                                        필수
-                                    </Text>
-                                </Flex>
-                            </Flex>
-
-                            <Text font="b3_14_reg" color="G_400">
-                                [주제], [청중] 처럼 다른 사용자들에게 입력 받고
-                                싶은 항목을 대괄호로 감싸주세요.
-                            </Text>
-
+                        <FormItem
+                            title="프롬프트 템플릿"
+                            tags={["필수"]}
+                            description=" [주제], [청중] 처럼 다른 사용자들에게 입력 받고 싶은 항목을 대괄호로 감싸주세요."
+                        >
                             <Flex gap={4} justify="end">
                                 <Text font="b3_14_reg" color="primary_100">
                                     어떻게 작성해야 할지 모르겠다면?
@@ -141,59 +113,28 @@ export default function PromptNewPage() {
 총 10 슬라이드로 이루어져있고, 청중은 [청중]을 대상으로 고려해줘."
                                 value={description}
                                 onChange={(val) => setDescription(val)}
-                                disabled
                             />
-                        </InputBox>
+                        </FormItem>
 
                         <Flex style={{ width: "100%" }} gap={16}>
-                            <InputBox style={{ flex: 1 }}>
-                                <Flex gap={12}>
-                                    <Text font="b1_18_bold">사용한 AI</Text>
-
-                                    <Flex gap={8} align="center">
-                                        <Text
-                                            font="c1_12_semi"
-                                            color="primary_100"
-                                        >
-                                            필수
-                                        </Text>
-                                        <Text
-                                            font="c1_12_semi"
-                                            color="primary_100"
-                                        >
-                                            복수 선택 가능
-                                        </Text>
-                                    </Flex>
-                                </Flex>
-
+                            <FormItem
+                                title="사용한 AI"
+                                tags={["필수", "복수 선택 가능"]}
+                                style={{ flex: 1 }}
+                            >
                                 <Select
                                     placeholder="사용한 AI를 선택해주세요."
                                     style={{ width: "100%", marginTop: "8px" }}
                                     mode="multiple"
                                     options={AI}
                                 />
-                            </InputBox>
+                            </FormItem>
 
-                            <InputBox style={{ flex: 1 }}>
-                                <Flex gap={12}>
-                                    <Text font="b1_18_bold">분야</Text>
-
-                                    <Flex gap={8} align="center">
-                                        <Text
-                                            font="c1_12_semi"
-                                            color="primary_100"
-                                        >
-                                            필수
-                                        </Text>
-                                        <Text
-                                            font="c1_12_semi"
-                                            color="primary_100"
-                                        >
-                                            최대 5개 선택 가능
-                                        </Text>
-                                    </Flex>
-                                </Flex>
-
+                            <FormItem
+                                title="분야"
+                                tags={["필수", " 최대 5개 선택 가능"]}
+                                style={{ flex: 1 }}
+                            >
                                 <Select
                                     placeholder="프롬프트의 분야를 선택해주세요."
                                     style={{ width: "100%", marginTop: "8px" }}
@@ -201,7 +142,7 @@ export default function PromptNewPage() {
                                     mode="multiple"
                                     maxCount={5}
                                 />
-                            </InputBox>
+                            </FormItem>
                         </Flex>
                     </Flex>
 
@@ -235,10 +176,6 @@ const Box = styled.div<{ flex: string; border?: string }>`
             border ? theme.colors[border] : theme.colors.G_100};
     background: #fff;
     padding: 20px;
-`;
-
-const InputBox = styled.div`
-    width: 100%;
 `;
 
 const ExampleBox = styled(Text)<{ height?: string }>`
