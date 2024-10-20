@@ -75,7 +75,7 @@ export default function PromptNewPage() {
                         <InputBox>
                             <Flex gap={12}>
                                 <Text font="b1_18_bold">프롬프트 제목</Text>
-                                <Flex gap={8}>
+                                <Flex gap={8} align="center">
                                     <Text font="c1_12_semi" color="primary_100">
                                         필수
                                     </Text>
@@ -93,7 +93,7 @@ export default function PromptNewPage() {
                         <InputBox>
                             <Flex gap={12}>
                                 <Text font="b1_18_bold">프롬프트 설명</Text>
-                                <Flex gap={8}>
+                                <Flex gap={8} align="center">
                                     <Text font="c1_12_semi" color="primary_100">
                                         필수
                                     </Text>
@@ -117,7 +117,7 @@ export default function PromptNewPage() {
                             <Flex gap={12}>
                                 <Text font="b1_18_bold">프롬프트 템플릿</Text>
 
-                                <Flex gap={8}>
+                                <Flex gap={8} align="center">
                                     <Text font="c1_12_semi" color="primary_100">
                                         필수
                                     </Text>
@@ -150,7 +150,7 @@ export default function PromptNewPage() {
                                 <Flex gap={12}>
                                     <Text font="b1_18_bold">사용한 AI</Text>
 
-                                    <Flex gap={8}>
+                                    <Flex gap={8} align="center">
                                         <Text
                                             font="c1_12_semi"
                                             color="primary_100"
@@ -178,7 +178,7 @@ export default function PromptNewPage() {
                                 <Flex gap={12}>
                                     <Text font="b1_18_bold">분야</Text>
 
-                                    <Flex gap={8}>
+                                    <Flex gap={8} align="center">
                                         <Text
                                             font="c1_12_semi"
                                             color="primary_100"
@@ -209,7 +209,6 @@ export default function PromptNewPage() {
                         size={52}
                         width="100%"
                         style={{ marginTop: "60px" }}
-                        type="disabled"
                     >
                         프롬프트 등록 완료하기
                     </Button>
@@ -241,18 +240,6 @@ const Box = styled.div<{ flex: string; border?: string }>`
 const InputBox = styled.div`
     width: 100%;
 `;
-
-// const Button = styled.button`
-//     width: 100%;
-//     padding: 14px 16px;
-//     ${({ theme }) => theme.mixins.flexBox()};
-//     border-radius: 12px;
-//     background: ${({ theme }) => theme.colors.G_100};
-//     color: ${({ theme }) => theme.colors.G_300};
-//     margin-top: 60px;
-
-//     ${({ theme }) => theme.fonts.b2_16_semi};
-// `;
 
 const ExampleBox = styled(Text)<{ height?: string }>`
     width: 100%;
