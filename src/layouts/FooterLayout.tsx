@@ -1,14 +1,16 @@
 import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
-export default function Layout() {
+export default function FooterLayout() {
     return (
         <LayoutContainer>
             <Header />
             <ContentWrapper>
                 <Outlet />
             </ContentWrapper>
+            <Footer />
         </LayoutContainer>
     );
 }

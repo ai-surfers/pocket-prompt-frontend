@@ -12,13 +12,17 @@ const Styles = ({ children }: StylesProps) => {
         <ConfigProvider
             theme={{
                 token: {
-                    colorPrimary: "#4A7DFF", //#4A7DFF
+                    colorPrimary: "#7580EA",
                     fontFamily: "Pretendard",
                 },
                 components: {
                     Typography: {
                         titleMarginBottom: "10px",
                         titleMarginTop: 0,
+                    },
+                    Select: {
+                        optionSelectedColor: "#7580EA",
+                        optionSelectedBg: "#F2F3FD",
                     },
                 },
             }}
