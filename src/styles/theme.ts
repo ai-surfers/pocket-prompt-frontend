@@ -17,10 +17,16 @@ const colors = {
     primary_dark: "#535DBF",
     primary_light: "#9EADFC",
     primary_xlight: "#CEDEFF",
+    primary_xxlight: "#E3E6FB",
 };
 
 const fonts = {
     // 명칭
+    header0: css`
+        font-size: 36px;
+        line-height: 136%; /* 48.96px */
+        letter-spacing: -0.72px;
+    `,
     header1: css`
         font-size: 24px;
         line-height: 144%; /* 34.56px */
