@@ -28,6 +28,7 @@ const colors = {
     primary_20: "#E3E6FB",
     primary_10: "#F2F3FD",
     primary_5: "#F8F8FE",
+    primary_xxlight: "#E3E6FB",
 };
 
 const fonts = {
