@@ -17,6 +17,7 @@ const colors = {
     primary_dark: "#535DBF",
     primary_light: "#9EADFC",
     primary_xlight: "#CEDEFF",
+    primary_xxlight: "#E3E6FB",
 };
 
 const fonts = {
