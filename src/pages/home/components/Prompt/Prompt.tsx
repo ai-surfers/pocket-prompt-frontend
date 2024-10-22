@@ -1,5 +1,5 @@
 import BookMark from "@/assets/svg/home/BookMark";
-import Eye from "@/assets/svg/home/eye";
+import Eye from "@/assets/svg/home/Eye";
 import Play from "@/assets/svg/home/Play";
 import theme from "@/styles/theme";
 import * as S from "./styles";
@@ -26,15 +26,15 @@ const Prompt = ({ colored }: PromptProps) => {
             </S.TitlesWrapper>
             <S.DetailsWrapper>
                 <S.Details>
-                    <Eye color={pointColor} />
+                    <Eye stroke={pointColor} />
                     <S.Numbers color={pointColor}>1254</S.Numbers>
                 </S.Details>
                 <S.Details>
-                    <Play color={pointColor} />
+                    <Play stroke={pointColor} />
                     <S.Numbers color={pointColor}>258</S.Numbers>
                 </S.Details>
                 <S.Details>
-                    <BookMark color={pointColor} />
+                    <BookMark stroke={pointColor} />
                     <S.Numbers color={pointColor}>258</S.Numbers>
                 </S.Details>
             </S.DetailsWrapper>

@@ -26,7 +26,7 @@ const BannerWrapper = styled.div`
         ${({ theme }) => theme.colors.G_100} 76.47%,
         ${({ theme }) => theme.colors.white} 100%
     );
-    margin-top: 40px;
+    position: relative;
 `;
 
 const BannerTitle = styled.div`
