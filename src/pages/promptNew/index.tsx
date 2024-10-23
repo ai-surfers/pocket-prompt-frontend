@@ -39,6 +39,7 @@ export default function PromptNewPage() {
                     justify="space-between"
                     align="stretch"
                     gap={16}
+                    wrap="wrap"
                     style={{ marginTop: "32px" }}
                 >
                     <Box flex="3">
@@ -173,6 +174,7 @@ const Container = styled.div`
 `;
 
 const PromptNewWrapper = styled(Wrapper)`
+    min-width: 1080px;
     padding-left: 40px;
     padding-right: 40px;
     padding-bottom: 40px;
