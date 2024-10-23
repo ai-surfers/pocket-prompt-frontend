@@ -26,6 +26,10 @@ const AI = Object.entries(AIPlatforms).map(([key, value]) => ({
 export default function PromptNewPage() {
     const form = useForm<PromptSchemaType>({
         resolver: zodResolver(promptSchema),
+        defaultValues: {
+            visibility: "Public",
+            categories: [],
+        },
     });
     const { control, handleSubmit, watch } = form;
 
