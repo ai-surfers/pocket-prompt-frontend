@@ -7,7 +7,7 @@ export const PromptWrapper = styled.div<{ colored: boolean }>`
     border-radius: 12px;
     border: 1.5px solid;
     border-color: ${({ theme, colored }) =>
-        colored ? "#ACB3F2" : theme.colors.primary_xxlight};
+        colored ? "#ACB3F2" : theme.colors.primary_20};
     padding: 16px;
     gap: 9.5px;
     background-color: ${({ colored, theme }) =>
@@ -35,7 +35,7 @@ export const TitlesWrapper = styled.div`
     height: 76px;
     padding-bottom: 15.5px;
     border-bottom: 1.5px solid;
-    border-color: ${({ theme }) => theme.colors.primary_xxlight};
+    border-color: ${({ theme }) => theme.colors.primary_20};
 `;
 
 export const Title = styled.div<{ colored: boolean }>`
