@@ -32,7 +32,8 @@ const BannerWrapper = styled.div`
 const BannerTitle = styled.div`
     ${({ theme }) => theme.mixins.flexBox("column")};
     text-align: center;
-    ${({ theme }) => theme.fonts.header0};
+    ${({ theme }) => theme.fonts.xlarge};
+    line-height: 136%;
     ${({ theme }) => theme.fonts.bold};
     color: ${({ theme }) => theme.colors.white};
 
