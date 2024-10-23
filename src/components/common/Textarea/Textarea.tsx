@@ -10,7 +10,7 @@ export interface TextareaProps {
 
 export default function Textarea({
     placeholder,
-    value,
+    value = "",
     onChange,
     count,
     disabled = false,
