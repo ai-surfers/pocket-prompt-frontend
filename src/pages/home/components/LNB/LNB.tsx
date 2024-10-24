@@ -12,11 +12,11 @@ const LNB = () => {
     const [selectedKey, setSelectedKey] = useState<string>("1");
 
     const menuItems = [
-        { key: "1", label: "텍스트 프롬프트", icon: <TextSVG /> },
-        { key: "2", label: "이미지 프롬프트", icon: <Image /> },
-        { key: "3", label: "동영상 프롬프트", icon: <Video /> },
+        { key: "1", label: "텍스트 프롬프트", icon: TextSVG },
+        { key: "2", label: "이미지 프롬프트", icon: Image },
+        { key: "3", label: "동영상 프롬프트", icon: Video },
         { type: "divider", key: "divider-1" },
-        { key: "4", label: "저장한 프롬프트", icon: <BookMark /> },
+        { key: "4", label: "저장한 프롬프트", icon: BookMark },
     ];
 
     // 메뉴 항목을 동적으로 생성
@@ -27,13 +27,13 @@ const LNB = () => {
 
         return {
             key: item.key,
-            icon: (
+            icon: item.icon ? ( // icon이 있는 경우에만 MenuItemIcon 렌더링
                 <MenuItemIcon
                     menuKey={item.key}
                     icon={item.icon}
                     selectedKey={selectedKey}
                 />
-            ),
+            ) : null,
             label: item.label,
         };
     });
