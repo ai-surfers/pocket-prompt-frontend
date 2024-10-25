@@ -18,14 +18,7 @@ const BannerWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox("column")};
     height: 328px;
     border-radius: 16px;
-    background: linear-gradient(
-        180deg,
-        ${({ theme }) => theme.colors.primary} 0%,
-        ${({ theme }) => theme.colors.primary_light} 23.99%,
-        ${({ theme }) => theme.colors.primary_xlight} 49.55%,
-        ${({ theme }) => theme.colors.G_100} 76.47%,
-        ${({ theme }) => theme.colors.white} 100%
-    );
+    background: ${({ theme }) => theme.mixins.gradientPrimary()}
     position: relative;
 `;
 
