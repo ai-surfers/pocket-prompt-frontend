@@ -478,6 +478,17 @@ const mixins = {
             animation: ${fadeIn} 0.5s ease-in-out, ${slideUp} 0.5s ease-in-out;
         `;
     },
+
+    gradientPrimary: () => css`
+        linear-gradient(
+            180deg,
+            ${colors.primary} 0%,
+            ${colors.primary_light} 23.99%,
+            ${colors.primary_xlight} 49.55%,
+            ${colors.G_100} 76.47%,
+            ${colors.white} 100%
+        );
+    `,
 };
 
 const theme = { colors, fonts, mixins };
