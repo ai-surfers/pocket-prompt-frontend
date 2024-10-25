@@ -1,17 +1,22 @@
 import {
     ContentWrap,
-    DownloadButton,
-    DownloadButtonText,
     Extension1Container,
     Extension1Wrap,
-    IconWrap,
     MainTitle,
     SubTitle,
     DemoVideo,
+    VideoWrap,
+    VideoBandImage,
+    VideoBandHalfImage,
+    VideoStarImage,
     BelowDownloadButtonText,
 } from "./styles";
 import ArrowUpRight from "@/assets/svg/extension/ArrowUpRight";
 import DemoVideoGif from "@/assets/images/extension/pocket-prompt-demo-video.gif";
+import VideoBand from "@/assets/svg/extension/video-band.svg";
+import VideoBandHalf from "@/assets/svg/extension/video-band-half.svg";
+import VideoStar from "@/assets/svg/extension/video-star.svg";
+import { DownloadButton, DownloadButtonText, IconWrap } from "../styles";
 const Extension1 = () => {
     return (
         <Extension1Container>
@@ -45,7 +50,15 @@ const Extension1 = () => {
                         당신의 챗GPT에 날개를 달아주세요
                     </BelowDownloadButtonText>
                 </ContentWrap>
-                <DemoVideo src={DemoVideoGif} alt="Pocket Prompt 데모 비디오" />
+                <VideoWrap>
+                    <DemoVideo
+                        src={DemoVideoGif}
+                        alt="Pocket Prompt 데모 비디오"
+                    />
+                    <VideoBandImage src={VideoBand} />
+                    <VideoBandHalfImage src={VideoBandHalf} />
+                    <VideoStarImage src={VideoStar} />
+                </VideoWrap>
             </Extension1Wrap>
         </Extension1Container>
     );
