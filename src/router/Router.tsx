@@ -7,10 +7,12 @@ import MyPage from "@/pages/my";
 import ExtensionPage from "@/pages/extension";
 import PromptNewPage from "@/pages/promptNew";
 import FooterLayout from "@/layouts/FooterLayout";
+import NotFound from "@/pages/NotFound";
 
 const router = createBrowserRouter([
     {
         path: "/",
+        errorElement: <NotFound />,
         element: <FooterLayout />,
         children: [
             {
