@@ -31,7 +31,12 @@ export default function PromptNewPage() {
             categories: [],
         },
     });
-    const { control, handleSubmit, watch } = form;
+    const {
+        control,
+        handleSubmit,
+        watch,
+        formState: { isValid },
+    } = form;
 
     useEffect(() => {
         const subscription = watch((values) => {
@@ -186,14 +191,21 @@ export default function PromptNewPage() {
                                         tags={["필수", "복수 선택 가능"]}
                                         style={{ flex: 1 }}
                                     >
-                                        <Select
-                                            placeholder="사용한 AI를 선택해주세요."
-                                            style={{
-                                                width: "100%",
-                                                marginTop: "8px",
-                                            }}
-                                            mode="multiple"
-                                            options={AI}
+                                        <Controller
+                                            name="ai_platforms_used"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <Select
+                                                    placeholder="사용한 AI를 선택해주세요."
+                                                    style={{
+                                                        width: "100%",
+                                                        marginTop: "8px",
+                                                    }}
+                                                    mode="multiple"
+                                                    options={AI}
+                                                    onChange={field.onChange}
+                                                />
+                                            )}
                                         />
                                     </FormItem>
 
@@ -229,6 +241,7 @@ export default function PromptNewPage() {
                             width="100%"
                             style={{ marginTop: "60px" }}
                             onClick={handleClickSubmit}
+                            hierarchy={isValid ? "primary" : "disabled"}
                         >
                             프롬프트 등록 완료하기
                         </Button>
