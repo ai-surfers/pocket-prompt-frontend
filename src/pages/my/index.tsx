@@ -6,6 +6,7 @@ import { useUser } from "@/hooks/useUser";
 import { useNavigate } from "react-router-dom";
 import { useGetPaymetns } from "@/hooks/queries/payments/useGetPayments";
 import { usePutPayments } from "@/hooks/mutations/payments/usePutPayments";
+import * as Sentry from "@Sentry/react";
 
 const { Title, Text } = Typography;
 
@@ -72,11 +73,22 @@ export default function MyPage() {
 
     const { data } = useGetPaymetns();
 
+    function throwError() {
+        try {
+            throw new Error("커스텀 에러 발생, 센트리 에러 테스트");
+        } catch (error) {
+            Sentry.captureException(error);
+        }
+    }
     console.log(">> data", data);
     return (
         <Container>
             <Wrapper>
-                <Title level={2} style={{ marginBottom: "20px" }}>
+                <Title
+                    level={2}
+                    style={{ marginBottom: "20px" }}
+                    onClick={throwError}
+                >
                     구독 관리
                 </Title>
                 <Space

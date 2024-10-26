@@ -16,6 +16,10 @@ export default defineConfig({
         sentryVitePlugin({
             org: "aisurfers",
             project: "pocket-prompt-web",
+            sourcemaps: {
+                assets: "./dist/**",
+                filesToDeleteAfterUpload: "./dist/**/*.map",
+            },
         }),
     ],
 
