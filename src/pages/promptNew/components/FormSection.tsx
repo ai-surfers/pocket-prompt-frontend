@@ -31,6 +31,12 @@ function FormSection({ onSumbit }: FormSectionProps) {
         formState: { isValid },
     } = useFormContext<PromptSchemaType>();
 
+    function goToGuide() {
+        const url =
+            "https://pocket-prompt.notion.site/da477857a0cc44888b06dd23cf6682ff";
+        window.open(url, "_blank");
+    }
+
     return (
         <Box>
             <Flex justify="space-between" align="center">
@@ -88,12 +94,16 @@ function FormSection({ onSumbit }: FormSectionProps) {
                         tags={["필수"]}
                         description=" [주제], [청중] 처럼 다른 사용자들에게 입력 받고 싶은 항목을 대괄호로 감싸주세요."
                     >
-                        <Flex gap={4} justify="end">
-                            <Text font="b3_14_reg" color="primary_100">
+                        <HelpBox>
+                            <Text
+                                font="b3_14_reg"
+                                color="primary_100"
+                                onClick={goToGuide}
+                            >
                                 어떻게 작성해야 할지 모르겠다면?
                             </Text>
                             <IcInfoCircle width={20} />
-                        </Flex>
+                        </HelpBox>
 
                         <Controller
                             name="prompt_template"
@@ -184,4 +194,16 @@ const Box = styled.div`
     border: 1.5px solid ${({ theme }) => theme.colors.primary_50};
     background: #fff;
     padding: 20px;
+`;
+
+const HelpBox = styled.div`
+    ${({ theme }) => theme.mixins.flexBox()};
+    gap: 4px;
+    justify-self: flex-end;
+
+    cursor: pointer;
+    transition: opacity 0.2s;
+    &:hover {
+        opacity: 0.6;
+    }
 `;
