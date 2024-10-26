@@ -1,7 +1,6 @@
 // Keys
 export enum LOCALSTORAGE_KEYS {
     ACCESS_TOKEN = "access_token",
-    REDIRECT_URL = "redirect_url",
 }
 
 /**
