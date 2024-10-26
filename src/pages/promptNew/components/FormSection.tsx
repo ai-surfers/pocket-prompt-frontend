@@ -8,7 +8,7 @@ import { AIPlatforms, Categories } from "@/core/Prompt";
 import FormItem from "@/pages/promptNew/components/Form/FormItem";
 import { PromptSchemaType } from "@/schema/PromptSchema";
 import { Flex, Select } from "antd";
-import { Controller, UseFormReturn } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
 const CATEGORY = Object.entries(Categories).map(([key, value]) => ({
@@ -23,14 +23,13 @@ const AI = Object.entries(AIPlatforms).map(([key, value]) => ({
 }));
 
 interface FormSectionProps {
-    form: UseFormReturn<PromptSchemaType>;
-    handleClickSubmit: () => void;
+    onSumbit: () => void;
 }
-function FormSection({ form, handleClickSubmit }: FormSectionProps) {
+function FormSection({ onSumbit }: FormSectionProps) {
     const {
         control,
         formState: { isValid },
-    } = form;
+    } = useFormContext<PromptSchemaType>();
 
     return (
         <Box>
@@ -50,7 +49,7 @@ function FormSection({ form, handleClickSubmit }: FormSectionProps) {
                 />
             </Flex>
 
-            <form onSubmit={handleClickSubmit}>
+            <form onSubmit={onSumbit}>
                 <Flex vertical gap={32} style={{ marginTop: "9px" }}>
                     <FormItem title="프롬프트 제목" tags={["필수"]}>
                         <Controller
@@ -167,7 +166,7 @@ function FormSection({ form, handleClickSubmit }: FormSectionProps) {
                 size={52}
                 width="100%"
                 style={{ marginTop: "60px" }}
-                onClick={handleClickSubmit}
+                onClick={onSumbit}
                 hierarchy={isValid ? "primary" : "disabled"}
             >
                 프롬프트 등록 완료하기

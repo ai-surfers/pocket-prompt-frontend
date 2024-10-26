@@ -1,15 +1,22 @@
 import Text from "@/components/common/Text/Text";
 import ExampleBox from "@/pages/promptNew/components/Example/ExampleBox";
 import ExampleContent from "@/pages/promptNew/components/Example/ExampleContent";
+import { PromptSchemaType } from "@/schema/PromptSchema";
+import { extractOptions } from "@/utils/promptUtils";
 import { Flex } from "antd";
+import { useMemo } from "react";
+import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
-interface PreviewSectionProps {
-    title?: string;
-    description?: string;
-    inputs?: string[];
-}
-function PreviewSection({ title, description, inputs }: PreviewSectionProps) {
+function PreviewSection() {
+    const { watch } = useFormContext<PromptSchemaType>();
+    const title = watch("title");
+    const description = watch("description");
+    const prompt_template = watch("prompt_template");
+    const inputs = useMemo(() => {
+        return extractOptions(prompt_template);
+    }, [prompt_template]);
+
     return (
         <Box>
             <Text font="h2_20_bold">내 프롬프트 미리보기</Text>

@@ -15,8 +15,7 @@ import {
 import { extractOptions } from "@/utils/promptUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Flex } from "antd";
-import { useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { z } from "zod";
 
@@ -25,15 +24,6 @@ export default function PromptNewPage() {
         resolver: zodResolver(promptSchema),
         defaultValues: defaultPromptSchema,
     });
-
-    const { handleSubmit, watch } = form;
-
-    const title = watch("title");
-    const description = watch("description");
-    const prompt_template = watch("prompt_template");
-    const inputs = useMemo(() => {
-        return extractOptions(prompt_template);
-    }, [prompt_template]);
 
     const { mutate } = usePostPrompt({
         onSuccess(res) {
@@ -50,15 +40,18 @@ export default function PromptNewPage() {
 
     const handleClickSubmit = async () => {
         console.log(">> handleClickSubmit");
-        handleSubmit(
+        form.handleSubmit(
             async (values: unknown) => {
                 const input = values as z.infer<typeof promptSchema>;
 
-                const user_input_formats = inputs.map<InputFormat>((ip) => ({
-                    name: ip,
-                    type: "text",
-                    placeholder: "",
-                }));
+                const user_inputs = extractOptions(input.prompt_template);
+                const user_input_formats = user_inputs.map<InputFormat>(
+                    (ip) => ({
+                        name: ip,
+                        type: "text",
+                        placeholder: "",
+                    })
+                );
 
                 const promptData: CreatePromptRequest = {
                     ...input,
@@ -75,36 +68,31 @@ export default function PromptNewPage() {
     };
 
     return (
-        <Container>
-            <PromptNewWrapper>
-                <Text font="large_32_bold" style={{ marginTop: "40px" }}>
-                    나만의 프롬프트 등록하기
-                </Text>
+        <FormProvider {...form}>
+            <Container>
+                <PromptNewWrapper>
+                    <Text font="large_32_bold" style={{ marginTop: "40px" }}>
+                        나만의 프롬프트 등록하기
+                    </Text>
 
-                <Text font="h2_20_reg" color="G_400">
-                    실시간으로 미리보기 화면을 보면서 등록하는 나만의 프롬프트
-                </Text>
+                    <Text font="h2_20_reg" color="G_400">
+                        실시간으로 미리보기 화면을 보면서 등록하는 나만의
+                        프롬프트
+                    </Text>
 
-                <Flex
-                    justify="space-between"
-                    align="stretch"
-                    gap={16}
-                    wrap="wrap"
-                    style={{ marginTop: "32px" }}
-                >
-                    <PreviewSection
-                        title={title}
-                        description={description}
-                        inputs={inputs}
-                    />
-
-                    <FormSection
-                        form={form}
-                        handleClickSubmit={handleClickSubmit}
-                    />
-                </Flex>
-            </PromptNewWrapper>
-        </Container>
+                    <Flex
+                        justify="space-between"
+                        align="stretch"
+                        gap={16}
+                        wrap="wrap"
+                        style={{ marginTop: "32px" }}
+                    >
+                        <PreviewSection />
+                        <FormSection onSumbit={handleClickSubmit} />
+                    </Flex>
+                </PromptNewWrapper>
+            </Container>
+        </FormProvider>
     );
 }
 
