@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
@@ -12,9 +13,19 @@ export default defineConfig({
                 memo: true,
             },
         }),
+        sentryVitePlugin({
+            org: "aisurfers",
+            project: "pocket-prompt-web",
+        }),
     ],
+
     resolve: {
         alias: [{ find: "@", replacement: "/src" }],
     },
+
     envDir: "./pocket-prompt-frontend-envs/",
+
+    build: {
+        sourcemap: true,
+    },
 });
