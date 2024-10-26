@@ -3,8 +3,19 @@ import { Wrapper } from "@/layouts/Layout";
 import Prompt from "./components/Prompt/Prompt";
 import styled from "styled-components";
 import LNB from "./components/LNB/LNB";
+import { Pagination } from "antd";
+import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
 
 export default function HomePage() {
+    const {
+        items,
+        totalItems,
+        currentPage,
+        itemsPerPage,
+        handlePageChange,
+        isLoading,
+    } = usePromptQuery();
+
     return (
         <HomeWrapper>
             <LNB />
@@ -15,19 +26,34 @@ export default function HomePage() {
                 <SectionWrapper>
                     <Title>🔥 지금 인기 있는 프롬프트</Title>
                     <PromptWrapper>
-                        <Prompt colored={true} />
+                        {/* <Prompt colored={true} /> */}
                     </PromptWrapper>
                 </SectionWrapper>
                 <SectionWrapper>
                     <Title>📖 전체 프롬프트</Title>
                     <PromptWrapper>
-                        <Prompt colored={false} />
-                        <Prompt colored={false} />
-                        <Prompt colored={false} />
-                        <Prompt colored={false} />
-                        <Prompt colored={false} />
-                        <Prompt colored={false} />
+                        {isLoading
+                            ? Array.from({ length: itemsPerPage }).map(
+                                  (_, idx) => <SkeletonBox key={idx} />
+                              )
+                            : items.map((item) => (
+                                  <Prompt
+                                      key={item.id}
+                                      title={item.title}
+                                      description={item.description}
+                                      views={item.views}
+                                      star={item.star}
+                                      usages={item.usages}
+                                  />
+                              ))}
                     </PromptWrapper>
+                    <Pagination
+                        current={currentPage}
+                        pageSize={itemsPerPage}
+                        total={totalItems || 0}
+                        onChange={handlePageChange}
+                        showSizeChanger={false}
+                    />
                 </SectionWrapper>
             </ContentWrapper>
         </HomeWrapper>
@@ -51,12 +77,14 @@ const BannerWrapper = styled.div`
 `;
 
 const SectionWrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("column", "center", "start")};
+    ${({ theme }) => theme.mixins.flexBox("column", "center", "center")};
     gap: 12px;
     margin: 9px 0 44px 0;
 `;
 
 const Title = styled.div`
+    text-align: start;
+    width: 100%;
     ${({ theme }) => theme.colors.G_800};
     ${({ theme }) => theme.fonts.header1};
     ${({ theme }) => theme.fonts.bold};
@@ -68,4 +96,12 @@ const PromptWrapper = styled.div`
     gap: 16px;
     flex-wrap: wrap;
     box-sizing: border-box;
+    width: 1107px;
+`;
+
+const SkeletonBox = styled.div`
+    ${({ theme }) => theme.mixins.skeleton()};
+    width: 358px;
+    height: 157px;
+    border-radius: 8px;
 `;
