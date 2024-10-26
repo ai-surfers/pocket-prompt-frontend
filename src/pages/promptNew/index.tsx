@@ -6,11 +6,14 @@ import Textarea from "@/components/common/Textarea/Textarea";
 import Toggle from "@/components/common/Toggle/Toggle";
 import { AIPlatforms, Categories } from "@/core/Prompt";
 import { Wrapper } from "@/layouts/Layout";
+import ExampleBox from "@/pages/promptNew/components/Example/ExampleBox";
+import ExampleContent from "@/pages/promptNew/components/Example/ExampleContent";
 import FormItem from "@/pages/promptNew/components/FormItem";
 import { promptSchema, PromptSchemaType } from "@/schema/PromptSchema";
+import { extractOptions } from "@/utils/promptUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Flex, Select } from "antd";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { z } from "zod";
@@ -37,6 +40,13 @@ export default function PromptNewPage() {
         watch,
         formState: { isValid },
     } = form;
+
+    const title = watch("title");
+    const description = watch("description");
+    const prompt_template = watch("prompt_template");
+    const user_input_format = useMemo(() => {
+        return extractOptions(prompt_template);
+    }, [prompt_template]);
 
     useEffect(() => {
         const subscription = watch((values) => {
@@ -81,22 +91,24 @@ export default function PromptNewPage() {
 
                         <Flex vertical gap={30} style={{ marginTop: "24px" }}>
                             <Flex vertical gap={6}>
-                                <ExampleBox font="b3_14_reg" color="G_300">
-                                    프롬프트 제목이 이곳에 표시됩니다.
-                                </ExampleBox>
-                                <ExampleBox font="b3_14_reg" color="G_300">
-                                    프롬프트 설명이 이곳에 표시됩니다.
-                                </ExampleBox>
+                                <ExampleBox
+                                    defaultValue="프롬프트 제목이 이곳에 표시됩니다."
+                                    value={title}
+                                    font="b1_18_semi"
+                                    color="G_700"
+                                />
+                                <ExampleBox
+                                    defaultValue="   프롬프트 설명이 이곳에 표시됩니다."
+                                    value={description}
+                                    font="b3_14_reg"
+                                    color="G_500"
+                                />
                             </Flex>
 
-                            <ExampleBox
-                                height="532px"
-                                font="b3_14_reg"
-                                color="G_300"
-                            >
-                                프롬프트 내용에 따른 미리보기가 이곳에
-                                표시됩니다.
-                            </ExampleBox>
+                            <ExampleContent
+                                defaultValue="프롬프트 내용에 따른 미리보기가 이곳에 표시됩니다."
+                                value={user_input_format}
+                            />
                         </Flex>
                     </Box>
                     <Box flex="7" border="primary_50">
@@ -131,7 +143,6 @@ export default function PromptNewPage() {
                                                 placeholder="프롬프트의 제목을 입력해주세요."
                                                 value={field.value}
                                                 onChange={field.onChange}
-                                                count={10}
                                             />
                                         )}
                                     />
@@ -150,7 +161,6 @@ export default function PromptNewPage() {
                                                 placeholder="예시: 주제와 청중을 입력하면 근사한 파워포인트 초안을 만들어주는 프롬프트"
                                                 value={field.value}
                                                 onChange={field.onChange}
-                                                count={300}
                                             />
                                         )}
                                     />
@@ -275,13 +285,13 @@ const Box = styled.div<{ flex: string; border?: string }>`
     padding: 20px;
 `;
 
-const ExampleBox = styled(Text)<{ height?: string }>`
-    width: 100%;
-    min-height: ${({ height }) => (height ? height : 0)};
-    border-radius: 8px;
-    background: ${({ theme }) => theme.colors.G_50};
-    padding: 11px 12px;
+// const ExampleBox = styled(Text)<{ height?: string }>`
+//     width: 100%;
+//     min-height: ${({ height }) => (height ? height : 0)};
+//     border-radius: 8px;
+//     background: ${({ theme }) => theme.colors.G_50};
+//     padding: 11px 12px;
 
-    ${({ theme }) => theme.fonts.b3_14_reg};
-    color: ${({ theme }) => theme.colors.G_300};
-`;
+//     ${({ theme }) => theme.fonts.b3_14_reg};
+//     color: ${({ theme }) => theme.colors.G_300};
+// `;

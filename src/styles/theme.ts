@@ -207,7 +207,6 @@ const fonts = {
         font-style: normal;
         font-weight: 400;
     `,
-
     b1_18_bold: css`
         /* b1_18/bold */
         font-family: Pretendard;
@@ -217,8 +216,44 @@ const fonts = {
         line-height: 150%; /* 1.6875rem */
         letter-spacing: -0.0225rem;
     `,
+    b1_18_semi: css`
+        /* b1_18/semi */
+        font-family: Pretendard;
+        font-size: 1.125rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 150%; /* 1.6875rem */
+        letter-spacing: -0.0225rem;
+    `,
+    b1_18_med: css`
+        /* b1_18/med */
+        font-family: Pretendard;
+        font-size: 1.125rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 150%; /* 1.6875rem */
+        letter-spacing: -0.0225rem;
+    `,
+    b1_18_reg: css`
+        /* b1_18/reg */
+        font-family: Pretendard;
+        font-size: 1.125rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%; /* 1.6875rem */
+        letter-spacing: -0.0225rem;
+    `,
+
+    b2_16_bold: css`
+        /* b2_16/bold */
+        font-family: Pretendard;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 150%; /* 1.5rem */
+    `,
     b2_16_semi: css`
-        /* b2_16/semi */
+        /* b2_16/reg */
         font-family: Pretendard;
         font-size: 1rem;
         font-style: normal;
