@@ -6,11 +6,7 @@ interface ToggleProps {
     value: string;
     onChange: (value: string) => void;
 }
-export default function Toggle({
-    items,
-    value = items[0],
-    onChange,
-}: ToggleProps) {
+export default function Toggle({ items, value, onChange }: ToggleProps) {
     const activeIndex = useMemo(() => {
         return items.indexOf(value);
     }, [value, items]);

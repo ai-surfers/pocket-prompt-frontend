@@ -14,7 +14,11 @@ import { Wrapper } from "@/layouts/Layout";
 import ExampleBox from "@/pages/promptNew/components/Example/ExampleBox";
 import ExampleContent from "@/pages/promptNew/components/Example/ExampleContent";
 import FormItem from "@/pages/promptNew/components/FormItem";
-import { promptSchema, PromptSchemaType } from "@/schema/PromptSchema";
+import {
+    defaultPromptSchema,
+    promptSchema,
+    PromptSchemaType,
+} from "@/schema/PromptSchema";
 import { extractOptions } from "@/utils/promptUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Flex, Select } from "antd";
@@ -26,7 +30,7 @@ import { z } from "zod";
 const CATEGORY = Object.entries(Categories).map(([key, value]) => ({
     key: key,
     label: value.ko,
-    value: value.ko,
+    value: key,
 }));
 
 const AI = Object.entries(AIPlatforms).map(([key, value]) => ({
@@ -36,10 +40,7 @@ const AI = Object.entries(AIPlatforms).map(([key, value]) => ({
 export default function PromptNewPage() {
     const form = useForm<PromptSchemaType>({
         resolver: zodResolver(promptSchema),
-        defaultValues: {
-            visibility: "Public",
-            categories: [],
-        },
+        defaultValues: defaultPromptSchema,
     });
 
     const {
@@ -61,7 +62,7 @@ export default function PromptNewPage() {
         onSuccess(res) {
             console.log("Success", res);
             alert(res.detail || "프롬프트를 등록하였습니다.");
-            form.reset();
+            form.reset(defaultPromptSchema);
         },
         onError(e) {
             console.error("Failed", e);
@@ -241,6 +242,7 @@ export default function PromptNewPage() {
                                                     }}
                                                     mode="multiple"
                                                     options={AI}
+                                                    value={field.value}
                                                     onChange={field.onChange}
                                                 />
                                             )}
@@ -265,6 +267,7 @@ export default function PromptNewPage() {
                                                     mode="multiple"
                                                     maxCount={5}
                                                     options={CATEGORY}
+                                                    value={field.value}
                                                     onChange={field.onChange}
                                                 />
                                             )}

@@ -10,3 +10,7 @@ export const promptSchema = z.object({
     ai_platforms_used: z.array(z.string()).min(1),
     prompt_template: z.string(),
 });
+
+export const defaultPromptSchema = {
+    visibility: "Public",
+};
