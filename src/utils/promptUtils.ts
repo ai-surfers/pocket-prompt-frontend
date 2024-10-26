@@ -4,7 +4,6 @@
  * @returns []로 작성한 옵션들 (중복 X, \[\]는 무시)
  */
 export function extractOptions(text: string): string[] {
-    console.log(">> text", text);
     const regex = /(?<!\\)\[(.*?)]/g;
     let matches;
 

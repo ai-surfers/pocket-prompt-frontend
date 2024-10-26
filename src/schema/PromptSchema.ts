@@ -1,7 +1,8 @@
 import { z } from "zod";
 
-export type PromptSchemaType = z.infer<typeof promptSchema>;
-
+/**
+ * 프롬프트 등록 시 사용하는 프롬프트 폼 스키마
+ */
 export const promptSchema = z.object({
     title: z.string(),
     description: z.string(),
@@ -14,3 +15,5 @@ export const promptSchema = z.object({
 export const defaultPromptSchema = {
     visibility: "Public",
 };
+
+export type PromptSchemaType = z.infer<typeof promptSchema>;

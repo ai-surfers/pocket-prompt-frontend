@@ -1,19 +1,12 @@
-import { IcInfoCircle } from "@/assets/svg";
-import Button from "@/components/common/Button/Button";
-import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
-import Textarea from "@/components/common/Textarea/Textarea";
-import Toggle from "@/components/common/Toggle/Toggle";
-import { AIPlatforms, Categories } from "@/core/Prompt";
 import {
     CreatePromptRequest,
     InputFormat,
     usePostPrompt,
 } from "@/hooks/mutations/prompts/usePostPrompt";
 import { Wrapper } from "@/layouts/Layout";
-import ExampleBox from "@/pages/promptNew/components/Example/ExampleBox";
-import ExampleContent from "@/pages/promptNew/components/Example/ExampleContent";
-import FormItem from "@/pages/promptNew/components/FormItem";
+import FormSection from "@/pages/promptNew/components/FormSection";
+import PreviewSection from "@/pages/promptNew/components/PreviewSection";
 import {
     defaultPromptSchema,
     promptSchema,
@@ -21,34 +14,19 @@ import {
 } from "@/schema/PromptSchema";
 import { extractOptions } from "@/utils/promptUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Flex, Select } from "antd";
+import { Flex } from "antd";
 import { useMemo } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { z } from "zod";
 
-const CATEGORY = Object.entries(Categories).map(([key, value]) => ({
-    key: key,
-    label: value.ko,
-    value: key,
-}));
-
-const AI = Object.entries(AIPlatforms).map(([key, value]) => ({
-    key: key,
-    value: value,
-}));
 export default function PromptNewPage() {
     const form = useForm<PromptSchemaType>({
         resolver: zodResolver(promptSchema),
         defaultValues: defaultPromptSchema,
     });
 
-    const {
-        control,
-        handleSubmit,
-        watch,
-        formState: { isValid },
-    } = form;
+    const { handleSubmit, watch } = form;
 
     const title = watch("title");
     const description = watch("description");
@@ -57,7 +35,6 @@ export default function PromptNewPage() {
         return extractOptions(prompt_template);
     }, [prompt_template]);
 
-    // Mutation
     const { mutate } = usePostPrompt({
         onSuccess(res) {
             console.log("Success", res);
@@ -115,178 +92,16 @@ export default function PromptNewPage() {
                     wrap="wrap"
                     style={{ marginTop: "32px" }}
                 >
-                    <Box flex="3">
-                        <Text font="h2_20_bold">내 프롬프트 미리보기</Text>
+                    <PreviewSection
+                        title={title}
+                        description={description}
+                        inputs={inputs}
+                    />
 
-                        <Flex vertical gap={30} style={{ marginTop: "24px" }}>
-                            <Flex vertical gap={6}>
-                                <ExampleBox
-                                    defaultValue="프롬프트 제목이 이곳에 표시됩니다."
-                                    value={title}
-                                    font="b1_18_semi"
-                                    color="G_700"
-                                />
-                                <ExampleBox
-                                    defaultValue="   프롬프트 설명이 이곳에 표시됩니다."
-                                    value={description}
-                                    font="b3_14_reg"
-                                    color="G_500"
-                                />
-                            </Flex>
-
-                            <ExampleContent
-                                defaultValue="프롬프트 내용에 따른 미리보기가 이곳에 표시됩니다."
-                                value={inputs}
-                            />
-                        </Flex>
-                    </Box>
-                    <Box flex="7" border="primary_50">
-                        <Flex justify="space-between" align="center">
-                            <Text font="h2_20_bold">내 프롬프트 입력하기</Text>
-
-                            <Controller
-                                name="visibility"
-                                control={control}
-                                render={({ field }) => (
-                                    <Toggle
-                                        items={["Public", "Private"]}
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                    />
-                                )}
-                            />
-                        </Flex>
-
-                        <form onSubmit={handleClickSubmit}>
-                            <Flex
-                                vertical
-                                gap={32}
-                                style={{ marginTop: "9px" }}
-                            >
-                                <FormItem title="프롬프트 제목" tags={["필수"]}>
-                                    <Controller
-                                        name="title"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <Input
-                                                placeholder="프롬프트의 제목을 입력해주세요."
-                                                value={field.value}
-                                                onChange={field.onChange}
-                                            />
-                                        )}
-                                    />
-                                </FormItem>
-
-                                <FormItem
-                                    title="프롬프트 설명"
-                                    tags={["필수"]}
-                                    description=" 다른 사람들이 프롬프트를 더 쉽게 이해할 수 있도록 설명을 입력해주세요!"
-                                >
-                                    <Controller
-                                        name="description"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <Textarea
-                                                placeholder="예시: 주제와 청중을 입력하면 근사한 파워포인트 초안을 만들어주는 프롬프트"
-                                                value={field.value}
-                                                onChange={field.onChange}
-                                            />
-                                        )}
-                                    />
-                                </FormItem>
-
-                                <FormItem
-                                    title="프롬프트 템플릿"
-                                    tags={["필수"]}
-                                    description=" [주제], [청중] 처럼 다른 사용자들에게 입력 받고 싶은 항목을 대괄호로 감싸주세요."
-                                >
-                                    <Flex gap={4} justify="end">
-                                        <Text
-                                            font="b3_14_reg"
-                                            color="primary_100"
-                                        >
-                                            어떻게 작성해야 할지 모르겠다면?
-                                        </Text>
-                                        <IcInfoCircle width={20} />
-                                    </Flex>
-
-                                    <Controller
-                                        name="prompt_template"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <Textarea
-                                                placeholder="예시: [주제]를 주제로 한 파워포인트의 초안을 작성해줘.
-총 10 슬라이드로 이루어져있고, 청중은 [청중]을 대상으로 고려해줘."
-                                                value={field.value}
-                                                onChange={field.onChange}
-                                            />
-                                        )}
-                                    />
-                                </FormItem>
-
-                                <Flex style={{ width: "100%" }} gap={16}>
-                                    <FormItem
-                                        title="사용한 AI"
-                                        tags={["필수", "복수 선택 가능"]}
-                                        style={{ flex: 1 }}
-                                    >
-                                        <Controller
-                                            name="ai_platforms_used"
-                                            control={control}
-                                            render={({ field }) => (
-                                                <Select
-                                                    placeholder="사용한 AI를 선택해주세요."
-                                                    style={{
-                                                        width: "100%",
-                                                        marginTop: "8px",
-                                                    }}
-                                                    mode="multiple"
-                                                    options={AI}
-                                                    value={field.value}
-                                                    onChange={field.onChange}
-                                                />
-                                            )}
-                                        />
-                                    </FormItem>
-
-                                    <FormItem
-                                        title="분야"
-                                        tags={["필수", " 최대 5개 선택 가능"]}
-                                        style={{ flex: 1 }}
-                                    >
-                                        <Controller
-                                            name="categories"
-                                            control={control}
-                                            render={({ field }) => (
-                                                <Select
-                                                    placeholder="프롬프트의 분야를 선택해주세요."
-                                                    style={{
-                                                        width: "100%",
-                                                        marginTop: "8px",
-                                                    }}
-                                                    mode="multiple"
-                                                    maxCount={5}
-                                                    options={CATEGORY}
-                                                    value={field.value}
-                                                    onChange={field.onChange}
-                                                />
-                                            )}
-                                        />
-                                    </FormItem>
-                                </Flex>
-                            </Flex>
-                        </form>
-
-                        <Button
-                            size={52}
-                            width="100%"
-                            style={{ marginTop: "60px" }}
-                            onClick={handleClickSubmit}
-                            hierarchy={isValid ? "primary" : "disabled"}
-                        >
-                            프롬프트 등록 완료하기
-                        </Button>
-                    </Box>
+                    <FormSection
+                        form={form}
+                        handleClickSubmit={handleClickSubmit}
+                    />
                 </Flex>
             </PromptNewWrapper>
         </Container>
@@ -303,15 +118,4 @@ const PromptNewWrapper = styled(Wrapper)`
     padding-left: 40px;
     padding-right: 40px;
     padding-bottom: 40px;
-`;
-
-const Box = styled.div<{ flex: string; border?: string }>`
-    flex: ${({ flex }) => flex};
-
-    border-radius: 16px;
-    border: 1.5px solid
-        ${({ border, theme }) =>
-            border ? theme.colors[border] : theme.colors.G_100};
-    background: #fff;
-    padding: 20px;
 `;
