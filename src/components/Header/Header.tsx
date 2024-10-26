@@ -6,12 +6,17 @@ import { useEffect } from "react";
 import { getUser } from "@/apis/auth/auth";
 import User from "./User/User";
 import { Logo } from "@/assets/svg";
+import {
+    getLocalStorage,
+    LOCALSTORAGE_KEYS,
+    removeLocalStorage,
+} from "@/utils/storageUtils";
 
 export default function Header() {
     const { setUser, resetUserState, userData } = useUser();
 
     useEffect(() => {
-        const access_token = window.localStorage.getItem("ACCESS_TOKEN");
+        const access_token = getLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
         console.log(">> ", userData.accessToken);
 
         if (access_token) {
@@ -20,7 +25,7 @@ export default function Header() {
                 if (!success) {
                     alert("유저 조회에 실패하였습니다.");
 
-                    window.localStorage.removeItem("ACCESS_TOKEN");
+                    removeLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
                     resetUserState();
                     return;
                 }

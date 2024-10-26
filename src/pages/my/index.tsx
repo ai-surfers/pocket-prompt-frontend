@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useGetPaymetns } from "@/hooks/queries/payments/useGetPayments";
 import { usePutPayments } from "@/hooks/mutations/payments/usePutPayments";
 import * as Sentry from "@sentry/react";
+import { LOCALSTORAGE_KEYS, removeLocalStorage } from "@/utils/storageUtils";
 
 const { Title, Text } = Typography;
 
@@ -48,7 +49,7 @@ export default function MyPage() {
     const navigate = useNavigate();
 
     function handleLogout() {
-        window.localStorage.removeItem("ACCESS_TOKEN");
+        removeLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
         resetUserState();
         navigate("/", { replace: true });
     }
