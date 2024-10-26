@@ -4,7 +4,7 @@ import Styles from "./styles";
 import { QueryClientProvider } from "@tanstack/react-query";
 import queryClient from "./apis/queryClient";
 import { RecoilRoot } from "recoil";
-import * as Sentry from "@Sentry/react";
+import * as Sentry from "@sentry/react";
 
 function App() {
     console.log(`🍀 Environment - ${import.meta.env.MODE}`);

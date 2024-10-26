@@ -6,7 +6,7 @@ import { useUser } from "@/hooks/useUser";
 import { useNavigate } from "react-router-dom";
 import { useGetPaymetns } from "@/hooks/queries/payments/useGetPayments";
 import { usePutPayments } from "@/hooks/mutations/payments/usePutPayments";
-import * as Sentry from "@Sentry/react";
+import * as Sentry from "@sentry/react";
 
 const { Title, Text } = Typography;
 
