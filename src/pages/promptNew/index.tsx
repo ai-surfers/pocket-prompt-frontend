@@ -1,4 +1,5 @@
 import Text from "@/components/common/Text/Text";
+import { InputType } from "@/core/Prompt";
 import {
     CreatePromptRequest,
     InputFormat,
@@ -33,8 +34,7 @@ export default function PromptNewPage() {
         },
         onError(e) {
             console.error("Failed", e);
-            const message = e.message[0]?.msg;
-            alert(message || "프롬프트 등록에 실패하였습니다.");
+            alert("프롬프트 등록에 실패하였습니다.");
         },
     });
 
@@ -48,7 +48,7 @@ export default function PromptNewPage() {
                 const user_input_formats = user_inputs.map<InputFormat>(
                     (ip) => ({
                         name: ip,
-                        type: "text",
+                        type: InputType.TEXT,
                         placeholder: "",
                     })
                 );
