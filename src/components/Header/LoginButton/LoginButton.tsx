@@ -2,15 +2,18 @@ import { getUser, login } from "@/apis/auth/auth";
 import { auth, PROVIDER } from "@/apis/firebase";
 import { useUser } from "@/hooks/useUser";
 import {
+    getLocalStorage,
     LOCALSTORAGE_KEYS,
     removeLocalStorage,
     setLocalStorage,
 } from "@/utils/storageUtils";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export default function LoginButton() {
     const { setUser, setAccessToken, resetUserState } = useUser();
+    const navigate = useNavigate();
 
     async function handleLogin() {
         const res1 = await signInWithPopup(auth, PROVIDER);
@@ -50,6 +53,13 @@ export default function LoginButton() {
         // 성공, 저장
         setAccessToken(data.access_token);
         setUser(userData);
+
+        // redirect url 있는 경우, 해당 페이지로 리다이렉팅
+        const redirectUrl = getLocalStorage(LOCALSTORAGE_KEYS.REDIRECT_URL);
+        if (redirectUrl) {
+            navigate(redirectUrl);
+            removeLocalStorage(LOCALSTORAGE_KEYS.REDIRECT_URL);
+        }
     }
 
     return <Button onClick={handleLogin}>로그인</Button>;
