@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { BaseResponse, POST } from "../../../apis/client";
-import { InputType } from "@/types/Prompt";
+import { InputType } from "@/core/Prompt";
 
 /**
  * CreatePromptRequest
