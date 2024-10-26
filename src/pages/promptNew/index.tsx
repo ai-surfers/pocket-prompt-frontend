@@ -5,6 +5,11 @@ import Text from "@/components/common/Text/Text";
 import Textarea from "@/components/common/Textarea/Textarea";
 import Toggle from "@/components/common/Toggle/Toggle";
 import { AIPlatforms, Categories } from "@/core/Prompt";
+import {
+    CreatePromptRequest,
+    InputFormat,
+    usePostPrompt,
+} from "@/hooks/mutations/prompts/usePostPrompt";
 import { Wrapper } from "@/layouts/Layout";
 import ExampleBox from "@/pages/promptNew/components/Example/ExampleBox";
 import ExampleContent from "@/pages/promptNew/components/Example/ExampleContent";
@@ -13,15 +18,17 @@ import { promptSchema, PromptSchemaType } from "@/schema/PromptSchema";
 import { extractOptions } from "@/utils/promptUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Flex, Select } from "antd";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { z } from "zod";
 
 const CATEGORY = Object.entries(Categories).map(([key, value]) => ({
     key: key,
+    label: value.ko,
     value: value.ko,
 }));
+
 const AI = Object.entries(AIPlatforms).map(([key, value]) => ({
     key: key,
     value: value,
@@ -34,6 +41,7 @@ export default function PromptNewPage() {
             categories: [],
         },
     });
+
     const {
         control,
         handleSubmit,
@@ -44,23 +52,43 @@ export default function PromptNewPage() {
     const title = watch("title");
     const description = watch("description");
     const prompt_template = watch("prompt_template");
-    const user_input_format = useMemo(() => {
+    const inputs = useMemo(() => {
         return extractOptions(prompt_template);
     }, [prompt_template]);
 
-    useEffect(() => {
-        const subscription = watch((values) => {
-            console.log(">>", values);
-        });
-        return () => subscription.unsubscribe();
-    }, [watch]);
+    // Mutation
+    const { mutate } = usePostPrompt({
+        onSuccess(res) {
+            console.log("Success", res);
+            alert(res.detail || "프롬프트를 등록하였습니다.");
+            form.reset();
+        },
+        onError(e) {
+            console.error("Failed", e);
+            const message = e.message[0]?.msg;
+            alert(message || "프롬프트 등록에 실패하였습니다.");
+        },
+    });
 
     const handleClickSubmit = async () => {
         console.log(">> handleClickSubmit");
         handleSubmit(
             async (values: unknown) => {
                 const input = values as z.infer<typeof promptSchema>;
-                console.log(">> value", input);
+
+                const user_input_formats = inputs.map<InputFormat>((ip) => ({
+                    name: ip,
+                    type: "text",
+                    placeholder: "",
+                }));
+
+                const promptData: CreatePromptRequest = {
+                    ...input,
+                    user_input_format: user_input_formats,
+                };
+
+                console.log(">> promptData", promptData);
+                mutate(promptData);
             },
             (errors) => {
                 console.error(">> error", errors);
@@ -107,7 +135,7 @@ export default function PromptNewPage() {
 
                             <ExampleContent
                                 defaultValue="프롬프트 내용에 따른 미리보기가 이곳에 표시됩니다."
-                                value={user_input_format}
+                                value={inputs}
                             />
                         </Flex>
                     </Box>
@@ -234,9 +262,9 @@ export default function PromptNewPage() {
                                                         width: "100%",
                                                         marginTop: "8px",
                                                     }}
-                                                    options={CATEGORY}
                                                     mode="multiple"
                                                     maxCount={5}
+                                                    options={CATEGORY}
                                                     onChange={field.onChange}
                                                 />
                                             )}
@@ -284,14 +312,3 @@ const Box = styled.div<{ flex: string; border?: string }>`
     background: #fff;
     padding: 20px;
 `;
-
-// const ExampleBox = styled(Text)<{ height?: string }>`
-//     width: 100%;
-//     min-height: ${({ height }) => (height ? height : 0)};
-//     border-radius: 8px;
-//     background: ${({ theme }) => theme.colors.G_50};
-//     padding: 11px 12px;
-
-//     ${({ theme }) => theme.fonts.b3_14_reg};
-//     color: ${({ theme }) => theme.colors.G_300};
-// `;
