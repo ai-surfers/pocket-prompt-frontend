@@ -36,11 +36,13 @@ export type GetPromptsResponse = {
 
 export type ViewType = "open" | "starred" | "my";
 
+export type SortType = "created_at" | "star" | "usages" | "relevance";
+
 export type GetPromptsParams = {
     view_type: ViewType;
     query?: string;
     categories?: string[];
-    sort_by?: "created_at" | "star" | "usages" | "relevance";
+    sort_by?: SortType;
     sort_order?: "asc" | "desc";
     limit?: number;
     page?: number;

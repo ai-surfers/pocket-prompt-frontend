@@ -1,8 +1,9 @@
-import { Pagination } from "antd";
+import { Pagination, Select } from "antd";
 import Prompt from "../Prompt/Prompt";
 import styled from "styled-components";
 import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
-import { ViewType } from "@/apis/prompt/prompt.model";
+import { SortType, ViewType } from "@/apis/prompt/prompt.model";
+import { useState } from "react";
 
 interface PaginatedPromptProps {
     viewType: ViewType;
@@ -13,6 +14,8 @@ const PaginatedPrompt = ({
     viewType,
     usePage = true,
 }: PaginatedPromptProps) => {
+    const [sortBy, setSortBy] = useState<SortType>("created_at");
+
     const {
         items,
         totalItems,
@@ -20,10 +23,28 @@ const PaginatedPrompt = ({
         itemsPerPage,
         handlePageChange,
         isLoading,
-    } = usePromptQuery(viewType);
+    } = usePromptQuery({ viewType, sortBy });
+
+    const handleChange = (value: SortType) => {
+        setSortBy(value);
+    };
 
     return (
         <>
+            {usePage && (
+                <SelectWrapper>
+                    <Select
+                        defaultValue="created_at"
+                        style={{ width: 120 }}
+                        onChange={handleChange}
+                        options={[
+                            { value: "created_at", label: "최신 순" },
+                            { value: "relevance", label: "관련도 순" },
+                            { value: "usages", label: "인기 순" },
+                        ]}
+                    />
+                </SelectWrapper>
+            )}
             <PromptWrapper>
                 {isLoading
                     ? Array.from({ length: itemsPerPage }).map((_, idx) => (
@@ -70,4 +91,9 @@ const SkeletonBox = styled.div`
     width: 358px;
     height: 157px;
     border-radius: 8px;
+`;
+
+const SelectWrapper = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("row", "end")};
+    width: 100%;
 `;
