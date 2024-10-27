@@ -1,18 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getPrompts } from "@/apis/prompt/prompt";
-import { PAGINATION_KEYS } from "../QueryKeys";
-import { GetPromptsResponse } from "@/apis/prompt/prompt.model";
+import { GetPromptsResponse, ViewType } from "@/apis/prompt/prompt.model";
 
-const usePromptQuery = () => {
+const usePromptQuery = (viewType: ViewType) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(18);
 
     const { data, isLoading } = useQuery<GetPromptsResponse>({
-        queryKey: [PAGINATION_KEYS, currentPage, itemsPerPage],
+        queryKey: [viewType, currentPage, itemsPerPage],
         queryFn: () =>
             getPrompts({
-                view_type: "open",
+                view_type: viewType,
                 page: currentPage,
                 limit: itemsPerPage,
             }).then((res) => res),

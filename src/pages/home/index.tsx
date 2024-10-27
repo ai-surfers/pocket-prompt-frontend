@@ -1,21 +1,10 @@
 import Banner from "./components/Banner/Banner";
 import { Wrapper } from "@/layouts/Layout";
-import Prompt from "./components/Prompt/Prompt";
 import styled from "styled-components";
 import LNB from "./components/LNB/LNB";
-import { Pagination } from "antd";
-import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
+import PaginatedPrompt from "./components/PaginatedPrompt/PaginatedPrompt";
 
 export default function HomePage() {
-    const {
-        items,
-        totalItems,
-        currentPage,
-        itemsPerPage,
-        handlePageChange,
-        isLoading,
-    } = usePromptQuery();
-
     return (
         <HomeWrapper>
             <LNB />
@@ -25,35 +14,11 @@ export default function HomePage() {
                 </BannerWrapper>
                 <SectionWrapper>
                     <Title>🔥 지금 인기 있는 프롬프트</Title>
-                    <PromptWrapper>
-                        {/* <Prompt colored={true} /> */}
-                    </PromptWrapper>
+                    <PaginatedPrompt viewType="starred" usePage={false} />
                 </SectionWrapper>
                 <SectionWrapper>
                     <Title>📖 전체 프롬프트</Title>
-                    <PromptWrapper>
-                        {isLoading
-                            ? Array.from({ length: itemsPerPage }).map(
-                                  (_, idx) => <SkeletonBox key={idx} />
-                              )
-                            : items.map((item) => (
-                                  <Prompt
-                                      key={item.id}
-                                      title={item.title}
-                                      description={item.description}
-                                      views={item.views}
-                                      star={item.star}
-                                      usages={item.usages}
-                                  />
-                              ))}
-                    </PromptWrapper>
-                    <Pagination
-                        current={currentPage}
-                        pageSize={itemsPerPage}
-                        total={totalItems || 0}
-                        onChange={handlePageChange}
-                        showSizeChanger={false}
-                    />
+                    <PaginatedPrompt viewType="open" />
                 </SectionWrapper>
             </ContentWrapper>
         </HomeWrapper>
@@ -88,20 +53,4 @@ const Title = styled.div`
     ${({ theme }) => theme.colors.G_800};
     ${({ theme }) => theme.fonts.header1};
     ${({ theme }) => theme.fonts.bold};
-`;
-
-const PromptWrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row", "start", "start")};
-    align-content: flex-start;
-    gap: 16px;
-    flex-wrap: wrap;
-    box-sizing: border-box;
-    width: 1107px;
-`;
-
-const SkeletonBox = styled.div`
-    ${({ theme }) => theme.mixins.skeleton()};
-    width: 358px;
-    height: 157px;
-    border-radius: 8px;
 `;

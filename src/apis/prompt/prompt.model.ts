@@ -34,12 +34,14 @@ export type GetPromptsResponse = {
     page_meta_data: PaginationInfo;
 };
 
-export interface GetPromptsParams {
-    view_type: "open" | "starred" | "my";
+export type ViewType = "open" | "starred" | "my";
+
+export type GetPromptsParams = {
+    view_type: ViewType;
     query?: string;
     categories?: string[];
     sort_by?: "created_at" | "star" | "usages" | "relevance";
     sort_order?: "asc" | "desc";
     limit?: number;
     page?: number;
-}
+};

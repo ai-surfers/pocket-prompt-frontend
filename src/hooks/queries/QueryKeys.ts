@@ -14,8 +14,4 @@ const PAYMENTS_KEYS = {
     all: ["payments"] as const,
 };
 
-const PAGINATION_KEYS = {
-    all: ["pagination"] as const,
-};
-
-export { LOCATION_KEYS, PAYMENTS_KEYS, PAGINATION_KEYS };
+export { LOCATION_KEYS, PAYMENTS_KEYS };
