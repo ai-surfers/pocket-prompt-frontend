@@ -14,11 +14,11 @@ export default function HomePage() {
                 </BannerWrapper>
                 <SectionWrapper>
                     <Title>🔥 지금 인기 있는 프롬프트</Title>
-                    <PaginatedPrompt viewType="starred" usePage={false} />
+                    <PaginatedPrompt type="popular" usePage={false} />
                 </SectionWrapper>
                 <SectionWrapper>
                     <Title>📖 전체 프롬프트</Title>
-                    <PaginatedPrompt viewType="open" />
+                    <PaginatedPrompt type="total" />
                 </SectionWrapper>
             </ContentWrapper>
         </HomeWrapper>

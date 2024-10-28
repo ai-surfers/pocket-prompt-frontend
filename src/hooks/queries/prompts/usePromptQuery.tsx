@@ -1,29 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { getPrompts } from "@/apis/prompt/prompt";
-import {
-    GetPromptsResponse,
-    SortType,
-    ViewType,
-} from "@/apis/prompt/prompt.model";
+import { GetPromptsResponse, SortType } from "@/apis/prompt/prompt.model";
 
-interface PromptQueryProps {
-    viewType: ViewType;
+export interface PromptQueryProps {
     sortBy: SortType;
+    limit?: number;
 }
 
-const usePromptQuery = ({ viewType, sortBy }: PromptQueryProps) => {
+const usePromptQuery = ({ sortBy, limit }: PromptQueryProps) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(18);
 
     const { data, isLoading } = useQuery<GetPromptsResponse>({
-        queryKey: [viewType, currentPage, itemsPerPage, sortBy],
+        queryKey: [currentPage, itemsPerPage, sortBy, limit],
         queryFn: () =>
             getPrompts({
-                view_type: viewType,
+                view_type: "open",
                 sort_by: sortBy,
                 page: currentPage,
-                limit: itemsPerPage,
+                limit: limit ? limit : itemsPerPage,
+                sort_order: "desc",
             }).then((res) => res),
     });
 

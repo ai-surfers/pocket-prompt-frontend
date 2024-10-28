@@ -1,20 +1,30 @@
 import { Pagination, Select } from "antd";
 import Prompt from "../Prompt/Prompt";
 import styled from "styled-components";
-import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
-import { SortType, ViewType } from "@/apis/prompt/prompt.model";
+import usePromptQuery, {
+    PromptQueryProps,
+} from "@/hooks/queries/prompts/usePromptQuery";
+import { SortType } from "@/apis/prompt/prompt.model";
 import { useState } from "react";
 
 interface PaginatedPromptProps {
-    viewType: ViewType;
     usePage?: boolean;
+    type: "total" | "popular";
 }
 
-const PaginatedPrompt = ({
-    viewType,
-    usePage = true,
-}: PaginatedPromptProps) => {
+const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
     const [sortBy, setSortBy] = useState<SortType>("created_at");
+
+    const promptQueryParams: PromptQueryProps =
+        type === "total"
+            ? {
+                  sortBy: sortBy,
+                  limit: undefined,
+              }
+            : {
+                  sortBy: "star",
+                  limit: 3,
+              };
 
     const {
         items,
@@ -23,7 +33,7 @@ const PaginatedPrompt = ({
         itemsPerPage,
         handlePageChange,
         isLoading,
-    } = usePromptQuery({ viewType, sortBy });
+    } = usePromptQuery({ ...promptQueryParams });
 
     const handleChange = (value: SortType) => {
         setSortBy(value);
@@ -35,12 +45,12 @@ const PaginatedPrompt = ({
                 <SelectWrapper>
                     <Select
                         defaultValue="created_at"
-                        style={{ width: 120 }}
+                        style={{ width: 123 }}
                         onChange={handleChange}
                         options={[
                             { value: "created_at", label: "최신 순" },
                             { value: "relevance", label: "관련도 순" },
-                            { value: "usages", label: "인기 순" },
+                            { value: "star", label: "인기 순" },
                         ]}
                     />
                 </SelectWrapper>
