@@ -3,6 +3,7 @@ import Eye from "@/assets/svg/home/Eye";
 import Play from "@/assets/svg/home/Play";
 import theme from "@/styles/theme";
 import * as S from "./styles";
+import useToast from "@/hooks/useToast";
 
 interface PromptProps {
     colored?: boolean;
@@ -22,9 +23,17 @@ const Prompt = ({
     usages,
 }: PromptProps) => {
     const pointColor = colored ? theme.colors.primary : theme.colors.G_400;
+    const showToast = useToast();
+
+    const handleClick = () => {
+        showToast(
+            "프롬프트 상세 조회는 아직 준비 중인 기능이에요.",
+            "더 좋은 프롬프트 탐색을 위해 빠르게 준비하고 있을게요!"
+        );
+    };
 
     return (
-        <S.PromptWrapper colored={colored}>
+        <S.PromptWrapper colored={colored} onClick={handleClick}>
             {colored && <S.NumberTag>1</S.NumberTag>}
             <S.TitlesWrapper>
                 <S.Title colored={colored}>{title}</S.Title>
