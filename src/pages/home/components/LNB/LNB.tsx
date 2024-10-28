@@ -9,11 +9,13 @@ import { useState } from "react";
 import MenuItemIcon from "./MenuItemIcon/MenuItemIcon";
 import Button from "@/components/common/Button/Button";
 import Add from "@/assets/svg/home/Add";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useToast from "@/hooks/useToast";
 
 const LNB = () => {
     const [selectedKey, setSelectedKey] = useState<string>("1");
     const navigate = useNavigate();
+    const showToast = useToast();
 
     const menuItems = [
         { key: "1", label: "텍스트 프롬프트", icon: TextSVG },
@@ -43,7 +45,16 @@ const LNB = () => {
     });
 
     const handleClickMenu: MenuProps["onClick"] = (e) => {
-        setSelectedKey(e.key);
+        const selectedItem = menuItems.find((item) => item.key === e.key);
+
+        if (e.key === "1") {
+            setSelectedKey(e.key);
+        } else {
+            showToast(
+                `${selectedItem?.label}는 아직 준비 중인 기능이에요.`,
+                "더 많은 프롬프트 탐색을 위해 빠르게 준비하고 있을게요!"
+            );
+        }
     };
 
     const handleClickNewButton = () => {
