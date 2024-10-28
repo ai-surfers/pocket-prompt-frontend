@@ -35,10 +35,13 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
                     query: searchedKeyword,
                 };
             case "category":
+                if (searchCategory === "total") {
+                    return { sortBy: sortBy, limit: undefined };
+                }
                 return {
                     sortBy: sortBy,
                     limit: undefined,
-                    categories: Array.from(searchCategory) as string[],
+                    categories: [searchCategory],
                 };
         }
     })();
@@ -51,6 +54,7 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
         handlePageChange,
         isLoading,
     } = usePromptQuery({ ...promptQueryParams });
+    console.log({ ...promptQueryParams });
 
     const handleChange = (value: SortType) => {
         setSortBy(value);

@@ -1,12 +1,22 @@
 import Search from "@/assets/svg/home/Search";
 import Input from "@/components/common/Input/Input";
-import { keywordState, searchedKeywordState } from "@/states/searchState";
+import {
+    keywordState,
+    searchedCategoryState,
+    searchedKeywordState,
+} from "@/states/searchState";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 const SearchBar = () => {
     const [keyword, setKeyword] = useRecoilState(keywordState);
     const setSearchedKeyword = useSetRecoilState(searchedKeywordState);
+    const setSearchedCategory = useSetRecoilState(searchedCategoryState);
+
+    const handleChange = () => {
+        setSearchedKeyword(keyword);
+        setSearchedCategory("");
+    };
 
     return (
         <InputWrapper>
@@ -15,7 +25,7 @@ const SearchBar = () => {
                 placeholder="필요한 프롬프트를 검색해보세요"
                 value={keyword}
                 onChange={setKeyword}
-                onEnter={() => setSearchedKeyword(keyword)}
+                onEnter={handleChange}
             />
         </InputWrapper>
     );

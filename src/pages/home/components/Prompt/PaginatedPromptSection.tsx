@@ -5,10 +5,19 @@ import {
     searchedKeywordState,
 } from "@/states/searchState";
 import { useRecoilValue } from "recoil";
+import { useEffect } from "react";
 
 const PaginatedPromptSection = () => {
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
+
+    useEffect(() => {
+        console.log("키워드 변경", searchedKeyword);
+    }, [searchedKeyword]);
+
+    useEffect(() => {
+        console.log("카테고리 변경", searchedCategory);
+    }, [searchedCategory]);
 
     return (
         <>
@@ -17,21 +26,22 @@ const PaginatedPromptSection = () => {
                     <PaginatedPrompt type="search" />
                 </SectionWrapper>
             )}
-            {searchedCategory && (
+            {!!searchedCategory && searchedCategory !== "total" && (
                 <SectionWrapper>
-                    <PaginatedPrompt type="search" />
+                    <PaginatedPrompt type="category" />
                 </SectionWrapper>
             )}
-            {!searchedKeyword && !searchedCategory && (
-                <>
-                    <SectionWrapper>
-                        <PaginatedPrompt type="popular" usePage={false} />
-                    </SectionWrapper>
-                    <SectionWrapper>
-                        <PaginatedPrompt type="total" />
-                    </SectionWrapper>
-                </>
-            )}
+            {!searchedKeyword &&
+                (!searchedCategory || searchedCategory === "total") && (
+                    <>
+                        <SectionWrapper>
+                            <PaginatedPrompt type="popular" usePage={false} />
+                        </SectionWrapper>
+                        <SectionWrapper>
+                            <PaginatedPrompt type="total" />
+                        </SectionWrapper>
+                    </>
+                )}
         </>
     );
 };

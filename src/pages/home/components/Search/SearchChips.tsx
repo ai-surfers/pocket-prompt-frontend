@@ -1,27 +1,33 @@
 import Button from "@/components/common/Button/Button";
-import { searchedCategoryState } from "@/states/searchState";
-import React from "react";
+import {
+    searchedCategoryState,
+    searchedKeywordState,
+} from "@/states/searchState";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 const SearchChips = () => {
-    const setsearchedCategory = useSetRecoilState(searchedCategoryState);
+    const setSearchedCategory = useSetRecoilState(searchedCategoryState);
+    const setSearchedKeyword = useSetRecoilState(searchedKeywordState);
+
     const chips = [
-        { value: "브랜딩", title: "브랜딩" },
-        { value: "블로그", title: "블로그" },
-        { value: "비즈니스", title: "비즈니스" },
-        { value: "개발", title: "개발" },
-        { value: "마케팅", title: "마케팅" },
-        { value: "연구", title: "연구" },
-        { value: "글쓰기", title: "글쓰기" },
-        { value: "생산성", title: "생산성" },
-        { value: "언어", title: "언어" },
-        { value: "재미", title: "재미" },
-        { value: "영상기획", title: "영상기획" },
+        { value: "total", title: "전체" },
+        { value: "branding", title: "브랜딩" },
+        { value: "blog", title: "블로그" },
+        { value: "business", title: "비즈니스" },
+        { value: "development", title: "개발" },
+        { value: "marketing", title: "마케팅" },
+        { value: "research", title: "연구" },
+        { value: "writing", title: "글쓰기" },
+        { value: "productivity", title: "생산성" },
+        { value: "language", title: "언어" },
+        { value: "entertainment", title: "재미" },
+        { value: "video", title: "영상기획" },
     ];
 
     const handleChipClick = (chipValue: string) => {
-        setsearchedCategory((prevState) => new Set(prevState).add(chipValue));
+        setSearchedKeyword("");
+        setSearchedCategory(chipValue);
     };
 
     return (
