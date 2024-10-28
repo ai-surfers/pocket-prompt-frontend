@@ -1,6 +1,11 @@
 import { getUser, login } from "@/apis/auth/auth";
 import { auth, PROVIDER } from "@/apis/firebase";
 import { useUser } from "@/hooks/useUser";
+import {
+    LOCALSTORAGE_KEYS,
+    removeLocalStorage,
+    setLocalStorage,
+} from "@/utils/storageUtils";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import styled from "styled-components";
 
@@ -29,7 +34,7 @@ export default function LoginButton() {
         }
 
         // 성공 시, 액세스 토큰 저장 후, 유저 조회
-        window.localStorage.setItem("ACCESS_TOKEN", data.access_token);
+        setLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN, data.access_token);
 
         const res3 = await getUser();
         const { success: success3, data: userData } = res3.data;
@@ -37,7 +42,7 @@ export default function LoginButton() {
         if (!success3) {
             alert("유저 조회에 실패하였습니다.");
 
-            window.localStorage.removeItem("ACCESS_TOKEN");
+            removeLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
             resetUserState();
             return;
         }
