@@ -39,6 +39,9 @@ const EmptyText = styled(Text)`
 
 const ExampleText = styled(Text)`
     width: 100%;
+    word-wrap: break-word;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
     border-radius: 8px;
     border: 1px solid ${({ theme }) => theme.colors.G_100};
     padding: 11px 12px;

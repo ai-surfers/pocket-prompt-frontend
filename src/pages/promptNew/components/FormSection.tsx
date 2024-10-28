@@ -66,6 +66,7 @@ function FormSection({ onSumbit }: FormSectionProps) {
                                     placeholder="프롬프트의 제목을 입력해주세요."
                                     value={field.value}
                                     onChange={field.onChange}
+                                    count={50}
                                 />
                             )}
                         />
@@ -84,6 +85,7 @@ function FormSection({ onSumbit }: FormSectionProps) {
                                     placeholder="예시: 주제와 청중을 입력하면 근사한 파워포인트 초안을 만들어주는 프롬프트"
                                     value={field.value}
                                     onChange={field.onChange}
+                                    count={200}
                                 />
                             )}
                         />

@@ -50,6 +50,7 @@ export default PreviewSection;
 
 const Box = styled.div`
     flex: 3;
+    max-width: 30%;
 
     border-radius: 16px;
     border: 1.5px solid ${({ theme }) => theme.colors.G_100};
