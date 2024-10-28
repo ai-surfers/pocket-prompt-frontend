@@ -7,9 +7,15 @@ export interface PromptQueryProps {
     sortBy: SortType;
     limit?: number;
     query?: string;
+    categories?: string[];
 }
 
-const usePromptQuery = ({ sortBy, limit, query }: PromptQueryProps) => {
+const usePromptQuery = ({
+    sortBy,
+    limit,
+    query,
+    categories,
+}: PromptQueryProps) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(18);
 
@@ -23,6 +29,7 @@ const usePromptQuery = ({ sortBy, limit, query }: PromptQueryProps) => {
                 limit: limit ? limit : itemsPerPage,
                 sort_order: "desc",
                 query: query,
+                categories: categories,
             }).then((res) => res),
     });
 

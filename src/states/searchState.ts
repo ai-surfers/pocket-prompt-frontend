@@ -9,3 +9,8 @@ export const searchedKeywordState = atom({
     key: "searchedKeywordState",
     default: "",
 });
+
+export const searchedCategoryState = atom({
+    key: "searchedCategoryState",
+    default: new Set(),
+});

@@ -1,18 +1,28 @@
 import styled from "styled-components";
 import PaginatedPrompt from "./PaginatedPrompt";
-import { searchedKeywordState } from "@/states/searchState";
+import {
+    searchedCategoryState,
+    searchedKeywordState,
+} from "@/states/searchState";
 import { useRecoilValue } from "recoil";
 
 const PaginatedPromptSection = () => {
     const searchedKeyword = useRecoilValue(searchedKeywordState);
+    const searchedCategory = useRecoilValue(searchedCategoryState);
 
     return (
         <>
-            {searchedKeyword ? (
+            {searchedKeyword && (
                 <SectionWrapper>
                     <PaginatedPrompt type="search" />
                 </SectionWrapper>
-            ) : (
+            )}
+            {searchedCategory && (
+                <SectionWrapper>
+                    <PaginatedPrompt type="search" />
+                </SectionWrapper>
+            )}
+            {!searchedKeyword && !searchedCategory && (
                 <>
                     <SectionWrapper>
                         <PaginatedPrompt type="popular" usePage={false} />

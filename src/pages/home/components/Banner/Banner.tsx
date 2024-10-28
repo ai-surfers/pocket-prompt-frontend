@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import { LogoNoLine } from "@/assets/svg";
-import SearchBar from "../SearchBar/SearchBar";
+import SearchBar from "../Search/SearchBar";
+import SearchChips from "../Search/SearchChips";
 
 const Banner = () => {
     return (
@@ -10,7 +11,10 @@ const Banner = () => {
                 <br />
                 <div>여기 다 있습니다.</div>
             </BannerTitle>
-            <SearchBar />
+            <SearchWrapper>
+                <SearchBar />
+                <SearchChips />
+            </SearchWrapper>
             <Icon />
         </BannerWrapper>
     );
@@ -31,6 +35,7 @@ const BannerTitle = styled.div`
     line-height: 136%;
     ${({ theme }) => theme.fonts.bold};
     color: ${({ theme }) => theme.colors.white};
+    margin-bottom: 26px;
 
     div {
         background-color: ${({ theme }) => theme.colors.primary_dark};
@@ -43,6 +48,11 @@ const Icon = styled(LogoNoLine)`
     left: 42px;
     height: 169px;
     flex-shrink: 0;
+`;
+
+const SearchWrapper = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("column")};
+    gap: 12px;
 `;
 
 export default Banner;

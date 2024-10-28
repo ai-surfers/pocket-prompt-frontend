@@ -7,16 +7,20 @@ import usePromptQuery, {
 import { SortType } from "@/apis/prompt/prompt.model";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { searchedKeywordState } from "@/states/searchState";
+import {
+    searchedKeywordState,
+    searchedCategoryState,
+} from "@/states/searchState";
 
 interface PaginatedPromptProps {
     usePage?: boolean;
-    type: "total" | "popular" | "search";
+    type: "total" | "popular" | "search" | "category";
 }
 
 const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
     const [sortBy, setSortBy] = useState<SortType>("created_at");
     const searchedKeyword = useRecoilValue(searchedKeywordState);
+    const searchCategory = useRecoilValue(searchedCategoryState);
 
     const promptQueryParams: PromptQueryProps = (() => {
         switch (type) {
@@ -29,6 +33,12 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
                     sortBy: sortBy,
                     limit: undefined,
                     query: searchedKeyword,
+                };
+            case "category":
+                return {
+                    sortBy: sortBy,
+                    limit: undefined,
+                    categories: Array.from(searchCategory) as string[],
                 };
         }
     })();
@@ -54,6 +64,8 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
                 return "🔥 지금 인기 있는 프롬프트";
             case "search":
                 return "검색된 프롬프트";
+            case "category":
+                return "카테고리 프롬프트";
         }
     })();
 
