@@ -9,7 +9,7 @@ export interface InputProps {
 }
 export default function Input({
     placeholder,
-    value,
+    value = "",
     onChange,
     count,
     disabled = false,

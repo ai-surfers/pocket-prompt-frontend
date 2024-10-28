@@ -7,10 +7,13 @@ import MyPage from "@/pages/my";
 import ExtensionPage from "@/pages/extension";
 import PromptNewPage from "@/pages/promptNew";
 import FooterLayout from "@/layouts/FooterLayout";
+import NotFound from "@/pages/NotFound";
+import ProtectedRoute from "@/router/ProtectedRoute";
 
 const router = createBrowserRouter([
     {
         path: "/",
+        errorElement: <NotFound />,
         element: <FooterLayout />,
         children: [
             {
@@ -33,11 +36,19 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/prompt-new",
-                element: <PromptNewPage />,
+                element: (
+                    <ProtectedRoute>
+                        <PromptNewPage />
+                    </ProtectedRoute>
+                ),
             },
             {
                 path: "/my",
-                element: <MyPage />,
+                element: (
+                    <ProtectedRoute>
+                        <MyPage />
+                    </ProtectedRoute>
+                ),
             },
         ],
     },

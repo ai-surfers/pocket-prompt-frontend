@@ -28,6 +28,7 @@ const colors = {
     primary_20: "#E3E6FB",
     primary_10: "#F2F3FD",
     primary_5: "#F8F8FE",
+    primary_xxlight: "#E3E6FB",
 };
 
 const fonts = {
@@ -41,6 +42,11 @@ const fonts = {
         font-size: 32px;
         line-height: 144%; /* 46.08px */
         letter-spacing: -0.64px;
+    `,
+    header0: css`
+        font-size: 36px;
+        line-height: 136%; /* 48.96px */
+        letter-spacing: -0.72px;
     `,
     header1: css`
         font-size: 24px;
@@ -207,7 +213,6 @@ const fonts = {
         font-style: normal;
         font-weight: 400;
     `,
-
     b1_18_bold: css`
         /* b1_18/bold */
         font-family: Pretendard;
@@ -217,8 +222,44 @@ const fonts = {
         line-height: 150%; /* 1.6875rem */
         letter-spacing: -0.0225rem;
     `,
+    b1_18_semi: css`
+        /* b1_18/semi */
+        font-family: Pretendard;
+        font-size: 1.125rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 150%; /* 1.6875rem */
+        letter-spacing: -0.0225rem;
+    `,
+    b1_18_med: css`
+        /* b1_18/med */
+        font-family: Pretendard;
+        font-size: 1.125rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 150%; /* 1.6875rem */
+        letter-spacing: -0.0225rem;
+    `,
+    b1_18_reg: css`
+        /* b1_18/reg */
+        font-family: Pretendard;
+        font-size: 1.125rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%; /* 1.6875rem */
+        letter-spacing: -0.0225rem;
+    `,
+
+    b2_16_bold: css`
+        /* b2_16/bold */
+        font-family: Pretendard;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 150%; /* 1.5rem */
+    `,
     b2_16_semi: css`
-        /* b2_16/semi */
+        /* b2_16/reg */
         font-family: Pretendard;
         font-size: 1rem;
         font-style: normal;

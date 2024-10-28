@@ -5,13 +5,13 @@ interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
     size?: number;
     width?: string;
     icon?: React.ReactNode;
-    type?: "primary" | "secondary" | "normal" | "disabled";
+    hierarchy?: "primary" | "secondary" | "normal" | "disabled";
 }
 
 export default function Button({
     size = 56,
     width,
-    type = "primary",
+    hierarchy = "primary",
     icon,
     children,
     ...props
@@ -20,9 +20,10 @@ export default function Button({
         <StyledButton
             width={width}
             size={size}
-            type={type}
-            disabled={type === "disabled"}
+            hierarchy={hierarchy}
+            disabled={hierarchy === "disabled"}
             {...props}
+            type="submit"
         >
             {icon && <div>{icon}</div>}
             {children}
@@ -34,7 +35,7 @@ const StyledButton = styled.button<{
     width?: string;
     size: number;
     disabled?: boolean;
-    type: string;
+    hierarchy: string;
 }>`
     width: ${({ width }) => (width ? `${width}` : "auto")};
     height: ${({ size }) => `${size}px`};
@@ -48,8 +49,8 @@ const StyledButton = styled.button<{
 
     transition: all 0.2s;
 
-    ${({ type, theme }) => {
-        switch (type) {
+    ${({ hierarchy, theme }) => {
+        switch (hierarchy) {
             case "primary":
                 return css`
                     background: ${theme.colors.primary};
