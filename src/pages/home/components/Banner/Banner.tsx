@@ -1,5 +1,6 @@
 import { styled } from "styled-components";
 import { LogoNoLine } from "@/assets/svg";
+import SearchBar from "../SearchBar/SearchBar";
 
 const Banner = () => {
     return (
@@ -9,6 +10,7 @@ const Banner = () => {
                 <br />
                 <div>여기 다 있습니다.</div>
             </BannerTitle>
+            <SearchBar />
             <Icon />
         </BannerWrapper>
     );

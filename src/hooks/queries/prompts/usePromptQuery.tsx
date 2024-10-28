@@ -6,14 +6,15 @@ import { GetPromptsResponse, SortType } from "@/apis/prompt/prompt.model";
 export interface PromptQueryProps {
     sortBy: SortType;
     limit?: number;
+    query?: string;
 }
 
-const usePromptQuery = ({ sortBy, limit }: PromptQueryProps) => {
+const usePromptQuery = ({ sortBy, limit, query }: PromptQueryProps) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(18);
 
     const { data, isLoading } = useQuery<GetPromptsResponse>({
-        queryKey: [currentPage, itemsPerPage, sortBy, limit],
+        queryKey: [currentPage, itemsPerPage, sortBy, limit, query],
         queryFn: () =>
             getPrompts({
                 view_type: "open",
@@ -21,6 +22,7 @@ const usePromptQuery = ({ sortBy, limit }: PromptQueryProps) => {
                 page: currentPage,
                 limit: limit ? limit : itemsPerPage,
                 sort_order: "desc",
+                query: query,
             }).then((res) => res),
     });
 

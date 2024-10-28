@@ -6,25 +6,32 @@ import usePromptQuery, {
 } from "@/hooks/queries/prompts/usePromptQuery";
 import { SortType } from "@/apis/prompt/prompt.model";
 import { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { searchedKeywordState } from "@/states/searchState";
 
 interface PaginatedPromptProps {
     usePage?: boolean;
-    type: "total" | "popular";
+    type: "total" | "popular" | "search";
 }
 
 const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
     const [sortBy, setSortBy] = useState<SortType>("created_at");
+    const searchedKeyword = useRecoilValue(searchedKeywordState);
 
-    const promptQueryParams: PromptQueryProps =
-        type === "total"
-            ? {
-                  sortBy: sortBy,
-                  limit: undefined,
-              }
-            : {
-                  sortBy: "star",
-                  limit: 3,
-              };
+    const promptQueryParams: PromptQueryProps = (() => {
+        switch (type) {
+            case "total":
+                return { sortBy: sortBy, limit: undefined };
+            case "popular":
+                return { sortBy: "star", limit: 3 };
+            case "search":
+                return {
+                    sortBy: sortBy,
+                    limit: undefined,
+                    query: searchedKeyword,
+                };
+        }
+    })();
 
     const {
         items,
@@ -39,22 +46,37 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
         setSortBy(value);
     };
 
+    const promptTitle = (() => {
+        switch (type) {
+            case "total":
+                return "📖 전체 프롬프트";
+            case "popular":
+                return "🔥 지금 인기 있는 프롬프트";
+            case "search":
+                return "검색된 프롬프트";
+        }
+    })();
+
     return (
         <>
-            {usePage && (
-                <SelectWrapper>
-                    <Select
-                        defaultValue="created_at"
-                        style={{ width: 123 }}
-                        onChange={handleChange}
-                        options={[
-                            { value: "created_at", label: "최신 순" },
-                            { value: "relevance", label: "관련도 순" },
-                            { value: "star", label: "인기 순" },
-                        ]}
-                    />
-                </SelectWrapper>
-            )}
+            <TitleWrapper>
+                <Title>{promptTitle}</Title>
+                {usePage && (
+                    <SelectWrapper>
+                        <Select
+                            defaultValue="created_at"
+                            style={{ width: 123 }}
+                            onChange={handleChange}
+                            options={[
+                                { value: "created_at", label: "최신 순" },
+                                { value: "relevance", label: "관련도 순" },
+                                { value: "star", label: "인기 순" },
+                            ]}
+                        />
+                    </SelectWrapper>
+                )}
+            </TitleWrapper>
+
             <PromptWrapper>
                 {isLoading
                     ? Array.from({ length: itemsPerPage }).map((_, idx) => (
@@ -106,4 +128,17 @@ const SkeletonBox = styled.div`
 const SelectWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox("row", "end")};
     width: 100%;
+`;
+
+const TitleWrapper = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("row", "space-between")};
+    width: 100%;
+`;
+
+const Title = styled.div`
+    text-align: start;
+    width: 100%;
+    ${({ theme }) => theme.colors.G_800};
+    ${({ theme }) => theme.fonts.header1};
+    ${({ theme }) => theme.fonts.bold};
 `;
