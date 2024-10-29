@@ -17,7 +17,7 @@ const usePromptQuery = ({
     categories,
 }: PromptQueryProps) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(18);
+    const itemsPerPage = 18;
 
     const { data, isLoading } = useQuery<GetPromptsResponse>({
         queryKey: [currentPage, itemsPerPage, sortBy, limit, query],
