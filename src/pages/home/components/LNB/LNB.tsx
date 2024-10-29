@@ -93,8 +93,8 @@ const StyledMenu = styled(Menu)`
         gap: 6px;
         padding: 0;
         background-color: transparent !important;
-        height: 24px;
-        margin-bottom: 24px;
+        width: 149px;
+        height: 48px;
     }
 
     .ant-menu-title-content {
@@ -111,8 +111,12 @@ const StyledMenu = styled(Menu)`
         }
     }
 
+    .ant-menu-item-active {
+        background-color: ${({ theme }) => theme.colors.primary_10} !important;
+    }
+
     .ant-menu-item-divider {
-        margin-bottom: 16px;
+        margin-bottom: 2px;
     }
 `;
 
@@ -122,4 +126,5 @@ const StyledButton = styled(Button)`
     padding: 8px 4px;
     gap: 2px;
     ${({ theme }) => theme.fonts.b2_16_semi}
+    margin-top: 8px;
 `;
