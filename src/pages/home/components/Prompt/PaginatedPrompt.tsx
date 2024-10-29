@@ -54,7 +54,6 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
         handlePageChange,
         isLoading,
     } = usePromptQuery({ ...promptQueryParams });
-    console.log({ ...promptQueryParams });
 
     const handleChange = (value: SortType) => {
         setSortBy(value);

@@ -5,19 +5,10 @@ import {
     searchedKeywordState,
 } from "@/states/searchState";
 import { useRecoilValue } from "recoil";
-import { useEffect } from "react";
 
 const PaginatedPromptSection = () => {
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
-
-    useEffect(() => {
-        console.log("키워드 변경", searchedKeyword);
-    }, [searchedKeyword]);
-
-    useEffect(() => {
-        console.log("카테고리 변경", searchedCategory);
-    }, [searchedCategory]);
 
     return (
         <>
