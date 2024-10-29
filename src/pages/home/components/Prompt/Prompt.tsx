@@ -12,6 +12,7 @@ interface PromptProps {
     views: number;
     star: number;
     usages: number;
+    index: number;
 }
 
 const Prompt = ({
@@ -21,6 +22,7 @@ const Prompt = ({
     views,
     star,
     usages,
+    index,
 }: PromptProps) => {
     const pointColor = colored ? theme.colors.primary : theme.colors.G_400;
     const showToast = useToast();
@@ -34,7 +36,7 @@ const Prompt = ({
 
     return (
         <S.PromptWrapper colored={colored} onClick={handleClick}>
-            {colored && <S.NumberTag>1</S.NumberTag>}
+            {colored && <S.NumberTag>{index}</S.NumberTag>}
             <S.TitlesWrapper>
                 <S.Title colored={colored}>{title}</S.Title>
                 <S.Subtitle>{description}</S.Subtitle>

@@ -98,7 +98,7 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
                     ? Array.from({ length: itemsPerPage }).map((_, idx) => (
                           <SkeletonBox key={idx} />
                       ))
-                    : items.map((item) => (
+                    : items.map((item, index) => (
                           <Prompt
                               key={item.id}
                               title={item.title}
@@ -106,6 +106,8 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
                               views={item.views}
                               star={item.star}
                               usages={item.usages}
+                              colored={type === "popular"}
+                              index={index + 1}
                           />
                       ))}
             </PromptWrapper>
