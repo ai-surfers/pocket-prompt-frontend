@@ -11,6 +11,7 @@ import {
     searchedKeywordState,
     searchedCategoryState,
 } from "@/states/searchState";
+import { Categories } from "@/core/Prompt";
 
 interface PaginatedPromptProps {
     usePage?: boolean;
@@ -68,7 +69,7 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
             case "search":
                 return "검색된 프롬프트";
             case "category":
-                return "카테고리 프롬프트";
+                return `${Categories[searchCategory].emoji} ${Categories[searchCategory].ko} 프롬프트`;
         }
     })();
 

@@ -1,40 +1,46 @@
 import Button from "@/components/common/Button/Button";
+import { Categories } from "@/core/Prompt";
 import {
+    keywordState,
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
-import { useSetRecoilState } from "recoil";
+import { useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 const SearchChips = () => {
+    const setKeyword = useSetRecoilState(keywordState);
     const setSearchedCategory = useSetRecoilState(searchedCategoryState);
-    const setSearchedKeyword = useSetRecoilState(searchedKeywordState);
-
-    const chips = [
-        { value: "total", title: "전체" },
-        { value: "branding", title: "브랜딩" },
-        { value: "blog", title: "블로그" },
-        { value: "business", title: "비즈니스" },
-        { value: "development", title: "개발" },
-        { value: "marketing", title: "마케팅" },
-        { value: "research", title: "연구" },
-        { value: "writing", title: "글쓰기" },
-        { value: "productivity", title: "생산성" },
-        { value: "language", title: "언어" },
-        { value: "entertainment", title: "재미" },
-        { value: "video", title: "영상기획" },
-    ];
+    const [searchedKeyword, setSearchedKeyword] =
+        useRecoilState(searchedKeywordState);
+    const [selectedButton, setSelectedButton] = useState("total");
 
     const handleChipClick = (chipValue: string) => {
         setSearchedKeyword("");
         setSearchedCategory(chipValue);
+        setSelectedButton(chipValue);
+        setKeyword("");
     };
+
+    const totalCategories = {
+        total: { ko: "전체", en: "total", emoji: "" },
+        ...Categories,
+    };
+
+    useEffect(() => {
+        if (searchedKeyword) setSelectedButton("total");
+    }, [searchedKeyword]);
 
     return (
         <SearchChipsWrapper>
-            {chips.map((chip) => (
-                <StyledButton onClick={() => handleChipClick(chip.value)}>
-                    {chip.title}
+            {Object.entries(totalCategories).map(([key, category]) => (
+                <StyledButton
+                    key={key}
+                    onClick={() => handleChipClick(category.en)}
+                    selected={selectedButton === category.en}
+                >
+                    {category.ko}
                 </StyledButton>
             ))}
         </SearchChipsWrapper>
@@ -50,10 +56,12 @@ const SearchChipsWrapper = styled.div`
     gap: 8px;
 `;
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(Button)<{ selected: boolean }>`
     height: 32px;
     ${({ theme }) => theme.fonts.b3_14_med}
-    background-color: ${({ theme }) => theme.colors.white};
-    color: ${({ theme }) => theme.colors.primary};
+    background-color: ${({ selected, theme }) =>
+        selected ? theme.colors.primary : theme.colors.white};
+    color: ${({ selected, theme }) =>
+        selected ? theme.colors.white : theme.colors.primary};
     border: 1px solid ${({ theme }) => theme.colors.primary_30};
 `;
