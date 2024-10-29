@@ -43,7 +43,7 @@ const usePromptQuery = ({
 
     return {
         items: data?.prompt_info_list || [],
-        totalItems: data?.page_meta_data.total_pages || 0,
+        totalItems: data?.page_meta_data.total_count || 0,
         isLoading,
         currentPage,
         itemsPerPage,
