@@ -1,3 +1,4 @@
+import { getLocalStorage, LOCALSTORAGE_KEYS } from "@/utils/storageUtils";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -14,7 +15,7 @@ export const API = axios.create({
  */
 API.interceptors.request.use(
     async (config) => {
-        const accessToken = window.localStorage.getItem("ACCESS_TOKEN");
+        const accessToken = getLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
 
         console.log(accessToken);
         if (accessToken) {
