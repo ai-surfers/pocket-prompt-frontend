@@ -3,39 +3,56 @@ import Eye from "@/assets/svg/home/Eye";
 import Play from "@/assets/svg/home/Play";
 import theme from "@/styles/theme";
 import * as S from "./styles";
+import useToast from "@/hooks/useToast";
 
 interface PromptProps {
-    colored: boolean;
+    colored?: boolean;
+    title: string;
+    description: string;
+    views: number;
+    star: number;
+    usages: number;
+    index: number;
 }
 
-const Prompt = ({ colored }: PromptProps) => {
+const Prompt = ({
+    colored = false,
+    title,
+    description,
+    views,
+    star,
+    usages,
+    index,
+}: PromptProps) => {
     const pointColor = colored ? theme.colors.primary : theme.colors.G_400;
+    const showToast = useToast();
+
+    const handleClick = () => {
+        showToast(
+            "프롬프트 상세 조회는 아직 준비 중인 기능이에요.",
+            "여러분의 손쉬운 AI활용을 위해 빠르게 준비하고 있을게요!"
+        );
+    };
 
     return (
-        <S.PromptWrapper colored={colored}>
-            {colored && <S.NumberTag>1</S.NumberTag>}
+        <S.PromptWrapper colored={colored} onClick={handleClick}>
+            {colored && <S.NumberTag>{index}</S.NumberTag>}
             <S.TitlesWrapper>
-                <S.Title colored={colored}>
-                    파워포인트 작성 치트키 파워포인트 작성 치트키 파워포인트
-                    작성 치트키
-                </S.Title>
-                <S.Subtitle>
-                    주제와 청중을 입력하면 근사한 파워포인트 초안을 만들어주는
-                    프롬프트 부제목도 길어지면 이렇게 말줄임표 들어가게 ...
-                </S.Subtitle>
+                <S.Title colored={colored}>{title}</S.Title>
+                <S.Subtitle>{description}</S.Subtitle>
             </S.TitlesWrapper>
             <S.DetailsWrapper>
                 <S.Details>
                     <Eye stroke={pointColor} />
-                    <S.Numbers color={pointColor}>1254</S.Numbers>
+                    <S.Numbers color={pointColor}>{views}</S.Numbers>
                 </S.Details>
                 <S.Details>
                     <Play stroke={pointColor} />
-                    <S.Numbers color={pointColor}>258</S.Numbers>
+                    <S.Numbers color={pointColor}>{usages}</S.Numbers>
                 </S.Details>
                 <S.Details>
                     <BookMark stroke={pointColor} />
-                    <S.Numbers color={pointColor}>258</S.Numbers>
+                    <S.Numbers color={pointColor}>{star}</S.Numbers>
                 </S.Details>
             </S.DetailsWrapper>
         </S.PromptWrapper>

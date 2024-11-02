@@ -6,6 +6,7 @@ export interface InputProps {
     onChange: (value: string) => void;
     count?: number;
     disabled?: boolean;
+    onEnter?: () => void;
 }
 export default function Input({
     placeholder,
@@ -13,6 +14,7 @@ export default function Input({
     onChange,
     count,
     disabled = false,
+    onEnter,
 }: InputProps) {
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const value = e.target.value;
@@ -21,12 +23,19 @@ export default function Input({
         onChange(value);
     }
 
+    function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+        if (e.key === "Enter" && onEnter) {
+            onEnter();
+        }
+    }
+
     return (
         <InputContainer $length={value.length} $disabled={disabled}>
             <StyledInput
                 placeholder={placeholder}
                 value={value}
                 onChange={handleChange}
+                onKeyDown={handleKeyDown}
                 disabled={disabled}
             />
             {count && (
