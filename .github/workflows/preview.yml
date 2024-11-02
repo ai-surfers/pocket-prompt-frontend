@@ -48,7 +48,12 @@ jobs:
               run: yarn install
 
             - name: Build
-              run: yarn build:dev
+              run: |
+                  if [ "${{ github.ref_name }}" == "main" ]; then
+                  yarn build
+                  else
+                  yarn build:dev
+                  fi
 
             - name: Publish to Cloudflare Pages
               uses: cloudflare/pages-action@v1
