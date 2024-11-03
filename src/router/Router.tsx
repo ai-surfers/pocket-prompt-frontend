@@ -43,6 +43,14 @@ const router = createBrowserRouter([
                 ),
             },
             {
+                path: "/prompt-edit",
+                element: (
+                    <ProtectedRoute>
+                        <PromptNewPage />
+                    </ProtectedRoute>
+                ),
+            },
+            {
                 path: "/my",
                 element: (
                     <ProtectedRoute>
