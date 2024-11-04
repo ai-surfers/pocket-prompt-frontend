@@ -5,6 +5,7 @@ import {
     InputFormat,
     usePostPrompt,
 } from "@/hooks/mutations/prompts/usePostPrompt";
+import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
 import { Wrapper } from "@/layouts/Layout";
 import FormSection from "@/pages/promptNew/components/FormSection";
 import PreviewSection from "@/pages/promptNew/components/PreviewSection";
@@ -16,11 +17,21 @@ import {
 import { extractOptions } from "@/utils/promptUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Flex } from "antd";
+import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { z } from "zod";
 
-export default function PromptNewPage() {
+interface PromptNewPageProps {
+    isEdit?: boolean;
+}
+
+export default function PromptNewPage({ isEdit = false }: PromptNewPageProps) {
+    // 수정 모드일 때 uri id 값으로 프롬프트 상세 조회
+    const { promptId } = useParams<{ promptId: string }>();
+    const { data } = usePromptQuery(promptId ?? "");
+
     const form = useForm<PromptSchemaType>({
         resolver: zodResolver(promptSchema),
         defaultValues: defaultPromptSchema,
@@ -67,6 +78,22 @@ export default function PromptNewPage() {
         )();
     };
 
+    // 수정 모드일 때 form reset
+    useEffect(() => {
+        if (isEdit && data) {
+            const formattedData = {
+                ...data,
+                visibility:
+                    data.visibility === "public"
+                        ? "Public"
+                        : data.visibility === "private"
+                        ? "Private"
+                        : data.visibility,
+            };
+            form.reset(formattedData);
+        }
+    }, [isEdit, data, form]);
+
     return (
         <FormProvider {...form}>
             <Container>
@@ -88,7 +115,10 @@ export default function PromptNewPage() {
                         style={{ marginTop: "32px" }}
                     >
                         <PreviewSection />
-                        <FormSection onSumbit={handleClickSubmit} />
+                        <FormSection
+                            onSumbit={handleClickSubmit}
+                            isEdit={isEdit}
+                        />
                     </Flex>
                 </PromptNewWrapper>
             </Container>

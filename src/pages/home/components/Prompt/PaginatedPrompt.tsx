@@ -1,9 +1,9 @@
 import { Pagination, Select } from "antd";
 import Prompt from "../Prompt/Prompt";
 import styled from "styled-components";
-import usePromptQuery, {
+import usePromptsListQuery, {
     PromptQueryProps,
-} from "@/hooks/queries/prompts/usePromptQuery";
+} from "@/hooks/queries/prompts/usePromptsListQuery";
 import { SortType } from "@/apis/prompt/prompt.model";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
@@ -54,7 +54,7 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
         itemsPerPage,
         handlePageChange,
         isLoading,
-    } = usePromptQuery({ ...promptQueryParams });
+    } = usePromptsListQuery({ ...promptQueryParams });
 
     const handleChange = (value: SortType) => {
         setSortBy(value);
@@ -108,6 +108,7 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
                               usages={item.usages}
                               colored={type === "popular"}
                               index={index + 1}
+                              id={item.id}
                           />
                       ))}
             </PromptWrapper>
