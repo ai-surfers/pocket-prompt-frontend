@@ -5,6 +5,7 @@ import {
     InputFormat,
     usePostPrompt,
 } from "@/hooks/mutations/prompts/usePostPrompt";
+import { usePutPrompt } from "@/hooks/mutations/prompts/usePutPrompt";
 import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
 import { Wrapper } from "@/layouts/Layout";
 import FormSection from "@/pages/promptNew/components/FormSection";
@@ -37,7 +38,7 @@ export default function PromptNewPage({ isEdit = false }: PromptNewPageProps) {
         defaultValues: defaultPromptSchema,
     });
 
-    const { mutate } = usePostPrompt({
+    const { mutate: createPromptMutate } = usePostPrompt({
         onSuccess(res) {
             console.log("Success", res);
             alert(res.detail || "프롬프트를 등록하였습니다.");
@@ -46,6 +47,17 @@ export default function PromptNewPage({ isEdit = false }: PromptNewPageProps) {
         onError(e) {
             console.error("Failed", e);
             alert("프롬프트 등록에 실패하였습니다.");
+        },
+    });
+
+    const { mutate: updatePromptMutate } = usePutPrompt({
+        onSuccess(res) {
+            console.log("Success", res);
+            alert(res.detail || "프롬프트가 수정되었습니다.");
+        },
+        onError(e) {
+            console.error("Failed", e);
+            alert("프롬프트 수정에 실패하였습니다.");
         },
     });
 
@@ -70,7 +82,14 @@ export default function PromptNewPage({ isEdit = false }: PromptNewPageProps) {
                 };
 
                 console.log(">> promptData", promptData);
-                mutate(promptData);
+
+                if (isEdit && promptId) {
+                    // 수정 모드일 때 updatePrompt 호출
+                    updatePromptMutate({ prompt: promptData, id: promptId });
+                } else {
+                    // 생성 모드일 때 createPrompt 호출
+                    createPromptMutate(promptData);
+                }
             },
             (errors) => {
                 console.error(">> error", errors);
