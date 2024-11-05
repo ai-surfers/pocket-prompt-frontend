@@ -49,7 +49,7 @@ jobs:
 
             - name: Build
               run: |
-                  if [ "${{ github.ref_name }}" == "main" ]; then
+                  if [ "${{ github.event.pull_request.base.ref }}" == "main" ]; then
                   yarn build
                   else
                   yarn build:dev

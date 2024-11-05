@@ -45,7 +45,7 @@ export default function Header() {
                     <TabBarContainer>
                         <StyledNavLink to="/">Home</StyledNavLink>
                         <StyledNavLink to="/extension">Extension</StyledNavLink>
-                        {/* <StyledNavLink to="/price">Pricing</StyledNavLink> */}
+                        <StyledNavLink to="/price">Pricing</StyledNavLink>
                     </TabBarContainer>
                 </HeaderLeftContainer>
 
