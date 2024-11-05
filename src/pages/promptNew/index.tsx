@@ -42,7 +42,6 @@ export default function PromptNewPage({ isEdit = false }: PromptNewPageProps) {
         onSuccess(res) {
             console.log("Success", res);
             alert(res.detail || "프롬프트를 등록하였습니다.");
-            form.reset(defaultPromptSchema);
         },
         onError(e) {
             console.error("Failed", e);
@@ -78,6 +77,7 @@ export default function PromptNewPage({ isEdit = false }: PromptNewPageProps) {
 
                 const promptData: CreatePromptRequest = {
                     ...input,
+                    visibility: input.visibility.toLowerCase(),
                     user_input_format: user_input_formats,
                 };
 
@@ -90,6 +90,7 @@ export default function PromptNewPage({ isEdit = false }: PromptNewPageProps) {
                     // 생성 모드일 때 createPrompt 호출
                     createPromptMutate(promptData);
                 }
+                form.reset(defaultPromptSchema);
             },
             (errors) => {
                 console.error(">> error", errors);
