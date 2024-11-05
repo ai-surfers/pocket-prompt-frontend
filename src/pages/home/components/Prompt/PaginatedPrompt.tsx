@@ -108,7 +108,6 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
                               usages={item.usages}
                               colored={type === "popular"}
                               index={index + 1}
-                              id={item.id}
                           />
                       ))}
             </PromptWrapper>
