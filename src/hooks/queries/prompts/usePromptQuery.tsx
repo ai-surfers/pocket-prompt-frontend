@@ -29,7 +29,8 @@ const usePromptQuery = ({
                 limit: limit ? limit : itemsPerPage,
                 sort_order: "desc",
                 query: query,
-                categories: categories,
+                ...(categories &&
+                    categories.length > 0 && { categories: categories[0] }),
             }).then((res) => res),
     });
 
