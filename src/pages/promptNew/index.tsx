@@ -20,7 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Flex } from "antd";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { z } from "zod";
 
@@ -33,6 +33,10 @@ export default function PromptNewPage({ isEdit = false }: PromptNewPageProps) {
     const { promptId } = useParams<{ promptId: string }>();
     const { data } = usePromptQuery(promptId ?? "");
 
+    const navigate = useNavigate();
+
+    const mode = !isEdit ? "등록" : "수정";
+
     const form = useForm<PromptSchemaType>({
         resolver: zodResolver(promptSchema),
         defaultValues: defaultPromptSchema,
@@ -42,6 +46,8 @@ export default function PromptNewPage({ isEdit = false }: PromptNewPageProps) {
         onSuccess(res) {
             console.log("Success", res);
             alert(res.detail || "프롬프트를 등록하였습니다.");
+
+            navigate(`/prompt-edit/${res.data.prompt_id}`, { replace: true });
         },
         onError(e) {
             console.error("Failed", e);
@@ -119,11 +125,11 @@ export default function PromptNewPage({ isEdit = false }: PromptNewPageProps) {
             <Container>
                 <PromptNewWrapper>
                     <Text font="large_32_bold" style={{ marginTop: "40px" }}>
-                        나만의 프롬프트 등록하기
+                        나만의 프롬프트 {mode}하기
                     </Text>
 
                     <Text font="h2_20_reg" color="G_400">
-                        실시간으로 미리보기 화면을 보면서 등록하는 나만의
+                        실시간으로 미리보기 화면을 보면서 {mode}하는 나만의
                         프롬프트
                     </Text>
 
