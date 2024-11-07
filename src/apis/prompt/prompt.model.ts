@@ -6,7 +6,7 @@ type PromptInputField = {
     default?: number;
 };
 
-type PromptDetails = {
+export type PromptDetails = {
     id: string;
     title: string;
     description: string;
@@ -29,7 +29,7 @@ type PaginationInfo = {
     is_last: boolean;
 };
 
-export type GetPromptsResponse = {
+export type GetPromptsListResponse = {
     prompt_info_list: PromptDetails[];
     page_meta_data: PaginationInfo;
 };
@@ -38,10 +38,10 @@ export type ViewType = "open" | "starred" | "my";
 
 export type SortType = "created_at" | "star" | "usages" | "relevance";
 
-export type GetPromptsParams = {
+export type GetPromptsListParams = {
     view_type: ViewType;
     query?: string;
-    categories?: string[];
+    categories?: string;
     sort_by?: SortType;
     sort_order?: "asc" | "desc";
     limit?: number;

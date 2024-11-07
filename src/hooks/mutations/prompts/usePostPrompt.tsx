@@ -35,7 +35,7 @@ export const createPrompt = async (prompt: CreatePromptRequest) => {
     return data;
 };
 
-interface PostPromptProps {
+export interface PostPromptProps {
     onSuccess: (res: BaseResponse<CreatePromptResponse>) => void;
     onError: (e: Error) => void;
 }
