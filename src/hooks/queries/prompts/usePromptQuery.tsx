@@ -1,54 +1,15 @@
+import { getPrompt } from "@/apis/prompt/prompt";
+import { PromptDetails } from "@/apis/prompt/prompt.model";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { getPrompts } from "@/apis/prompt/prompt";
-import { GetPromptsResponse, SortType } from "@/apis/prompt/prompt.model";
 
-export interface PromptQueryProps {
-    sortBy: SortType;
-    limit?: number;
-    query?: string;
-    categories?: string[];
-}
-
-const usePromptQuery = ({
-    sortBy,
-    limit,
-    query,
-    categories,
-}: PromptQueryProps) => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 18;
-
-    const { data, isLoading } = useQuery<GetPromptsResponse>({
-        queryKey: [currentPage, itemsPerPage, sortBy, limit, query, categories],
-        queryFn: () =>
-            getPrompts({
-                view_type: "open",
-                sort_by: sortBy,
-                page: currentPage,
-                limit: limit ? limit : itemsPerPage,
-                sort_order: "desc",
-                query: query,
-                categories: categories,
-            }).then((res) => res),
+const usePromptQuery = (id: string) => {
+    const { data, isLoading } = useQuery<PromptDetails>({
+        queryKey: [id],
+        queryFn: () => getPrompt(id).then((res) => res),
+        enabled: !!id,
     });
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    };
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [sortBy]);
-
-    return {
-        items: data?.prompt_info_list || [],
-        totalItems: data?.page_meta_data.total_count || 0,
-        isLoading,
-        currentPage,
-        itemsPerPage,
-        handlePageChange,
-    };
+    return { data, isLoading };
 };
 
 export default usePromptQuery;
