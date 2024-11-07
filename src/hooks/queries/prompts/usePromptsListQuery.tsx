@@ -7,7 +7,7 @@ export interface PromptQueryProps {
     sortBy: SortType;
     limit?: number;
     query?: string;
-    categories?: string[];
+    categories?: string;
 }
 
 const usePromptsListQuery = ({
@@ -29,7 +29,7 @@ const usePromptsListQuery = ({
                 limit: limit ? limit : itemsPerPage,
                 sort_order: "desc",
                 query: query,
-                categories: categories,
+                ...(categories && { categories: categories[0] }),
             }).then((res) => res),
     });
 

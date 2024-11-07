@@ -42,7 +42,7 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
                 return {
                     sortBy: sortBy,
                     limit: undefined,
-                    categories: [searchCategory],
+                    categories: searchCategory,
                 };
         }
     })();
