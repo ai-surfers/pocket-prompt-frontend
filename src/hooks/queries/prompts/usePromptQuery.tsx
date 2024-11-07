@@ -20,7 +20,7 @@ const usePromptQuery = ({
     const itemsPerPage = 18;
 
     const { data, isLoading } = useQuery<GetPromptsResponse>({
-        queryKey: [currentPage, itemsPerPage, sortBy, limit, query],
+        queryKey: [currentPage, itemsPerPage, sortBy, limit, query, categories],
         queryFn: () =>
             getPrompts({
                 view_type: "open",
