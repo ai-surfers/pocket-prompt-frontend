@@ -41,7 +41,7 @@ export type SortType = "created_at" | "star" | "usages" | "relevance";
 export type GetPromptsParams = {
     view_type: ViewType;
     query?: string;
-    categories?: string[];
+    categories?: string;
     sort_by?: SortType;
     sort_order?: "asc" | "desc";
     limit?: number;
