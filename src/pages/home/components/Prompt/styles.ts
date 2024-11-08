@@ -13,6 +13,7 @@ export const PromptWrapper = styled.div<{ colored: boolean }>`
     background-color: ${({ colored, theme }) =>
         colored ? "#F2F3FD" : theme.colors.white};
     position: relative;
+    cursor: pointer;
 `;
 
 export const NumberTag = styled.div`
