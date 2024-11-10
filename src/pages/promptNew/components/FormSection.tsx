@@ -24,9 +24,8 @@ const AI = Object.entries(AIPlatforms).map(([key, value]) => ({
 
 interface FormSectionProps {
     onSumbit: () => void;
-    isEdit: boolean;
 }
-function FormSection({ onSumbit, isEdit }: FormSectionProps) {
+function FormSection({ onSumbit }: FormSectionProps) {
     const {
         control,
         formState: { isValid },
@@ -82,11 +81,11 @@ function FormSection({ onSumbit, isEdit }: FormSectionProps) {
                             name="description"
                             control={control}
                             render={({ field }) => (
-                                <Textarea
+                                <Input
                                     placeholder="예시: 주제와 청중을 입력하면 근사한 파워포인트 초안을 만들어주는 프롬프트"
                                     value={field.value}
                                     onChange={field.onChange}
-                                    count={200}
+                                    count={100}
                                 />
                             )}
                         />
@@ -182,7 +181,7 @@ function FormSection({ onSumbit, isEdit }: FormSectionProps) {
                 onClick={onSumbit}
                 hierarchy={isValid ? "primary" : "disabled"}
             >
-                {isEdit ? "프롬프트 수정 완료하기" : "프롬프트 등록 완료하기"}
+                프롬프트 등록 완료하기
             </Button>
         </Box>
     );
