@@ -1,17 +1,17 @@
 // [Reference] https://yogjin.tistory.com/121
 
-const LOCATION_KEYS = {
-    all: ["locations"] as const,
+const PROMPT_KEYS = {
+    all: ["prompts"] as const,
 
-    lists: () => [...LOCATION_KEYS.all, "list"] as const, // ["locations", "list"]
-    list: (filters: object) => [...LOCATION_KEYS.lists(), { filters }] as const, // ["locations", "list", "..."]
+    lists: () => [...PROMPT_KEYS.all, "list"] as const, // ["prompts", "list"]
+    list: (filters: object) => [...PROMPT_KEYS.lists(), { filters }] as const, // ["prompts", "list", "..."]
 
-    details: () => [...LOCATION_KEYS.all, "detail"] as const, // ["locations", "detail"]
-    detail: (id: string) => [...LOCATION_KEYS.details(), id] as const, // ["locations", "detail", "id"]
+    details: () => [...PROMPT_KEYS.all, "detail"] as const, // ["prompts", "detail"]
+    detail: (id: string) => [...PROMPT_KEYS.details(), id] as const, // ["prompts", "detail", "id"]
 };
 
 const PAYMENTS_KEYS = {
     all: ["payments"] as const,
 };
 
-export { LOCATION_KEYS, PAYMENTS_KEYS };
+export { PROMPT_KEYS, PAYMENTS_KEYS };

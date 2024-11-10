@@ -1,35 +1,22 @@
 import Banner from "./components/Banner/Banner";
 import { Wrapper } from "@/layouts/Layout";
-import Prompt from "./components/Prompt/Prompt";
 import styled from "styled-components";
 import LNB from "./components/LNB/LNB";
+
+import PaginatedPromptSection from "./components/Prompt/PaginatedPromptSection";
 
 export default function HomePage() {
     return (
         <HomeWrapper>
-            <LNB />
-            <ContentWrapper>
-                <BannerWrapper>
-                    <Banner />
-                </BannerWrapper>
-                <SectionWrapper>
-                    <Title>🔥 지금 인기 있는 프롬프트</Title>
-                    <PromptWrapper>
-                        <Prompt colored={true} />
-                    </PromptWrapper>
-                </SectionWrapper>
-                <SectionWrapper>
-                    <Title>📖 전체 프롬프트</Title>
-                    <PromptWrapper>
-                        <Prompt colored={false} />
-                        <Prompt colored={false} />
-                        <Prompt colored={false} />
-                        <Prompt colored={false} />
-                        <Prompt colored={false} />
-                        <Prompt colored={false} />
-                    </PromptWrapper>
-                </SectionWrapper>
-            </ContentWrapper>
+            <HomeContentWrapper>
+                <LNB />
+                <ContentWrapper>
+                    <BannerWrapper>
+                        <Banner />
+                    </BannerWrapper>
+                    <PaginatedPromptSection />
+                </ContentWrapper>
+            </HomeContentWrapper>
         </HomeWrapper>
     );
 }
@@ -39,6 +26,13 @@ const HomeWrapper = styled.div`
     gap: 40px;
     margin-top: 92px;
     align-items: start;
+    width: 100vw;
+`;
+
+const HomeContentWrapper = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("row", "center", "start")};
+    gap: 40px;
+    margin: auto;
 `;
 
 const ContentWrapper = styled(Wrapper)`
@@ -48,24 +42,4 @@ const ContentWrapper = styled(Wrapper)`
 
 const BannerWrapper = styled.div`
     margin-bottom: 15px;
-`;
-
-const SectionWrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("column", "center", "start")};
-    gap: 12px;
-    margin: 9px 0 44px 0;
-`;
-
-const Title = styled.div`
-    ${({ theme }) => theme.colors.G_800};
-    ${({ theme }) => theme.fonts.header1};
-    ${({ theme }) => theme.fonts.bold};
-`;
-
-const PromptWrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row", "start", "start")};
-    align-content: flex-start;
-    gap: 16px;
-    flex-wrap: wrap;
-    box-sizing: border-box;
 `;

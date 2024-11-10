@@ -24,8 +24,9 @@ const AI = Object.entries(AIPlatforms).map(([key, value]) => ({
 
 interface FormSectionProps {
     onSumbit: () => void;
+    isEdit: boolean;
 }
-function FormSection({ onSumbit }: FormSectionProps) {
+function FormSection({ onSumbit, isEdit }: FormSectionProps) {
     const {
         control,
         formState: { isValid },
@@ -181,7 +182,7 @@ function FormSection({ onSumbit }: FormSectionProps) {
                 onClick={onSumbit}
                 hierarchy={isValid ? "primary" : "disabled"}
             >
-                프롬프트 등록 완료하기
+                {isEdit ? "프롬프트 수정 완료하기" : "프롬프트 등록 완료하기"}
             </Button>
         </Box>
     );

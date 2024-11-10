@@ -1,21 +1,21 @@
 export const Visibility: string[] = ["public", "private"];
 
 interface Category {
-    [key: string]: { ko: string; en: string };
+    [key: string]: { ko: string; en: string; emoji: string };
 }
 
 export const Categories: Category = {
-    branding: { ko: "브랜딩", en: "branding" },
-    blog: { ko: "블로그", en: "blog" },
-    business: { ko: "비즈니스", en: "business" },
-    development: { ko: "개발", en: "development" },
-    marketing: { ko: "마케팅", en: "marketing" },
-    research: { ko: "연구", en: "research" },
-    writing: { ko: "글쓰기", en: "writing" },
-    productivity: { ko: "생산성", en: "productivity" },
-    language: { ko: "언어", en: "language" },
-    entertainment: { ko: "재미", en: "entertainment" },
-    video: { ko: "영상", en: "video" },
+    branding: { ko: "브랜딩", en: "branding", emoji: "✨" },
+    blog: { ko: "블로그", en: "blog", emoji: "✍️" },
+    business: { ko: "비즈니스", en: "business", emoji: "👔" },
+    development: { ko: "개발", en: "development", emoji: "💻" },
+    marketing: { ko: "마케팅", en: "marketing", emoji: "📣" },
+    research: { ko: "연구", en: "research", emoji: "🔬" },
+    writing: { ko: "글쓰기", en: "writing", emoji: "✍️" },
+    productivity: { ko: "생산성", en: "productivity", emoji: "🚀" },
+    language: { ko: "언어", en: "language", emoji: "💬" },
+    entertainment: { ko: "재미", en: "entertainment", emoji: "😂" },
+    video: { ko: "영상기획", en: "video", emoji: "📹" },
 };
 
 export const AIPlatforms = {

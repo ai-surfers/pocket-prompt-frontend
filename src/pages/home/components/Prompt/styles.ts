@@ -4,6 +4,7 @@ export const PromptWrapper = styled.div<{ colored: boolean }>`
     ${({ theme }) => theme.mixins.flexBox("column", "space-between")};
     width: 358px;
     height: 157px;
+    box-sizing: border-box;
     border-radius: 12px;
     border: 1.5px solid;
     border-color: ${({ theme, colored }) =>
@@ -14,6 +15,11 @@ export const PromptWrapper = styled.div<{ colored: boolean }>`
         colored ? "#F2F3FD" : theme.colors.white};
     position: relative;
     cursor: pointer;
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+        box-shadow: 0px 0px 64px 0px rgba(117, 128, 234, 0.18);
+    }
 `;
 
 export const NumberTag = styled.div`
