@@ -40,9 +40,7 @@ export default function Header() {
         <HeaderContainer>
             <HeaderWrapper>
                 <HeaderLeftContainer>
-                    <StyledNavLink to="/">
-                        <Logo style={{ width: "40px" }} />
-                    </StyledNavLink>
+                    <Logo style={{ width: "40px" }} />
 
                     <TabBarContainer>
                         <StyledNavLink to="/">Home</StyledNavLink>
@@ -85,7 +83,7 @@ const HeaderWrapper = styled.div`
     padding: 0 20px;
 
     ${({ theme }) => theme.mixins.flexBox("row", "space-between")};
-    flex-wrap: wrap;
+    flex-wrp: wrap;
 `;
 
 const StyledNavLink = styled(NavLink)`
