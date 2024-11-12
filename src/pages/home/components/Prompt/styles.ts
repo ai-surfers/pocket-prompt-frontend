@@ -14,6 +14,7 @@ export const PromptWrapper = styled.div<{ colored: boolean }>`
     background-color: ${({ colored, theme }) =>
         colored ? "#F2F3FD" : theme.colors.white};
     position: relative;
+    cursor: pointer;
     transition: box-shadow 0.3s ease;
 
     &:hover {

@@ -82,11 +82,11 @@ function FormSection({ onSumbit, isEdit }: FormSectionProps) {
                             name="description"
                             control={control}
                             render={({ field }) => (
-                                <Textarea
+                                <Input
                                     placeholder="예시: 주제와 청중을 입력하면 근사한 파워포인트 초안을 만들어주는 프롬프트"
                                     value={field.value}
                                     onChange={field.onChange}
-                                    count={200}
+                                    count={100}
                                 />
                             )}
                         />
