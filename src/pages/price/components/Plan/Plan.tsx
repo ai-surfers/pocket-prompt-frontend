@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Segmented, Typography } from "antd";
+import { Segmented } from "antd";
 import { useMemo, useState } from "react";
 import { PLAN_DATA } from "./PlanData";
 import PlanCard from "./PlanCard";
@@ -9,7 +9,8 @@ import {
     usePostPayments,
 } from "@/hooks/mutations/payments/usePostPayments";
 import { useUser } from "@/hooks/useUser";
-const { Text } = Typography;
+import YearlyFreeDescription from "@/assets/svg/Price/yearly-plan-free-description.svg";
+import Text from "@/components/common/Text/Text";
 
 const PORTONE_STORE_ID = import.meta.env.VITE_PORTONE_STORE_ID;
 const PORTONE_CHANNEL_KEY = import.meta.env.VITE_PORTONE_CHANNEL_KEY;
@@ -80,13 +81,14 @@ export default function Plan() {
 
     return (
         <PlanContainer>
-            <Segmented
-                onChange={handleCycleChange}
-                options={["월간", "연간"]}
-            />
-
+            <SegmentedFrame>
+                <Segmented
+                    onChange={handleCycleChange}
+                    options={["월간", "연간"]}
+                />
+            </SegmentedFrame>
             <CardGrid>
-                {plans.map((plan) => (
+                {plans.map((plan, index) => (
                     <AnimatedCard key={plan.planType}>
                         <PlanCard
                             title={plan.title}
@@ -94,21 +96,29 @@ export default function Plan() {
                             period={plan.period}
                             features={plan.features}
                             buttonLabel={plan.buttonLabel}
+                            isHighlight={index !== 0}
                             onClick={() => handleStartClick(plan.planType)}
                         />
                     </AnimatedCard>
                 ))}
             </CardGrid>
-
-            <Text>예산에 구애받지 마세요, 창의성을 발휘하세요!</Text>
+            <Text font="b2_16_med" color="primary_100">
+                예산에 구애받지 마세요, 창의성을 발휘하세요!
+            </Text>
+            {billingCycle === "월간" && (
+                <YearlyFreeDescriptionImg
+                    src={YearlyFreeDescription}
+                    alt="연간 플랜 설명"
+                />
+            )}
         </PlanContainer>
     );
 }
 
 const PlanContainer = styled.section`
+    position: relative;
     ${({ theme }) => theme.mixins.flexBox("column")};
-    gap: 20px;
-    margin: 40px 0;
+    margin: 48px 0 60px;
 `;
 
 const CardGrid = styled.div`
@@ -116,8 +126,52 @@ const CardGrid = styled.div`
     justify-content: center;
     flex-wrap: wrap;
     gap: 16px;
+    margin-bottom: 20px;
 `;
 
 const AnimatedCard = styled.div`
     ${({ theme }) => theme.mixins.slideUpWFadeIn()};
+`;
+
+const SegmentedFrame = styled.div`
+    margin-bottom: 36px;
+    overflow: hidden;
+    & .ant-segmented {
+        padding: 6px;
+        background-color: ${({ theme }) => theme.colors.primary_20};
+        border-radius: 12px;
+    }
+    & .ant-segmented-item {
+        border-radius: 8px;
+    }
+    & .ant-segmented-thumb {
+        border-radius: 8px;
+
+        :hover {
+            background-color: transparent;
+        }
+    }
+    & .ant-segmented-item-label {
+        width: 267px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        ${({ theme }) => theme.fonts.h2_20_reg}
+        color:  ${({ theme }) => theme.colors.G_500};
+    }
+    & .ant-segmented-item-selected {
+        box-shadow: 0px 0px 64px 0px rgba(117, 128, 234, 0.6);
+
+        & .ant-segmented-item-label {
+            ${({ theme }) => theme.fonts.h2_20_semi}
+            color:  ${({ theme }) => theme.colors.primary_100};
+        }
+    }
+`;
+
+const YearlyFreeDescriptionImg = styled.img`
+    position: absolute;
+    top: 10px;
+    right: 160px;
 `;

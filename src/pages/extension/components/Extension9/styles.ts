@@ -35,12 +35,12 @@ export const ToggleHeader = styled.div`
     cursor: pointer;
 `;
 
-export const ToggleHeaderTitle = styled.span`
+export const ToggleHeaderTitle = styled.span<{ opened: boolean }>`
     color: var(--gray-600, #3e4151);
     font-family: Pretendard;
     font-size: 18px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: ${({ opened }) => (opened ? "700" : "500")};
     line-height: 150%; /* 27px */
     letter-spacing: -0.36px;
 
