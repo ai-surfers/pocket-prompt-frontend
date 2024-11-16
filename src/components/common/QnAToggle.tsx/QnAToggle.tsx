@@ -5,7 +5,7 @@ import {
     ToggleContentText,
     ToggleHeader,
     ToggleHeaderTitle,
-} from "../../../pages/extension/components/Extension9/styles";
+} from "./styles";
 import ArrowDown from "@/assets/svg/extension/arrow-down.svg";
 import ArrowUp from "@/assets/svg/extension/arrow-up.svg";
 interface Props {
@@ -20,7 +20,7 @@ const QnAToggle = ({ question, answer }: Props) => {
             <ToggleHeader onClick={() => setOpend(!opened)}>
                 <ToggleHeaderTitle opened={opened}>
                     <span>Q.</span>
-                    {question}
+                    <p>{question}</p>
                 </ToggleHeaderTitle>
                 <img src={opened ? ArrowUp : ArrowDown} />
             </ToggleHeader>

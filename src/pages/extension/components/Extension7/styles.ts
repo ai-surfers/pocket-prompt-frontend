@@ -29,4 +29,8 @@ export const Title = styled.p`
     line-height: 144%; /* 51.84px */
     letter-spacing: -0.72px;
     margin-bottom: 28px;
+
+    @media screen and (max-width: 1279px) {
+        font-size: 28px;
+    }
 `;
