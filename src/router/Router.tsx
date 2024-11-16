@@ -9,6 +9,7 @@ import PromptNewPage from "@/pages/promptNew";
 import FooterLayout from "@/layouts/FooterLayout";
 import NotFound from "@/pages/NotFound";
 import ProtectedRoute from "@/router/ProtectedRoute";
+import PromptPage from "@/pages/prompt";
 
 const router = createBrowserRouter([
     {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
                         <MyPage />
                     </ProtectedRoute>
                 ),
+            },
+            {
+                path: "/prompt/:promptId",
+                element: <PromptPage />,
             },
         ],
     },
