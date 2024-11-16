@@ -78,7 +78,7 @@ const StyledTextarea = styled.textarea`
     ${({ theme }) => theme.fonts.b3_14_reg};
 
     min-height: 87px;
-    max-height: 200px;
+    max-height: 300px;
 
     border: none;
     background: transparent;
