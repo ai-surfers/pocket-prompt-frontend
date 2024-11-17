@@ -7,6 +7,7 @@ import {
     LogoImage,
     SubTitle,
     Title,
+    GeminiIconImg,
 } from "./styles";
 import GPTIcon from "@/assets/images/extension/gpt-icon.png";
 import ClaudeIcon from "@/assets/images/extension/claude-icon.png";
@@ -29,7 +30,7 @@ const Extension5 = () => {
                 <AIPlatformsIconWrap>
                     <AIPlatformsIcon src={GPTIcon} />
                     <AIPlatformsIcon src={ClaudeIcon} />
-                    <AIPlatformsIcon src={GeminiIcon} />
+                    <GeminiIconImg src={GeminiIcon} />
                 </AIPlatformsIconWrap>
                 <LogoImage src={Logo} alt="로고 이미지" />
             </Extension5Wrap>

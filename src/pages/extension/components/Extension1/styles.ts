@@ -39,6 +39,16 @@ export const Extension1Wrap = styled.div`
     align-items: center;
     position: relative;
     z-index: 2;
+
+    @media screen and (max-width: 1350px) {
+        padding: 84px 40px 114px;
+    }
+
+    @media screen and (max-width: 1024px) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 `;
 
 export const ContentWrap = styled.div``;
@@ -51,10 +61,29 @@ export const DemoVideo = styled.img`
     object-fit: cover;
     position: relative;
     z-index: 2;
+
+    @media screen and (max-width: 1350px) {
+        width: 584px;
+        height: 329px;
+    }
+
+    @media screen and (max-width: 1024px) {
+        width: 416px;
+        height: 234px;
+    }
+
+    @media screen and (max-width: 768px) {
+        width: 348px;
+        height: 196px;
+    }
 `;
 
 export const VideoWrap = styled.div`
     position: relative;
+
+    @media screen and (max-width: 1024px) {
+        margin-bottom: 41px;
+    }
 `;
 
 export const VideoBandImage = styled.img`
@@ -86,6 +115,15 @@ export const SubTitle = styled.h2`
     line-height: 143%;
     letter-spacing: -0.56px;
     margin-bottom: 16px;
+
+    @media screen and (max-width: 1350px) {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+
+    @media screen and (max-width: 1024px) {
+        text-align: center;
+    }
 `;
 
 export const MainTitle = styled.h1`
@@ -96,6 +134,16 @@ export const MainTitle = styled.h1`
     font-weight: 700;
     line-height: 123%; /* 63.96px */
     margin-bottom: 58px;
+
+    @media screen and (max-width: 1350px) {
+        font-size: 36px;
+        margin-bottom: 54px;
+    }
+
+    @media screen and (max-width: 1024px) {
+        text-align: center;
+        margin-bottom: 21px;
+    }
 `;
 
 export const BelowDownloadButtonText = styled.p<{
@@ -109,4 +157,8 @@ export const BelowDownloadButtonText = styled.p<{
     line-height: 144%; /* 23.04px */
     letter-spacing: 0px;
     margin-left: 12px;
+
+    @media screen and (max-width: 1024px) {
+        text-align: center;
+    }
 `;

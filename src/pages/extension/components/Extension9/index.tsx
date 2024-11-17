@@ -1,5 +1,5 @@
 import { qnaData } from "./qnaData";
-import QnAToggle from "./QnAToggle";
+import QnAToggle from "../../../../components/common/QnAToggle.tsx/QnAToggle";
 import { Extension9Container, Title } from "./styles";
 const Extension9 = () => {
     return (

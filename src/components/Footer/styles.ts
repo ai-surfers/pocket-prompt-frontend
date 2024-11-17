@@ -7,6 +7,19 @@ export const FooterWrapper = styled.div`
     color: white;
     font-family: "Pretendard", sans-serif;
     display: flex;
+
+    @media screen and (max-width: 1279px) {
+        padding: 40px;
+    }
+
+    @media screen and (max-width: 1024px) {
+        padding: 40px 32px;
+    }
+
+    @media screen and (max-width: 767px) {
+        flex-direction: column;
+        gap: 20px;
+    }
 `;
 
 export const ContentWrap = styled.div`
@@ -17,6 +30,10 @@ export const NavLinks = styled.div`
     display: flex;
     gap: 24px;
     margin-bottom: 20px;
+
+    @media screen and (max-width: 1279px) {
+        font-size: 20px;
+    }
 `;
 
 export const NavLink = styled.a`
@@ -27,6 +44,10 @@ export const NavLink = styled.a`
     text-decoration: none;
     &:hover {
         text-decoration: underline;
+    }
+
+    @media screen and (max-width: 1279px) {
+        font-size: 14px;
     }
 `;
 
@@ -46,6 +67,11 @@ export const CompanyName = styled.div`
 export const InfoSection = styled.div`
     display: flex;
     gap: 40px;
+
+    @media screen and (max-width: 1024px) {
+        flex-direction: column;
+        gap: 24px;
+    }
 `;
 
 export const InfoColumn = styled.div`
@@ -64,4 +90,9 @@ export const InfoText = styled.div`
 export const Logo = styled.img`
     width: 150px;
     height: 150px;
+
+    @media screen and (max-width: 1024px) {
+        width: 120px;
+        height: 120px;
+    }
 `;

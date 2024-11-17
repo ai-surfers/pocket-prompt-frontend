@@ -18,9 +18,9 @@ const QnAToggle = ({ question, answer }: Props) => {
     return (
         <ToggleContainer>
             <ToggleHeader onClick={() => setOpend(!opened)}>
-                <ToggleHeaderTitle>
+                <ToggleHeaderTitle opened={opened}>
                     <span>Q.</span>
-                    {question}
+                    <p>{question}</p>
                 </ToggleHeaderTitle>
                 <img src={opened ? ArrowUp : ArrowDown} />
             </ToggleHeader>
