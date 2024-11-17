@@ -1,31 +1,45 @@
-import Button from "@/components/common/Button/Button";
-import Text from "@/components/common/Text/Text";
-import { Wrapper } from "@/layouts/Layout";
+import { TopSection } from "@/pages/prompt/components/TopSection";
+import { ExecuteSection } from "@/pages/prompt/components/ExecuteSection";
+import { ResultSection } from "@/pages/prompt/components/ResultSection";
 import { Flex } from "antd";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
 
 export default function PromptPage() {
     const { promptId } = useParams<{ promptId: string }>();
-    console.log("promptID", promptId);
+    const { data, isLoading } = usePromptQuery(promptId ?? "");
+
+    console.log("promptID", promptId, data);
+
+    const handleOnSelect = (value: string) => {
+        alert(`${value} is Selected!`);
+    };
+
+    const handleShowTemplate = () => {
+        alert(`템플릿 확인`);
+    };
 
     return (
         <Container>
-            <TopContainer>
-                <Wrapper>
-                    <Text font="h1_24_semi">파워포인트 작성 치트키</Text>
-                    <Text font="b1_18_reg" color="G_400">
-                        주제와 청중을 입력하면 근사한 파워포인트 초안을
-                        만들어주는 프롬프트
-                    </Text>
+            {data && <TopSection prompt={data} />}
 
-                    <InformationContainer>
-                        <ChipContainer>
-                            <Button size={56}>생산성</Button>
-                        </ChipContainer>
-                    </InformationContainer>
-                </Wrapper>
-            </TopContainer>
+            {/* 하단 */}
+            <BodySection wrap gap={16}>
+                {/* 프롬프트 사용하기 */}
+                <BoxContainer>
+                    <ExecuteSection
+                        onSelect={handleOnSelect}
+                        onShowTemplate={handleShowTemplate}
+                        inputs={data?.user_input_format || []}
+                    />
+                </BoxContainer>
+
+                {/* 포켓런 결과 */}
+                <BoxContainer>
+                    <ResultSection />
+                </BoxContainer>
+            </BodySection>
         </Container>
     );
 }
@@ -34,13 +48,34 @@ const Container = styled.div`
     width: 100vw;
     min-height: 100vh;
     background-color: ${({ theme }) => theme.colors.G_50};
+
+    .ant-select-selector {
+        border-radius: 12px;
+    }
 `;
 
-const TopContainer = styled.div`
-    width: 100%;
+const BodySection = styled(Flex)`
+    margin: 0 auto;
+
+    max-width: 1240px;
+    padding: 40px 80px 20px;
+`;
+
+const BoxContainer = styled.div`
+    border-radius: 16px;
     background-color: ${({ theme }) => theme.colors.white};
-    padding: 40px 80px 32px;
-`;
+    padding: 20px;
 
-const InformationContainer = styled(Flex)``;
-const ChipContainer = styled.div``;
+    @media (min-width: 1080px) {
+        &:nth-child(1) {
+            flex: 3;
+        }
+        &:nth-child(2) {
+            flex: 7;
+        }
+    }
+
+    @media (max-width: 1080px) {
+        width: 100%;
+    }
+`;

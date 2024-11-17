@@ -1,21 +1,22 @@
-import { HTMLAttributes, PropsWithChildren } from "react";
+import { HTMLAttributes } from "react";
 import styled, { css } from "styled-components";
 
-interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
+type ButtonProps = {
     size?: number;
     width?: string;
-    icon?: React.ReactNode;
     hierarchy?: "primary" | "secondary" | "normal" | "disabled";
-}
+    suffix?: React.ReactNode;
+    children?: React.ReactNode;
+} & HTMLAttributes<HTMLButtonElement>;
 
 export default function Button({
     size = 56,
     width,
     hierarchy = "primary",
-    icon,
+    suffix,
     children,
     ...props
-}: PropsWithChildren<ButtonProps>) {
+}: ButtonProps) {
     return (
         <StyledButton
             width={width}
@@ -25,8 +26,8 @@ export default function Button({
             {...props}
             type="submit"
         >
-            {icon && <>{icon}</>}
             {children}
+            {suffix && suffix}
         </StyledButton>
     );
 }
@@ -46,7 +47,7 @@ const StyledButton = styled.button<{
 
     box-sizing: border-box;
 
-    ${({ theme }) => theme.mixins.flexBox()};
+    ${({ theme }) => theme.mixins.flexBox("row", "flex-start")};
     gap: 8px;
 
     transition: all 0.2s;
