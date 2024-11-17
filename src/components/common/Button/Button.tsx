@@ -25,7 +25,7 @@ export default function Button({
             {...props}
             type="submit"
         >
-            {icon && <div>{icon}</div>}
+            {icon && <>{icon}</>}
             {children}
         </StyledButton>
     );
@@ -43,6 +43,8 @@ const StyledButton = styled.button<{
 
     border-radius: 12px;
     padding: 8px 16px;
+
+    box-sizing: border-box;
 
     ${({ theme }) => theme.mixins.flexBox()};
     gap: 8px;
@@ -67,12 +69,12 @@ const StyledButton = styled.button<{
             case "secondary":
                 return css`
                     background: ${theme.colors.white};
-                    border: 1.5px solid ${theme.colors.primary_30};
+                    box-shadow: inset 0 0 0 1.5px ${theme.colors.primary_30};
                     color: ${theme.colors.primary};
 
                     &:hover {
                         background: ${theme.colors.primary_10};
-                        border: 1.5px solid ${theme.colors.primary_50};
+                        box-shadow: inset 0 0 0 1.5px ${theme.colors.primary_50};
                     }
                 `;
             case "normal":
