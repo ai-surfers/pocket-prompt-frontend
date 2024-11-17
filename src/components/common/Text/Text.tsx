@@ -21,4 +21,5 @@ export default function Text({
 const StyledText = styled.div<{ $font: string; $color: string }>`
     ${({ theme, $font }) => theme.fonts[$font]};
     color: ${({ theme, $color }) => theme.colors[$color]};
+    white-space: pre-wrap;
 `;

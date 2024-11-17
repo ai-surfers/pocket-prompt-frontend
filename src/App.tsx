@@ -6,6 +6,7 @@ import queryClient from "./apis/queryClient";
 import { RecoilRoot } from "recoil";
 import Toast from "./components/common/Toast/Toast";
 import * as Sentry from "@sentry/react";
+import GlobalModal from "@/components/common/Modal/GlobalModal";
 
 function App() {
     console.log(`🍀 Environment - ${import.meta.env.MODE}`);
@@ -31,6 +32,7 @@ function App() {
                 <QueryClientProvider client={queryClient}>
                     <RouterProvider router={router} />
                     <Toast />
+                    <GlobalModal />
                 </QueryClientProvider>
             </RecoilRoot>
         </Styles>

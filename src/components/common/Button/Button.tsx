@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 type ButtonProps = {
     size?: number;
     width?: string;
-    hierarchy?: "primary" | "secondary" | "normal" | "disabled";
+    hierarchy?: "primary" | "secondary" | "normal" | "disabled" | "default";
     suffix?: React.ReactNode;
     children?: React.ReactNode;
 } & HTMLAttributes<HTMLButtonElement>;
@@ -85,6 +85,15 @@ const StyledButton = styled.button<{
 
                     &:hover {
                         background: ${theme.colors.primary_20};
+                    }
+                `;
+            case "default":
+                return css`
+                    background: none;
+                    color: ${theme.colors.black};
+
+                    &:hover {
+                        background: ${theme.colors.G_100};
                     }
                 `;
             case "disabled":

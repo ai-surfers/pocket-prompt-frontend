@@ -2,6 +2,7 @@
 import { PromptDetails } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
+import { Categories } from "@/core/Prompt";
 import { useUser } from "@/hooks/useUser";
 import { Wrapper } from "@/layouts/Layout";
 import Icon from "@/pages/home/components/common/Icon";
@@ -55,7 +56,7 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
                         {prompt.categories.map((cat) => (
                             <Chip key={cat}>
                                 <Text font="b2_16_semi" color="G_600">
-                                    {cat}
+                                    {Categories[cat].ko}
                                 </Text>
                             </Chip>
                         ))}

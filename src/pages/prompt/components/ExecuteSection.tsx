@@ -3,30 +3,52 @@ import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
 import Icon from "@/pages/home/components/common/Icon";
+import PocketRunDropdown from "@/pages/prompt/components/PocketRunDropdown";
+import PromptTemplateModal from "@/pages/prompt/components/PromptTemplateModal";
 import FormItem from "@/pages/promptNew/components/Form/FormItem";
-import { Flex, Select } from "antd";
+import { copyClipboard, populateTemplate } from "@/utils/promptUtils";
+import { Flex } from "antd";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 interface ExecuteSectionProps {
     onSelect: (value: string) => void;
-    onShowTemplate: () => void;
+    template: string;
     inputs: PromptInputField[];
 }
 
 export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
-    onSelect,
-    onShowTemplate,
     inputs,
+    template,
 }) => {
     const form = useForm();
-    const { control } = form;
+    const { control, formState } = form;
 
-    const handleClickSubmit = async () => {
-        console.log(">> handleClickSubmit");
+    const [isPromptTemplateOpen, setIsPromptTemplateOpen] = useState(false);
+    const handleShowTemplate = () => {
+        setIsPromptTemplateOpen(true);
+    };
+
+    const handleClickSubmit = async (platform?: string) => {
         form.handleSubmit(
-            async (values: unknown) => {
+            async (values: Record<string, string>) => {
                 console.log("Form Data:", values);
-                alert(`Form Submitted: ${JSON.stringify(values)}`);
+
+                if (!platform) {
+                    const prompt = populateTemplate(template, values);
+                    console.log(">>Populated Template", prompt);
+
+                    copyClipboard(prompt)
+                        .then(() => {
+                            alert("프롬프트가 클립보드에 복사되었습니다.");
+                        })
+                        .catch((err) => {
+                            console.error("클립보드 복사 실패:", err);
+                            alert("클립보드 복사에 실패했습니다.");
+                        });
+                } else {
+                    // [TODO] 포켓런
+                }
             },
             (errors) => {
                 console.log(">> error", errors);
@@ -39,7 +61,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
     };
 
     return (
-        <form onSubmit={handleClickSubmit}>
+        <>
             <Flex vertical gap={16}>
                 <Flex
                     justify="space-between"
@@ -54,62 +76,72 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                             textDecoration: "underline",
                             cursor: "pointer",
                         }}
-                        onClick={onShowTemplate}
+                        onClick={handleShowTemplate}
                     >
                         프롬프트 템플릿 확인하기
                     </Text>
                 </Flex>
 
-                <Flex vertical gap={24} style={{ marginBottom: "80px" }}>
-                    {inputs.map((input) => (
-                        <FormItem
-                            title={input.name}
-                            tags={["필수"]}
-                            key={input.name}
-                        >
-                            <Controller
-                                name={input.name}
-                                control={control}
-                                rules={{
-                                    required: `${input.name}를 입력해 주세요!`,
-                                }}
-                                render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        placeholder={
-                                            input.placeholder ||
-                                            "입력 값을 입력해 주세요."
-                                        }
-                                    />
-                                )}
-                            />
-                        </FormItem>
-                    ))}
-                </Flex>
+                <form>
+                    <Flex vertical gap={24} style={{ marginBottom: "80px" }}>
+                        {inputs.map((input) => (
+                            <FormItem
+                                title={input.name}
+                                tags={["필수"]}
+                                key={input.name}
+                            >
+                                <Controller
+                                    name={input.name}
+                                    control={control}
+                                    rules={{
+                                        required: `${input.name}를 입력해 주세요!`,
+                                    }}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            placeholder={
+                                                input.placeholder ||
+                                                "입력 값을 입력해 주세요."
+                                            }
+                                        />
+                                    )}
+                                />
+                            </FormItem>
+                        ))}
+                    </Flex>
+                </form>
 
                 <Flex gap={12}>
                     <Button
                         size={44}
-                        hierarchy="secondary"
-                        suffix={<Icon name="Copy" size={20} />}
+                        hierarchy={
+                            !formState.isValid ? "disabled" : "secondary"
+                        }
+                        suffix={
+                            <Icon
+                                name="Copy"
+                                size={20}
+                                color={
+                                    !formState.isValid ? "G_300" : "primary_100"
+                                }
+                            />
+                        }
                         style={{ padding: "12px" }}
+                        onClick={() => handleClickSubmit()}
                     />
 
-                    <Select
-                        placeholder="포켓런 하기"
-                        style={{
-                            width: "100%",
-                            height: "44px",
-                        }}
-                        options={[
-                            { key: "ChatGPT", value: "Chat GPT 기반" },
-                            { key: "Claude", value: "Claude 기반" },
-                            { key: "Gemini", value: "Gemini 기반" },
-                        ]}
-                        onSelect={() => handleClickSubmit()}
+                    <PocketRunDropdown
+                        disabled={!formState.isValid}
+                        onSelect={handleClickSubmit}
                     />
                 </Flex>
             </Flex>
-        </form>
+
+            <PromptTemplateModal
+                template={template}
+                isOpen={isPromptTemplateOpen}
+                onClose={() => setIsPromptTemplateOpen(false)}
+            />
+        </>
     );
 };

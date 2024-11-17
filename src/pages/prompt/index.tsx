@@ -16,10 +16,6 @@ export default function PromptPage() {
         alert(`${value} is Selected!`);
     };
 
-    const handleShowTemplate = () => {
-        alert(`템플릿 확인`);
-    };
-
     return (
         <Container>
             {data && <TopSection prompt={data} />}
@@ -30,8 +26,8 @@ export default function PromptPage() {
                 <BoxContainer>
                     <ExecuteSection
                         onSelect={handleOnSelect}
-                        onShowTemplate={handleShowTemplate}
                         inputs={data?.user_input_format || []}
+                        template={data?.prompt_template || ""}
                     />
                 </BoxContainer>
 
