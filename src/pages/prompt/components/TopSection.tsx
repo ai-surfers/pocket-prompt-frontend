@@ -36,6 +36,7 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
                             style={{ padding: "12px" }}
                         />
                         <BookmarkButton
+                            id={prompt.id}
                             is_starred={prompt.is_starred_by_user}
                         />
                         <Button
