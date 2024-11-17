@@ -6,13 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 const usePromptQuery = (id: string) => {
     const QUERY_KEY = PROMPT_KEYS.detail(id);
 
-    const { data, isLoading } = useQuery<PromptDetails>({
+    return useQuery<PromptDetails>({
         queryKey: QUERY_KEY,
         queryFn: () => getPrompt(id).then((res) => res),
         enabled: !!id,
     });
-
-    return { data, isLoading };
 };
 
 export default usePromptQuery;

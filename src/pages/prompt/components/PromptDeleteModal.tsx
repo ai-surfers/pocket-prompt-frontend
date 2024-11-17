@@ -30,7 +30,9 @@ export default function PromptDeleteModal({
             showToast("프롬프트 삭제가 완료되었어요", "");
             navigate("/");
 
-            queryClient.invalidateQueries({ queryKey: PROMPT_KEYS.detail(id) });
+            queryClient.invalidateQueries({
+                queryKey: PROMPT_KEYS.detail(prompt.id),
+            });
             queryClient.invalidateQueries({ queryKey: PROMPT_KEYS.lists() });
         },
         onError(e) {

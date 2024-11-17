@@ -1,42 +1,81 @@
 import { TopSection } from "@/pages/prompt/components/TopSection";
 import { ExecuteSection } from "@/pages/prompt/components/ExecuteSection";
 import { ResultSection } from "@/pages/prompt/components/ResultSection";
-import { Flex } from "antd";
+import { Flex, Result, Spin } from "antd";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
+import { ErrorBoundary } from "@sentry/react";
+import { Wrapper } from "@/layouts/Layout";
 
 export default function PromptPage() {
     const { promptId } = useParams<{ promptId: string }>();
-    const { data, isLoading } = usePromptQuery(promptId ?? "");
-
-    console.log("promptID", promptId, data);
+    const { data, isLoading, isError } = usePromptQuery(promptId ?? "");
 
     const handleOnSelect = (value: string) => {
         alert(`${value} is Selected!`);
     };
 
-    return (
-        <Container>
-            {data && <TopSection prompt={data} />}
+    if (isLoading) {
+        return (
+            <Wrapper>
+                <Flex
+                    style={{
+                        width: "100vw",
+                        height: "100vh",
+                    }}
+                    justify="center"
+                    align="center"
+                >
+                    <Spin size="large" />
+                </Flex>
+            </Wrapper>
+        );
+    }
 
-            {/* 하단 */}
-            <BodySection wrap gap={16}>
-                {/* 프롬프트 사용하기 */}
-                <BoxContainer>
-                    <ExecuteSection
-                        onSelect={handleOnSelect}
-                        inputs={data?.user_input_format || []}
-                        template={data?.prompt_template || ""}
+    if (isError) {
+        return (
+            <Wrapper>
+                <Flex
+                    style={{
+                        width: "100vw",
+                        height: "100vh",
+                    }}
+                    justify="center"
+                    align="center"
+                >
+                    <Result
+                        status="warning"
+                        title="존재하지 않는 프롬프트입니다."
                     />
-                </BoxContainer>
+                </Flex>
+            </Wrapper>
+        );
+    }
 
-                {/* 포켓런 결과 */}
-                <BoxContainer>
-                    <ResultSection />
-                </BoxContainer>
-            </BodySection>
-        </Container>
+    return (
+        <ErrorBoundary>
+            <Container>
+                {data && <TopSection prompt={data} />}
+
+                {/* 하단 */}
+                <BodySection wrap gap={16}>
+                    {/* 프롬프트 사용하기 */}
+                    <BoxContainer>
+                        <ExecuteSection
+                            onSelect={handleOnSelect}
+                            inputs={data?.user_input_format || []}
+                            template={data?.prompt_template || ""}
+                        />
+                    </BoxContainer>
+
+                    {/* 포켓런 결과 */}
+                    <BoxContainer>
+                        <ResultSection />
+                    </BoxContainer>
+                </BodySection>
+            </Container>
+        </ErrorBoundary>
     );
 }
 
