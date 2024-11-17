@@ -1,11 +1,12 @@
 // TopSection.tsx
 import { PromptDetails } from "@/apis/prompt/prompt.model";
-import BookMark from "@/assets/svg/home/BookMark";
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
+import { useUser } from "@/hooks/useUser";
 import { Wrapper } from "@/layouts/Layout";
 import Icon from "@/pages/home/components/common/Icon";
 import BookmarkButton from "@/pages/prompt/components/BookmarkButton";
+import EditDropdown from "@/pages/prompt/components/EditDropdown";
 import { formatDate, formatNumber } from "@/utils/textUtils";
 import { Flex } from "antd";
 import { ReactNode } from "react";
@@ -14,7 +15,10 @@ import styled from "styled-components";
 interface TopSectionProps {
     prompt: PromptDetails;
 }
+
 export const TopSection = ({ prompt }: TopSectionProps) => {
+    const { userData } = useUser();
+
     return (
         <TopContainer>
             <Wrapper>
@@ -39,14 +43,10 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
                             id={prompt.id}
                             is_starred={prompt.is_starred_by_user}
                         />
-                        <Button
-                            size={44}
-                            hierarchy="normal"
-                            suffix={<Icon name="Edit2" />}
-                            style={{ padding: "12px" }}
-                        >
-                            프롬프트 편집
-                        </Button>
+
+                        {prompt.author_nickname === userData.user?.nickname && (
+                            <EditDropdown id={prompt.id} />
+                        )}
                     </Flex>
                 </Flex>
 
