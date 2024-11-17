@@ -15,7 +15,6 @@ export default function PromptTemplateModal({
     template,
 }: PromptTemplateModal) {
     const handleOnCopy = () => {
-        // [TODO] 프롬프트 복사
         copyClipboard(template)
             .then(() => {
                 alert("프롬프트가 클립보드에 복사되었습니다.");

@@ -14,21 +14,12 @@ import PromptPage from "@/pages/prompt";
 const router = createBrowserRouter([
     {
         path: "/",
-        errorElement: <NotFound />,
         element: <FooterLayout />,
+        errorElement: <NotFound />,
         children: [
-            {
-                path: "/",
-                element: <HomePage />,
-            },
-            {
-                path: "/extension",
-                element: <ExtensionPage />,
-            },
-            {
-                path: "/price",
-                element: <PricePage />,
-            },
+            { path: "/", element: <HomePage /> },
+            { path: "/extension", element: <ExtensionPage /> },
+            { path: "/price", element: <PricePage /> },
         ],
     },
     {
@@ -59,10 +50,7 @@ const router = createBrowserRouter([
                     </ProtectedRoute>
                 ),
             },
-            {
-                path: "/prompt/:promptId",
-                element: <PromptPage />,
-            },
+            { path: "/prompt/:promptId", element: <PromptPage /> },
         ],
     },
 ]);

@@ -1,4 +1,5 @@
 import { getUser } from "@/apis/auth/auth";
+import useToast from "@/hooks/useToast";
 import { useUser } from "@/hooks/useUser";
 import { LOCALSTORAGE_KEYS, setLocalStorage } from "@/utils/storageUtils";
 import { useEffect, useState } from "react";
@@ -10,6 +11,8 @@ const ProtectedRoute: React.FC<React.PropsWithChildren> = ({ children }) => {
 
     const [searchParams, setSearchParams] = useSearchParams();
     const token = searchParams.get("token");
+
+    const showToast = useToast();
 
     // Extension에서 넘어온 경우, token으로 자동 로그인 체크
     useEffect(() => {
@@ -23,11 +26,12 @@ const ProtectedRoute: React.FC<React.PropsWithChildren> = ({ children }) => {
                     setUser(data);
                 } catch (error) {
                     console.error("로그인 실패:", error);
+                } finally {
+                    searchParams.delete("token");
+                    setSearchParams(searchParams, { replace: true });
                 }
             }
 
-            searchParams.delete("token");
-            setSearchParams(searchParams);
             setLoading(false);
         };
 
@@ -35,11 +39,11 @@ const ProtectedRoute: React.FC<React.PropsWithChildren> = ({ children }) => {
     }, [token, setUser, searchParams, setSearchParams]);
 
     if (loading) {
-        return <div>loading...</div>;
+        return <div>Loading...</div>;
     }
 
     if (!userData || !userData.isLogin) {
-        alert("로그인 후 이용 가능합니다.");
+        showToast("로그인 후 이용 가능합니다.", "");
 
         return <Navigate to="/" replace={true} />;
     }

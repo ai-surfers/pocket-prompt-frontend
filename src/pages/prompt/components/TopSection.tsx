@@ -8,6 +8,7 @@ import { Wrapper } from "@/layouts/Layout";
 import Icon from "@/pages/home/components/common/Icon";
 import BookmarkButton from "@/pages/prompt/components/BookmarkButton";
 import EditDropdown from "@/pages/prompt/components/EditDropdown";
+import { copyClipboard } from "@/utils/promptUtils";
 import { formatDate, formatNumber } from "@/utils/textUtils";
 import { Flex } from "antd";
 import { ReactNode } from "react";
@@ -19,6 +20,18 @@ interface TopSectionProps {
 
 export const TopSection = ({ prompt }: TopSectionProps) => {
     const { userData } = useUser();
+
+    const handleShare = () => {
+        const url = window.location.href;
+        copyClipboard(url)
+            .then(() => {
+                alert("현재 주소가 복사되었습니다.");
+            })
+            .catch((err) => {
+                console.error("클립보드 복사 실패:", err);
+                alert("클립보드 복사에 실패하였습니다.");
+            });
+    };
 
     return (
         <TopContainer>
@@ -39,6 +52,7 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
                                 (<Icon name="Send" size={20} />) as ReactNode
                             }
                             style={{ padding: "12px" }}
+                            onClick={handleShare}
                         />
                         <BookmarkButton
                             id={prompt.id}
@@ -46,7 +60,7 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
                         />
 
                         {prompt.author_nickname === userData.user?.nickname && (
-                            <EditDropdown id={prompt.id} />
+                            <EditDropdown prompt={prompt} />
                         )}
                     </Flex>
                 </Flex>

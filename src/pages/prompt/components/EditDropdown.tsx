@@ -1,19 +1,25 @@
+import { PromptDetails } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
 import Icon from "@/pages/home/components/common/Icon";
+import PromptDeleteModal from "@/pages/prompt/components/PromptDeleteModal";
 import { Dropdown, MenuProps } from "antd";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface EditDropdownProps {
-    id: string;
+    prompt: PromptDetails;
 }
-export default function EditDropdown({ id }: EditDropdownProps) {
+export default function EditDropdown({ prompt }: EditDropdownProps) {
     const navigate = useNavigate();
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
     const handleOnEdit = () => {
-        navigate(`/prompt-edit/${id}`);
+        navigate(`/prompt-edit/${prompt.id}`);
     };
-    const handleOnDelete = () => {};
+    const handleOnDelete = () => {
+        setOpenDeleteModal(true);
+    };
 
     const items: MenuProps["items"] = [
         {
@@ -45,15 +51,25 @@ export default function EditDropdown({ id }: EditDropdownProps) {
     ];
 
     return (
-        <Dropdown menu={{ items }}>
-            <Button
-                size={44}
-                hierarchy="normal"
-                suffix={<Icon name="Edit2" />}
-                style={{ padding: "12px" }}
-            >
-                프롬프트 편집
-            </Button>
-        </Dropdown>
+        <>
+            <Dropdown menu={{ items }}>
+                <Button
+                    size={44}
+                    hierarchy="normal"
+                    suffix={<Icon name="Edit2" />}
+                    style={{ padding: "12px" }}
+                >
+                    프롬프트 편집
+                </Button>
+            </Dropdown>
+
+            <PromptDeleteModal
+                isOpen={openDeleteModal}
+                onClose={() => {
+                    setOpenDeleteModal(false);
+                }}
+                prompt={prompt}
+            />
+        </>
     );
 }
