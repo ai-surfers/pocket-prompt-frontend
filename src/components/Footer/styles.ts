@@ -28,7 +28,7 @@ export const ContentWrap = styled.div`
 
 export const NavLinks = styled.div`
     display: flex;
-    gap: 24px;
+    flex-flow: wrap;
     margin-bottom: 20px;
 
     @media screen and (max-width: 1279px) {
@@ -55,6 +55,7 @@ export const Divider = styled.div`
     font-size: 18px;
     font-weight: 400;
     line-height: 27px;
+    padding: 0px 16px;
 `;
 
 export const CompanyName = styled.div`
