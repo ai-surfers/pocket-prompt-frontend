@@ -18,7 +18,7 @@ export default function FormItem({
     return (
         <div style={{ width: "100%" }} {...props}>
             <Flex gap={12}>
-                <Text font="b1_18_bold">{title}</Text>
+                <Text font="b1_18_semi">{title}</Text>
                 {tags && (
                     <Flex gap={8} align="center">
                         {tags.map((tag) => (

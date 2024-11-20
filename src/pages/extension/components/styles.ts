@@ -12,6 +12,10 @@ export const DownloadButton = styled.a`
     gap: 8px;
     cursor: pointer;
     margin-bottom: 12px;
+
+    @media screen and (max-width: 1279px) {
+        width: 268px;
+    }
 `;
 
 export const DownloadButtonText = styled.p`
@@ -25,6 +29,11 @@ export const DownloadButtonText = styled.p`
     font-weight: 700;
     line-height: 144%; /* 28.8px */
     letter-spacing: 0px;
+
+    @media screen and (max-width: 1279px) {
+        width: 268px;
+        font-size: 18px;
+    }
 `;
 
 export const IconWrap = styled.div`

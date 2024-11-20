@@ -1,4 +1,5 @@
-import styled, { css } from "styled-components";
+import React, { forwardRef } from "react";
+import styled from "styled-components";
 
 export interface InputProps {
     placeholder?: string;
@@ -8,44 +9,46 @@ export interface InputProps {
     disabled?: boolean;
     onEnter?: () => void;
 }
-export default function Input({
-    placeholder,
-    value = "",
-    onChange,
-    count,
-    disabled = false,
-    onEnter,
-}: InputProps) {
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const value = e.target.value;
 
-        if (count && value.length > count) return;
-        onChange(value);
+const Input = forwardRef<HTMLInputElement, InputProps>(
+    (
+        { placeholder, value = "", onChange, count, disabled = false, onEnter },
+        ref
+    ) => {
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            const inputValue = e.target.value;
+
+            if (count && inputValue.length > count) return;
+            onChange(inputValue);
+        };
+
+        const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === "Enter" && onEnter) {
+                onEnter();
+            }
+        };
+
+        return (
+            <InputContainer $length={value.length} $disabled={disabled}>
+                <StyledInput
+                    ref={ref}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
+                    disabled={disabled}
+                />
+                {count !== undefined && (
+                    <CountBox $length={value.length}>
+                        <b>{value.length}</b>/{count}
+                    </CountBox>
+                )}
+            </InputContainer>
+        );
     }
+);
 
-    function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-        if (e.key === "Enter" && onEnter) {
-            onEnter();
-        }
-    }
-
-    return (
-        <InputContainer $length={value.length} $disabled={disabled}>
-            <StyledInput
-                placeholder={placeholder}
-                value={value}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                disabled={disabled}
-            />
-            {count && (
-                <CountBox $length={value.length}>
-                    <b>{value.length}</b>/{count}
-                </CountBox>
-            )}
-        </InputContainer>
-    );
-}
+export default Input;
 
 const InputContainer = styled.div<{ $length: number; $disabled?: boolean }>`
     display: flex;
@@ -72,7 +75,7 @@ const InputContainer = styled.div<{ $length: number; $disabled?: boolean }>`
 
     ${({ $disabled, theme }) =>
         $disabled &&
-        css`
+        `
             background: ${theme.colors.G_100};
             border: 1px solid ${theme.colors.G_100};
             color: ${theme.colors.G_300};

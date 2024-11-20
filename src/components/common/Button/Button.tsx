@@ -1,21 +1,22 @@
-import { HTMLAttributes, PropsWithChildren } from "react";
+import { HTMLAttributes } from "react";
 import styled, { css } from "styled-components";
 
-interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
+type ButtonProps = {
     size?: number;
     width?: string;
-    icon?: React.ReactNode;
-    hierarchy?: "primary" | "secondary" | "normal" | "disabled";
-}
+    hierarchy?: "primary" | "secondary" | "normal" | "disabled" | "default";
+    suffix?: React.ReactNode;
+    children?: React.ReactNode;
+} & HTMLAttributes<HTMLButtonElement>;
 
 export default function Button({
     size = 56,
     width,
     hierarchy = "primary",
-    icon,
+    suffix,
     children,
     ...props
-}: PropsWithChildren<ButtonProps>) {
+}: ButtonProps) {
     return (
         <StyledButton
             width={width}
@@ -25,8 +26,8 @@ export default function Button({
             {...props}
             type="submit"
         >
-            {icon && <div>{icon}</div>}
             {children}
+            {suffix && suffix}
         </StyledButton>
     );
 }
@@ -44,7 +45,9 @@ const StyledButton = styled.button<{
     border-radius: 12px;
     padding: 8px 16px;
 
-    ${({ theme }) => theme.mixins.flexBox()};
+    box-sizing: border-box;
+
+    ${({ theme }) => theme.mixins.flexBox("row", "flex-start")};
     gap: 8px;
 
     transition: all 0.2s;
@@ -67,12 +70,12 @@ const StyledButton = styled.button<{
             case "secondary":
                 return css`
                     background: ${theme.colors.white};
-                    border: 1.5px solid ${theme.colors.primary_30};
+                    box-shadow: inset 0 0 0 1.5px ${theme.colors.primary_30};
                     color: ${theme.colors.primary};
 
                     &:hover {
                         background: ${theme.colors.primary_10};
-                        border: 1.5px solid ${theme.colors.primary_50};
+                        box-shadow: inset 0 0 0 1.5px ${theme.colors.primary_50};
                     }
                 `;
             case "normal":
@@ -82,6 +85,15 @@ const StyledButton = styled.button<{
 
                     &:hover {
                         background: ${theme.colors.primary_20};
+                    }
+                `;
+            case "default":
+                return css`
+                    background: none;
+                    color: ${theme.colors.black};
+
+                    &:hover {
+                        background: ${theme.colors.G_100};
                     }
                 `;
             case "disabled":

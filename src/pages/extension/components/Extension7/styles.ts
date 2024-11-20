@@ -11,12 +11,12 @@ export const Extension7Container = styled.div`
 `;
 
 export const Extension7BackgroundImage = styled.img`
-    position: absolute;
     width: 100%;
     height: 630px;
-    top: 0px;
-    left: 0px;
-    z-index: -1;
+
+    @media screen and (max-width: 1279px) {
+        width: 1440px;
+    }
 `;
 
 export const Title = styled.p`
@@ -29,4 +29,15 @@ export const Title = styled.p`
     line-height: 144%; /* 51.84px */
     letter-spacing: -0.72px;
     margin-bottom: 28px;
+
+    @media screen and (max-width: 1279px) {
+        font-size: 28px;
+    }
+`;
+
+export const ContentWrap = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 `;

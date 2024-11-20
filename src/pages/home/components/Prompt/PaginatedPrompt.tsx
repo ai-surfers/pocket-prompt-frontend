@@ -101,6 +101,7 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
                     : items.map((item, index) => (
                           <Prompt
                               key={item.id}
+                              id={item.id}
                               title={item.title}
                               description={item.description}
                               views={item.views}
