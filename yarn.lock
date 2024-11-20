@@ -1486,18 +1486,17 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-gtm-module@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@types/react-gtm-module/-/react-gtm-module-2.0.4.tgz#27457712f7a17f44e752d2b7bd93e794a5fc6ff3"
+  integrity sha512-5wPMWsUE5AI6O0B0K1/zbs0rFHBKu+7NWXQwDXhqvA12ooLD6W1AYiWZqR4UiOd7ixZDV1H5Ys301zEsqyIfNg==
+
 "@types/react-responsive@^8.0.8":
   version "8.0.8"
   resolved "https://registry.yarnpkg.com/@types/react-responsive/-/react-responsive-8.0.8.tgz#e351be7cc4d03bc476075839922bb5f9a3094e76"
   integrity sha512-HDUZtoeFRHrShCGaND23HmXAB9evOOTjkghd2wAasLkuorYYitm5A1XLeKkhXKZppcMBxqB/8V4Snl6hRUTA8g==
   dependencies:
     "@types/react" "*"
-
-"@types/react-gtm-module@^2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@types/react-gtm-module/-/react-gtm-module-2.0.4.tgz#27457712f7a17f44e752d2b7bd93e794a5fc6ff3"
-  integrity sha512-5wPMWsUE5AI6O0B0K1/zbs0rFHBKu+7NWXQwDXhqvA12ooLD6W1AYiWZqR4UiOd7ixZDV1H5Ys301zEsqyIfNg==
-
 
 "@types/react-slick@^0.23.13":
   version "0.23.13"
@@ -2770,7 +2769,7 @@ progress@^2.0.3:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
 
-prop-types@^15.7.2:
+prop-types@^15.6.1, prop-types@^15.7.2:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
