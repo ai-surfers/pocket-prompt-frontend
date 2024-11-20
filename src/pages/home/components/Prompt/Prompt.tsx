@@ -3,7 +3,7 @@ import Eye from "@/assets/svg/home/Eye";
 import Play from "@/assets/svg/home/Play";
 import theme from "@/styles/theme";
 import * as S from "./styles";
-import useToast from "@/hooks/useToast";
+import { useNavigate } from "react-router-dom";
 
 interface PromptProps {
     colored?: boolean;
@@ -13,6 +13,7 @@ interface PromptProps {
     star: number;
     usages: number;
     index: number;
+    id: string;
 }
 
 const Prompt = ({
@@ -23,15 +24,13 @@ const Prompt = ({
     star,
     usages,
     index,
+    id,
 }: PromptProps) => {
     const pointColor = colored ? theme.colors.primary : theme.colors.G_400;
-    const showToast = useToast();
+    const navigate = useNavigate();
 
     const handleClick = () => {
-        showToast(
-            "프롬프트 상세 조회는 아직 준비 중인 기능이에요.",
-            "여러분의 손쉬운 AI활용을 위해 빠르게 준비하고 있을게요!"
-        );
+        navigate(`/prompt/${id}`);
     };
 
     return (

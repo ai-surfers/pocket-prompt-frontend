@@ -178,7 +178,7 @@ function FormSection({ onSumbit, isEdit }: FormSectionProps) {
             <Button
                 size={52}
                 width="100%"
-                style={{ marginTop: "60px" }}
+                style={{ marginTop: "60px", justifyContent: "center" }}
                 onClick={onSumbit}
                 hierarchy={isValid ? "primary" : "disabled"}
             >

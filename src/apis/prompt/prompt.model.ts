@@ -1,4 +1,4 @@
-type PromptInputField = {
+export type PromptInputField = {
     name: string;
     type: string;
     placeholder?: string;
