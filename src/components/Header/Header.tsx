@@ -11,9 +11,15 @@ import {
     LOCALSTORAGE_KEYS,
     removeLocalStorage,
 } from "@/utils/storageUtils";
+import { useMediaQuery } from "react-responsive";
+import { MenuOutlined } from "@ant-design/icons";
 
 export default function Header() {
     const { setUser, resetUserState, userData } = useUser();
+
+    const isUnderTablet = useMediaQuery({
+        maxWidth: "1024px",
+    });
 
     useEffect(() => {
         const access_token = getLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
@@ -43,16 +49,25 @@ export default function Header() {
                     <StyledNavLink to="/">
                         <Logo style={{ width: "40px" }} />
                     </StyledNavLink>
-
-                    <TabBarContainer>
-                        <StyledNavLink to="/">Home</StyledNavLink>
-                        <StyledNavLink to="/extension">Extension</StyledNavLink>
-                        <StyledNavLink to="/price">Pricing</StyledNavLink>
-                    </TabBarContainer>
+                    {!isUnderTablet && (
+                        <TabBarContainer>
+                            <StyledNavLink to="/">Home</StyledNavLink>
+                            <StyledNavLink to="/extension">
+                                Extension
+                            </StyledNavLink>
+                            <StyledNavLink to="/price">Pricing</StyledNavLink>
+                        </TabBarContainer>
+                    )}
                 </HeaderLeftContainer>
 
                 <HeaderRightContainer>
-                    {userData.isLogin ? <User /> : <LoginButton />}
+                    {isUnderTablet ? (
+                        <MenuOutlined />
+                    ) : userData.isLogin ? (
+                        <User />
+                    ) : (
+                        <LoginButton />
+                    )}
                 </HeaderRightContainer>
             </HeaderWrapper>
         </HeaderContainer>

@@ -1,5 +1,6 @@
-import { Collapse } from "antd";
 import styled from "styled-components";
+import Text from "@/components/common/Text/Text";
+import QnAToggle from "@/components/common/QnAToggle.tsx/QnAToggle";
 
 interface FAQItem {
     key: string;
@@ -51,11 +52,34 @@ const FAQ_ITEMS: FAQItem[] = [
 ];
 
 export default function FAQ() {
-    return <StyledCollapse items={FAQ_ITEMS} />;
+    return (
+        <Frame>
+            <Text
+                font="h1_24_bold"
+                color="G_800"
+                style={{ marginBottom: "12px" }}
+            >
+                자주 묻는 질문
+            </Text>
+            <FAQFrame>
+                {FAQ_ITEMS.map((faq) => (
+                    <QnAToggle
+                        key={faq.key}
+                        question={faq.label}
+                        answer={faq.children}
+                    />
+                ))}
+            </FAQFrame>
+        </Frame>
+    );
 }
 
-const StyledCollapse = styled(Collapse)`
+const Frame = styled.div`
     width: 100%;
-    margin-bottom: 20px;
-    font-size: 14px;
+`;
+
+const FAQFrame = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 `;

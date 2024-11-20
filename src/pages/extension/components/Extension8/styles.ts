@@ -6,12 +6,21 @@ export const Extension8Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+
+    @media screen and (max-width: 1024px) {
+        padding: 60px;
+    }
 `;
 
 export const ContentWrap = styled.div`
     display: flex;
     align-items: center;
     gap: 120px;
+
+    @media screen and (max-width: 1024px) {
+        flex-direction: column;
+        gap: 60px;
+    }
 `;
 
 export const ContentCard = styled.div`
