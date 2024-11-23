@@ -22,6 +22,8 @@ API.interceptors.request.use(
             config.headers.Authorization = `Bearer ${accessToken}`;
         }
 
+        config.headers["source-location"] = "web";
+
         console.log(`${config.url} -- ✈ `, config.data || "");
         return config;
     },
