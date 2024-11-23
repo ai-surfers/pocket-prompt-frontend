@@ -12,6 +12,9 @@ export const getPromptsList = async (
     try {
         const res = await GET<GetPromptsListResponse>("/prompts-list", {
             params,
+            headers: {
+                "source-location": "web",
+            },
         });
         return res.data.data;
     } catch (error) {
