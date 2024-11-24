@@ -1,5 +1,5 @@
 import type { SVGProps } from "react";
-const Close = (props: SVGProps<SVGSVGElement>) => (
+const Close = ({ stroke = "white", ...props }: SVGProps<SVGSVGElement>) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -10,7 +10,7 @@ const Close = (props: SVGProps<SVGSVGElement>) => (
     >
         <path
             d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18"
-            stroke="white"
+            stroke={stroke}
             stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"
