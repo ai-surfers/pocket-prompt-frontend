@@ -15,7 +15,10 @@ import { useMediaQuery } from "react-responsive";
 import { MenuOutlined } from "@ant-design/icons";
 import { Menus } from "@/core/Menu";
 
-export default function Header({ onOpen }) {
+type HeaderProps = {
+    onOpen: () => void;
+};
+export default function Header({ onOpen }: HeaderProps) {
     const { setUser, resetUserState, userData } = useUser();
 
     const isUnderTablet = useMediaQuery({
