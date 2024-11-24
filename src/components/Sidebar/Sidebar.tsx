@@ -2,6 +2,7 @@ import { Logo } from "@/assets/svg";
 import Close from "@/assets/svg/home/Close";
 import Text from "@/components/common/Text/Text";
 import LoginButton from "@/components/Header/LoginButton/LoginButton";
+import { useUser } from "@/hooks/useUser";
 import Icon from "@/pages/home/components/common/Icon";
 import { Drawer, Flex } from "antd";
 import { useLocation } from "react-router-dom";
@@ -21,25 +22,29 @@ const Menus = [
         path: "/price",
     },
 ];
-export default function Sidebar() {
+export default function Sidebar({ open, onClose }) {
+    const { userData } = useUser();
+
     return (
         <StyledDrawer
             id="drawer"
             className="drawer"
             width="100%"
-            open={true}
+            open={open}
             closable={false}
             style={{ background: "none" }}
         >
             <HeaderContainer>
                 <Logo style={{ width: "44px" }} />
-                <Close stroke="#3E4151" />
+                <Close stroke="#3E4151" onClick={onClose} />
             </HeaderContainer>
 
             <BodyContainer>
-                <div style={{ margin: "0 20px 12px" }}>
-                    <LoginButton />
-                </div>
+                {!userData.isLogin && (
+                    <div style={{ margin: "12px 20px" }}>
+                        <LoginButton />
+                    </div>
+                )}
 
                 {Menus.map((menu, idx) => (
                     <MenuItem menu={menu} key={idx} />
@@ -78,7 +83,7 @@ const HeaderContainer = styled.header`
 const BodyContainer = styled.div`
     width: 100%;
     height: 100%;
-    padding: 24px 0;
+    padding: 12px 0;
 `;
 
 type MenuItemProps = {

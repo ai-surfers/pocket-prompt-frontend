@@ -14,7 +14,7 @@ import {
 import { useMediaQuery } from "react-responsive";
 import { MenuOutlined } from "@ant-design/icons";
 
-export default function Header() {
+export default function Header({ onOpen }) {
     const { setUser, resetUserState, userData } = useUser();
 
     const isUnderTablet = useMediaQuery({
@@ -62,7 +62,7 @@ export default function Header() {
 
                 <HeaderRightContainer>
                     {isUnderTablet ? (
-                        <MenuOutlined />
+                        <MenuOutlined onClick={onOpen} />
                     ) : userData.isLogin ? (
                         <User />
                     ) : (
