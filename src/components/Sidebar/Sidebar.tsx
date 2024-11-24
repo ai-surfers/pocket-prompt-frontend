@@ -2,26 +2,13 @@ import { Logo } from "@/assets/svg";
 import Close from "@/assets/svg/home/Close";
 import Text from "@/components/common/Text/Text";
 import LoginButton from "@/components/Header/LoginButton/LoginButton";
+import { Menus } from "@/core/Menu";
 import { useUser } from "@/hooks/useUser";
 import Icon from "@/pages/home/components/common/Icon";
 import { Drawer, Flex } from "antd";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const Menus = [
-    {
-        label: "Home",
-        path: "/",
-    },
-    {
-        label: "Extension",
-        path: "/extension",
-    },
-    {
-        label: "Pricing",
-        path: "/price",
-    },
-];
 export default function Sidebar({ open, onClose }) {
     const { userData } = useUser();
 
@@ -47,7 +34,7 @@ export default function Sidebar({ open, onClose }) {
                 )}
 
                 {Menus.map((menu, idx) => (
-                    <MenuItem menu={menu} key={idx} />
+                    <MenuItem menu={menu} key={idx} onClose={onClose} />
                 ))}
                 <GuideItem />
             </BodyContainer>
@@ -91,15 +78,22 @@ type MenuItemProps = {
         label: string;
         path: string;
     };
+    onClose: () => void;
 };
-const MenuItem = ({ menu }: MenuItemProps) => {
+const MenuItem = ({ menu, onClose }: MenuItemProps) => {
     const location = useLocation();
     const selected = location.pathname === menu.path;
+
     const font = selected ? "b2_16_med" : "b2_16_reg";
     const color = selected ? "primary" : "G_400";
 
+    const navigate = useNavigate();
+    const handleOnNavigate = () => {
+        navigate(menu.path);
+        onClose();
+    };
     return (
-        <Item>
+        <Item onClick={handleOnNavigate}>
             {selected && <Rectangle />}
             <Text font={font} color={color}>
                 {menu.label}
@@ -125,8 +119,14 @@ const Rectangle = styled.div`
 `;
 
 const GuideItem = () => {
+    const handleOnGuide = () => {
+        window.open(
+            "https://pocket-prompt.notion.site/da477857a0cc44888b06dd23cf6682ff",
+            "_blank"
+        );
+    };
     return (
-        <Item>
+        <Item onClick={handleOnGuide}>
             <Flex justify="space-between">
                 <Flex gap={8}>
                     <Icon name="Book" />

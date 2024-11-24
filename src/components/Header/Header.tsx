@@ -13,6 +13,7 @@ import {
 } from "@/utils/storageUtils";
 import { useMediaQuery } from "react-responsive";
 import { MenuOutlined } from "@ant-design/icons";
+import { Menus } from "@/core/Menu";
 
 export default function Header({ onOpen }) {
     const { setUser, resetUserState, userData } = useUser();
@@ -51,11 +52,11 @@ export default function Header({ onOpen }) {
                     </StyledNavLink>
                     {!isUnderTablet && (
                         <TabBarContainer>
-                            <StyledNavLink to="/">Home</StyledNavLink>
-                            <StyledNavLink to="/extension">
-                                Extension
-                            </StyledNavLink>
-                            <StyledNavLink to="/price">Pricing</StyledNavLink>
+                            {Menus.map((menu, idx) => (
+                                <StyledNavLink to={menu.path} key={idx}>
+                                    {menu.label}
+                                </StyledNavLink>
+                            ))}
                         </TabBarContainer>
                     )}
                 </HeaderLeftContainer>
