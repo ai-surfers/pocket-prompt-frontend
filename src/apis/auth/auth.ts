@@ -12,9 +12,5 @@ export async function login(token: string) {
  *  로그인
  */
 export async function getUser() {
-    return await GET<UserResponse>(`/me`, {
-        headers: {
-            "source-location": "web",
-        },
-    });
+    return await GET<UserResponse>(`/me`);
 }
