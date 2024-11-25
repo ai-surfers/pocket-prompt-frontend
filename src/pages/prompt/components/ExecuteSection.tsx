@@ -2,14 +2,18 @@ import { PromptInputField } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
+import usePocketRun from "@/hooks/mutations/pocketRun/usePocketRun";
 import Icon from "@/pages/home/components/common/Icon";
 import PocketRunDropdown from "@/pages/prompt/components/PocketRunDropdown";
 import PromptTemplateModal from "@/pages/prompt/components/PromptTemplateModal";
 import FormItem from "@/pages/promptNew/components/Form/FormItem";
+import { pocketRunState } from "@/states/pocketRunState";
 import { copyClipboard, populateTemplate } from "@/utils/promptUtils";
 import { Flex } from "antd";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 
 interface ExecuteSectionProps {
     onSelect: (value: string) => void;
@@ -29,6 +33,26 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
         setIsPromptTemplateOpen(true);
     };
 
+    const { promptId } = useParams<{ promptId: string }>();
+
+    const setPocketRunState = useSetRecoilState(pocketRunState);
+
+    const { mutate: pocketRun } = usePocketRun({
+        onSuccess: (res) => {
+            console.log("Success:", res);
+            setPocketRunState((prevState) => {
+                if (prevState[0].response === "") {
+                    return [res];
+                } else {
+                    return [...prevState, res];
+                }
+            });
+        },
+        onError: (err) => {
+            console.error("Error:", err);
+        },
+    });
+
     const handleClickSubmit = async (platform?: string) => {
         form.handleSubmit(
             async (values: Record<string, string>) => {
@@ -47,7 +71,11 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                             alert("클립보드 복사에 실패했습니다.");
                         });
                 } else {
-                    // [TODO] 포켓런
+                    pocketRun({
+                        promptId: promptId ?? "",
+                        context: values,
+                        model: platform,
+                    });
                 }
             },
             (errors) => {

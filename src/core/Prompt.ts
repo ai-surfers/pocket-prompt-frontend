@@ -20,8 +20,12 @@ export const Categories: Category = {
 
 export const AIPlatforms = {
     ChatGPT: "ChatGPT",
-    Claude: "Claude",
-    Gemini: "Gemini",
+    // Claude: "Claude",
+    // Gemini: "Gemini",
+};
+
+export const PocketRunModel: Record<string, string> = {
+    ChatGPT: "gpt-4o",
 };
 
 export enum InputType {
