@@ -1,16 +1,18 @@
 import Text from "@/components/common/Text/Text";
-import { pocketRunState } from "@/states/pocketRunState";
-import { Flex } from "antd";
+import { pocketRunLoadingState, pocketRunState } from "@/states/pocketRunState";
+import { Flex, Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 
 export const ResultSection: React.FC = () => {
     const pocketRunRes = useRecoilValue(pocketRunState);
+    const pocketRunLoading = useRecoilValue(pocketRunLoadingState);
 
     return (
         <Flex vertical gap={16} style={{ height: "100%" }}>
             <Text font="h2_20_semi">포켓런 결과</Text>
-            {pocketRunRes[0].response.length === 0 ? (
+            {!pocketRunLoading && pocketRunRes[0].response.length === 0 ? (
                 <EmptyBox vertical gap={4} justify="center" align="center">
                     <Text font="b2_16_semi">아직 포켓런 결과가 없어요!</Text>
                     <Text font="b3_14_reg" color="G_400">
@@ -39,11 +41,40 @@ export const ResultSection: React.FC = () => {
                                 </Chip>
                             ))}
                         </ChipWrapper>
-                        <Box>
-                            <Text font="b2_16_med" color={"G_700"} key={index}>
-                                {res.response}
-                            </Text>
-                        </Box>
+
+                        {index === pocketRunRes.length - 1 &&
+                        pocketRunLoading ? (
+                            <LoadingBox>
+                                <Spin
+                                    indicator={
+                                        <LoadingOutlined
+                                            style={{
+                                                fontSize: 36,
+                                                marginBottom: 16,
+                                            }}
+                                            spin
+                                        />
+                                    }
+                                />
+                                <Text font="b1_18_semi">
+                                    포켓런 결과를 불러오고 있어요
+                                </Text>
+                                <Text font="b3_14_reg">
+                                    최상의 결과를 불러올게요! 잠시만
+                                    기다려주세요
+                                </Text>
+                            </LoadingBox>
+                        ) : (
+                            <Box>
+                                <Text
+                                    font="b2_16_med"
+                                    color={"G_700"}
+                                    key={index}
+                                >
+                                    {res.response}
+                                </Text>
+                            </Box>
+                        )}
                     </>
                 ))
             )}
@@ -63,17 +94,26 @@ const EmptyBox = styled(Flex)`
 const Box = styled(Flex)`
     border-radius: 8px;
     border: 1.5px solid var(--primary-20, #e3e6fb);
-
     width: 100%;
-    height: 100%;
     padding: 16px;
     flex-direction: column;
     gap: 8px;
 `;
 
+const LoadingBox = styled.div`
+    display: flex;
+    border-radius: 8px;
+    background: var(--gray-50, #f7f8f9);
+    width: 100%;
+    height: 323px;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+`;
+
 const ChipWrapper = styled.div`
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: row;
     gap: 8px;

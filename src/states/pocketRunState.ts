@@ -11,3 +11,8 @@ export const pocketRunState = atom<PocketRunReturnTypes[]>({
         },
     ],
 });
+
+export const pocketRunLoadingState = atom({
+    key: "pocketRunLoadingState",
+    default: false,
+});

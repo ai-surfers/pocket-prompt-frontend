@@ -7,10 +7,10 @@ import Icon from "@/pages/home/components/common/Icon";
 import PocketRunDropdown from "@/pages/prompt/components/PocketRunDropdown";
 import PromptTemplateModal from "@/pages/prompt/components/PromptTemplateModal";
 import FormItem from "@/pages/promptNew/components/Form/FormItem";
-import { pocketRunState } from "@/states/pocketRunState";
+import { pocketRunLoadingState, pocketRunState } from "@/states/pocketRunState";
 import { copyClipboard, populateTemplate } from "@/utils/promptUtils";
 import { Flex } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
@@ -36,16 +36,15 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
     const { promptId } = useParams<{ promptId: string }>();
 
     const setPocketRunState = useSetRecoilState(pocketRunState);
+    const setPocketRunLoading = useSetRecoilState(pocketRunLoadingState);
 
-    const { mutate: pocketRun } = usePocketRun({
+    const { mutate: pocketRun, isPending } = usePocketRun({
         onSuccess: (res) => {
             console.log("Success:", res);
             setPocketRunState((prevState) => {
-                if (prevState[0].response === "") {
-                    return [res];
-                } else {
-                    return [...prevState, res];
-                }
+                const newState = [...prevState];
+                newState[prevState.length - 1] = res; // 마지막 요소(로딩중)를 res로 변경
+                return newState;
             });
         },
         onError: (err) => {
@@ -76,6 +75,27 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                         context: values,
                         model: platform,
                     });
+
+                    setPocketRunState((prevState) => {
+                        if (prevState[0].response === "") {
+                            return [
+                                {
+                                    response: "",
+                                    context: values,
+                                    model: platform,
+                                },
+                            ];
+                        } else {
+                            return [
+                                ...prevState,
+                                {
+                                    response: "",
+                                    context: values,
+                                    model: platform,
+                                },
+                            ];
+                        }
+                    });
                 }
             },
             (errors) => {
@@ -87,6 +107,11 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
             }
         )();
     };
+
+    useEffect(() => {
+        setPocketRunLoading(isPending);
+        console.log(isPending);
+    }, [isPending, setPocketRunLoading]);
 
     return (
         <>
@@ -159,7 +184,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                     />
 
                     <PocketRunDropdown
-                        disabled={!formState.isValid}
+                        disabled={!formState.isValid || isPending}
                         onSelect={handleClickSubmit}
                     />
                 </Flex>
