@@ -4,10 +4,23 @@ import { Flex, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import Icon from "@/pages/home/components/common/Icon";
+import { copyClipboard } from "@/utils/promptUtils";
+import Button from "@/components/common/Button/Button";
 
 export const ResultSection: React.FC = () => {
     const pocketRunRes = useRecoilValue(pocketRunState);
     const pocketRunLoading = useRecoilValue(pocketRunLoadingState);
+
+    const handleClickCopy = (result: string) => {
+        copyClipboard(result)
+            .then(() => {
+                console.log("클립보드 복사 성공");
+            })
+            .catch((err) => {
+                console.error("클립보드 복사 실패:", err);
+            });
+    };
 
     return (
         <Flex vertical gap={16} style={{ height: "100%" }}>
@@ -65,15 +78,38 @@ export const ResultSection: React.FC = () => {
                                 </Text>
                             </LoadingBox>
                         ) : (
-                            <Box>
-                                <Text
-                                    font="b2_16_med"
-                                    color={"G_700"}
-                                    key={index}
+                            <>
+                                <Box>
+                                    <Text
+                                        font="b2_16_med"
+                                        color={"G_700"}
+                                        key={index}
+                                    >
+                                        {res.response}
+                                    </Text>
+                                </Box>
+                                <Button
+                                    onClick={() =>
+                                        handleClickCopy(res.response)
+                                    }
+                                    width="143px"
+                                    size={44}
+                                    suffix={
+                                        <Icon
+                                            name="Copy"
+                                            size={20}
+                                            color="primary_100"
+                                        />
+                                    }
+                                    style={{
+                                        padding: "8px 12px 8px 16px",
+                                        margin: "auto 0 auto auto",
+                                    }}
+                                    hierarchy="normal"
                                 >
-                                    {res.response}
-                                </Text>
-                            </Box>
+                                    결과 복사하기
+                                </Button>
+                            </>
                         )}
                     </>
                 ))
