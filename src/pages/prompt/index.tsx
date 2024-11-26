@@ -103,10 +103,10 @@ const BoxContainer = styled.div`
 
     @media (min-width: 1080px) {
         &:nth-child(1) {
-            flex: 3;
+            flex: 3.5;
         }
         &:nth-child(2) {
-            flex: 7;
+            flex: 6.5;
         }
     }
 
