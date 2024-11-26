@@ -4,6 +4,8 @@ import Play from "@/assets/svg/home/Play";
 import theme from "@/styles/theme";
 import * as S from "./styles";
 import { useNavigate } from "react-router-dom";
+import { useResetRecoilState } from "recoil";
+import { pocketRunState } from "@/states/pocketRunState";
 
 interface PromptProps {
     colored?: boolean;
@@ -27,10 +29,12 @@ const Prompt = ({
     id,
 }: PromptProps) => {
     const pointColor = colored ? theme.colors.primary : theme.colors.G_400;
+    const resetPocketRunState = useResetRecoilState(pocketRunState);
     const navigate = useNavigate();
 
     const handleClick = () => {
         navigate(`/prompt/${id}`);
+        resetPocketRunState();
     };
 
     return (
