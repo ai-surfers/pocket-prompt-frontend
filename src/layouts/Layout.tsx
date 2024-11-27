@@ -1,11 +1,16 @@
 import Header from "@/components/Header/Header";
+import Sidebar from "@/components/Sidebar/Sidebar";
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 export default function Layout() {
+    const [isOpen, setIsOpen] = useState(false);
+
     return (
         <LayoutContainer>
-            <Header />
+            <Header onOpen={() => setIsOpen(true)} />
+            <Sidebar open={isOpen} onClose={() => setIsOpen(false)} />
             <ContentWrapper>
                 <Outlet />
             </ContentWrapper>

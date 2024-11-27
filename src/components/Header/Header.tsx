@@ -13,8 +13,12 @@ import {
 } from "@/utils/storageUtils";
 import { useMediaQuery } from "react-responsive";
 import { MenuOutlined } from "@ant-design/icons";
+import { Menus } from "@/core/Menu";
 
-export default function Header() {
+type HeaderProps = {
+    onOpen: () => void;
+};
+export default function Header({ onOpen }: HeaderProps) {
     const { setUser, resetUserState, userData } = useUser();
 
     const isUnderTablet = useMediaQuery({
@@ -51,18 +55,18 @@ export default function Header() {
                     </StyledNavLink>
                     {!isUnderTablet && (
                         <TabBarContainer>
-                            <StyledNavLink to="/">Home</StyledNavLink>
-                            <StyledNavLink to="/extension">
-                                Extension
-                            </StyledNavLink>
-                            <StyledNavLink to="/price">Pricing</StyledNavLink>
+                            {Menus.map((menu, idx) => (
+                                <StyledNavLink to={menu.path} key={idx}>
+                                    {menu.label}
+                                </StyledNavLink>
+                            ))}
                         </TabBarContainer>
                     )}
                 </HeaderLeftContainer>
 
                 <HeaderRightContainer>
                     {isUnderTablet ? (
-                        <MenuOutlined />
+                        <MenuOutlined onClick={onOpen} />
                     ) : userData.isLogin ? (
                         <User />
                     ) : (

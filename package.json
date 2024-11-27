@@ -5,7 +5,7 @@
     "type": "module",
     "homepage": "https://ai-surfers.github.io/resp",
     "scripts": {
-        "dev": "vite",
+        "dev": "vite --host",
         "prod": "vite --mode production",
         "build": "tsc -b && vite build",
         "build:dev": "tsc -b && vite build --mode development",

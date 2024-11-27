@@ -1,5 +1,6 @@
 import { getUser, login } from "@/apis/auth/auth";
 import { auth, PROVIDER } from "@/apis/firebase";
+import Text from "@/components/common/Text/Text";
 import { useUser } from "@/hooks/useUser";
 import {
     LOCALSTORAGE_KEYS,
@@ -52,17 +53,21 @@ export default function LoginButton() {
         setUser(userData);
     }
 
-    return <Button onClick={handleLogin}>로그인</Button>;
+    return (
+        <Button onClick={handleLogin}>
+            <Text font="b2_16_semi" color="white">
+                로그인
+            </Text>
+        </Button>
+    );
 }
 
 const Button = styled.div`
     border-radius: 12px;
     padding: 10px 12px;
 
-    ${({ theme }) => theme.fonts.body3};
-    ${({ theme }) => theme.fonts.semibold};
     background: ${({ theme }) => theme.colors.primary};
-    color: ${({ theme }) => theme.colors.white};
+    ${({ theme }) => theme.mixins.flexBox()}
 
     cursor: pointer;
 `;
