@@ -2,14 +2,18 @@ import { PromptInputField } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
+import usePocketRun from "@/hooks/mutations/pocketRun/usePocketRun";
 import Icon from "@/pages/home/components/common/Icon";
 import PocketRunDropdown from "@/pages/prompt/components/PocketRunDropdown";
 import PromptTemplateModal from "@/pages/prompt/components/PromptTemplateModal";
 import FormItem from "@/pages/promptNew/components/Form/FormItem";
+import { pocketRunLoadingState, pocketRunState } from "@/states/pocketRunState";
 import { copyClipboard, populateTemplate } from "@/utils/promptUtils";
 import { Flex } from "antd";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 interface ExecuteSectionProps {
     onSelect: (value: string) => void;
@@ -22,12 +26,35 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
     template,
 }) => {
     const form = useForm();
-    const { control, formState } = form;
+    const { control, formState, watch } = form;
 
     const [isPromptTemplateOpen, setIsPromptTemplateOpen] = useState(false);
     const handleShowTemplate = () => {
         setIsPromptTemplateOpen(true);
     };
+
+    const { promptId } = useParams<{ promptId: string }>();
+
+    const [pocketRunRes, setPocketRunRes] = useRecoilState(pocketRunState);
+    const setPocketRunLoading = useSetRecoilState(pocketRunLoadingState);
+
+    const [hasChanged, setHasChanged] = useState(false);
+    const prevFormValues = useRef<Record<string, string>>({});
+    const formValues = watch();
+
+    const { mutate: pocketRun, isPending } = usePocketRun({
+        onSuccess: (res) => {
+            console.log("Success:", res);
+            setPocketRunRes((prevState) => {
+                const newState = [...prevState];
+                newState[prevState.length - 1] = res; // 마지막 요소(로딩중)를 res로 변경
+                return newState;
+            });
+        },
+        onError: (err) => {
+            console.error("Error:", err);
+        },
+    });
 
     const handleClickSubmit = async (platform?: string) => {
         form.handleSubmit(
@@ -47,7 +74,32 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                             alert("클립보드 복사에 실패했습니다.");
                         });
                 } else {
-                    // [TODO] 포켓런
+                    pocketRun({
+                        promptId: promptId ?? "",
+                        context: values,
+                        model: platform,
+                    });
+
+                    setPocketRunRes((prevState) => {
+                        if (prevState[0].response === "") {
+                            return [
+                                {
+                                    response: "",
+                                    context: values,
+                                    model: platform,
+                                },
+                            ];
+                        } else {
+                            return [
+                                ...prevState,
+                                {
+                                    response: "",
+                                    context: values,
+                                    model: platform,
+                                },
+                            ];
+                        }
+                    });
                 }
             },
             (errors) => {
@@ -59,6 +111,25 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
             }
         )();
     };
+
+    useEffect(() => {
+        setPocketRunLoading(isPending);
+        console.log(isPending);
+    }, [isPending, setPocketRunLoading]);
+
+    useEffect(() => {
+        // Compare current form values with previous values
+        const hasFormChanged = Object.keys(formValues).some((key) => {
+            return formValues[key] !== prevFormValues.current[key];
+        });
+
+        if (hasFormChanged && pocketRunRes.length > 1) {
+            setHasChanged(true);
+        }
+
+        // Update previous values
+        prevFormValues.current = formValues;
+    }, [formValues, pocketRunRes.length]);
 
     return (
         <>
@@ -131,8 +202,9 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                     />
 
                     <PocketRunDropdown
-                        disabled={!formState.isValid}
+                        disabled={!formState.isValid || isPending}
                         onSelect={handleClickSubmit}
+                        secondRun={hasChanged}
                     />
                 </Flex>
             </Flex>
