@@ -11,12 +11,12 @@ interface GetCardInfoResponse {
  *  카드 정보 확인
  */
 
-export const getCardInfo = async () => {
+const getCardInfo = async () => {
     const res = await GET<GetCardInfoResponse>(`/subscription/card_info`);
     return res.data.data;
 };
 
-export const useGetSubscription = () => {
+export const useGetCardInfo = () => {
     const QUERY_KEY = CARD_INFO_KEYS.all;
 
     const { data, isLoading, isError, error, refetch } = useQuery({

@@ -3,6 +3,7 @@ import { css, keyframes } from "styled-components";
 const colors = {
     white: "#FFFFFF",
     black: "#060812",
+    blue: "#5177FF",
     G_900: "#181B29",
     G_800: "#202232",
     G_700: "#2E3040",

@@ -1,30 +1,19 @@
 // MyPage.tsx
 import styled from "styled-components";
-import { Card, Button, Table, Typography, Space } from "antd";
+import { Card, Table, Space } from "antd";
 import { Wrapper } from "@/layouts/Layout";
-import { useUser } from "@/hooks/useUser";
-import { useNavigate } from "react-router-dom";
-import { useGetPaymetns } from "@/hooks/queries/payments/useGetPayments";
+import { useGetSubscription } from "@/hooks/queries/payments/useGetSubscription";
 import { usePutPayments } from "@/hooks/mutations/payments/usePutPayments";
-import * as Sentry from "@sentry/react";
-import { LOCALSTORAGE_KEYS, removeLocalStorage } from "@/utils/storageUtils";
+// import * as Sentry from "@sentry/react";
 
-const { Title, Text } = Typography;
+import Text from "@/components/common/Text/Text";
+import Button from "@/components/common/Button/Button";
+import { useGetCardInfo } from "@/hooks/queries/payments/useGetCardInfo";
 
-const dataSource = [
-    {
-        key: "1",
-        date: "2024-08-01",
-        description: "월 구독료 (Plus)",
-        amount: "₩3,900",
-    },
-    {
-        key: "2",
-        date: "2024-07-01",
-        description: "월 구독료 (Plus)",
-        amount: "₩3,900",
-    },
-];
+const SUBSCRIPTION_STATUS = {
+    active: "활성",
+    inactive: "비활성",
+};
 
 const columns = [
     {
@@ -45,15 +34,6 @@ const columns = [
 ];
 
 export default function MyPage() {
-    const { resetUserState } = useUser();
-    const navigate = useNavigate();
-
-    function handleLogout() {
-        removeLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
-        resetUserState();
-        navigate("/", { replace: true });
-    }
-
     const { mutate: unsubscription } = usePutPayments({
         onSuccess(res) {
             alert("구독이 성공적으로 취소되었습니다.");
@@ -72,55 +52,116 @@ export default function MyPage() {
         }
     }
 
-    const { data } = useGetPaymetns();
+    const { data: subscriptionData } = useGetSubscription();
+    const { data: cardInfoData } = useGetCardInfo();
 
-    function throwError() {
-        try {
-            throw new Error("커스텀 에러 발생, 센트리 에러 테스트");
-        } catch (error) {
-            Sentry.captureException(error);
-        }
-    }
-    console.log(">> data", data);
+    const dataSource =
+        subscriptionData?.payment_list_data.payment_document_list;
+
+    // function throwError() {
+    //     try {
+    //         throw new Error("커스텀 에러 발생, 센트리 에러 테스트");
+    //     } catch (error) {
+    //         Sentry.captureException(error);
+    //     }
+    // }
+
     return (
         <Container>
             <Wrapper>
-                <Title
-                    level={2}
-                    style={{ marginBottom: "20px" }}
-                    onClick={throwError}
-                >
+                <Text font="h1_24_bold" style={{ marginBottom: "20px" }}>
                     구독 관리
-                </Title>
+                </Text>
                 <Space
                     direction="vertical"
                     size="large"
                     style={{ width: "100%" }}
                 >
                     <Card>
-                        <SectionTitle>현재 구독 정보</SectionTitle>
-                        <Space direction="vertical">
-                            <Text>플랜: 포켓 프롬프트 Plus</Text>
-                            <Text>가격: ₩3,900/월</Text>
-                            <Text>다음 청구일: 2024년 9월 1일</Text>
-                            <Text>상태: 활성</Text>
-                            <Button type="primary">플랜 변경</Button>
-                        </Space>
+                        <TitleWrapper>
+                            <Text font="b1_18_bold">현재 구독 정보</Text>
+                            <Button
+                                hierarchy="normal"
+                                width="132px"
+                                size={44}
+                                style={{ justifyContent: "center" }}
+                            >
+                                플랜 변경
+                            </Button>
+                        </TitleWrapper>
+                        <ContentWrapper>
+                            <TextWrapper>
+                                <Text font="b2_16_reg" color="G_500">
+                                    플랜
+                                </Text>
+                                <Text font="b2_16_reg" color="G_500">
+                                    가격
+                                </Text>
+                                <Text font="b2_16_reg" color="G_500">
+                                    다음 갱신일
+                                </Text>
+                                <Text font="b2_16_reg" color="G_500">
+                                    상태
+                                </Text>
+                            </TextWrapper>
+                            <TextWrapper>
+                                <Text font="b2_16_semi" color="G_600">
+                                    {subscriptionData?.plan}
+                                </Text>
+                                <Text font="b2_16_semi" color="G_600">
+                                    {subscriptionData?.price}
+                                </Text>
+                                <Text font="b2_16_semi" color="G_600">
+                                    {subscriptionData?.next_pay}
+                                </Text>
+                                <Chip>
+                                    <Text font="b3_14_med" color="blue">
+                                        {
+                                            SUBSCRIPTION_STATUS[
+                                                (subscriptionData?.subscription_status ??
+                                                    "inactive") as
+                                                    | "active"
+                                                    | "inactive"
+                                            ]
+                                        }
+                                    </Text>
+                                </Chip>
+                            </TextWrapper>
+                        </ContentWrapper>
                     </Card>
 
                     <Card>
-                        <SectionTitle>결제 정보</SectionTitle>
-                        <Space direction="vertical">
-                            <Text>결제 방법: 신용카드 (1234)</Text>
-                            <Text>
-                                청구 주소: 서울특별시 강남구 테헤란로 123
-                            </Text>
-                            <Button type="default">결제 정보 수정</Button>
-                        </Space>
+                        <TitleWrapper>
+                            <Text font="b1_18_bold">결제 정보</Text>
+                            <Button
+                                hierarchy="normal"
+                                width="132px"
+                                size={44}
+                                style={{ justifyContent: "center" }}
+                            >
+                                결제 정보 수정
+                            </Button>
+                        </TitleWrapper>
+                        <ContentWrapper>
+                            <TextWrapper>
+                                <Text font="b2_16_reg" color="G_500">
+                                    결제 방법
+                                </Text>
+                            </TextWrapper>
+
+                            <TextWrapper>
+                                <Text font="b2_16_semi" color="G_600">
+                                    {`${cardInfoData?.name} (${cardInfoData?.last_four_digits})`}
+                                </Text>
+                            </TextWrapper>
+                        </ContentWrapper>
                     </Card>
 
                     <Card>
-                        <SectionTitle>구독 이력</SectionTitle>
+                        <TitleWrapper>
+                            <Text font="b1_18_bold">구독 이력</Text>
+                        </TitleWrapper>
+
                         <Table
                             dataSource={dataSource}
                             columns={columns}
@@ -128,15 +169,20 @@ export default function MyPage() {
                         />
                     </Card>
 
-                    <CancelButton
-                        type="primary"
-                        danger
+                    <Button
+                        hierarchy="default"
                         onClick={handleUnsubscription}
+                        width="132px"
+                        size={44}
+                        style={{
+                            margin: "auto 0 auto auto",
+                            justifyContent: "center",
+                        }}
                     >
-                        구독 취소
-                    </CancelButton>
-
-                    <CancelButton onClick={handleLogout}>로그아웃</CancelButton>
+                        <Text font="b2_16_semi" color="G_500">
+                            구독 취소
+                        </Text>
+                    </Button>
                 </Space>
             </Wrapper>
         </Container>
@@ -150,11 +196,27 @@ const Container = styled.div`
     background-color: #f0f2f5;
 `;
 
-const SectionTitle = styled(Title).attrs({ level: 4 })`
-    margin-bottom: 20px;
+const TitleWrapper = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("row", "space-between", "center")};
+    margin-bottom: 14px;
 `;
 
-const CancelButton = styled(Button)`
-    height: 50px;
-    font-size: 16px;
+const ContentWrapper = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("row", "start", "center")};
+`;
+
+const TextWrapper = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("column", "center", "start")};
+    min-width: 144px;
+    gap: 12px;
+`;
+
+const Chip = styled.div`
+    display: flex;
+    height: 28px;
+    padding: 4px 12px 3px 12px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    background: ${({ theme }) => theme.colors.primary_10};
 `;
