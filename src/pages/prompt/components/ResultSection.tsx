@@ -4,7 +4,7 @@ import { Flex, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import Icon from "@/pages/home/components/common/Icon";
+import Icon from "@/components/common/Icon";
 import { copyClipboard } from "@/utils/promptUtils";
 import Button from "@/components/common/Button/Button";
 

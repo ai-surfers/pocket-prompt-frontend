@@ -1,15 +1,15 @@
 import styled from "styled-components";
 import { Menu } from "antd";
 import type { MenuProps } from "antd";
-import { ComponentType, ReactNode, SVGProps, useState } from "react";
-import MenuItemIcon from "./MenuItemIcon/MenuItemIcon";
-
+import { ReactNode, useState } from "react";
+import * as Icons from "iconsax-react";
 import useToast from "@/hooks/useToast";
+import Icon from "../common/Icon";
 
 export interface MenuItemsType {
     key: string;
     label?: string;
-    icon?: ComponentType<SVGProps<SVGSVGElement>>;
+    iconType?: keyof typeof Icons;
     type?: "divider";
 }
 
@@ -25,19 +25,19 @@ const LNB = ({ menuItems, button }: LNBtype) => {
 
     // 메뉴 항목을 동적으로 생성
     const items: MenuProps["items"] = menuItems.map((item) => {
-        if (item.type === "divider") {
+        if (!item.iconType || item.type === "divider") {
             return { type: "divider", key: item.key };
         }
 
         return {
             key: item.key,
-            icon: item.icon ? ( // icon이 있는 경우에만 MenuItemIcon 렌더링
-                <MenuItemIcon
-                    menuKey={item.key}
-                    icon={item.icon}
-                    selectedKey={selectedKey}
+            icon: (
+                <Icon
+                    name={item.iconType}
+                    color={selectedKey === item.key ? "primary" : "G_400"}
+                    size={20}
                 />
-            ) : null,
+            ),
             label: item.label,
         };
     });
@@ -99,6 +99,10 @@ const StyledMenu = styled(Menu)`
         .ant-menu-title-content {
             ${({ theme }) => theme.fonts.bold};
             color: ${({ theme }) => theme.colors.primary};
+        }
+
+        svg {
+            stroke: ${({ theme }) => theme.colors.primary} !important;
         }
     }
 

@@ -2,10 +2,6 @@ import Banner from "./components/Banner/Banner";
 import { Wrapper } from "@/layouts/Layout";
 import styled from "styled-components";
 import LNB, { MenuItemsType } from "../../components/LNB/LNB";
-import BookMark from "@/assets/svg/home/BookMark";
-import Image from "@/assets/svg/home/Image";
-import TextSVG from "@/assets/svg/home/TextSVG";
-import Video from "@/assets/svg/home/Video";
 import Add from "@/assets/svg/home/Add";
 import PaginatedPromptSection from "./components/Prompt/PaginatedPromptSection";
 import Button from "@/components/common/Button/Button";
@@ -16,11 +12,27 @@ export default function HomePage() {
     const navigate = useNavigate();
 
     const menuItems: MenuItemsType[] = [
-        { key: "1", label: "텍스트 프롬프트", icon: TextSVG },
-        { key: "2", label: "이미지 프롬프트", icon: Image },
-        { key: "3", label: "동영상 프롬프트", icon: Video },
+        {
+            key: "1",
+            label: "텍스트 프롬프트",
+            iconType: "TextBlock",
+        },
+        {
+            key: "2",
+            label: "이미지 프롬프트",
+            iconType: "Image",
+        },
+        {
+            key: "3",
+            label: "동영상 프롬프트",
+            iconType: "Video",
+        },
         { type: "divider", key: "divider-1" },
-        { key: "4", label: "저장한 프롬프트", icon: BookMark },
+        {
+            key: "4",
+            label: "저장한 프롬프트",
+            iconType: "Bookmark",
+        },
     ];
 
     const handleClickNewButton = () => {

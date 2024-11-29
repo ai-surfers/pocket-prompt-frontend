@@ -3,7 +3,7 @@ import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
 import usePocketRun from "@/hooks/mutations/pocketRun/usePocketRun";
-import Icon from "@/pages/home/components/common/Icon";
+import Icon from "@/components/common/Icon";
 import PocketRunDropdown from "@/pages/prompt/components/PocketRunDropdown";
 import PromptTemplateModal from "@/pages/prompt/components/PromptTemplateModal";
 import FormItem from "@/pages/promptNew/components/Form/FormItem";
