@@ -1,29 +1,27 @@
-import BookMark from "@/assets/svg/home/BookMark";
-import Image from "@/assets/svg/home/Image";
-import TextSVG from "@/assets/svg/home/TextSVG";
-import Video from "@/assets/svg/home/Video";
 import styled from "styled-components";
 import { Menu } from "antd";
 import type { MenuProps } from "antd";
-import { useState } from "react";
+import { ComponentType, ReactNode, SVGProps, useState } from "react";
 import MenuItemIcon from "./MenuItemIcon/MenuItemIcon";
-import Button from "@/components/common/Button/Button";
-import Add from "@/assets/svg/home/Add";
-import { useNavigate } from "react-router-dom";
+
 import useToast from "@/hooks/useToast";
 
-const LNB = () => {
-    const [selectedKey, setSelectedKey] = useState<string>("1");
-    const navigate = useNavigate();
-    const showToast = useToast();
+export interface MenuItemsType {
+    key: string;
+    label?: string;
+    icon?: ComponentType<SVGProps<SVGSVGElement>>;
+    type?: "divider";
+}
 
-    const menuItems = [
-        { key: "1", label: "텍스트 프롬프트", icon: TextSVG },
-        { key: "2", label: "이미지 프롬프트", icon: Image },
-        { key: "3", label: "동영상 프롬프트", icon: Video },
-        { type: "divider", key: "divider-1" },
-        { key: "4", label: "저장한 프롬프트", icon: BookMark },
-    ];
+interface LNBtype {
+    menuItems: MenuItemsType[];
+    button?: ReactNode;
+}
+
+const LNB = ({ menuItems, button }: LNBtype) => {
+    const [selectedKey, setSelectedKey] = useState<string>("1");
+
+    const showToast = useToast();
 
     // 메뉴 항목을 동적으로 생성
     const items: MenuProps["items"] = menuItems.map((item) => {
@@ -57,10 +55,6 @@ const LNB = () => {
         }
     };
 
-    const handleClickNewButton = () => {
-        navigate("/prompt-new");
-    };
-
     return (
         <LNBWrapper>
             <StyledMenu
@@ -69,10 +63,7 @@ const LNB = () => {
                 mode="vertical"
                 items={items}
             />
-            <StyledButton onClick={handleClickNewButton}>
-                <Add />
-                프롬프트 등록
-            </StyledButton>
+            {button}
         </LNBWrapper>
     );
 };
@@ -118,13 +109,4 @@ const StyledMenu = styled(Menu)`
     .ant-menu-item-divider {
         margin-bottom: 2px;
     }
-`;
-
-const StyledButton = styled(Button)`
-    width: 133px;
-    height: 52px;
-    padding: 8px 4px;
-    gap: 2px;
-    ${({ theme }) => theme.fonts.b2_16_semi}
-    margin-top: 8px;
 `;

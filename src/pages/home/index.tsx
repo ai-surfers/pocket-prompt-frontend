@@ -1,15 +1,48 @@
 import Banner from "./components/Banner/Banner";
 import { Wrapper } from "@/layouts/Layout";
 import styled from "styled-components";
-import LNB from "./components/LNB/LNB";
-
+import LNB, { MenuItemsType } from "../../components/LNB/LNB";
+import BookMark from "@/assets/svg/home/BookMark";
+import Image from "@/assets/svg/home/Image";
+import TextSVG from "@/assets/svg/home/TextSVG";
+import Video from "@/assets/svg/home/Video";
+import Add from "@/assets/svg/home/Add";
 import PaginatedPromptSection from "./components/Prompt/PaginatedPromptSection";
+import Button from "@/components/common/Button/Button";
+import { useNavigate } from "react-router-dom";
+import Text from "@/components/common/Text/Text";
 
 export default function HomePage() {
+    const navigate = useNavigate();
+
+    const menuItems: MenuItemsType[] = [
+        { key: "1", label: "텍스트 프롬프트", icon: TextSVG },
+        { key: "2", label: "이미지 프롬프트", icon: Image },
+        { key: "3", label: "동영상 프롬프트", icon: Video },
+        { type: "divider", key: "divider-1" },
+        { key: "4", label: "저장한 프롬프트", icon: BookMark },
+    ];
+
+    const handleClickNewButton = () => {
+        navigate("/prompt-new");
+    };
+
+    const newPropmptButton = (
+        <Button
+            onClick={handleClickNewButton}
+            style={{ padding: "8px 12px", gap: 2 }}
+        >
+            <Add />
+            <Text font="b2_16_semi" color="white">
+                프롬프트 등록
+            </Text>
+        </Button>
+    );
+
     return (
         <HomeWrapper>
             <HomeContentWrapper>
-                <LNB />
+                <LNB menuItems={menuItems} button={newPropmptButton} />
                 <ContentWrapper>
                     <BannerWrapper>
                         <Banner />
