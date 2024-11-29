@@ -24,9 +24,10 @@ export default function HomePage() {
 const HomeWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox()}
     gap: 40px;
-    margin-top: 92px;
+    padding-top: 92px;
     align-items: start;
     width: 100vw;
+    background-color: white;
 `;
 
 const HomeContentWrapper = styled.div`
