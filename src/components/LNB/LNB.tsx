@@ -3,7 +3,6 @@ import { Menu } from "antd";
 import type { MenuProps } from "antd";
 import { ReactNode, useState } from "react";
 import * as Icons from "iconsax-react";
-import useToast from "@/hooks/useToast";
 import Icon from "../common/Icon";
 
 export interface MenuItemsType {
@@ -11,6 +10,8 @@ export interface MenuItemsType {
     label?: string;
     iconType?: keyof typeof Icons;
     type?: "divider";
+    onClick?: () => void;
+    disabled?: boolean;
 }
 
 interface LNBtype {
@@ -20,8 +21,6 @@ interface LNBtype {
 
 const LNB = ({ menuItems, button }: LNBtype) => {
     const [selectedKey, setSelectedKey] = useState<string>("1");
-
-    const showToast = useToast();
 
     // 메뉴 항목을 동적으로 생성
     const items: MenuProps["items"] = menuItems.map((item) => {
@@ -39,19 +38,15 @@ const LNB = ({ menuItems, button }: LNBtype) => {
                 />
             ),
             label: item.label,
+            onClick: item.onClick,
         };
     });
 
     const handleClickMenu: MenuProps["onClick"] = (e) => {
         const selectedItem = menuItems.find((item) => item.key === e.key);
 
-        if (e.key === "1") {
+        if (!selectedItem?.disabled) {
             setSelectedKey(e.key);
-        } else {
-            showToast(
-                `${selectedItem?.label}는 아직 준비 중인 기능이에요.`,
-                "더 많은 프롬프트 탐색을 위해 빠르게 준비하고 있을게요!"
-            );
         }
     };
 
@@ -80,9 +75,10 @@ const StyledMenu = styled(Menu)`
     padding: 0;
 
     .ant-menu-item {
-        ${({ theme }) => theme.mixins.flexBox()};
+        ${({ theme }) => theme.mixins.flexBox("row", "start", "center")};
         gap: 6px;
         padding: 0;
+        padding-left: 10px;
         background-color: transparent !important;
         width: 149px;
         height: 48px;
