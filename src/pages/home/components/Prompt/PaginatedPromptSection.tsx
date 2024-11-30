@@ -11,7 +11,7 @@ const PaginatedPromptSection = () => {
     const searchedCategory = useRecoilValue(searchedCategoryState);
 
     return (
-        <>
+        <PromptSectionContainer>
             {searchedKeyword && (
                 <SectionWrapper>
                     <PaginatedPrompt type="search" />
@@ -33,11 +33,15 @@ const PaginatedPromptSection = () => {
                         </SectionWrapper>
                     </>
                 )}
-        </>
+        </PromptSectionContainer>
     );
 };
 
 export default PaginatedPromptSection;
+
+const PromptSectionContainer = styled.section`
+    width: 100%;
+`;
 
 const SectionWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox("column", "center", "center")};

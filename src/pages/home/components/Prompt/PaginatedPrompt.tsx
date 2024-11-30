@@ -1,4 +1,4 @@
-import { Pagination, Select } from "antd";
+import { Col, Flex, Grid, Pagination, Row, Select } from "antd";
 import Prompt from "../Prompt/Prompt";
 import styled from "styled-components";
 import usePromptsListQuery, {
@@ -74,7 +74,7 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
     })();
 
     return (
-        <>
+        <Flex vertical gap={20} style={{ width: "100%" }}>
             <TitleWrapper>
                 <Title>{promptTitle}</Title>
                 {usePage && (
@@ -93,49 +93,46 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
                 )}
             </TitleWrapper>
 
-            <PromptWrapper>
+            <Row gutter={[16, 16]}>
                 {isLoading
                     ? Array.from({ length: itemsPerPage }).map((_, idx) => (
-                          <SkeletonBox key={idx} />
+                          <Col key={idx} xs={24} sm={12} md={8}>
+                              <SkeletonBox key={idx} />
+                          </Col>
                       ))
                     : items.map((item, index) => (
-                          <Prompt
-                              key={item.id}
-                              id={item.id}
-                              title={item.title}
-                              description={item.description}
-                              views={item.views}
-                              star={item.star}
-                              usages={item.usages}
-                              colored={type === "popular"}
-                              index={index + 1}
-                          />
+                          <Col key={item.id} xs={24} sm={12} md={8}>
+                              <Prompt
+                                  key={item.id}
+                                  id={item.id}
+                                  title={item.title}
+                                  description={item.description}
+                                  views={item.views}
+                                  star={item.star}
+                                  usages={item.usages}
+                                  colored={type === "popular"}
+                                  index={index + 1}
+                              />
+                          </Col>
                       ))}
-            </PromptWrapper>
+            </Row>
+
             {usePage && (
-                <Pagination
-                    current={currentPage}
-                    pageSize={itemsPerPage}
-                    total={totalItems || 0}
-                    onChange={handlePageChange}
-                    showSizeChanger={false}
-                />
+                <div style={{ margin: "0 auto" }}>
+                    <Pagination
+                        current={currentPage}
+                        pageSize={itemsPerPage}
+                        total={totalItems || 0}
+                        onChange={handlePageChange}
+                        showSizeChanger={false}
+                    />
+                </div>
             )}
-        </>
+        </Flex>
     );
 };
 
 export default PaginatedPrompt;
-
-const PromptWrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row", "start", "start")};
-    align-content: flex-start;
-    gap: 16px;
-    flex-wrap: wrap;
-    box-sizing: border-box;
-    width: 1107px;
-    min-height: 157px;
-`;
 
 const SkeletonBox = styled.div`
     ${({ theme }) => theme.mixins.skeleton()};
