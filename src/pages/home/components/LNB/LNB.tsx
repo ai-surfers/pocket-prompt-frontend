@@ -3,7 +3,7 @@ import Image from "@/assets/svg/home/Image";
 import TextSVG from "@/assets/svg/home/TextSVG";
 import Video from "@/assets/svg/home/Video";
 import styled from "styled-components";
-import { Menu } from "antd";
+import { Flex, Menu } from "antd";
 import type { MenuProps } from "antd";
 import { useState } from "react";
 import MenuItemIcon from "./MenuItemIcon/MenuItemIcon";
@@ -11,17 +11,21 @@ import Button from "@/components/common/Button/Button";
 import Add from "@/assets/svg/home/Add";
 import { useNavigate } from "react-router-dom";
 import useToast from "@/hooks/useToast";
+import useDeviceSize from "@/hooks/useDeviceSize";
+import Text from "@/components/common/Text/Text";
 
 const LNB = () => {
     const [selectedKey, setSelectedKey] = useState<string>("1");
     const navigate = useNavigate();
     const showToast = useToast();
 
+    const { isUnderTablet } = useDeviceSize();
+
     const menuItems = [
         { key: "1", label: "텍스트 프롬프트", icon: TextSVG },
         { key: "2", label: "이미지 프롬프트", icon: Image },
         { key: "3", label: "동영상 프롬프트", icon: Video },
-        { type: "divider", key: "divider-1" },
+        ...(isUnderTablet ? [] : [{ type: "divider", key: "divider-1" }]),
         { key: "4", label: "저장한 프롬프트", icon: BookMark },
     ];
 
@@ -44,11 +48,11 @@ const LNB = () => {
         };
     });
 
-    const handleClickMenu: MenuProps["onClick"] = (e) => {
-        const selectedItem = menuItems.find((item) => item.key === e.key);
+    const handleClickMenu = (index: string) => {
+        const selectedItem = menuItems.find((item) => item.key === index);
 
-        if (e.key === "1") {
-            setSelectedKey(e.key);
+        if (index === "1") {
+            setSelectedKey(index);
         } else {
             showToast(
                 `${selectedItem?.label}는 아직 준비 중인 기능이에요.`,
@@ -61,10 +65,43 @@ const LNB = () => {
         navigate("/prompt-new");
     };
 
+    if (isUnderTablet) {
+        return (
+            <Flex
+                justify="space-between"
+                align="center"
+                wrap="wrap"
+                gap={10}
+                style={{ width: "100vw", padding: "0 10px" }}
+            >
+                <Flex gap={20}>
+                    {menuItems.map((item) => (
+                        <button onClick={() => handleClickMenu(item.key)}>
+                            {item.icon && (
+                                <MenuItemIcon
+                                    menuKey={item.key}
+                                    icon={item.icon}
+                                    selectedKey={selectedKey}
+                                />
+                            )}
+                        </button>
+                    ))}
+                </Flex>
+
+                <Button onClick={handleClickNewButton} size={40}>
+                    <Add />
+                    <Text font="b3_14_semi" color="white">
+                        프롬프트 등록
+                    </Text>
+                </Button>
+            </Flex>
+        );
+    }
+
     return (
         <LNBWrapper>
             <StyledMenu
-                onClick={handleClickMenu}
+                onClick={(e) => handleClickMenu(e.key)}
                 selectedKeys={[selectedKey]}
                 mode="vertical"
                 items={items}

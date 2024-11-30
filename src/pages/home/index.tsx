@@ -4,11 +4,14 @@ import styled from "styled-components";
 import LNB from "./components/LNB/LNB";
 
 import PaginatedPromptSection from "./components/Prompt/PaginatedPromptSection";
+import useDeviceSize from "@/hooks/useDeviceSize";
 
 export default function HomePage() {
+    const { isUnderTablet } = useDeviceSize();
+
     return (
         <HomeWrapper>
-            <HomeContentWrapper>
+            <HomeContentWrapper $isUnderTablet={isUnderTablet}>
                 <LNB />
                 <ContentWrapper>
                     <BannerWrapper>
@@ -26,12 +29,16 @@ const HomeWrapper = styled.div`
     gap: 40px;
     margin-top: 92px;
     align-items: start;
-    width: 100vw;
 `;
 
-const HomeContentWrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row", "center", "start")};
-    gap: 40px;
+const HomeContentWrapper = styled.div<{ $isUnderTablet: boolean }>`
+    ${({ theme, $isUnderTablet }) =>
+        theme.mixins.flexBox(
+            $isUnderTablet ? "column" : "row",
+            "center",
+            "start"
+        )};
+    gap: ${({ $isUnderTablet }) => ($isUnderTablet ? "20px" : "40px")};
     margin: auto;
 `;
 
