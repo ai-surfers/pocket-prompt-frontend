@@ -34,7 +34,7 @@ const SearchBar = () => {
 export default SearchBar;
 
 const InputWrapper = styled.div`
-    width: 543px;
+    width: 100%;
     height: 52px;
     position: relative;
 

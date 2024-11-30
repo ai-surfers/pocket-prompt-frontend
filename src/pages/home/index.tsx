@@ -27,7 +27,7 @@ export default function HomePage() {
 const HomeWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox()}
     gap: 40px;
-    margin-top: 92px;
+    padding-top: 80px;
     align-items: start;
 `;
 
@@ -44,9 +44,11 @@ const HomeContentWrapper = styled.div<{ $isUnderTablet: boolean }>`
 
 const ContentWrapper = styled(Wrapper)`
     max-width: 1107px;
-    padding: 0;
+    width: 100vw;
+    padding: 0 10px;
 `;
 
 const BannerWrapper = styled.div`
     margin-bottom: 15px;
+    width: 100%;
 `;
