@@ -1,4 +1,4 @@
-import { Col, Flex, Grid, Pagination, Row, Select } from "antd";
+import { Col, Flex, Pagination, Row, Select } from "antd";
 import Prompt from "../Prompt/Prompt";
 import styled from "styled-components";
 import usePromptsListQuery, {
