@@ -12,6 +12,7 @@ import {
     searchedCategoryState,
 } from "@/states/searchState";
 import { Categories } from "@/core/Prompt";
+import useDeviceSize from "@/hooks/useDeviceSize";
 
 interface PaginatedPromptProps {
     usePage?: boolean;
@@ -23,25 +24,28 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchCategory = useRecoilValue(searchedCategoryState);
 
+    const { isUnderTablet } = useDeviceSize();
+
+    const limit = isUnderTablet ? 5 : undefined;
     const promptQueryParams: PromptQueryProps = (() => {
         switch (type) {
             case "total":
-                return { sortBy: sortBy, limit: undefined };
+                return { sortBy: sortBy, limit: limit };
             case "popular":
                 return { sortBy: "star", limit: 3 };
             case "search":
                 return {
                     sortBy: sortBy,
-                    limit: undefined,
+                    limit: limit,
                     query: searchedKeyword,
                 };
             case "category":
                 if (searchCategory === "total") {
-                    return { sortBy: sortBy, limit: undefined };
+                    return { sortBy: sortBy, limit: limit };
                 }
                 return {
                     sortBy: sortBy,
-                    limit: undefined,
+                    limit: limit,
                     categories: searchCategory,
                 };
         }
