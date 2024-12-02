@@ -10,6 +10,9 @@ import Text from "@/components/common/Text/Text";
 import Button from "@/components/common/Button/Button";
 import { useGetCardInfo } from "@/hooks/queries/payments/useGetCardInfo";
 import { formatDate, formatNumber } from "@/utils/textUtils";
+import { useNavigate } from "react-router-dom";
+import { usePutBillingKeys } from "@/hooks/mutations/payments/usePutBillingKey";
+import { requestBillingKey } from "@/utils/billingUtils";
 
 const SUBSCRIPTION_STATUS = {
     active: "활성",
@@ -35,6 +38,8 @@ const columns = [
 ];
 
 export default function MySubscription() {
+    const navigate = useNavigate();
+
     const { mutate: unsubscription } = usePutPayments({
         onSuccess(res) {
             alert("구독이 성공적으로 취소되었습니다.");
@@ -65,6 +70,37 @@ export default function MySubscription() {
             })
         );
 
+    const handleClickChangePayment = async () => {
+        try {
+            const res = await requestBillingKey(
+                subscriptionData?.plan ?? "",
+                "월간"
+            );
+            changePayments({
+                billing_key: res.billing_key,
+                payment_gateway: res.payment_gateway,
+            });
+        } catch (error) {
+            console.error(error);
+            alert(
+                error instanceof Error
+                    ? error.message
+                    : "빌링키 오류가 발생했습니다."
+            );
+        }
+    };
+
+    const { mutate: changePayments } = usePutBillingKeys({
+        onSuccess(res) {
+            alert("결제수단이 성공적으로 변경되었습니다.");
+            console.log(">> 결제수단 변경 성공", res);
+        },
+        onError(e) {
+            alert(e.message);
+            console.error(">> 구독 취소 실패", e);
+        },
+    });
+
     // function throwError() {
     //     try {
     //         throw new Error("커스텀 에러 발생, 센트리 에러 테스트");
@@ -92,6 +128,7 @@ export default function MySubscription() {
                                 width="132px"
                                 size={44}
                                 style={{ justifyContent: "center" }}
+                                onClick={() => navigate("/price")}
                             >
                                 플랜 변경
                             </Button>
@@ -150,6 +187,7 @@ export default function MySubscription() {
                                 width="132px"
                                 size={44}
                                 style={{ justifyContent: "center" }}
+                                onClick={handleClickChangePayment}
                             >
                                 결제 정보 수정
                             </Button>
