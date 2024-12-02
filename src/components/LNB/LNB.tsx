@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Menu } from "antd";
 import type { MenuProps } from "antd";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import * as Icons from "iconsax-react";
 import Icon from "../common/Icon";
 
@@ -17,9 +17,10 @@ export interface MenuItemsType {
 interface LNBtype {
     menuItems: MenuItemsType[];
     button?: ReactNode;
+    initialMenu?: string;
 }
 
-const LNB = ({ menuItems, button }: LNBtype) => {
+const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
     const [selectedKey, setSelectedKey] = useState<string>("1");
 
     // 메뉴 항목을 동적으로 생성
@@ -49,6 +50,10 @@ const LNB = ({ menuItems, button }: LNBtype) => {
             setSelectedKey(e.key);
         }
     };
+
+    useEffect(() => {
+        setSelectedKey(initialMenu);
+    }, [initialMenu]);
 
     return (
         <LNBWrapper>

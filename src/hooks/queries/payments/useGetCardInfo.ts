@@ -12,7 +12,7 @@ interface GetCardInfoResponse {
  */
 
 const getCardInfo = async () => {
-    const res = await GET<GetCardInfoResponse>(`/subscription/card_info`);
+    const res = await GET<GetCardInfoResponse>(`/subscription/card`);
     return res.data.data;
 };
 

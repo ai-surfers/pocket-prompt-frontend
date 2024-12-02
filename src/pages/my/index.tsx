@@ -2,16 +2,20 @@ import styled from "styled-components";
 import MySubscription from "./MySubscription";
 import LNB, { MenuItemsType } from "@/components/LNB/LNB";
 import { useState } from "react";
+import useToast from "@/hooks/useToast";
 
 const MyPage = () => {
-    const [selectedMenu, setSelectedMenu] = useState("1");
+    const [selectedMenu, setSelectedMenu] = useState("2");
+    const showToast = useToast();
 
     const menuItems: MenuItemsType[] = [
         {
             key: "1",
             label: "마이페이지",
             iconType: "Profile",
-            onClick: () => setSelectedMenu("1"),
+            onClick: () =>
+                showToast("마이페이지는 아직 준비 중인 기능이에요.", ""),
+            disabled: true,
         },
         {
             key: "2",
@@ -24,7 +28,7 @@ const MyPage = () => {
     return (
         <Wrapper>
             <LNBWrapper>
-                <LNB menuItems={menuItems} />
+                <LNB menuItems={menuItems} initialMenu="2" />
             </LNBWrapper>
             <ContentWrapper>
                 {selectedMenu === "1" && <></>}

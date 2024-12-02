@@ -9,6 +9,7 @@ import { usePutPayments } from "@/hooks/mutations/payments/usePutPayments";
 import Text from "@/components/common/Text/Text";
 import Button from "@/components/common/Button/Button";
 import { useGetCardInfo } from "@/hooks/queries/payments/useGetCardInfo";
+import { formatDate, formatNumber } from "@/utils/textUtils";
 
 const SUBSCRIPTION_STATUS = {
     active: "활성",
@@ -23,13 +24,13 @@ const columns = [
     },
     {
         title: "설명",
-        dataIndex: "description",
-        key: "description",
+        dataIndex: "explain",
+        key: "explain",
     },
     {
         title: "금액",
-        dataIndex: "amount",
-        key: "amount",
+        dataIndex: "price",
+        key: "price",
     },
 ];
 
@@ -56,7 +57,13 @@ export default function MySubscription() {
     const { data: cardInfoData } = useGetCardInfo();
 
     const dataSource =
-        subscriptionData?.payment_list_data.payment_document_list;
+        subscriptionData?.payment_list_data.payment_document_list.map(
+            (item) => ({
+                ...item,
+                date: formatDate(item.date),
+                price: `₩${formatNumber(item.price)}`,
+            })
+        );
 
     // function throwError() {
     //     try {
@@ -109,10 +116,15 @@ export default function MySubscription() {
                                     {subscriptionData?.plan}
                                 </Text>
                                 <Text font="b2_16_semi" color="G_600">
-                                    {subscriptionData?.price}
+                                    ₩
+                                    {formatNumber(
+                                        subscriptionData?.price ?? ""
+                                    )}
                                 </Text>
                                 <Text font="b2_16_semi" color="G_600">
-                                    {subscriptionData?.next_pay}
+                                    {formatDate(
+                                        subscriptionData?.next_pay ?? ""
+                                    )}
                                 </Text>
                                 <Chip>
                                     <Text font="b3_14_med" color="blue">
@@ -151,7 +163,9 @@ export default function MySubscription() {
 
                             <TextWrapper>
                                 <Text font="b2_16_semi" color="G_600">
-                                    {`${cardInfoData?.name} (${cardInfoData?.last_four_digits})`}
+                                    {cardInfoData?.name
+                                        ? `${cardInfoData?.name} (${cardInfoData?.last_four_digits})`
+                                        : ""}
                                 </Text>
                             </TextWrapper>
                         </ContentWrapper>
