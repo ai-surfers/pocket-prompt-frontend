@@ -13,6 +13,8 @@ import {
 } from "@/states/searchState";
 import { Categories } from "@/core/Prompt";
 import useDeviceSize from "@/hooks/useDeviceSize";
+import { ImgEmpty } from "@/assets/svg";
+import Text from "@/components/common/Text/Text";
 
 interface PaginatedPromptProps {
     usePage?: boolean;
@@ -98,27 +100,31 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
             </TitleWrapper>
 
             <Row gutter={[16, 16]}>
-                {isLoading
-                    ? Array.from({ length: itemsPerPage }).map((_, idx) => (
-                          <Col key={idx} xs={24} sm={12} md={8}>
-                              <SkeletonBox key={idx} />
-                          </Col>
-                      ))
-                    : items.map((item, index) => (
-                          <Col key={item.id} xs={24} sm={12} md={8}>
-                              <Prompt
-                                  key={item.id}
-                                  id={item.id}
-                                  title={item.title}
-                                  description={item.description}
-                                  views={item.views}
-                                  star={item.star}
-                                  usages={item.usages}
-                                  colored={type === "popular"}
-                                  index={index + 1}
-                              />
-                          </Col>
-                      ))}
+                {isLoading ? (
+                    Array.from({ length: itemsPerPage }).map((_, idx) => (
+                        <Col key={idx} xs={24} sm={12} md={8}>
+                            <SkeletonBox key={idx} />
+                        </Col>
+                    ))
+                ) : items.length < 1 ? (
+                    <Empty />
+                ) : (
+                    items.map((item, index) => (
+                        <Col key={item.id} xs={24} sm={12} md={8}>
+                            <Prompt
+                                key={item.id}
+                                id={item.id}
+                                title={item.title}
+                                description={item.description}
+                                views={item.views}
+                                star={item.star}
+                                usages={item.usages}
+                                colored={type === "popular"}
+                                index={index + 1}
+                            />
+                        </Col>
+                    ))
+                )}
             </Row>
 
             {usePage && (
@@ -161,4 +167,28 @@ const Title = styled.div`
     ${({ theme }) => theme.colors.G_800};
     ${({ theme }) => theme.fonts.header1};
     ${({ theme }) => theme.fonts.bold};
+`;
+
+const Empty = () => {
+    return (
+        <EmptyWrapper vertical justify="center" align="center" gap={16}>
+            <ImgEmpty width={148} />
+
+            <Flex vertical align="center" gap={2}>
+                <Text font="b2_16_semi" color="G_700">
+                    아직 등록된 프롬프트가 없어요!
+                </Text>
+                <Text font="b3_14_reg" color="G_400">
+                    1등으로 관련 프롬프트를 등록해볼까요?
+                </Text>
+            </Flex>
+        </EmptyWrapper>
+    );
+};
+
+const EmptyWrapper = styled(Flex)`
+    width: 100%;
+    padding: 80px;
+    border-radius: 8px;
+    background: ${({ theme }) => theme.colors.G_50};
 `;

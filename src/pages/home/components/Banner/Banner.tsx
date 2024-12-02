@@ -1,9 +1,9 @@
 import { styled } from "styled-components";
-import { LogoNoLine } from "@/assets/svg";
 import SearchBar from "../Search/SearchBar";
 import SearchChips from "../Search/SearchChips";
 import Text from "@/components/common/Text/Text";
 import useDeviceSize from "@/hooks/useDeviceSize";
+import LogoNoLine from "@/assets/svg/LogoNoLine";
 
 const Banner = () => {
     const { isUnderTablet } = useDeviceSize();

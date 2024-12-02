@@ -41,6 +41,7 @@ export default PaginatedPromptSection;
 
 const PromptSectionContainer = styled.section`
     width: 100%;
+    padding: 0 10px;
 `;
 
 const SectionWrapper = styled.div`
