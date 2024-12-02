@@ -27,8 +27,10 @@ export default function HomePage() {
 const HomeWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox()}
     gap: 40px;
-    padding-top: 80px;
+    padding-top: 92px;
     align-items: start;
+    width: 100vw;
+    background-color: white;
 `;
 
 const HomeContentWrapper = styled.div<{ $isUnderTablet: boolean }>`

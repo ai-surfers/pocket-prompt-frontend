@@ -3,6 +3,8 @@ import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
 import usePocketRun from "@/hooks/mutations/pocketRun/usePocketRun";
+import useToast from "@/hooks/useToast";
+import { useUser } from "@/hooks/useUser";
 import Icon from "@/pages/home/components/common/Icon";
 import PocketRunDropdown from "@/pages/prompt/components/PocketRunDropdown";
 import PromptTemplateModal from "@/pages/prompt/components/PromptTemplateModal";
@@ -42,6 +44,9 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
     const prevFormValues = useRef<Record<string, string>>({});
     const formValues = watch();
 
+    const { userData } = useUser();
+    const showToast = useToast();
+
     const { mutate: pocketRun, isPending } = usePocketRun({
         onSuccess: (res) => {
             console.log("Success:", res);
@@ -74,6 +79,10 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                             alert("클립보드 복사에 실패했습니다.");
                         });
                 } else {
+                    if (!userData.isLogin) {
+                        showToast("로그인 후 이용 가능합니다.", "");
+                        return;
+                    }
                     pocketRun({
                         promptId: promptId ?? "",
                         context: values,
