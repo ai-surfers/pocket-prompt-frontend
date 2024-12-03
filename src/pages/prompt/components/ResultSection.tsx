@@ -46,12 +46,7 @@ export const ResultSection: React.FC = () => {
                                 </Text>
                             </ModelChip>
                             {Object.entries(res.context).map(([key, value]) => (
-                                <Chip
-                                    key={key}
-                                    style={{
-                                        overflow: "scroll",
-                                    }}
-                                >
+                                <Chip key={key}>
                                     <Text font="b3_14_reg" color="G_500">
                                         <span>{key}: </span>
                                         {value}

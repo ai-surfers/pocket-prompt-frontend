@@ -1,6 +1,5 @@
 import Button from "@/components/common/Button/Button";
 import { Categories } from "@/core/Prompt";
-import useDeviceSize from "@/hooks/useDeviceSize";
 import {
     keywordState,
     searchedCategoryState,
@@ -16,8 +15,6 @@ const SearchChips = () => {
     const [searchedKeyword, setSearchedKeyword] =
         useRecoilState(searchedKeywordState);
     const [selectedButton, setSelectedButton] = useState("total");
-
-    const { isUnderTablet } = useDeviceSize();
 
     const handleChipClick = (chipValue: string) => {
         setSearchedKeyword("");
@@ -41,8 +38,7 @@ const SearchChips = () => {
                 <StyledButton
                     key={key}
                     onClick={() => handleChipClick(category.en)}
-                    $selected={selectedButton === category.en}
-                    $mobile={isUnderTablet}
+                    selected={selectedButton === category.en}
                 >
                     {category.ko}
                 </StyledButton>
@@ -55,20 +51,17 @@ export default SearchChips;
 
 const SearchChipsWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox()};
-    width: 100%;
-    max-width: 445px;
+    width: 445px;
     flex-wrap: wrap;
     gap: 8px;
 `;
 
-const StyledButton = styled(Button)<{ $selected: boolean; $mobile: boolean }>`
+const StyledButton = styled(Button)<{ selected: boolean }>`
     height: 32px;
-    ${({ $mobile, theme }) =>
-        $mobile ? theme.fonts.c1_12_semi : theme.fonts.b3_14_med}
-
-    background-color: ${({ $selected, theme }) =>
-        $selected ? theme.colors.primary : theme.colors.white};
-    color: ${({ $selected, theme }) =>
-        $selected ? theme.colors.white : theme.colors.primary};
+    ${({ theme }) => theme.fonts.b3_14_med}
+    background-color: ${({ selected, theme }) =>
+        selected ? theme.colors.primary : theme.colors.white};
+    color: ${({ selected, theme }) =>
+        selected ? theme.colors.white : theme.colors.primary};
     border: 1px solid ${({ theme }) => theme.colors.primary_30};
 `;
