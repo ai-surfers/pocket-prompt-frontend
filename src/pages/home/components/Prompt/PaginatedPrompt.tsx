@@ -167,6 +167,7 @@ const Title = styled.div`
     ${({ theme }) => theme.colors.G_800};
     ${({ theme }) => theme.fonts.header1};
     ${({ theme }) => theme.fonts.bold};
+    color: ${({ theme }) => theme.colors.G_800};
 `;
 
 const Empty = () => {
