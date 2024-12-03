@@ -17,6 +17,7 @@ import { requestBillingKey } from "@/utils/billingUtils";
 const SUBSCRIPTION_STATUS = {
     active: "활성",
     inactive: "비활성",
+    "expiring soon": "만료 예정",
 };
 
 const columns = [
@@ -40,10 +41,26 @@ const columns = [
 export default function MySubscription() {
     const navigate = useNavigate();
 
+    const { data: subscriptionData, refetch: refetchSubscriptionData } =
+        useGetSubscription();
+    const { data: cardInfoData, refetch: refetchCardInfoData } =
+        useGetCardInfo();
+
+    const dataSource =
+        subscriptionData?.payment_list_data.payment_document_list.map(
+            (item) => ({
+                ...item,
+                date: formatDate(item.date),
+                price: `₩${formatNumber(item.price)}`,
+            })
+        );
+
     const { mutate: unsubscription } = usePutPayments({
         onSuccess(res) {
             alert("구독이 성공적으로 취소되었습니다.");
             console.log(">> 구독 취소 성공", res);
+            refetchSubscriptionData();
+            refetchCardInfoData();
         },
         onError(e) {
             alert(e.message);
@@ -57,18 +74,6 @@ export default function MySubscription() {
             unsubscription();
         }
     }
-
-    const { data: subscriptionData } = useGetSubscription();
-    const { data: cardInfoData } = useGetCardInfo();
-
-    const dataSource =
-        subscriptionData?.payment_list_data.payment_document_list.map(
-            (item) => ({
-                ...item,
-                date: formatDate(item.date),
-                price: `₩${formatNumber(item.price)}`,
-            })
-        );
 
     const handleClickChangePayment = async () => {
         try {
@@ -94,6 +99,7 @@ export default function MySubscription() {
         onSuccess(res) {
             alert("결제수단이 성공적으로 변경되었습니다.");
             console.log(">> 결제수단 변경 성공", res);
+            refetchCardInfoData();
         },
         onError(e) {
             alert(e.message);
@@ -138,12 +144,17 @@ export default function MySubscription() {
                                 <Text font="b2_16_reg" color="G_500">
                                     플랜
                                 </Text>
-                                <Text font="b2_16_reg" color="G_500">
-                                    가격
-                                </Text>
-                                <Text font="b2_16_reg" color="G_500">
-                                    다음 갱신일
-                                </Text>
+                                {!!subscriptionData?.price && (
+                                    <Text font="b2_16_reg" color="G_500">
+                                        가격
+                                    </Text>
+                                )}
+                                {!!subscriptionData?.next_pay &&
+                                    subscriptionData?.next_pay !== "없음" && (
+                                        <Text font="b2_16_reg" color="G_500">
+                                            다음 갱신일
+                                        </Text>
+                                    )}
                                 <Text font="b2_16_reg" color="G_500">
                                     상태
                                 </Text>
@@ -152,17 +163,19 @@ export default function MySubscription() {
                                 <Text font="b2_16_semi" color="G_600">
                                     {subscriptionData?.plan}
                                 </Text>
-                                <Text font="b2_16_semi" color="G_600">
-                                    ₩
-                                    {formatNumber(
-                                        subscriptionData?.price ?? ""
+                                {!!subscriptionData?.price && (
+                                    <Text font="b2_16_semi" color="G_600">
+                                        ₩{formatNumber(subscriptionData?.price)}
+                                    </Text>
+                                )}
+                                {!!subscriptionData?.next_pay &&
+                                    subscriptionData?.next_pay !== "없음" && (
+                                        <Text font="b2_16_semi" color="G_600">
+                                            {formatDate(
+                                                subscriptionData?.next_pay
+                                            )}
+                                        </Text>
                                     )}
-                                </Text>
-                                <Text font="b2_16_semi" color="G_600">
-                                    {formatDate(
-                                        subscriptionData?.next_pay ?? ""
-                                    )}
-                                </Text>
                                 <Chip>
                                     <Text font="b3_14_med" color="blue">
                                         {
@@ -171,6 +184,7 @@ export default function MySubscription() {
                                                     "inactive") as
                                                     | "active"
                                                     | "inactive"
+                                                    | "expiring soon"
                                             ]
                                         }
                                     </Text>
