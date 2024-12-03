@@ -2,8 +2,9 @@ import styled from "styled-components";
 
 export const PromptWrapper = styled.div<{ colored: boolean }>`
     ${({ theme }) => theme.mixins.flexBox("column", "space-between")};
-    width: 358px;
-    height: 157px;
+
+    padding: 16px;
+
     box-sizing: border-box;
     border-radius: 12px;
     border: 1.5px solid;
