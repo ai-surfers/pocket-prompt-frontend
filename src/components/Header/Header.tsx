@@ -11,9 +11,9 @@ import {
     LOCALSTORAGE_KEYS,
     removeLocalStorage,
 } from "@/utils/storageUtils";
-import { useMediaQuery } from "react-responsive";
 import { MenuOutlined } from "@ant-design/icons";
 import { Menus } from "@/core/Menu";
+import useDeviceSize from "@/hooks/useDeviceSize";
 
 type HeaderProps = {
     onOpen: () => void;
@@ -21,9 +21,7 @@ type HeaderProps = {
 export default function Header({ onOpen }: HeaderProps) {
     const { setUser, resetUserState, userData } = useUser();
 
-    const isUnderTablet = useMediaQuery({
-        maxWidth: "1024px",
-    });
+    const { isUnderTablet } = useDeviceSize();
 
     useEffect(() => {
         const access_token = getLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);

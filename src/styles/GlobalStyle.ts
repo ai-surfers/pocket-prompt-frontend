@@ -15,6 +15,7 @@ ${reset}
 
  button {
   cursor: pointer;
+  background: none;
  }
 
  :root {

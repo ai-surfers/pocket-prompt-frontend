@@ -1,4 +1,4 @@
-import { Pagination, Select } from "antd";
+import { Col, Flex, Pagination, Row, Select } from "antd";
 import Prompt from "../Prompt/Prompt";
 import styled from "styled-components";
 import usePromptsListQuery, {
@@ -12,6 +12,9 @@ import {
     searchedCategoryState,
 } from "@/states/searchState";
 import { Categories } from "@/core/Prompt";
+import useDeviceSize from "@/hooks/useDeviceSize";
+import { ImgEmpty } from "@/assets/svg";
+import Text from "@/components/common/Text/Text";
 
 interface PaginatedPromptProps {
     usePage?: boolean;
@@ -23,25 +26,28 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchCategory = useRecoilValue(searchedCategoryState);
 
+    const { isUnderTablet } = useDeviceSize();
+
+    const limit = isUnderTablet ? 5 : undefined;
     const promptQueryParams: PromptQueryProps = (() => {
         switch (type) {
             case "total":
-                return { sortBy: sortBy, limit: undefined };
+                return { sortBy: sortBy, limit: limit };
             case "popular":
                 return { sortBy: "star", limit: 3 };
             case "search":
                 return {
                     sortBy: sortBy,
-                    limit: undefined,
+                    limit: limit,
                     query: searchedKeyword,
                 };
             case "category":
                 if (searchCategory === "total") {
-                    return { sortBy: sortBy, limit: undefined };
+                    return { sortBy: sortBy, limit: limit };
                 }
                 return {
                     sortBy: sortBy,
-                    limit: undefined,
+                    limit: limit,
                     categories: searchCategory,
                 };
         }
@@ -74,7 +80,7 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
     })();
 
     return (
-        <>
+        <Flex vertical gap={20} style={{ width: "100%" }}>
             <TitleWrapper>
                 <Title>{promptTitle}</Title>
                 {usePage && (
@@ -93,49 +99,50 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
                 )}
             </TitleWrapper>
 
-            <PromptWrapper>
-                {isLoading
-                    ? Array.from({ length: itemsPerPage }).map((_, idx) => (
-                          <SkeletonBox key={idx} />
-                      ))
-                    : items.map((item, index) => (
-                          <Prompt
-                              key={item.id}
-                              id={item.id}
-                              title={item.title}
-                              description={item.description}
-                              views={item.views}
-                              star={item.star}
-                              usages={item.usages}
-                              colored={type === "popular"}
-                              index={index + 1}
-                          />
-                      ))}
-            </PromptWrapper>
+            <Row gutter={[16, 16]}>
+                {isLoading ? (
+                    Array.from({ length: itemsPerPage }).map((_, idx) => (
+                        <Col key={idx} xs={24} sm={12} md={8}>
+                            <SkeletonBox key={idx} />
+                        </Col>
+                    ))
+                ) : items.length < 1 ? (
+                    <Empty />
+                ) : (
+                    items.map((item, index) => (
+                        <Col key={item.id} xs={24} sm={12} md={8}>
+                            <Prompt
+                                key={item.id}
+                                id={item.id}
+                                title={item.title}
+                                description={item.description}
+                                views={item.views}
+                                star={item.star}
+                                usages={item.usages}
+                                colored={type === "popular"}
+                                index={index + 1}
+                            />
+                        </Col>
+                    ))
+                )}
+            </Row>
+
             {usePage && (
-                <Pagination
-                    current={currentPage}
-                    pageSize={itemsPerPage}
-                    total={totalItems || 0}
-                    onChange={handlePageChange}
-                    showSizeChanger={false}
-                />
+                <div style={{ margin: "0 auto" }}>
+                    <Pagination
+                        current={currentPage}
+                        pageSize={itemsPerPage}
+                        total={totalItems || 0}
+                        onChange={handlePageChange}
+                        showSizeChanger={false}
+                    />
+                </div>
             )}
-        </>
+        </Flex>
     );
 };
 
 export default PaginatedPrompt;
-
-const PromptWrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row", "start", "start")};
-    align-content: flex-start;
-    gap: 16px;
-    flex-wrap: wrap;
-    box-sizing: border-box;
-    width: 1107px;
-    min-height: 157px;
-`;
 
 const SkeletonBox = styled.div`
     ${({ theme }) => theme.mixins.skeleton()};
@@ -160,4 +167,28 @@ const Title = styled.div`
     ${({ theme }) => theme.colors.G_800};
     ${({ theme }) => theme.fonts.header1};
     ${({ theme }) => theme.fonts.bold};
+`;
+
+const Empty = () => {
+    return (
+        <EmptyWrapper vertical justify="center" align="center" gap={16}>
+            <ImgEmpty width={148} />
+
+            <Flex vertical align="center" gap={2}>
+                <Text font="b2_16_semi" color="G_700">
+                    아직 등록된 프롬프트가 없어요!
+                </Text>
+                <Text font="b3_14_reg" color="G_400">
+                    1등으로 관련 프롬프트를 등록해볼까요?
+                </Text>
+            </Flex>
+        </EmptyWrapper>
+    );
+};
+
+const EmptyWrapper = styled(Flex)`
+    width: 100%;
+    padding: 80px;
+    border-radius: 8px;
+    background: ${({ theme }) => theme.colors.G_50};
 `;
