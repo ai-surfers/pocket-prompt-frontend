@@ -6,7 +6,7 @@ export const Extension8Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-
+    background-color: white;
     @media screen and (max-width: 1024px) {
         padding: 60px;
     }
