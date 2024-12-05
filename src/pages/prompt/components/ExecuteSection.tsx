@@ -46,7 +46,6 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
     const { userData } = useUser();
     const showToast = useToast();
 
-
     const { mutate: pocketRun, isPending } = usePocketRun({
         onSuccess: (res) => {
             console.log("Success:", res);
@@ -183,6 +182,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                                                 input.placeholder ||
                                                 "입력 값을 입력해 주세요."
                                             }
+                                            disabled={isPending}
                                         />
                                     )}
                                 />
