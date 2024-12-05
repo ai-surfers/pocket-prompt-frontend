@@ -1,6 +1,6 @@
 import Text from "@/components/common/Text/Text";
 import { pocketRunLoadingState, pocketRunState } from "@/states/pocketRunState";
-import { Flex, Spin } from "antd";
+import { Dropdown, Flex, MenuProps, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -22,6 +22,32 @@ export const ResultSection: React.FC = () => {
             });
     };
 
+    const items = (value: string): MenuProps["items"] => {
+        if (!value) {
+            return [
+                {
+                    label: "Invalid Value",
+                    key: "0",
+                },
+            ];
+        }
+        return [
+            {
+                label: (
+                    <Text
+                        font="b3_14_reg"
+                        color="G_500"
+                        style={{ width: "100%" }}
+                    >
+                        {value}
+                    </Text>
+                ),
+                key: "0",
+                style: { pointerEvents: "none", width: "100%" },
+            },
+        ];
+    };
+
     return (
         <Flex vertical gap={16} style={{ height: "100%" }}>
             <Text font="h2_20_semi">포켓런 결과</Text>
@@ -35,7 +61,7 @@ export const ResultSection: React.FC = () => {
                 </EmptyBox>
             ) : (
                 pocketRunRes.map((res, index) => (
-                    <>
+                    <div key={`pocketRun${index}`}>
                         <Text font="b1_18_semi" color="G_800">
                             {index + 1}차 결과
                         </Text>
@@ -45,19 +71,37 @@ export const ResultSection: React.FC = () => {
                                     {res.model}
                                 </Text>
                             </ModelChip>
-                            {Object.entries(res.context).map(([key, value]) => (
-                                <Chip
-                                    key={key}
-                                    style={{
-                                        overflow: "scroll",
-                                    }}
-                                >
-                                    <Text font="b3_14_reg" color="G_500">
-                                        <span>{key}: </span>
-                                        {value}
-                                    </Text>
-                                </Chip>
-                            ))}
+                            <DropdownWrapper>
+                                {Object.entries(res.context).map(
+                                    ([key, value]) => (
+                                        <Dropdown
+                                            key={key}
+                                            menu={{ items: items(value) || [] }}
+                                            trigger={["click"]}
+                                            overlayStyle={{
+                                                width: "150px",
+                                                height: "auto",
+                                                whiteSpace: "break-spaces",
+                                                overflow: "visible",
+                                            }}
+                                        >
+                                            <DropdownButton>
+                                                <Text
+                                                    font="b3_14_semi"
+                                                    color="G_600"
+                                                >
+                                                    {key}
+                                                </Text>
+                                                <Icon
+                                                    name="ArrowDown2"
+                                                    size={16}
+                                                    color="G_300"
+                                                ></Icon>
+                                            </DropdownButton>
+                                        </Dropdown>
+                                    )
+                                )}
+                            </DropdownWrapper>
                         </ChipWrapper>
 
                         {index === pocketRunRes.length - 1 &&
@@ -116,7 +160,7 @@ export const ResultSection: React.FC = () => {
                                 </Button>
                             </>
                         )}
-                    </>
+                    </div>
                 ))
             )}
         </Flex>
@@ -139,6 +183,7 @@ const Box = styled(Flex)`
     padding: 16px;
     flex-direction: column;
     gap: 8px;
+    margin: 8px 0 12px 0;
 `;
 
 const LoadingBox = styled.div`
@@ -147,7 +192,7 @@ const LoadingBox = styled.div`
     background: var(--gray-50, #f7f8f9);
     width: 100%;
     height: 323px;
-    margin: auto;
+    margin: 8px 0 12px 0;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -158,6 +203,7 @@ const ChipWrapper = styled.div`
     display: flex;
     flex-direction: row;
     gap: 8px;
+    margin-top: 4px;
 `;
 
 const ModelChip = styled.div`
@@ -171,16 +217,19 @@ const ModelChip = styled.div`
     background: var(--gray-100, #f1f2f6);
 `;
 
-const Chip = styled.div`
+const DropdownWrapper = styled.div`
+    width: 100%;
+`;
+
+const DropdownButton = styled.button`
+    display: flex;
+    width: 100%;
     height: 36px;
-    width: fit-content;
     padding: 8px 12px;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    flex-shrink: 0;
     border-radius: 8px;
-    border: 1px solid var(--gray-200, #dee0e8);
-    span {
-        font-weight: 700;
-    }
+    border: 1px solid var(--gray-100, #f1f2f6);
+    background: var(--white, #fff);
 `;
