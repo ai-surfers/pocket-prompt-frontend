@@ -68,7 +68,11 @@ export const ResultSection: React.FC = () => {
                         </Text>
                         <ChipWrapper>
                             <ModelChip key={index}>
-                                <Text font="b3_14_reg" color="G_500">
+                                <Text
+                                    font="b3_14_reg"
+                                    color="G_500"
+                                    style={{ whiteSpace: "nowrap" }}
+                                >
                                     {
                                         AIPlatforms[
                                             res.model as "Basic" | "ChatGPT"
@@ -94,6 +98,12 @@ export const ResultSection: React.FC = () => {
                                                 <Text
                                                     font="b3_14_semi"
                                                     color="G_600"
+                                                    style={{
+                                                        whiteSpace: "nowrap",
+                                                        overflow: "hidden",
+                                                        textOverflow:
+                                                            "ellipsis",
+                                                    }}
                                                 >
                                                     {key}
                                                 </Text>
@@ -223,12 +233,15 @@ const ModelChip = styled.div`
 `;
 
 const DropdownWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     width: 100%;
+    overflow: hidden;
 `;
 
 const DropdownButton = styled.button`
     display: flex;
-    width: 100%;
     height: 36px;
     padding: 8px 12px;
     justify-content: space-between;
@@ -237,4 +250,6 @@ const DropdownButton = styled.button`
     border-radius: 8px;
     border: 1px solid var(--gray-100, #f1f2f6);
     background: var(--white, #fff);
+    overflow: hidden;
+    text-overflow: ellipsis;
 `;
