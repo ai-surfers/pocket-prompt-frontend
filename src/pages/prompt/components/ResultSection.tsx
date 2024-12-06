@@ -7,6 +7,7 @@ import styled from "styled-components";
 import Icon from "@/pages/home/components/common/Icon";
 import { copyClipboard } from "@/utils/promptUtils";
 import Button from "@/components/common/Button/Button";
+import { AIPlatforms } from "@/core/Prompt";
 
 export const ResultSection: React.FC = () => {
     const pocketRunRes = useRecoilValue(pocketRunState);
@@ -68,7 +69,11 @@ export const ResultSection: React.FC = () => {
                         <ChipWrapper>
                             <ModelChip key={index}>
                                 <Text font="b3_14_reg" color="G_500">
-                                    {res.model}
+                                    {
+                                        AIPlatforms[
+                                            res.model as "Basic" | "ChatGPT"
+                                        ]
+                                    }
                                 </Text>
                             </ModelChip>
                             <DropdownWrapper>
@@ -208,7 +213,7 @@ const ChipWrapper = styled.div`
 
 const ModelChip = styled.div`
     height: 36px;
-    width: fit-content;
+    width: 85px;
     padding: 8px 12px;
     justify-content: center;
     align-items: center;

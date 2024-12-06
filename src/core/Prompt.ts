@@ -19,12 +19,14 @@ export const Categories: Category = {
 };
 
 export const AIPlatforms = {
+    Basic: "기본 모델",
     ChatGPT: "ChatGPT",
     // Claude: "Claude",
     // Gemini: "Gemini",
 };
 
 export const PocketRunModel: Record<string, string> = {
+    Basic: "gpt-4o-mini",
     ChatGPT: "gpt-4o",
 };
 

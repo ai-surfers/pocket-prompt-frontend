@@ -29,7 +29,7 @@ export default function PocketRunDropdown({
                         color="G_600"
                         style={{ padding: "8px 4px" }}
                     >
-                        {value} 기반
+                        {value}
                     </Text>
                 ),
             };
