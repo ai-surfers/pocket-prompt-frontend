@@ -7,7 +7,7 @@ import styled from "styled-components";
 import Icon from "@/pages/home/components/common/Icon";
 import { copyClipboard } from "@/utils/promptUtils";
 import Button from "@/components/common/Button/Button";
-import { AIPlatforms } from "@/core/Prompt";
+import { PocketRunModel } from "@/core/Prompt";
 
 export const ResultSection: React.FC = () => {
     const pocketRunRes = useRecoilValue(pocketRunState);
@@ -74,9 +74,9 @@ export const ResultSection: React.FC = () => {
                                     style={{ whiteSpace: "nowrap" }}
                                 >
                                     {
-                                        AIPlatforms[
-                                            res.model as "Basic" | "ChatGPT"
-                                        ]
+                                        Object.values(PocketRunModel).find(
+                                            (model) => model.value === res.model
+                                        )?.label
                                     }
                                 </Text>
                             </ModelChip>

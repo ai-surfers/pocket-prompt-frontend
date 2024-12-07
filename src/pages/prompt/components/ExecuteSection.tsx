@@ -2,6 +2,7 @@ import { PromptInputField } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
+import { PocketRunModel } from "@/core/Prompt";
 import usePocketRun from "@/hooks/mutations/pocketRun/usePocketRun";
 import useModal from "@/hooks/useModal";
 import useToast from "@/hooks/useToast";
@@ -135,7 +136,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                         {
                             promptId: promptId ?? "",
                             context: values,
-                            model: platform,
+                            model: PocketRunModel[platform].value,
                         },
                         { onSuccess: () => {} }
                     );
