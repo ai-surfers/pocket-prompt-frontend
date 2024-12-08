@@ -3,6 +3,7 @@ import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
 import { PocketRunModel } from "@/core/Prompt";
+import { UTM_OVER_USAGE_LIMIT_URL, UTM_TIER_LIMIT_URL } from "@/core/UtmUri";
 import usePocketRun from "@/hooks/mutations/pocketRun/usePocketRun";
 import useModal from "@/hooks/useModal";
 import useToast from "@/hooks/useToast";
@@ -68,11 +69,30 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                 err.message ===
                     "무료 사용자는 고급 모델을 사용할 수 없습니다. 유료 플랜으로 업그레이드해 주세요."
             ) {
+                const targetUrl =
+                    import.meta.env.MODE === "production"
+                        ? err.message ===
+                          "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요."
+                            ? UTM_OVER_USAGE_LIMIT_URL
+                            : UTM_TIER_LIMIT_URL
+                        : "/price";
+
+                const handleClickPrice = () => {
+                    if (targetUrl.startsWith("http")) {
+                        window.location.href = targetUrl;
+                    } else {
+                        navigate(targetUrl);
+                    }
+                };
+
                 openModal({
-                    title: "포켓런 한도에 도달했습니다",
+                    title: "포켓런 한도에 도달했어요",
                     content: (
                         <Text font="b3_14_reg" color="G_700">
-                            {err.message}
+                            {err.message ===
+                            "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요."
+                                ? "플랜 한도를 초과하였어요. 플랜을 업그레이드해 주세요."
+                                : "무료 사용자는 고급 모델을 사용할 수 없어요. 유료 플랜으로 업그레이드해 주세요."}
                         </Text>
                     ),
                     footer: (
@@ -91,7 +111,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                                 style={{ flex: 1, justifyContent: "center" }}
                                 onClick={() => {
                                     closeModal();
-                                    navigate("/price");
+                                    handleClickPrice();
                                 }}
                             >
                                 플랜 둘러보기
