@@ -1,4 +1,3 @@
-import { PocketRunModel } from "@/core/Prompt";
 import { POST } from "../../../apis/client";
 import { useMutation } from "@tanstack/react-query";
 
@@ -33,7 +32,7 @@ const postPocketRun = async ({
         `/prompts/${promptId}/pocket-run`,
         {
             context: context,
-            model: PocketRunModel[model],
+            model: model,
         }
     );
 
