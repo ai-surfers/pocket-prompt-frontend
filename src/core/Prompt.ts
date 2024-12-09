@@ -24,9 +24,11 @@ export const AIPlatforms = {
     // Gemini: "Gemini",
 };
 
-export const PocketRunModel: Record<string, string> = {
-    ChatGPT: "gpt-4o",
-};
+export const PocketRunModel: Record<string, { label: string; value: string }> =
+    {
+        Basic: { label: "기본 모델", value: "gpt-4o-mini" },
+        ChatGPT: { label: "ChatGPT", value: "gpt-4o" },
+    };
 
 export enum InputType {
     TEXT = "text",
