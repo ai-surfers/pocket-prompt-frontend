@@ -17,7 +17,7 @@ export default function HomePage() {
                     <BannerWrapper>
                         <Banner />
                     </BannerWrapper>
-                    <PaginatedPromptSection />
+                    <PaginatedPromptSection viewType="starred" />
                 </ContentWrapper>
             </HomeContentWrapper>
         </HomeWrapper>

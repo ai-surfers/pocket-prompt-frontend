@@ -4,7 +4,7 @@ import styled from "styled-components";
 import usePromptsListQuery, {
     PromptQueryProps,
 } from "@/hooks/queries/prompts/usePromptsListQuery";
-import { SortType } from "@/apis/prompt/prompt.model";
+import { SortType, ViewType } from "@/apis/prompt/prompt.model";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import {
@@ -15,24 +15,31 @@ import { Categories } from "@/core/Prompt";
 import useDeviceSize from "@/hooks/useDeviceSize";
 import { ImgEmpty } from "@/assets/svg";
 import Text from "@/components/common/Text/Text";
+import { useUser } from "@/hooks/useUser";
 
 interface PaginatedPromptProps {
     usePage?: boolean;
-    type: "total" | "popular" | "search" | "category";
+    searchType: "total" | "popular" | "search" | "category";
+    viewType: ViewType;
 }
 
-const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
+const PaginatedPrompt = ({
+    searchType,
+    usePage = true,
+    viewType,
+}: PaginatedPromptProps) => {
     const [sortBy, setSortBy] = useState<SortType>("created_at");
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchCategory = useRecoilValue(searchedCategoryState);
+    const { userData } = useUser();
 
     const { isUnderTablet } = useDeviceSize();
 
     const limit = isUnderTablet ? 5 : undefined;
     const promptQueryParams: PromptQueryProps = (() => {
-        switch (type) {
+        switch (searchType) {
             case "total":
-                return { sortBy: sortBy, limit: limit };
+                return { sortBy: sortBy, limit: limit, viewType: viewType };
             case "popular":
                 return { sortBy: "star", limit: 3 };
             case "search":
@@ -67,9 +74,16 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
     };
 
     const promptTitle = (() => {
-        switch (type) {
+        switch (searchType) {
             case "total":
-                return "📖 전체 프롬프트";
+                return viewType === "open" ? (
+                    "📖 전체 프롬프트"
+                ) : (
+                    <>
+                        💾 <span>{userData.user?.nickname}</span>님이 저장한
+                        프롬프트
+                    </>
+                );
             case "popular":
                 return "🔥 지금 인기 있는 프롬프트";
             case "search":
@@ -119,7 +133,7 @@ const PaginatedPrompt = ({ type, usePage = true }: PaginatedPromptProps) => {
                                 views={item.views}
                                 star={item.star}
                                 usages={item.usages}
-                                colored={type === "popular"}
+                                colored={searchType === "popular"}
                                 index={index + 1}
                             />
                         </Col>
@@ -168,6 +182,10 @@ const Title = styled.div`
     ${({ theme }) => theme.fonts.header1};
     ${({ theme }) => theme.fonts.bold};
     color: ${({ theme }) => theme.colors.G_800};
+
+    span {
+        color: ${({ theme }) => theme.colors.primary};
+    }
 `;
 
 const Empty = () => {
