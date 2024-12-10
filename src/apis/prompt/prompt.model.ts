@@ -22,7 +22,7 @@ export type PromptDetails = {
     is_starred_by_user: boolean;
 };
 
-type PaginationInfo = {
+export type PaginationInfo = {
     total_pages: number;
     total_count: number;
     current_page: number;

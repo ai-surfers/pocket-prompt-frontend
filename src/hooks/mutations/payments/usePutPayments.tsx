@@ -6,14 +6,13 @@ import { useMutation } from "@tanstack/react-query";
  */
 export interface UnsubscriptionResponse {
     user_email: string;
-    payments_id: string;
 }
 
 /**
  *  정기결제 취소하기
  */
 export const unsubscription = async () => {
-    const res = await PUT<UnsubscriptionResponse>(`/unsubscription`);
+    const res = await PUT<UnsubscriptionResponse>(`/subscription`);
     return res.data;
 };
 

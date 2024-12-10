@@ -14,4 +14,8 @@ const PAYMENTS_KEYS = {
     all: ["payments"] as const,
 };
 
-export { PROMPT_KEYS, PAYMENTS_KEYS };
+const CARD_INFO_KEYS = {
+    all: ["cardInfos"] as const,
+};
+
+export { PROMPT_KEYS, PAYMENTS_KEYS, CARD_INFO_KEYS };

@@ -89,7 +89,7 @@ const StyledButton = styled.button<{
                 `;
             case "default":
                 return css`
-                    background: none;
+                    background: ${theme.colors.white};
                     color: ${theme.colors.black};
 
                     &:hover {

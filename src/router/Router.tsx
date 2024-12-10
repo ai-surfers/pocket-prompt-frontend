@@ -3,13 +3,13 @@ import { createBrowserRouter } from "react-router-dom";
 import Layout from "@/layouts/Layout";
 import HomePage from "@/pages/home";
 import PricePage from "@/pages/price";
-import MyPage from "@/pages/my";
 import ExtensionPage from "@/pages/extension";
 import PromptNewPage from "@/pages/promptNew";
 import FooterLayout from "@/layouts/FooterLayout";
 import NotFound from "@/pages/NotFound";
 import ProtectedRoute from "@/router/ProtectedRoute";
 import PromptPage from "@/pages/prompt";
+import MyPage from "@/pages/my";
 
 const router = createBrowserRouter([
     {

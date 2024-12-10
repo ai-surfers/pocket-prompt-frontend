@@ -23,6 +23,7 @@ const LayoutContainer = styled.div`
     min-height: 100vh; // 전체 뷰포트 높이를 차지하도록 설정
     display: flex;
     flex-direction: column;
+    background-color: white;
 `;
 
 const ContentWrapper = styled.div`
