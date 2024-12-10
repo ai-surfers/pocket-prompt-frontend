@@ -16,6 +16,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <Layout />,
         children: [
+            { path: "/", element: <HomePage /> },
             {
                 path: "/prompt-new",
                 element: (
@@ -46,7 +47,6 @@ const router = createBrowserRouter([
                 element: <FooterLayout />,
                 errorElement: <NotFound />,
                 children: [
-                    { path: "/", element: <HomePage /> },
                     { path: "/extension", element: <ExtensionPage /> },
                     { path: "/price", element: <PricePage /> },
                 ],

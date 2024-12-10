@@ -1,7 +1,7 @@
 import { Logo } from "@/assets/svg";
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
-import { AIPlatforms } from "@/core/Prompt";
+import { PocketRunModel } from "@/core/Prompt";
 import { Dropdown, Flex, MenuProps } from "antd";
 
 interface PocketRunDropdownProps {
@@ -19,7 +19,7 @@ export default function PocketRunDropdown({
         onSelect(key);
     };
 
-    const items: MenuProps["items"] = Object.entries(AIPlatforms).map(
+    const items: MenuProps["items"] = Object.entries(PocketRunModel).map(
         ([key, value]) => {
             return {
                 key: key,
@@ -29,7 +29,7 @@ export default function PocketRunDropdown({
                         color="G_600"
                         style={{ padding: "8px 4px" }}
                     >
-                        {value} 기반
+                        {value.label}
                     </Text>
                 ),
             };

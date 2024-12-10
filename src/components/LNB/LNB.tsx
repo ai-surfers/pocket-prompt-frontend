@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { Menu } from "antd";
+import { Flex, Menu } from "antd";
 import type { MenuProps } from "antd";
 import { ReactNode, useEffect, useState } from "react";
 import * as Icons from "iconsax-react";
 import Icon from "../common/Icon";
+import useDeviceSize from "@/hooks/useDeviceSize";
 
 export interface MenuItemsType {
     key: string;
@@ -22,9 +23,11 @@ interface LNBtype {
 
 const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
     const [selectedKey, setSelectedKey] = useState<string>("1");
+    const { isUnderTablet } = useDeviceSize();
+    console.log(menuItems, isUnderTablet);
 
     // 메뉴 항목을 동적으로 생성
-    const items: MenuProps["items"] = menuItems.map((item) => {
+    const desktopItems: MenuProps["items"] = menuItems.map((item) => {
         if (!item.iconType || item.type === "divider") {
             return { type: "divider", key: item.key };
         }
@@ -55,13 +58,44 @@ const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
         setSelectedKey(initialMenu);
     }, [initialMenu]);
 
+    if (isUnderTablet) {
+        return (
+            <Flex
+                justify="space-between"
+                align="center"
+                wrap="wrap"
+                gap={10}
+                style={{ width: "100vw", padding: "0 10px" }}
+            >
+                <Flex gap={20}>
+                    {menuItems.map((item) => (
+                        <button onClick={item.onClick} key={item.key}>
+                            {item.iconType && (
+                                <Icon
+                                    name={item.iconType}
+                                    color={
+                                        selectedKey === item.key
+                                            ? "primary"
+                                            : "G_400"
+                                    }
+                                    size={20}
+                                />
+                            )}
+                        </button>
+                    ))}
+                </Flex>
+                {button}
+            </Flex>
+        );
+    }
+
     return (
         <LNBWrapper>
             <StyledMenu
                 onClick={handleClickMenu}
                 selectedKeys={[selectedKey]}
                 mode="vertical"
-                items={items}
+                items={desktopItems}
             />
             {button}
         </LNBWrapper>

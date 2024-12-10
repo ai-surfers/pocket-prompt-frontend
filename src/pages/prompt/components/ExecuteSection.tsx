@@ -2,8 +2,13 @@ import { PromptInputField } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
+import { PocketRunModel } from "@/core/Prompt";
+import { UTM_OVER_USAGE_LIMIT_URL, UTM_TIER_LIMIT_URL } from "@/core/UtmUri";
 import usePocketRun from "@/hooks/mutations/pocketRun/usePocketRun";
 import Icon from "@/components/common/Icon";
+import useModal from "@/hooks/useModal";
+import useToast from "@/hooks/useToast";
+import { useUser } from "@/hooks/useUser";
 import PocketRunDropdown from "@/pages/prompt/components/PocketRunDropdown";
 import PromptTemplateModal from "@/pages/prompt/components/PromptTemplateModal";
 import FormItem from "@/pages/promptNew/components/Form/FormItem";
@@ -12,7 +17,7 @@ import { copyClipboard, populateTemplate } from "@/utils/promptUtils";
 import { Flex } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 interface ExecuteSectionProps {
@@ -41,18 +46,87 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
     const [hasChanged, setHasChanged] = useState(false);
     const prevFormValues = useRef<Record<string, string>>({});
     const formValues = watch();
+    const { userData } = useUser();
+    const showToast = useToast();
+    const { openModal, closeModal } = useModal();
+    const navigate = useNavigate();
 
     const { mutate: pocketRun, isPending } = usePocketRun({
         onSuccess: (res) => {
             console.log("Success:", res);
+            // 로딩중으로 표시되고 있는 결과란 컴포넌트에 pocketRun 결과값 주입
             setPocketRunRes((prevState) => {
                 const newState = [...prevState];
-                newState[prevState.length - 1] = res; // 마지막 요소(로딩중)를 res로 변경
+                newState[prevState.length - 1] = res;
                 return newState;
             });
         },
         onError: (err) => {
             console.error("Error:", err);
+            if (
+                err.message ===
+                    "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요." ||
+                err.message ===
+                    "무료 사용자는 고급 모델을 사용할 수 없습니다. 유료 플랜으로 업그레이드해 주세요."
+            ) {
+                const targetUrl =
+                    import.meta.env.MODE === "production"
+                        ? err.message ===
+                          "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요."
+                            ? UTM_OVER_USAGE_LIMIT_URL
+                            : UTM_TIER_LIMIT_URL
+                        : "/price";
+
+                const handleClickPrice = () => {
+                    if (targetUrl.startsWith("http")) {
+                        window.location.href = targetUrl;
+                    } else {
+                        navigate(targetUrl);
+                    }
+                };
+
+                openModal({
+                    title: "포켓런 한도에 도달했어요",
+                    content: (
+                        <Text font="b3_14_reg" color="G_700">
+                            {err.message ===
+                            "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요."
+                                ? "플랜 한도를 초과하였어요. 플랜을 업그레이드해 주세요."
+                                : "무료 사용자는 고급 모델을 사용할 수 없어요. 유료 플랜으로 업그레이드해 주세요."}
+                        </Text>
+                    ),
+                    footer: (
+                        <Flex
+                            style={{ width: "100%", paddingTop: "20px" }}
+                            gap={16}
+                        >
+                            <Button
+                                hierarchy="default"
+                                style={{ flex: 1, justifyContent: "center" }}
+                                onClick={closeModal}
+                            >
+                                닫기
+                            </Button>
+                            <Button
+                                style={{ flex: 1, justifyContent: "center" }}
+                                onClick={() => {
+                                    closeModal();
+                                    handleClickPrice();
+                                }}
+                            >
+                                플랜 둘러보기
+                            </Button>
+                        </Flex>
+                    ),
+                });
+
+                // 로딩중인 포켓런 결과 컴포넌트가 남아있지 않도록 함
+                if (pocketRunRes.length > 1) {
+                    setPocketRunRes((prevState) => {
+                        return prevState.slice(0, -1);
+                    });
+                }
+            }
         },
     });
 
@@ -74,14 +148,22 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                             alert("클립보드 복사에 실패했습니다.");
                         });
                 } else {
-                    pocketRun({
-                        promptId: promptId ?? "",
-                        context: values,
-                        model: platform,
-                    });
-
+                    if (!userData.isLogin) {
+                        showToast("로그인 후 이용 가능합니다.", "");
+                        return;
+                    }
+                    pocketRun(
+                        {
+                            promptId: promptId ?? "",
+                            context: values,
+                            model: PocketRunModel[platform].value,
+                        },
+                        { onSuccess: () => {} }
+                    );
+                    // pocketRun 실행되기 전 로딩 화면에 model, context 입력을 위해 form 데이터 사용하여 pocketRunRes 업데이트
                     setPocketRunRes((prevState) => {
                         if (prevState[0].response === "") {
+                            // pocketRunRes에 요소가 처음 업데이트 되는 경우 새 배열로 setPocketRunRes
                             return [
                                 {
                                     response: "",
@@ -90,6 +172,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                                 },
                             ];
                         } else {
+                            // pocketRunRes에 앞선 결과값이 저장되어있을 경우 배열에 push
                             return [
                                 ...prevState,
                                 {
@@ -118,7 +201,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
     }, [isPending, setPocketRunLoading]);
 
     useEffect(() => {
-        // Compare current form values with previous values
+        // 최초 포켓런이 아니고 입력값 변경이 있었을 때 포켓런 실행하기 버튼 string 바꾸는 로직
         const hasFormChanged = Object.keys(formValues).some((key) => {
             return formValues[key] !== prevFormValues.current[key];
         });
@@ -127,7 +210,6 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
             setHasChanged(true);
         }
 
-        // Update previous values
         prevFormValues.current = formValues;
     }, [formValues, pocketRunRes.length]);
 
@@ -174,6 +256,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                                                 input.placeholder ||
                                                 "입력 값을 입력해 주세요."
                                             }
+                                            disabled={isPending}
                                         />
                                     )}
                                 />

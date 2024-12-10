@@ -8,10 +8,12 @@ import { useNavigate } from "react-router-dom";
 import Text from "@/components/common/Text/Text";
 import Icon from "@/components/common/Icon";
 import useToast from "@/hooks/useToast";
+import useDeviceSize from "@/hooks/useDeviceSize";
 
 export default function HomePage() {
     const navigate = useNavigate();
     const showToast = useToast();
+    const { isUnderTablet } = useDeviceSize();
 
     const menuItems: MenuItemsType[] = [
         {
@@ -42,7 +44,9 @@ export default function HomePage() {
                 ),
             disabled: true,
         },
-        { type: "divider", key: "divider-1" },
+        ...(isUnderTablet
+            ? []
+            : [{ type: "divider" as const, key: "divider-1" }]),
         {
             key: "4",
             label: "저장한 프롬프트",
@@ -64,6 +68,7 @@ export default function HomePage() {
         <Button
             onClick={handleClickNewButton}
             style={{ padding: "8px 12px", gap: 2 }}
+            size={isUnderTablet ? 40 : 52}
         >
             <Icon name="Add" color="white" size={20} />
             <Text font="b2_16_semi" color="white">
@@ -74,7 +79,7 @@ export default function HomePage() {
 
     return (
         <HomeWrapper>
-            <HomeContentWrapper>
+            <HomeContentWrapper $isUnderTablet={isUnderTablet}>
                 <LNB menuItems={menuItems} button={newPropmptButton} />
                 <ContentWrapper>
                     <BannerWrapper>
@@ -90,22 +95,30 @@ export default function HomePage() {
 const HomeWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox()}
     gap: 40px;
-    margin-top: 92px;
+    padding-top: 92px;
     align-items: start;
     width: 100vw;
+    background-color: white;
 `;
 
-const HomeContentWrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row", "center", "start")};
-    gap: 40px;
+const HomeContentWrapper = styled.div<{ $isUnderTablet: boolean }>`
+    ${({ theme, $isUnderTablet }) =>
+        theme.mixins.flexBox(
+            $isUnderTablet ? "column" : "row",
+            "center",
+            "start"
+        )};
+    gap: ${({ $isUnderTablet }) => ($isUnderTablet ? "20px" : "40px")};
     margin: auto;
 `;
 
 const ContentWrapper = styled(Wrapper)`
     max-width: 1107px;
-    padding: 0;
+    width: 100vw;
+    padding: 0 10px;
 `;
 
 const BannerWrapper = styled.div`
     margin-bottom: 15px;
+    width: 100%;
 `;
