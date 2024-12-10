@@ -3,10 +3,12 @@ import MySubscription from "./MySubscription";
 import LNB, { MenuItemsType } from "@/components/LNB/LNB";
 import { useState } from "react";
 import useToast from "@/hooks/useToast";
+import useDeviceSize from "@/hooks/useDeviceSize";
 
 const MyPage = () => {
     const [selectedMenu, setSelectedMenu] = useState("2");
     const showToast = useToast();
+    const { isUnderTablet } = useDeviceSize();
 
     const menuItems: MenuItemsType[] = [
         {
@@ -26,7 +28,7 @@ const MyPage = () => {
     ];
 
     return (
-        <Wrapper>
+        <Wrapper isUnderTablet={isUnderTablet}>
             <LNBWrapper>
                 <LNB menuItems={menuItems} initialMenu="2" />
             </LNBWrapper>
@@ -40,12 +42,17 @@ const MyPage = () => {
 
 export default MyPage;
 
-const Wrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row", "start", "center")};
-    gap: 40px;
+const Wrapper = styled.div<{ isUnderTablet: boolean }>`
+    ${({ theme, isUnderTablet }) =>
+        theme.mixins.flexBox(
+            isUnderTablet ? "column" : "row",
+            "center",
+            "start"
+        )};
+    gap: ${({ isUnderTablet }) => (isUnderTablet ? "20px" : "40px")};
     align-items: start;
     width: 100vw;
-    height: 100vh;
+    height: ${({ isUnderTablet }) => (isUnderTablet ? "auto" : "100vh")};
 `;
 
 const LNBWrapper = styled.div`
