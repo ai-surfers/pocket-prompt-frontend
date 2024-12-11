@@ -5,7 +5,7 @@ import Text from "@/components/common/Text/Text";
 import { Categories } from "@/core/Prompt";
 import { useUser } from "@/hooks/useUser";
 import { Wrapper } from "@/layouts/Layout";
-import Icon from "@/pages/home/components/common/Icon";
+import Icon from "@/components/common/Icon";
 import BookmarkButton from "@/pages/prompt/components/BookmarkButton";
 import EditDropdown from "@/pages/prompt/components/EditDropdown";
 import { copyClipboard } from "@/utils/promptUtils";
