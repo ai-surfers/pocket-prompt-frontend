@@ -5,7 +5,7 @@ import usePromptsListQuery, {
     PromptQueryProps,
 } from "@/hooks/queries/prompts/usePromptsListQuery";
 import { SortType, ViewType } from "@/apis/prompt/prompt.model";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import {
     searchedKeywordState,
@@ -31,6 +31,7 @@ const PaginatedPrompt = ({
     const [sortBy, setSortBy] = useState<SortType>("created_at");
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchCategory = useRecoilValue(searchedCategoryState);
+
     const { userData } = useUser();
 
     const { isUnderTablet } = useDeviceSize();
@@ -92,7 +93,10 @@ const PaginatedPrompt = ({
                 return `${Categories[searchCategory].emoji} ${Categories[searchCategory].ko} 프롬프트`;
         }
     })();
-    console.log(searchCategory, searchedKeyword);
+
+    useEffect(() => {
+        setSortBy("created_at");
+    }, [searchCategory, searchedKeyword]);
 
     return (
         <Flex vertical gap={20} style={{ width: "100%" }}>
@@ -101,13 +105,13 @@ const PaginatedPrompt = ({
                 {usePage && (
                     <SelectWrapper>
                         <Select
+                            value={sortBy}
                             defaultValue="created_at"
                             style={{ width: 123 }}
                             onChange={handleChange}
                             options={[
                                 { value: "created_at", label: "최신 순" },
-                                ...(!searchedKeyword &&
-                                searchCategory === "total"
+                                ...(!searchedKeyword
                                     ? []
                                     : [
                                           {
