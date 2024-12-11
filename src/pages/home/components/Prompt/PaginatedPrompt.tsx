@@ -92,6 +92,7 @@ const PaginatedPrompt = ({
                 return `${Categories[searchCategory].emoji} ${Categories[searchCategory].ko} 프롬프트`;
         }
     })();
+    console.log(searchCategory, searchedKeyword);
 
     return (
         <Flex vertical gap={20} style={{ width: "100%" }}>
@@ -105,7 +106,15 @@ const PaginatedPrompt = ({
                             onChange={handleChange}
                             options={[
                                 { value: "created_at", label: "최신 순" },
-                                { value: "relevance", label: "관련도 순" },
+                                ...(!searchedKeyword &&
+                                searchCategory === "total"
+                                    ? []
+                                    : [
+                                          {
+                                              value: "relevance",
+                                              label: "관련도 순",
+                                          },
+                                      ]),
                                 { value: "star", label: "인기 순" },
                             ]}
                         />
