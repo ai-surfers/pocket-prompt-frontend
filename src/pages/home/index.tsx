@@ -9,20 +9,27 @@ import Text from "@/components/common/Text/Text";
 import Icon from "@/components/common/Icon";
 import useToast from "@/hooks/useToast";
 import useDeviceSize from "@/hooks/useDeviceSize";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useResetRecoilState } from "recoil";
+import {
+    searchedCategoryState,
+    searchedKeywordState,
+} from "@/states/searchState";
 
 export default function HomePage() {
     const navigate = useNavigate();
     const showToast = useToast();
     const { isUnderTablet } = useDeviceSize();
-    const [promptType, setPromptType] = useState("text");
+    const [promptListType, setPromptListType] = useState("text");
+    const resetSearchedKeyword = useResetRecoilState(searchedKeywordState);
+    const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
 
     const menuItems: MenuItemsType[] = [
         {
             key: "1",
             label: "텍스트 프롬프트",
             iconType: "TextBlock",
-            onClick: () => setPromptType("text"),
+            onClick: () => setPromptListType("text"),
         },
         {
             key: "2",
@@ -53,7 +60,7 @@ export default function HomePage() {
             key: "4",
             label: "저장한 프롬프트",
             iconType: "Bookmark",
-            onClick: () => setPromptType("saved"),
+            onClick: () => setPromptListType("saved"),
         },
     ];
 
@@ -75,7 +82,7 @@ export default function HomePage() {
     );
 
     const promptContent = () => {
-        if (promptType === "text") {
+        if (promptListType === "text") {
             return (
                 <>
                     <BannerWrapper>
@@ -88,6 +95,11 @@ export default function HomePage() {
             return <PaginatedPromptSection viewType="starred" />;
         }
     };
+
+    useEffect(() => {
+        resetSearchedKeyword();
+        resetSearchedCategory();
+    }, [promptListType, resetSearchedCategory, resetSearchedKeyword]);
 
     return (
         <HomeWrapper>
