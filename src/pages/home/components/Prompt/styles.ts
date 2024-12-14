@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const PromptWrapper = styled.div<{ colored: boolean }>`
+export const PromptWrapper = styled.div<{ $colored: boolean }>`
     ${({ theme }) => theme.mixins.flexBox("column", "space-between")};
 
     padding: 16px;
@@ -8,12 +8,12 @@ export const PromptWrapper = styled.div<{ colored: boolean }>`
     box-sizing: border-box;
     border-radius: 12px;
     border: 1.5px solid;
-    border-color: ${({ theme, colored }) =>
-        colored ? "#ACB3F2" : theme.colors.primary_20};
+    border-color: ${({ theme, $colored }) =>
+        $colored ? "#ACB3F2" : theme.colors.primary_20};
     padding: 16px;
     gap: 9.5px;
-    background-color: ${({ colored, theme }) =>
-        colored ? "#F2F3FD" : theme.colors.white};
+    background-color: ${({ $colored, theme }) =>
+        $colored ? "#F2F3FD" : theme.colors.white};
     position: relative;
     cursor: pointer;
     transition: box-shadow 0.3s ease;
@@ -46,7 +46,7 @@ export const TitlesWrapper = styled.div`
     border-color: ${({ theme }) => theme.colors.primary_20};
 `;
 
-export const Title = styled.div<{ colored: boolean }>`
+export const Title = styled.div<{ $colored: boolean }>`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -54,7 +54,7 @@ export const Title = styled.div<{ colored: boolean }>`
     ${({ theme }) => theme.fonts.semibold};
     color: ${({ theme }) => theme.colors.G_600};
     margin-bottom: 8px;
-    width: ${({ colored }) => (colored ? "calc(100% - 33px)" : "100%")};
+    width: ${({ $colored }) => ($colored ? "calc(100% - 33px)" : "100%")};
 `;
 
 export const Subtitle = styled.div`
