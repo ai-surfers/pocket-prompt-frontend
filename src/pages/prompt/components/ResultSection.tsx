@@ -8,15 +8,22 @@ import Icon from "@/components/common/Icon";
 import { copyClipboard } from "@/utils/promptUtils";
 import Button from "@/components/common/Button/Button";
 import { PocketRunModel } from "@/core/Prompt";
+import useToast from "@/hooks/useToast";
 
 export const ResultSection: React.FC = () => {
     const pocketRunRes = useRecoilValue(pocketRunState);
     const pocketRunLoading = useRecoilValue(pocketRunLoadingState);
 
+    const showToast = useToast();
+
     const handleClickCopy = (result: string) => {
         copyClipboard(result)
             .then(() => {
-                console.log("클립보드 복사 성공");
+                showToast({
+                    title: "포켓런 결과 복사가 완료되었어요.",
+                    subTitle: "",
+                    iconName: "CopySuccess",
+                });
             })
             .catch((err) => {
                 console.error("클립보드 복사 실패:", err);

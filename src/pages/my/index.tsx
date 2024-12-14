@@ -16,7 +16,11 @@ const MyPage = () => {
             label: "마이페이지",
             iconType: "Profile",
             onClick: () =>
-                showToast("마이페이지는 아직 준비 중인 기능이에요.", ""),
+                showToast({
+                    title: "마이페이지는 아직 준비 중인 기능이에요.",
+                    subTitle: "",
+                    iconName: "Timer",
+                }),
             disabled: true,
         },
         {

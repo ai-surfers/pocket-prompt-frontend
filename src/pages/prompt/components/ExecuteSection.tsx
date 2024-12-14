@@ -53,7 +53,6 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
 
     const { mutate: pocketRun, isPending } = usePocketRun({
         onSuccess: (res) => {
-            console.log("Success:", res);
             // 로딩중으로 표시되고 있는 결과란 컴포넌트에 pocketRun 결과값 주입
             setPocketRunRes((prevState) => {
                 const newState = [...prevState];
@@ -62,7 +61,6 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
             });
         },
         onError: (err) => {
-            console.error("Error:", err);
             if (
                 err.message ===
                     "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요." ||
@@ -141,7 +139,12 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
 
                     copyClipboard(prompt)
                         .then(() => {
-                            alert("프롬프트가 클립보드에 복사되었습니다.");
+                            showToast({
+                                title: "프롬프트 복사가 완료되었어요.",
+                                subTitle:
+                                    "복사된 프롬프트를 AI 플랫폼에 붙여넣기하여 사용해주세요.",
+                                iconName: "CopySuccess",
+                            });
                         })
                         .catch((err) => {
                             console.error("클립보드 복사 실패:", err);
@@ -149,7 +152,11 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                         });
                 } else {
                     if (!userData.isLogin) {
-                        showToast("로그인 후 이용 가능합니다.", "");
+                        showToast({
+                            title: "로그인 후 이용 가능합니다.",
+                            subTitle: "",
+                            iconName: "TickCircle",
+                        });
                         return;
                     }
                     pocketRun(
@@ -197,7 +204,6 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
 
     useEffect(() => {
         setPocketRunLoading(isPending);
-        console.log(isPending);
     }, [isPending, setPocketRunLoading]);
 
     useEffect(() => {

@@ -24,7 +24,6 @@ interface LNBtype {
 const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
     const [selectedKey, setSelectedKey] = useState<string>("1");
     const { isUnderTablet } = useDeviceSize();
-    console.log(menuItems, isUnderTablet);
 
     // 메뉴 항목을 동적으로 생성
     const desktopItems: MenuProps["items"] = menuItems.map((item) => {
