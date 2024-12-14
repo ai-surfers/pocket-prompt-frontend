@@ -1,6 +1,5 @@
 import { PromptInputField } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
-import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
 import { PocketRunModel } from "@/core/Prompt";
 import { UTM_OVER_USAGE_LIMIT_URL, UTM_TIER_LIMIT_URL } from "@/core/UtmUri";
@@ -19,6 +18,7 @@ import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import Textarea from "@/components/common/Textarea/Textarea";
 
 interface ExecuteSectionProps {
     onSelect: (value: string) => void;
@@ -131,11 +131,8 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
     const handleClickSubmit = async (platform?: string) => {
         form.handleSubmit(
             async (values: Record<string, string>) => {
-                console.log("Form Data:", values);
-
                 if (!platform) {
                     const prompt = populateTemplate(template, values);
-                    console.log(">>Populated Template", prompt);
 
                     copyClipboard(prompt)
                         .then(() => {
@@ -256,13 +253,14 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                                         required: `${input.name}를 입력해 주세요!`,
                                     }}
                                     render={({ field }) => (
-                                        <Input
+                                        <Textarea
                                             {...field}
                                             placeholder={
                                                 input.placeholder ||
                                                 "입력 값을 입력해 주세요."
                                             }
                                             disabled={isPending}
+                                            isMini={true}
                                         />
                                     )}
                                 />
