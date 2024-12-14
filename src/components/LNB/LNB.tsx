@@ -45,7 +45,7 @@ const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
         };
     });
 
-    const handleClickMenu: MenuProps["onClick"] = (e) => {
+    const handleClickDesktopMenu: MenuProps["onClick"] = (e) => {
         const selectedItem = menuItems.find((item) => item.key === e.key);
 
         if (!selectedItem?.disabled) {
@@ -68,7 +68,15 @@ const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
             >
                 <Flex gap={20}>
                     {menuItems.map((item) => (
-                        <button onClick={item.onClick} key={item.key}>
+                        <button
+                            onClick={() => {
+                                setSelectedKey(item.key);
+                                if (item.onClick) {
+                                    item.onClick();
+                                }
+                            }}
+                            key={item.key}
+                        >
                             {item.iconType && (
                                 <Icon
                                     name={item.iconType}
@@ -91,7 +99,7 @@ const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
     return (
         <LNBWrapper>
             <StyledMenu
-                onClick={handleClickMenu}
+                onClick={handleClickDesktopMenu}
                 selectedKeys={[selectedKey]}
                 mode="vertical"
                 items={desktopItems}
