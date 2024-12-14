@@ -9,18 +9,27 @@ import Text from "@/components/common/Text/Text";
 import Icon from "@/components/common/Icon";
 import useToast from "@/hooks/useToast";
 import useDeviceSize from "@/hooks/useDeviceSize";
+import { useEffect, useState } from "react";
+import { useResetRecoilState } from "recoil";
+import {
+    searchedCategoryState,
+    searchedKeywordState,
+} from "@/states/searchState";
 
 export default function HomePage() {
     const navigate = useNavigate();
     const showToast = useToast();
     const { isUnderTablet } = useDeviceSize();
+    const [promptListType, setPromptListType] = useState("text");
+    const resetSearchedKeyword = useResetRecoilState(searchedKeywordState);
+    const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
 
     const menuItems: MenuItemsType[] = [
         {
             key: "1",
             label: "텍스트 프롬프트",
             iconType: "TextBlock",
-            onClick: () => navigate("/"),
+            onClick: () => setPromptListType("text"),
         },
         {
             key: "2",
@@ -51,12 +60,7 @@ export default function HomePage() {
             key: "4",
             label: "저장한 프롬프트",
             iconType: "Bookmark",
-            onClick: () =>
-                showToast(
-                    `저장한 프롬프트는 아직 준비 중인 기능이에요.`,
-                    "더 많은 프롬프트 탐색을 위해 빠르게 준비하고 있을게요!"
-                ),
-            disabled: true,
+            onClick: () => setPromptListType("saved"),
         },
     ];
 
@@ -77,16 +81,31 @@ export default function HomePage() {
         </Button>
     );
 
-    return (
-        <HomeWrapper>
-            <HomeContentWrapper $isUnderTablet={isUnderTablet}>
-                <LNB menuItems={menuItems} button={newPropmptButton} />
-                <ContentWrapper>
+    const promptContent = () => {
+        if (promptListType === "text") {
+            return (
+                <>
                     <BannerWrapper>
                         <Banner />
                     </BannerWrapper>
                     <PaginatedPromptSection />
-                </ContentWrapper>
+                </>
+            );
+        } else {
+            return <PaginatedPromptSection viewType="starred" />;
+        }
+    };
+
+    useEffect(() => {
+        resetSearchedKeyword();
+        resetSearchedCategory();
+    }, [promptListType, resetSearchedCategory, resetSearchedKeyword]);
+
+    return (
+        <HomeWrapper>
+            <HomeContentWrapper $isUnderTablet={isUnderTablet}>
+                <LNB menuItems={menuItems} button={newPropmptButton} />
+                <ContentWrapper>{promptContent()}</ContentWrapper>
             </HomeContentWrapper>
         </HomeWrapper>
     );
