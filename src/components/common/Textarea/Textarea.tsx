@@ -80,7 +80,8 @@ const TextareaContainer = styled.div<{ $length: number; $disabled?: boolean }>`
 
 const StyledTextarea = styled.textarea<{ $isMini: boolean }>`
     ${({ theme }) => theme.fonts.b3_14_reg};
-    min-height: ${({ $isMini }) => ($isMini ? "23px" : "87px")};
+    height: ${({ $isMini }) => ($isMini ? "23px" : "87px")};
+    min-height: 23px;
     max-height: 300px;
 
     border: none;
