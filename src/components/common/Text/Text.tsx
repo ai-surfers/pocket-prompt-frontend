@@ -1,19 +1,30 @@
 import { HTMLAttributes, PropsWithChildren } from "react";
+import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
 
 interface TextProps extends HTMLAttributes<HTMLDivElement> {
     font: string;
     color?: string;
+    markdown?: boolean;
 }
 export default function Text({
     font,
     color = "black",
     children,
+    markdown = false,
     ...props
 }: PropsWithChildren<TextProps>) {
     return (
         <StyledText $font={font} $color={color} {...props}>
-            {children}
+            {markdown ? (
+                <MarkdownWrapper>
+                    <ReactMarkdown components={markdownStyles}>
+                        {String(children)}
+                    </ReactMarkdown>
+                </MarkdownWrapper>
+            ) : (
+                children
+            )}
         </StyledText>
     );
 }
@@ -23,3 +34,99 @@ const StyledText = styled.div<{ $font: string; $color: string }>`
     color: ${({ theme, $color }) => theme.colors[$color]};
     white-space: pre-wrap;
 `;
+
+const MarkdownWrapper = styled.div`
+    line-height: 1.4; /* 전체 줄 간격을 좁힘 */
+    font-size: 16px;
+    color: #333;
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        margin: 0.5em 0 0.3em 0; /* 위-아래 여백을 최소화 */
+        font-weight: bold;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    h2 {
+        font-size: 1.3em;
+    }
+
+    h3 {
+        font-size: 1.2em;
+    }
+
+    p {
+        margin: 0.1em 0; /* 문단의 위아래 여백을 최소화 */
+    }
+
+    ol {
+        padding-left: 1.8em; /* 리스트 들여쓰기 최소화 */
+        margin: 0; /* 리스트 위아래 여백을 줄임 */
+    }
+
+    ul {
+        padding-left: 1.8em; /* 리스트 들여쓰기 최소화 */
+        margin: 0; /* 리스트 위아래 여백을 줄임 */
+        list-style: disc;
+    }
+
+    li {
+        margin-bottom: 0.1em; /* 리스트 항목 간 여백을 줄임 */
+        line-height: 1.4; /* 리스트 줄 간격 */
+    }
+
+    strong {
+        font-weight: bold;
+        margin-right: 0.1em; /* 강조된 텍스트와 다음 요소의 간격 최소화 */
+    }
+
+    hr {
+        margin: 0.8em 0; /* 수평선 위아래 여백 최소화 */
+        border: none;
+        border-top: 1px solid #eaeaea;
+    }
+
+    blockquote {
+        margin: 0.3em 0; /* 인용문 여백 최소화 */
+        padding: 0.3em 0.8em;
+        background: #f9f9f9;
+        border-left: 3px solid #ccc;
+        color: #555;
+    }
+
+    code {
+        background: #f5f5f5;
+        border: 1px solid #e1e1e1;
+        padding: 0.1em 0.2em;
+        border-radius: 3px;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 0.95em;
+    }
+
+    pre {
+        background: #f5f5f5;
+        border: 1px solid #e1e1e1;
+        padding: 0.6em; /* 코드블록 패딩을 줄임 */
+        border-radius: 4px;
+        overflow-x: auto;
+        margin: 0.3em 0;
+    }
+`;
+
+// 마크다운 스타일 컴포넌트
+const markdownStyles = {
+    h1: (props: any) => <h1>{props.children}</h1>,
+    h2: (props: any) => <h2>{props.children}</h2>,
+    h3: (props: any) => <h3>{props.children}</h3>,
+    p: (props: any) => <p>{props.children}</p>,
+    ul: (props: any) => <ul>{props.children}</ul>,
+    ol: (props: any) => <ol>{props.children}</ol>,
+    li: (props: any) => <li>{props.children}</li>,
+    blockquote: (props: any) => <blockquote>{props.children}</blockquote>,
+    hr: () => <hr />,
+};

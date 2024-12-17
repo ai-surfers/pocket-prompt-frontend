@@ -70,7 +70,9 @@ const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
                     {menuItems.map((item) => (
                         <button
                             onClick={() => {
-                                setSelectedKey(item.key);
+                                if (!item.disabled) {
+                                    setSelectedKey(item.key);
+                                }
                                 if (item.onClick) {
                                     item.onClick();
                                 }

@@ -43,7 +43,11 @@ const ProtectedRoute: React.FC<React.PropsWithChildren> = ({ children }) => {
     }
 
     if (!userData || !userData.isLogin) {
-        showToast("로그인 후 이용 가능합니다.", "");
+        showToast({
+            title: "로그인 후 이용 가능합니다.",
+            subTitle: "",
+            iconName: "TickCircle",
+        });
 
         return <Navigate to="/" replace={true} />;
     }

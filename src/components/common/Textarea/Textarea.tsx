@@ -6,6 +6,7 @@ export interface TextareaProps {
     onChange: (value: string) => void;
     count?: number;
     disabled?: boolean;
+    isMini?: boolean;
 }
 
 export default function Textarea({
@@ -14,7 +15,9 @@ export default function Textarea({
     onChange,
     count,
     disabled = false,
+    isMini = false,
 }: TextareaProps) {
+    console.log(isMini);
     function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
         const value = e.target.value;
 
@@ -29,6 +32,7 @@ export default function Textarea({
                 value={value}
                 onChange={handleChange}
                 disabled={disabled}
+                $isMini={isMini}
             />
             {count && (
                 <CountBox $length={value.length}>
@@ -74,10 +78,10 @@ const TextareaContainer = styled.div<{ $length: number; $disabled?: boolean }>`
         `}
 `;
 
-const StyledTextarea = styled.textarea`
+const StyledTextarea = styled.textarea<{ $isMini: boolean }>`
     ${({ theme }) => theme.fonts.b3_14_reg};
-
-    min-height: 87px;
+    height: ${({ $isMini }) => ($isMini ? "23px" : "87px")};
+    min-height: 23px;
     max-height: 300px;
 
     border: none;

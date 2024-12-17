@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { usePutBillingKeys } from "@/hooks/mutations/payments/usePutBillingKey";
 import { requestBillingKey } from "@/utils/billingUtils";
 import useDeviceSize from "@/hooks/useDeviceSize";
+import useToast from "@/hooks/useToast";
 
 const SUBSCRIPTION_STATUS = {
     active: "활성",
@@ -41,6 +42,7 @@ const columns = [
 export default function MySubscription() {
     const navigate = useNavigate();
     const { isUnderTablet } = useDeviceSize();
+    const showToast = useToast();
 
     const { data: subscriptionData, refetch: refetchSubscriptionData } =
         useGetSubscription();
@@ -58,7 +60,12 @@ export default function MySubscription() {
 
     const { mutate: unsubscription } = usePutPayments({
         onSuccess(res) {
-            alert("구독이 성공적으로 취소되었습니다.");
+            showToast({
+                title: "구독이 성공적으로 취소되었어요.",
+                subTitle: "",
+                iconName: "TickCircle",
+            });
+
             console.log(">> 구독 취소 성공", res);
             refetchSubscriptionData();
             refetchCardInfoData();
@@ -98,7 +105,11 @@ export default function MySubscription() {
 
     const { mutate: changePayments } = usePutBillingKeys({
         onSuccess(res) {
-            alert("결제수단이 성공적으로 변경되었습니다.");
+            showToast({
+                title: "결제수단이 성공적으로 변경되었습니다.",
+                subTitle: "",
+                iconName: "TickCircle",
+            });
             console.log(">> 결제수단 변경 성공", res);
             refetchCardInfoData();
         },
