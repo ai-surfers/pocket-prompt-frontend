@@ -172,7 +172,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                                 {
                                     response: "",
                                     context: values,
-                                    model: platform,
+                                    model: PocketRunModel[platform].value,
                                 },
                             ];
                         } else {
@@ -182,7 +182,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                                 {
                                     response: "",
                                     context: values,
-                                    model: platform,
+                                    model: PocketRunModel[platform].value,
                                 },
                             ];
                         }
