@@ -1,13 +1,12 @@
 import styled from "styled-components";
-import MySubscription from "./MySubscription";
+import MySubscription from "./components/MySubscription";
 import LNB, { MenuItemsType } from "@/components/LNB/LNB";
 import { useState } from "react";
-import useToast from "@/hooks/useToast";
 import useDeviceSize from "@/hooks/useDeviceSize";
+import MyInfo from "./components/MyInfo";
 
 const MyPage = () => {
-    const [selectedMenu, setSelectedMenu] = useState("2");
-    const showToast = useToast();
+    const [selectedMenu, setSelectedMenu] = useState("1");
     const { isUnderTablet } = useDeviceSize();
 
     const menuItems: MenuItemsType[] = [
@@ -15,9 +14,7 @@ const MyPage = () => {
             key: "1",
             label: "마이페이지",
             iconType: "Profile",
-            onClick: () =>
-                showToast("마이페이지는 아직 준비 중인 기능이에요.", ""),
-            disabled: true,
+            onClick: () => setSelectedMenu("1"),
         },
         {
             key: "2",
@@ -30,10 +27,10 @@ const MyPage = () => {
     return (
         <Wrapper isUnderTablet={isUnderTablet}>
             <LNBWrapper>
-                <LNB menuItems={menuItems} initialMenu="2" />
+                <LNB menuItems={menuItems} initialMenu="1" />
             </LNBWrapper>
             <ContentWrapper>
-                {selectedMenu === "1" && <></>}
+                {selectedMenu === "1" && <MyInfo />}
                 {selectedMenu === "2" && <MySubscription />}
             </ContentWrapper>
         </Wrapper>
@@ -52,7 +49,6 @@ const Wrapper = styled.div<{ isUnderTablet: boolean }>`
     gap: ${({ isUnderTablet }) => (isUnderTablet ? "20px" : "40px")};
     align-items: start;
     width: 100vw;
-    height: ${({ isUnderTablet }) => (isUnderTablet ? "auto" : "100vh")};
 `;
 
 const LNBWrapper = styled.div`
@@ -62,6 +58,5 @@ const LNBWrapper = styled.div`
 
 const ContentWrapper = styled.div`
     width: 100%;
-    height: 100%;
     padding: 0;
 `;

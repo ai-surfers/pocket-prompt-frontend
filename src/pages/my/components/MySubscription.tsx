@@ -1,7 +1,6 @@
 // MyPage.tsx
 import styled from "styled-components";
 import { Card, Table, Space } from "antd";
-import { Wrapper } from "@/layouts/Layout";
 import { useGetSubscription } from "@/hooks/queries/payments/useGetSubscription";
 import { usePutPayments } from "@/hooks/mutations/payments/usePutPayments";
 // import * as Sentry from "@sentry/react";
@@ -13,6 +12,7 @@ import { formatDate, formatNumber } from "@/utils/textUtils";
 import { useNavigate } from "react-router-dom";
 import { usePutBillingKeys } from "@/hooks/mutations/payments/usePutBillingKey";
 import { requestBillingKey } from "@/utils/billingUtils";
+import useDeviceSize from "@/hooks/useDeviceSize";
 
 const SUBSCRIPTION_STATUS = {
     active: "활성",
@@ -40,6 +40,7 @@ const columns = [
 
 export default function MySubscription() {
     const navigate = useNavigate();
+    const { isUnderTablet } = useDeviceSize();
 
     const { data: subscriptionData, refetch: refetchSubscriptionData } =
         useGetSubscription();
@@ -117,7 +118,7 @@ export default function MySubscription() {
 
     return (
         <Container>
-            <Wrapper style={{ maxWidth: "1107px" }}>
+            <Wrapper $isUnderTablet={isUnderTablet}>
                 <Text font="h1_24_bold" style={{ marginBottom: "20px" }}>
                     구독 관리
                 </Text>
@@ -261,6 +262,12 @@ const Container = styled.div`
     height: 100%;
     padding: 41px 40px;
     background-color: #f0f2f5;
+`;
+
+const Wrapper = styled.div<{ $isUnderTablet: boolean }>`
+    max-width: 1080px;
+    padding-top: ${({ $isUnderTablet }) => ($isUnderTablet ? 0 : "60px")};
+    margin: 0 auto;
 `;
 
 const TitleWrapper = styled.div`

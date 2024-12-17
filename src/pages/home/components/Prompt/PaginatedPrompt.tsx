@@ -77,14 +77,21 @@ const PaginatedPrompt = ({
     const promptTitle = (() => {
         switch (searchType) {
             case "total":
-                return viewType === "open" ? (
-                    "📖 전체 프롬프트"
-                ) : (
-                    <>
-                        💾 <span>{userData.user?.nickname}</span>님이 저장한
-                        프롬프트
-                    </>
-                );
+                switch (viewType) {
+                    case "open":
+                        return "📖 전체 프롬프트";
+                    case "starred":
+                        return (
+                            <>
+                                💾 <span>{userData.user?.nickname}</span>님이
+                                저장한 프롬프트
+                            </>
+                        );
+                    case "my":
+                        return "내가 등록한 프롬프트";
+                    default:
+                        return null;
+                }
             case "popular":
                 return "🔥 지금 인기 있는 프롬프트";
             case "search":
