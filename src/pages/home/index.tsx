@@ -4,7 +4,7 @@ import styled from "styled-components";
 import LNB, { MenuItemsType } from "../../components/LNB/LNB";
 import PaginatedPromptSection from "./components/Prompt/PaginatedPromptSection";
 import Button from "@/components/common/Button/Button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Text from "@/components/common/Text/Text";
 import Icon from "@/components/common/Icon";
 import useToast from "@/hooks/useToast";
@@ -18,6 +18,7 @@ import {
 
 export default function HomePage() {
     const navigate = useNavigate();
+    const location = useLocation();
     const showToast = useToast();
     const { isUnderTablet } = useDeviceSize();
     const [promptListType, setPromptListType] = useState("text");
@@ -104,6 +105,12 @@ export default function HomePage() {
         resetSearchedKeyword();
         resetSearchedCategory();
     }, [promptListType, resetSearchedCategory, resetSearchedKeyword]);
+
+    useEffect(() => {
+        if (location.pathname === "/" && location.state?.resetPromptList) {
+            setPromptListType("text");
+        }
+    }, [location, navigate]);
 
     return (
         <HomeWrapper>
