@@ -36,10 +36,12 @@ export default function HomePage() {
             label: "이미지 프롬프트",
             iconType: "Image",
             onClick: () =>
-                showToast(
-                    `이미지 프롬프트는 아직 준비 중인 기능이에요.`,
-                    "더 많은 프롬프트 탐색을 위해 빠르게 준비하고 있을게요!"
-                ),
+                showToast({
+                    title: "이미지 프롬프트는 아직 준비 중인 기능이에요.",
+                    subTitle:
+                        "더 많은 프롬프트 탐색을 위해 빠르게 준비하고 있을게요!",
+                    iconName: "Timer",
+                }),
             disabled: true,
         },
         {
@@ -47,10 +49,12 @@ export default function HomePage() {
             label: "동영상 프롬프트",
             iconType: "Video",
             onClick: () =>
-                showToast(
-                    `동영상 프롬프트는 아직 준비 중인 기능이에요.`,
-                    "더 많은 프롬프트 탐색을 위해 빠르게 준비하고 있을게요!"
-                ),
+                showToast({
+                    title: `동영상 프롬프트는 아직 준비 중인 기능이에요.`,
+                    subTitle:
+                        "더 많은 프롬프트 탐색을 위해 빠르게 준비하고 있을게요!",
+                    iconName: "Timer",
+                }),
             disabled: true,
         },
         ...(isUnderTablet

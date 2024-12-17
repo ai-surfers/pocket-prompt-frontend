@@ -7,6 +7,7 @@ import {
 } from "@/hooks/mutations/prompts/usePostPrompt";
 import { usePutPrompt } from "@/hooks/mutations/prompts/usePutPrompt";
 import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
+import useToast from "@/hooks/useToast";
 import { Wrapper } from "@/layouts/Layout";
 import FormSection from "@/pages/promptNew/components/FormSection";
 import PreviewSection from "@/pages/promptNew/components/PreviewSection";
@@ -34,6 +35,7 @@ export default function PromptNewPage({ isEdit = false }: PromptNewPageProps) {
     const { data } = usePromptQuery(promptId ?? "");
 
     const navigate = useNavigate();
+    const showToast = useToast();
 
     const mode = !isEdit ? "등록" : "수정";
 
@@ -45,9 +47,13 @@ export default function PromptNewPage({ isEdit = false }: PromptNewPageProps) {
     const { mutate: createPromptMutate } = usePostPrompt({
         onSuccess(res) {
             console.log("Success", res);
-            alert(res.detail || "프롬프트를 등록하였습니다.");
+            showToast({
+                title: "프롬프트 등록이 완료되었어요.",
+                subTitle: "",
+                iconName: "TickCircle",
+            });
 
-            navigate(`/prompt-edit/${res.data.prompt_id}`, { replace: true });
+            navigate(`/prompt/${res.data.prompt_id}`, { replace: true });
         },
         onError(e) {
             console.error("Failed", e);
@@ -58,7 +64,12 @@ export default function PromptNewPage({ isEdit = false }: PromptNewPageProps) {
     const { mutate: updatePromptMutate } = usePutPrompt({
         onSuccess(res) {
             console.log("Success", res);
-            alert(res.detail || "프롬프트가 수정되었습니다.");
+            showToast({
+                title: "프롬프트 수정이 완료되었어요.",
+                subTitle: "",
+                iconName: "TickCircle",
+            });
+            navigate(`/prompt/${res.data.prompt_id}`, { replace: true });
         },
         onError(e) {
             console.error("Failed", e);

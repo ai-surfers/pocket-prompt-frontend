@@ -1,6 +1,5 @@
 import { PromptInputField } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
-import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
 import { PocketRunModel } from "@/core/Prompt";
 import { UTM_OVER_USAGE_LIMIT_URL, UTM_TIER_LIMIT_URL } from "@/core/UtmUri";
@@ -19,6 +18,7 @@ import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import Textarea from "@/components/common/Textarea/Textarea";
 
 interface ExecuteSectionProps {
     onSelect: (value: string) => void;
@@ -53,7 +53,6 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
 
     const { mutate: pocketRun, isPending } = usePocketRun({
         onSuccess: (res) => {
-            console.log("Success:", res);
             // 로딩중으로 표시되고 있는 결과란 컴포넌트에 pocketRun 결과값 주입
             setPocketRunRes((prevState) => {
                 const newState = [...prevState];
@@ -62,7 +61,6 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
             });
         },
         onError: (err) => {
-            console.error("Error:", err);
             if (
                 err.message ===
                     "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요." ||
@@ -133,15 +131,17 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
     const handleClickSubmit = async (platform?: string) => {
         form.handleSubmit(
             async (values: Record<string, string>) => {
-                console.log("Form Data:", values);
-
                 if (!platform) {
                     const prompt = populateTemplate(template, values);
-                    console.log(">>Populated Template", prompt);
 
                     copyClipboard(prompt)
                         .then(() => {
-                            alert("프롬프트가 클립보드에 복사되었습니다.");
+                            showToast({
+                                title: "프롬프트 복사가 완료되었어요.",
+                                subTitle:
+                                    "복사된 프롬프트를 AI 플랫폼에 붙여넣기하여 사용해주세요.",
+                                iconName: "CopySuccess",
+                            });
                         })
                         .catch((err) => {
                             console.error("클립보드 복사 실패:", err);
@@ -149,7 +149,11 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                         });
                 } else {
                     if (!userData.isLogin) {
-                        showToast("로그인 후 이용 가능합니다.", "");
+                        showToast({
+                            title: "로그인 후 이용 가능합니다.",
+                            subTitle: "",
+                            iconName: "TickCircle",
+                        });
                         return;
                     }
                     pocketRun(
@@ -168,7 +172,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                                 {
                                     response: "",
                                     context: values,
-                                    model: platform,
+                                    model: PocketRunModel[platform].value,
                                 },
                             ];
                         } else {
@@ -178,7 +182,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                                 {
                                     response: "",
                                     context: values,
-                                    model: platform,
+                                    model: PocketRunModel[platform].value,
                                 },
                             ];
                         }
@@ -197,7 +201,6 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
 
     useEffect(() => {
         setPocketRunLoading(isPending);
-        console.log(isPending);
     }, [isPending, setPocketRunLoading]);
 
     useEffect(() => {
@@ -250,13 +253,14 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                                         required: `${input.name}를 입력해 주세요!`,
                                     }}
                                     render={({ field }) => (
-                                        <Input
+                                        <Textarea
                                             {...field}
                                             placeholder={
                                                 input.placeholder ||
                                                 "입력 값을 입력해 주세요."
                                             }
                                             disabled={isPending}
+                                            isMini={true}
                                         />
                                     )}
                                 />

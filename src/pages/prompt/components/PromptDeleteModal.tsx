@@ -27,7 +27,11 @@ export default function PromptDeleteModal({
     const { mutate: remove, isPending } = useDeletePrompt({
         onSuccess(res) {
             console.log(res);
-            showToast("프롬프트 삭제가 완료되었어요", "");
+            showToast({
+                title: "프롬프트 삭제가 완료되었어요.",
+                subTitle: "",
+                iconName: "TickCircle",
+            });
             navigate("/");
 
             queryClient.invalidateQueries({

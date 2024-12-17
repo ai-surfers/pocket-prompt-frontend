@@ -38,10 +38,10 @@ const Prompt = ({
     };
 
     return (
-        <S.PromptWrapper colored={colored} onClick={handleClick}>
+        <S.PromptWrapper $colored={colored} onClick={handleClick}>
             {colored && <S.NumberTag>{index}</S.NumberTag>}
             <S.TitlesWrapper>
-                <S.Title colored={colored}>{title}</S.Title>
+                <S.Title $colored={colored}>{title}</S.Title>
                 <S.Subtitle>{description}</S.Subtitle>
             </S.TitlesWrapper>
             <S.DetailsWrapper>
