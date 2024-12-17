@@ -42,7 +42,8 @@ const MarkdownWrapper = styled.div`
 
     h1,
     h2,
-    h3 {
+    h3,
+    h4 {
         margin: 0.5em 0 0.3em 0; /* 위-아래 여백을 최소화 */
         font-weight: bold;
     }
@@ -60,13 +61,17 @@ const MarkdownWrapper = styled.div`
     }
 
     p {
-        margin: 0.2em 0; /* 문단의 위아래 여백을 최소화 */
+        margin: 0.1em 0; /* 문단의 위아래 여백을 최소화 */
     }
 
-    ul,
     ol {
         padding-left: 1.8em; /* 리스트 들여쓰기 최소화 */
-        margin: 0.2em 0; /* 리스트 위아래 여백을 줄임 */
+        margin: 0; /* 리스트 위아래 여백을 줄임 */
+    }
+
+    ul {
+        padding-left: 1.8em; /* 리스트 들여쓰기 최소화 */
+        margin: 0; /* 리스트 위아래 여백을 줄임 */
         list-style: disc;
     }
 
