@@ -155,6 +155,7 @@ export const ResultSection: React.FC = () => {
                                         font="b2_16_med"
                                         color={"G_700"}
                                         key={index}
+                                        markdown={true}
                                     >
                                         {res.response}
                                     </Text>
