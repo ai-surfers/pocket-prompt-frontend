@@ -20,11 +20,19 @@ const MyInfo = () => {
 
     const { mutate: updateNickname } = usePutNickname({
         onSuccess(res) {
-            showToast("닉네임이 변경되었어요.", "");
+            showToast({
+                title: "닉네임이 변경되었어요.",
+                subTitle: "",
+                iconName: "TickCircle",
+            });
             console.log(">> 닉네임 변경 성공", res);
         },
         onError(e) {
-            showToast(e.message, "");
+            showToast({
+                title: e.message,
+                subTitle: "",
+                iconName: "TickCircle",
+            });
             console.error(">> 닉네임 변경 실패", e);
         },
     });
