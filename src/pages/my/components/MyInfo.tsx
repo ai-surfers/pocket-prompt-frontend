@@ -19,7 +19,7 @@ import { getUser } from "@/apis/auth/auth";
 // import { isValidNickname } from "@/utils/textUtils";
 
 const MyInfo = () => {
-    const { userData, setUser } = useUser();
+    const { userData, setUser, resetUserState } = useUser();
     const [nickname, setNickname] = useState("");
     const { isUnderTablet } = useDeviceSize();
     const showToast = useToast();
@@ -90,7 +90,7 @@ const MyInfo = () => {
                             backgroundColor: "white",
                             borderRadius: "12px",
                             padding: "20px",
-                            width: "100%",
+                            width: "1083px",
                         }}
                     >
                         <Flex vertical={true} style={{ width: "547px" }}>
@@ -165,13 +165,16 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div<{ $isUnderTablet: boolean }>`
-    max-width: 1080px;
     width: 100%;
     padding-top: ${({ $isUnderTablet }) => ($isUnderTablet ? 0 : "60px")};
     margin: 0 auto;
 `;
 
 const MyInfoWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
     background-color: #f0f2f5;
     padding: 41px 40px;
     width: 100%;
@@ -189,9 +192,6 @@ const Email = styled.div`
     margin-top: 8px;
 `;
 
-function resetUserState() {
-    throw new Error("Function not implemented.");
-}
 // const Chip = styled.div`
 //     display: flex;
 //     height: 28px;
