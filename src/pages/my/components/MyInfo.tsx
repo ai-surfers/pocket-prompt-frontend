@@ -10,13 +10,41 @@ import useDeviceSize from "@/hooks/useDeviceSize";
 import PaginatedPromptSection from "@/pages/home/components/Prompt/PaginatedPromptSection";
 import { usePutNickname } from "@/hooks/mutations/usePutNickname";
 import useToast from "@/hooks/useToast";
+import {
+    getLocalStorage,
+    LOCALSTORAGE_KEYS,
+    removeLocalStorage,
+} from "@/utils/storageUtils";
+import { getUser } from "@/apis/auth/auth";
 // import { isValidNickname } from "@/utils/textUtils";
 
 const MyInfo = () => {
-    const { userData } = useUser();
+    const { userData, setUser } = useUser();
     const [nickname, setNickname] = useState("");
     const { isUnderTablet } = useDeviceSize();
     const showToast = useToast();
+
+    const getUserData = () => {
+        const access_token = getLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
+        console.log(">> ", userData.accessToken);
+
+        if (access_token) {
+            getUser().then((res) => {
+                const { success, data } = res.data;
+                if (!success) {
+                    alert("유저 조회에 실패하였습니다.");
+
+                    removeLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
+                    resetUserState();
+                    return;
+                }
+
+                // 성공, 저장
+                setUser(data);
+                console.log(userData);
+            });
+        }
+    };
 
     const { mutate: updateNickname } = usePutNickname({
         onSuccess(res) {
@@ -26,6 +54,8 @@ const MyInfo = () => {
                 iconName: "TickCircle",
             });
             console.log(">> 닉네임 변경 성공", res);
+            getUserData();
+            setNickname("");
         },
         onError(e) {
             showToast({
@@ -159,6 +189,9 @@ const Email = styled.div`
     margin-top: 8px;
 `;
 
+function resetUserState() {
+    throw new Error("Function not implemented.");
+}
 // const Chip = styled.div`
 //     display: flex;
 //     height: 28px;
