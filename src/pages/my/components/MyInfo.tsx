@@ -90,7 +90,7 @@ const MyInfo = () => {
                             backgroundColor: "white",
                             borderRadius: "12px",
                             padding: "20px",
-                            width: "1083px",
+                            maxWidth: "1083px",
                         }}
                     >
                         <Flex vertical={true} style={{ width: "547px" }}>
