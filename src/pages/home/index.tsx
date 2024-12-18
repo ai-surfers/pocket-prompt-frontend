@@ -139,7 +139,7 @@ const HomeContentWrapper = styled.div<{ $isUnderTablet: boolean }>`
             "start"
         )};
     gap: ${({ $isUnderTablet }) => ($isUnderTablet ? "20px" : "40px")};
-    margin: auto;
+    margin: 0 auto;
 `;
 
 const ContentWrapper = styled(Wrapper)`
