@@ -27,6 +27,7 @@ const LayoutContainer = styled.div`
 `;
 
 const ContentWrapper = styled.div`
+    display: flex;
     flex: 1; // 남은 공간을 모두 차지하도록 설정
 `;
 

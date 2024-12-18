@@ -13,9 +13,9 @@ import {
 } from "@/states/searchState";
 import { Categories } from "@/core/Prompt";
 import useDeviceSize from "@/hooks/useDeviceSize";
-import { ImgEmpty } from "@/assets/svg";
-import Text from "@/components/common/Text/Text";
+
 import { useUser } from "@/hooks/useUser";
+import EmptyPrompt from "./EmptyPrompt";
 
 interface PaginatedPromptProps {
     usePage?: boolean;
@@ -77,14 +77,21 @@ const PaginatedPrompt = ({
     const promptTitle = (() => {
         switch (searchType) {
             case "total":
-                return viewType === "open" ? (
-                    "📖 전체 프롬프트"
-                ) : (
-                    <>
-                        💾 <span>{userData.user?.nickname}</span>님이 저장한
-                        프롬프트
-                    </>
-                );
+                switch (viewType) {
+                    case "open":
+                        return "📖 전체 프롬프트";
+                    case "starred":
+                        return (
+                            <>
+                                💾 <span>{userData.user?.nickname}</span>님이
+                                저장한 프롬프트
+                            </>
+                        );
+                    case "my":
+                        return "내가 등록한 프롬프트";
+                    default:
+                        return null;
+                }
             case "popular":
                 return "🔥 지금 인기 있는 프롬프트";
             case "search":
@@ -102,7 +109,7 @@ const PaginatedPrompt = ({
         <Flex vertical gap={20} style={{ width: "100%" }}>
             <TitleWrapper>
                 <Title>{promptTitle}</Title>
-                {usePage && (
+                {usePage && items.length > 1 && (
                     <SelectWrapper>
                         <Select
                             value={sortBy}
@@ -134,7 +141,7 @@ const PaginatedPrompt = ({
                         </Col>
                     ))
                 ) : items.length < 1 ? (
-                    <Empty />
+                    <EmptyPrompt viewType={viewType} />
                 ) : (
                     items.map((item, index) => (
                         <Col key={item.id} xs={24} sm={12} md={8}>
@@ -154,7 +161,7 @@ const PaginatedPrompt = ({
                 )}
             </Row>
 
-            {usePage && (
+            {usePage && items.length > 1 && (
                 <div style={{ margin: "0 auto" }}>
                     <Pagination
                         current={currentPage}
@@ -199,28 +206,4 @@ const Title = styled.div`
     span {
         color: ${({ theme }) => theme.colors.primary};
     }
-`;
-
-const Empty = () => {
-    return (
-        <EmptyWrapper vertical justify="center" align="center" gap={16}>
-            <ImgEmpty width={148} />
-
-            <Flex vertical align="center" gap={2}>
-                <Text font="b2_16_semi" color="G_700">
-                    아직 등록된 프롬프트가 없어요!
-                </Text>
-                <Text font="b3_14_reg" color="G_400">
-                    1등으로 관련 프롬프트를 등록해볼까요?
-                </Text>
-            </Flex>
-        </EmptyWrapper>
-    );
-};
-
-const EmptyWrapper = styled(Flex)`
-    width: 100%;
-    padding: 80px;
-    border-radius: 8px;
-    background: ${({ theme }) => theme.colors.G_50};
 `;

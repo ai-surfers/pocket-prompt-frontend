@@ -64,6 +64,15 @@ const PaginatedPromptSection = ({
                         />
                     </SectionWrapper>
                 );
+            } else if (viewType === "my") {
+                return (
+                    <SectionWrapper>
+                        <PaginatedPrompt
+                            searchType="total"
+                            viewType={viewType}
+                        />
+                    </SectionWrapper>
+                );
             }
         }
     };

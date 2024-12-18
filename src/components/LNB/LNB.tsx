@@ -5,6 +5,7 @@ import { ReactNode, useEffect, useState } from "react";
 import * as Icons from "iconsax-react";
 import Icon from "../common/Icon";
 import useDeviceSize from "@/hooks/useDeviceSize";
+import { useLocation } from "react-router-dom";
 
 export interface MenuItemsType {
     key: string;
@@ -24,6 +25,7 @@ interface LNBtype {
 const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
     const [selectedKey, setSelectedKey] = useState<string>("1");
     const { isUnderTablet } = useDeviceSize();
+    const location = useLocation();
 
     // 메뉴 항목을 동적으로 생성
     const desktopItems: MenuProps["items"] = menuItems.map((item) => {
@@ -56,6 +58,12 @@ const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
     useEffect(() => {
         setSelectedKey(initialMenu);
     }, [initialMenu]);
+
+    useEffect(() => {
+        if (location.pathname === "/" && location.state?.resetPromptList) {
+            setSelectedKey("1");
+        }
+    }, [location]);
 
     if (isUnderTablet) {
         return (
