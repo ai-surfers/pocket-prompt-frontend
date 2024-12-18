@@ -1,34 +1,60 @@
 // components/Toast.js
 import { useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 import { toastState } from "@/states/toastState";
 import styled from "styled-components";
 import Text from "../Text/Text";
-import Timer from "@/assets/svg/home/Timer";
 import Close from "@/assets/svg/home/Close";
+import Icon from "../Icon";
+import useDeviceSize from "@/hooks/useDeviceSize";
 
 const Toast = () => {
-    const [{ isOpen, title, subTitle }, setToastState] =
-        useRecoilState(toastState);
+    const [{ isOpen, title, subTitle, iconName }] = useRecoilState(toastState);
+
+    const resetToastState = useResetRecoilState(toastState);
+    const { isMobile } = useDeviceSize();
 
     useEffect(() => {
         if (isOpen) {
             const timer = setTimeout(() => {
-                setToastState({ isOpen: false, title: "", subTitle: "" });
+                resetToastState();
             }, 5000);
 
             return () => clearTimeout(timer);
         }
-    }, [isOpen, setToastState]);
+    }, [isOpen, resetToastState]);
 
     const closeToast = () => {
-        setToastState({ isOpen: false, title: "", subTitle: "" });
+        resetToastState();
     };
 
+    if (isMobile) {
+        return (
+            <MobileContainer $isOpen={isOpen}>
+                <Wrapper>
+                    {iconName && (
+                        <Icon name={iconName} size={36} color="white"></Icon>
+                    )}
+                    <TitlesWrapper>
+                        <Text font="b2_16_semi" color="white">
+                            {title}
+                        </Text>
+                        <Text font="c1_12_reg" color="G_300">
+                            {subTitle}
+                        </Text>
+                    </TitlesWrapper>
+                </Wrapper>
+                <Close onClick={closeToast} />
+            </MobileContainer>
+        );
+    }
+
     return (
-        <ToastContainer isOpen={isOpen}>
+        <ToastContainer $isOpen={isOpen}>
             <Wrapper>
-                <Timer />
+                {iconName && (
+                    <Icon name={iconName} size={36} color="white"></Icon>
+                )}
                 <TitlesWrapper>
                     <Text font="h2_20_semi" color="white">
                         {title}
@@ -45,7 +71,28 @@ const Toast = () => {
 
 export default Toast;
 
-const ToastContainer = styled.div<{ isOpen: boolean }>`
+const MobileContainer = styled.div<{
+    $isOpen: boolean;
+}>`
+    ${({ theme }) => theme.mixins.flexBox("row", "space-between", "center")}
+    width: 100vw;
+    position: fixed;
+    bottom: 68px;
+    left: auto;
+    padding: 16px;
+    background-color: ${({ theme }) => theme.colors.G_900};
+    color: ${({ theme }) => theme.colors.white};
+    border-radius: 12px;
+    align-items: center;
+    gap: 16px;
+    opacity: ${(props) => (props.$isOpen ? 1 : 0)};
+    transition: opacity 0.3s;
+    visibility: ${(props) => (props.$isOpen ? "visible" : "hidden")};
+`;
+
+const ToastContainer = styled.div<{
+    $isOpen: boolean;
+}>`
     ${({ theme }) => theme.mixins.flexBox("row", "space-between", "center")}
     position: fixed;
     width: 512px;
@@ -58,9 +105,9 @@ const ToastContainer = styled.div<{ isOpen: boolean }>`
     border-radius: 12px;
     align-items: center;
     gap: 8px;
-    opacity: ${(props) => (props.isOpen ? 1 : 0)};
+    opacity: ${(props) => (props.$isOpen ? 1 : 0)};
     transition: opacity 0.3s;
-    visibility: ${(props) => (props.isOpen ? "visible" : "hidden")};
+    visibility: ${(props) => (props.$isOpen ? "visible" : "hidden")};
 `;
 
 const Wrapper = styled.div`

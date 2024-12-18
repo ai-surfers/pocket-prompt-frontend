@@ -5,7 +5,7 @@ import Text from "@/components/common/Text/Text";
 import { Categories } from "@/core/Prompt";
 import { useUser } from "@/hooks/useUser";
 import { Wrapper } from "@/layouts/Layout";
-import Icon from "@/pages/home/components/common/Icon";
+import Icon from "@/components/common/Icon";
 import BookmarkButton from "@/pages/prompt/components/BookmarkButton";
 import EditDropdown from "@/pages/prompt/components/EditDropdown";
 import { copyClipboard } from "@/utils/promptUtils";
@@ -13,6 +13,7 @@ import { formatDate, formatNumber } from "@/utils/textUtils";
 import { Flex } from "antd";
 import { ReactNode } from "react";
 import styled from "styled-components";
+import useToast from "@/hooks/useToast";
 
 interface TopSectionProps {
     prompt: PromptDetails;
@@ -20,12 +21,17 @@ interface TopSectionProps {
 
 export const TopSection = ({ prompt }: TopSectionProps) => {
     const { userData } = useUser();
+    const showToast = useToast();
 
     const handleShare = () => {
         const url = window.location.href;
         copyClipboard(url)
             .then(() => {
-                alert("현재 주소가 복사되었습니다.");
+                showToast({
+                    title: "현재 주소가 복사되었어요.",
+                    subTitle: "",
+                    iconName: "TickCircle",
+                });
             })
             .catch((err) => {
                 console.error("클립보드 복사 실패:", err);

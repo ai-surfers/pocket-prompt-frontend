@@ -1,5 +1,5 @@
 import Text from "@/components/common/Text/Text";
-import Icon from "@/pages/home/components/common/Icon";
+import Icon from "@/components/common/Icon";
 import { Flex } from "antd";
 import styled from "styled-components";
 

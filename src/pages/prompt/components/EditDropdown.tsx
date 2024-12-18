@@ -1,7 +1,7 @@
 import { PromptDetails } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
-import Icon from "@/pages/home/components/common/Icon";
+import Icon from "@/components/common/Icon";
 import PromptDeleteModal from "@/pages/prompt/components/PromptDeleteModal";
 import { Dropdown, MenuProps } from "antd";
 import { useState } from "react";

@@ -64,7 +64,7 @@ export default function Header({ onOpen }: HeaderProps) {
 
                 <HeaderRightContainer>
                     {isUnderTablet ? (
-                        <MenuOutlined onClick={onOpen} />
+                        <StyledMenuIcon onClick={onOpen} />
                     ) : userData.isLogin ? (
                         <User />
                     ) : (
@@ -134,4 +134,8 @@ const HeaderLeftContainer = styled.div`
 const HeaderRightContainer = styled.div`
     ${({ theme }) => theme.mixins.flexBox()};
     gap: 10px;
+`;
+
+const StyledMenuIcon = styled(MenuOutlined)`
+    color: #3e4151 !important;
 `;

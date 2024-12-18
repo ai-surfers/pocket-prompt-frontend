@@ -1,5 +1,6 @@
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
+import useToast from "@/hooks/useToast";
 import { copyClipboard } from "@/utils/promptUtils";
 import { Flex, Modal } from "antd";
 import styled from "styled-components";
@@ -14,10 +15,15 @@ export default function PromptTemplateModal({
     onClose,
     template,
 }: PromptTemplateModal) {
+    const showToast = useToast();
     const handleOnCopy = () => {
         copyClipboard(template)
             .then(() => {
-                alert("프롬프트가 클립보드에 복사되었습니다.");
+                showToast({
+                    title: "프롬프트 템플릿 복사가 완료되었어요.",
+                    subTitle: "",
+                    iconName: "CopySuccess",
+                });
                 onClose();
             })
             .catch((err) => {

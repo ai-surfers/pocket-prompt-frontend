@@ -3,25 +3,25 @@ import { Segmented } from "antd";
 import { useMemo, useState } from "react";
 import { PLAN_DATA } from "./PlanData";
 import PlanCard from "./PlanCard";
-import PortOne from "@portone/browser-sdk/v2";
-import {
-    SubscriptionRequest,
-    usePostPayments,
-} from "@/hooks/mutations/payments/usePostPayments";
+import { usePostPayments } from "@/hooks/mutations/payments/usePostPayments";
 import { useUser } from "@/hooks/useUser";
 import YearlyFreeDescription from "@/assets/svg/Price/yearly-plan-free-description.svg";
 import Text from "@/components/common/Text/Text";
-
-const PORTONE_STORE_ID = import.meta.env.VITE_PORTONE_STORE_ID;
-const PORTONE_CHANNEL_KEY = import.meta.env.VITE_PORTONE_CHANNEL_KEY;
+import { requestBillingKey } from "@/utils/billingUtils";
+import useToast from "@/hooks/useToast";
 
 export default function Plan() {
     const { userData } = useUser();
     const [billingCycle, setBillingCycle] = useState("월간");
+    const showToast = useToast();
 
     const { mutate: subscription } = usePostPayments({
         onSuccess(res) {
-            alert("정기결제가 등록되었습니다.");
+            showToast({
+                title: "정기결제가 등록되었어요.",
+                subTitle: "",
+                iconName: "TickCircle",
+            });
             console.log("usePostPayments - success", res);
         },
         onError(e) {
@@ -34,11 +34,15 @@ export default function Plan() {
         setBillingCycle(value);
     };
 
-    const handleStartClick = (planType: string) => {
+    const handleStartClick = async (planType: string) => {
         console.log(`선택된 요금제: ${planType}, 주기: ${billingCycle}`);
 
         if (!userData.isLogin) {
-            alert("로그인 후 이용 가능합니다.");
+            showToast({
+                title: "로그인 후 이용 가능합니다.",
+                subTitle: "",
+                iconName: "TickCircle",
+            });
             return;
         }
 
@@ -46,34 +50,19 @@ export default function Plan() {
             console.log("무시");
         } else {
             console.log("결제!");
-            requestBillingKey(planType);
+            try {
+                const res = await requestBillingKey(planType, billingCycle);
+                subscription(res);
+            } catch (error) {
+                console.error(error);
+                alert(
+                    error instanceof Error
+                        ? error.message
+                        : "빌링키 오류가 발생했습니다."
+                );
+            }
         }
     };
-
-    // [Reference] https://developers.portone.io/opi/ko/integration/start/v2/billing/issue?v=v2
-    async function requestBillingKey(planType: string) {
-        const issueResponse = await PortOne.requestIssueBillingKey({
-            storeId: PORTONE_STORE_ID,
-            channelKey: PORTONE_CHANNEL_KEY,
-            billingKeyMethod: "CARD",
-        });
-
-        console.log("issueResponse", issueResponse);
-        if (issueResponse?.code != null || !issueResponse?.billingKey) {
-            return alert(
-                issueResponse?.message || "빌링키 오류가 발생했습니다."
-            );
-        }
-
-        const request: SubscriptionRequest = {
-            billing_key: issueResponse?.billingKey,
-            payment_gateway: "tosspayments",
-            user_plan: planType,
-            subscription_type: billingCycle === "월간" ? "monthly" : "yearly",
-        };
-
-        subscription(request);
-    }
 
     const plans = useMemo(() => {
         return billingCycle === "연간" ? PLAN_DATA.annual : PLAN_DATA.monthly;

@@ -5,36 +5,79 @@ import {
     searchedKeywordState,
 } from "@/states/searchState";
 import { useRecoilValue } from "recoil";
+import { ViewType } from "@/apis/prompt/prompt.model";
 
-const PaginatedPromptSection = () => {
+interface PaginatedPromptSectionProps {
+    viewType?: ViewType;
+}
+
+const PaginatedPromptSection = ({
+    viewType = "open",
+}: PaginatedPromptSectionProps) => {
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
 
-    return (
-        <PromptSectionContainer>
-            {searchedKeyword && (
+    const promptContent = () => {
+        if (searchedKeyword) {
+            // 키워드 검색시
+            return (
                 <SectionWrapper>
-                    <PaginatedPrompt type="search" />
+                    <PaginatedPrompt searchType="search" viewType={viewType} />
                 </SectionWrapper>
-            )}
-            {!!searchedCategory && searchedCategory !== "total" && (
+            );
+        } else if (!!searchedCategory && searchedCategory !== "total") {
+            // 카테고리 칩 검색시
+            return (
                 <SectionWrapper>
-                    <PaginatedPrompt type="category" />
+                    <PaginatedPrompt
+                        searchType="category"
+                        viewType={viewType}
+                    />
                 </SectionWrapper>
-            )}
-            {!searchedKeyword &&
-                (!searchedCategory || searchedCategory === "total") && (
+            );
+        } else {
+            if (viewType === "open") {
+                // 기본 화면 (홈 화면 접근시 첫 화면)일 경우
+                return (
                     <>
                         <SectionWrapper>
-                            <PaginatedPrompt type="popular" usePage={false} />
+                            <PaginatedPrompt
+                                searchType="popular"
+                                usePage={false}
+                                viewType={viewType}
+                            />
                         </SectionWrapper>
                         <SectionWrapper>
-                            <PaginatedPrompt type="total" />
+                            <PaginatedPrompt
+                                searchType="total"
+                                viewType={viewType}
+                            />
                         </SectionWrapper>
                     </>
-                )}
-        </PromptSectionContainer>
-    );
+                );
+            } else if (viewType === "starred") {
+                return (
+                    <SectionWrapper>
+                        <PaginatedPrompt
+                            searchType="total"
+                            viewType={viewType}
+                        />
+                    </SectionWrapper>
+                );
+            } else if (viewType === "my") {
+                return (
+                    <SectionWrapper>
+                        <PaginatedPrompt
+                            searchType="total"
+                            viewType={viewType}
+                        />
+                    </SectionWrapper>
+                );
+            }
+        }
+    };
+
+    return <PromptSectionContainer>{promptContent()}</PromptSectionContainer>;
 };
 
 export default PaginatedPromptSection;

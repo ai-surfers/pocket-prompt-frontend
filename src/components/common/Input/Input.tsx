@@ -55,6 +55,7 @@ const InputContainer = styled.div<{ $length: number; $disabled?: boolean }>`
     align-items: center;
     padding: 11px 12px;
     margin-top: 8px;
+    flex: 1;
 
     ${({ theme }) => theme.fonts.b3_14_reg};
     transition: all 0.1s;

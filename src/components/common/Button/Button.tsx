@@ -21,7 +21,7 @@ export default function Button({
         <StyledButton
             width={width}
             size={size}
-            hierarchy={hierarchy}
+            $hierarchy={hierarchy}
             disabled={hierarchy === "disabled"}
             {...props}
             type="submit"
@@ -36,7 +36,7 @@ const StyledButton = styled.button<{
     width?: string;
     size: number;
     disabled?: boolean;
-    hierarchy: string;
+    $hierarchy: string;
 }>`
     width: ${({ width }) => (width ? `${width}` : "auto")};
     height: ${({ size }) => `${size}px`};
@@ -52,8 +52,8 @@ const StyledButton = styled.button<{
 
     transition: all 0.2s;
 
-    ${({ hierarchy, theme }) => {
-        switch (hierarchy) {
+    ${({ $hierarchy, theme }) => {
+        switch ($hierarchy) {
             case "primary":
                 return css`
                     background: ${theme.colors.primary};
@@ -89,7 +89,7 @@ const StyledButton = styled.button<{
                 `;
             case "default":
                 return css`
-                    background: none;
+                    background: ${theme.colors.white};
                     color: ${theme.colors.black};
 
                     &:hover {
