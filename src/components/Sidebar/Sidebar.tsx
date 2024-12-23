@@ -5,8 +5,12 @@ import GuideItem from "@/components/Sidebar/Item/GuideItem";
 import MenuItem from "@/components/Sidebar/Item/MenuItem";
 import { Menus } from "@/core/Menu";
 import { useUser } from "@/hooks/useUser";
-import { Drawer } from "antd";
+import { Drawer, Flex } from "antd";
 import styled from "styled-components";
+import Icon from "../common/Icon";
+import Text from "../common/Text/Text";
+import LogoutButton from "../Header/LogoutButton/LogoutButton";
+import { useNavigate } from "react-router-dom";
 
 type SidebarProps = {
     open: boolean;
@@ -14,6 +18,12 @@ type SidebarProps = {
 };
 export default function Sidebar({ open, onClose }: SidebarProps) {
     const { userData } = useUser();
+    const navigate = useNavigate();
+
+    const handleClickUser = () => {
+        navigate("my");
+        onClose();
+    };
 
     return (
         <StyledDrawer
@@ -30,7 +40,21 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             </HeaderContainer>
 
             <BodyContainer>
-                {!userData.isLogin && (
+                {userData.isLogin ? (
+                    <Flex
+                        flex={1}
+                        gap={12}
+                        style={{ padding: "12px", width: "100%" }}
+                    >
+                        <UserWrapper onClick={handleClickUser}>
+                            <Icon name="User" color="G_800" />
+                            <Text font="b2_16_med">
+                                {userData.user?.nickname}
+                            </Text>
+                        </UserWrapper>
+                        <LogoutButton isUnderTablet={false} />
+                    </Flex>
+                ) : (
                     <div style={{ margin: "12px 20px" }}>
                         <LoginButton />
                     </div>
@@ -48,8 +72,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 const StyledDrawer = styled(Drawer)`
     .ant-drawer-body {
         padding: 0;
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(40px);
+        background: white;
     }
 `;
 
@@ -59,9 +82,7 @@ const HeaderContainer = styled.header`
     height: 52px;
     padding: 4px 20px;
 
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(40px);
-    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.02);
+    background: white;
 
     position: sticky;
     top: 0;
@@ -74,4 +95,15 @@ const BodyContainer = styled.div`
     width: 100%;
     height: 100%;
     padding: 12px 0;
+`;
+
+const UserWrapper = styled.div`
+    ${({ theme }) => theme.mixins.flexBox()};
+    padding: 8px 12px 8px 16px;
+    gap: 10px;
+    background-color: var(--gray-100, #f1f2f6);
+    border-radius: 8px;
+    cursor: pointer;
+    flex: 8;
+    justify-content: flex-start;
 `;
