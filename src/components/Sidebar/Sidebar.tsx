@@ -52,11 +52,11 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                                 {userData.user?.nickname}
                             </Text>
                         </UserWrapper>
-                        <LogoutButton isUnderTablet={false} />
+                        <LogoutButton isUnderTablet={true} />
                     </Flex>
                 ) : (
                     <div style={{ margin: "12px 20px" }}>
-                        <LoginButton />
+                        <LoginButton isUnderTablet={true} />
                     </div>
                 )}
 

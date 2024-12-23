@@ -20,12 +20,12 @@ const LogoutButton = ({ isUnderTablet }: LogoutButtonProps) => {
     return (
         <Button
             hierarchy="default"
-            size={isUnderTablet ? 36 : 44}
+            size={isUnderTablet ? 44 : 36}
             style={{ justifyContent: "center" }}
             onClick={handleLogout}
         >
             <Text
-                font={isUnderTablet ? "b3_14_semi" : "b3_14_med"}
+                font={isUnderTablet ? "b3_14_med" : "b3_14_semi"}
                 color="G_400"
             >
                 로그아웃
