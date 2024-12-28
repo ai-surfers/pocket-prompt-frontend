@@ -1,5 +1,6 @@
 import { getUser, login } from "@/apis/auth/auth";
 import { auth, PROVIDER } from "@/apis/firebase";
+import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
 import { useUser } from "@/hooks/useUser";
 import {
@@ -8,9 +9,12 @@ import {
     setLocalStorage,
 } from "@/utils/storageUtils";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import styled from "styled-components";
 
-export default function LoginButton() {
+interface LoginButtonProps {
+    isUnderTablet: boolean;
+}
+
+export default function LoginButton({ isUnderTablet }: LoginButtonProps) {
     const { setUser, setAccessToken, resetUserState } = useUser();
 
     async function handleLogin() {
@@ -54,20 +58,15 @@ export default function LoginButton() {
     }
 
     return (
-        <Button onClick={handleLogin}>
+        <Button
+            onClick={handleLogin}
+            size={isUnderTablet ? 44 : 36}
+            width={isUnderTablet ? "100%" : "auto"}
+            style={{ justifyContent: "center" }}
+        >
             <Text font="b2_16_semi" color="white">
                 로그인
             </Text>
         </Button>
     );
 }
-
-const Button = styled.div`
-    border-radius: 12px;
-    padding: 10px 12px;
-
-    background: ${({ theme }) => theme.colors.primary};
-    ${({ theme }) => theme.mixins.flexBox()}
-
-    cursor: pointer;
-`;
