@@ -14,6 +14,9 @@ import {
 import { MenuOutlined } from "@ant-design/icons";
 import { Menus } from "@/core/Menu";
 import useDeviceSize from "@/hooks/useDeviceSize";
+import { Flex } from "antd";
+import LogoutButton from "./LogoutButton/LogoutButton";
+import GuideButton from "./GuideButton/GuideButton";
 
 type HeaderProps = {
     onOpen: () => void;
@@ -66,9 +69,16 @@ export default function Header({ onOpen }: HeaderProps) {
                     {isUnderTablet ? (
                         <StyledMenuIcon onClick={onOpen} />
                     ) : userData.isLogin ? (
-                        <User />
+                        <Flex gap={16}>
+                            <GuideButton />
+                            <User />
+                            <LogoutButton isUnderTablet={false} />
+                        </Flex>
                     ) : (
-                        <LoginButton />
+                        <Flex gap={16}>
+                            <GuideButton />
+                            <LoginButton isUnderTablet={false} />
+                        </Flex>
                     )}
                 </HeaderRightContainer>
             </HeaderWrapper>
@@ -97,7 +107,7 @@ const HeaderContainer = styled.header`
 const HeaderWrapper = styled.div`
     width: 100%;
     height: 100%;
-    max-width: 1080px;
+    max-width: 1440px;
     margin: 0 auto;
     padding: 0 20px;
 
