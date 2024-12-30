@@ -118,4 +118,6 @@ const BoxContainer = styled.div`
     @media (max-width: 1080px) {
         width: 100%;
     }
+
+    height: fit-content;
 `;
