@@ -21,7 +21,7 @@ import { getUser } from "@/apis/auth/auth";
 const MyInfo = () => {
     const { userData, setUser, resetUserState } = useUser();
     const [nickname, setNickname] = useState("");
-    const { isUnderTablet } = useDeviceSize();
+    const { isUnderTablet, isMobile } = useDeviceSize();
     const showToast = useToast();
 
     const getUserData = () => {
@@ -82,7 +82,13 @@ const MyInfo = () => {
         <Container>
             <Wrapper $isUnderTablet={isUnderTablet}>
                 <MyInfoWrapper>
-                    <Text font="h1_24_bold" style={{ marginBottom: "20px" }}>
+                    <Text
+                        font="h1_24_bold"
+                        style={{
+                            marginBottom: "20px",
+                            justifyContent: "start",
+                        }}
+                    >
                         마이페이지
                     </Text>
                     <Flex
@@ -90,10 +96,17 @@ const MyInfo = () => {
                             backgroundColor: "white",
                             borderRadius: "12px",
                             padding: "20px",
-                            maxWidth: "1083px",
+                            width: "100%",
                         }}
+                        gap={44}
+                        wrap
                     >
-                        <Flex vertical={true} style={{ width: "547px" }}>
+                        <Flex
+                            vertical={true}
+                            style={{
+                                width: isMobile ? "fit-content" : "547px",
+                            }}
+                        >
                             <Text font="b1_18_bold">닉네임</Text>
                             <Flex gap={8} style={{ width: "100%" }}>
                                 <Input
@@ -132,25 +145,43 @@ const MyInfo = () => {
                                 </Text>
                             </Email>
                         </Flex>
-                        {/* 
-                        TODO: 가입일, 함께한 날, 가입 순서 정보 구현
-                        <Flex>
-                            <Flex vertical={true}>
+
+                        {/* TODO: 가입일, 함께한 날, 가입 순서 정보 구현 */}
+                        <Flex align="flex-end" gap={24}>
+                            <Flex vertical>
                                 <Text
                                     font="b3_14_med"
                                     color="G_600"
                                     style={{ marginBottom: "2px" }}
                                 >
-                                    가입일
+                                    함께한 날
                                 </Text>
                                 <Chip>
-                                    <Text font="b3_14_med" color="G_600"></Text>
+                                    <Text font="b3_14_med" color="G_600">
+                                        D+{userData.user?.days_since_join}
+                                    </Text>
                                 </Chip>
                             </Flex>
-                        </Flex> */}
+                            <Flex vertical>
+                                <Text
+                                    font="b3_14_med"
+                                    color="G_600"
+                                    style={{ marginBottom: "2px" }}
+                                >
+                                    실행한 프롬프트
+                                </Text>
+                                <Chip>
+                                    <Text font="b3_14_med" color="G_600">
+                                        총{" "}
+                                        {userData.user?.total_prompt_executions}
+                                        개
+                                    </Text>
+                                </Chip>
+                            </Flex>
+                        </Flex>
                     </Flex>
                 </MyInfoWrapper>
-                <Flex style={{ padding: "41px 40px" }}>
+                <Flex style={{ padding: "41px 40px", maxWidth: "1083px" }}>
                     <PaginatedPromptSection viewType="my" />
                 </Flex>
             </Wrapper>
@@ -165,16 +196,14 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div<{ $isUnderTablet: boolean }>`
+    ${({ theme }) => theme.mixins.flexBox("column", "center", "center")};
     width: 100%;
     padding-top: ${({ $isUnderTablet }) => ($isUnderTablet ? 0 : "60px")};
     margin: 0 auto;
 `;
 
 const MyInfoWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
+    ${({ theme }) => theme.mixins.flexBox("column", "center", "start")};
     background-color: #f0f2f5;
     padding: 41px 40px;
     width: 100%;
@@ -192,14 +221,15 @@ const Email = styled.div`
     margin-top: 8px;
 `;
 
-// const Chip = styled.div`
-//     display: flex;
-//     height: 28px;
-//     padding: 4px 12px 3px 12px;
-//     justify-content: center;
-//     align-items: center;
-//     gap: 10px;
-//     align-self: stretch;
-//     border-radius: 6px;
-//     background: var(--gray-100, #f1f2f6);
-// `;
+const Chip = styled.div`
+    display: flex;
+    height: 28px;
+    padding: 4px 12px 3px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 6px;
+    background: var(--gray-100, #f1f2f6);
+    width: fit-content;
+`;

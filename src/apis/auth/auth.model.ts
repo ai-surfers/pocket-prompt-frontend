@@ -10,6 +10,7 @@ export interface LoginResponse {
  * UserResponse
  */
 export interface UserResponse {
+    days_since_join: number;
     email: string;
     nickname: string;
     picture: string;
