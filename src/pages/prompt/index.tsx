@@ -7,6 +7,7 @@ import styled from "styled-components";
 import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
 import { ErrorBoundary } from "@sentry/react";
 import { Wrapper } from "@/layouts/Layout";
+import MetaTags from "@/components/common/MetaTags/MetaTags";
 
 export default function PromptPage() {
     const { promptId } = useParams<{ promptId: string }>();
@@ -55,9 +56,13 @@ export default function PromptPage() {
 
     return (
         <ErrorBoundary>
+            <MetaTags
+                url={`https://pocket-prompt.com/prompt/${promptId}`}
+                title={data?.title}
+                description={data?.description}
+            />
             <Container>
                 {data && <TopSection prompt={data} />}
-
                 {/* 하단 */}
                 <BodySection wrap gap={16}>
                     {/* 프롬프트 사용하기 */}
