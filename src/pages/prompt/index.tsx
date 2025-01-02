@@ -8,10 +8,12 @@ import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
 import { ErrorBoundary } from "@sentry/react";
 import { Wrapper } from "@/layouts/Layout";
 import MetaTags from "@/components/common/MetaTags/MetaTags";
+import useDeviceSize from "@/hooks/useDeviceSize";
 
 export default function PromptPage() {
     const { promptId } = useParams<{ promptId: string }>();
     const { data, isLoading, isError } = usePromptQuery(promptId ?? "");
+    const { isMobile } = useDeviceSize();
 
     const handleOnSelect = (value: string) => {
         alert(`${value} is Selected!`);
@@ -64,7 +66,7 @@ export default function PromptPage() {
             <Container>
                 {data && <TopSection prompt={data} />}
                 {/* 하단 */}
-                <BodySection wrap gap={16}>
+                <BodySection wrap gap={16} $isMobile={isMobile}>
                     {/* 프롬프트 사용하기 */}
                     <BoxContainer>
                         <ExecuteSection
@@ -94,11 +96,12 @@ const Container = styled.div`
     }
 `;
 
-const BodySection = styled(Flex)`
+const BodySection = styled(Flex)<{ $isMobile: boolean }>`
     margin: 0 auto;
 
     max-width: 1240px;
-    padding: 40px 80px 20px;
+    padding: ${({ $isMobile }) =>
+        $isMobile ? "40px 20px 20px 20px" : "40px 80px 20px"};
 `;
 
 const BoxContainer = styled.div`
