@@ -101,20 +101,24 @@ const MarkdownWrapper = styled.div`
 
     code {
         background: #f5f5f5;
-        border: 1px solid #e1e1e1;
         padding: 0.1em 0.2em;
         border-radius: 3px;
-        font-family: "Courier New", Courier, monospace;
+        font-family: "Fira Code", "Source Code Pro", "Menlo", "Consolas",
+            "Courier New", monospace;
         font-size: 0.95em;
     }
 
     pre {
         background: #f5f5f5;
         border: 1px solid #e1e1e1;
-        padding: 0.6em; /* 코드블록 패딩을 줄임 */
+        padding: 0.6em;
         border-radius: 4px;
-        overflow-x: auto;
+        max-width: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
         margin: 0.3em 0;
+        word-wrap: break-word;
+        white-space: pre-wrap;
     }
 `;
 

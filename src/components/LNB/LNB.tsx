@@ -14,6 +14,7 @@ export interface MenuItemsType {
     type?: "divider";
     onClick?: () => void;
     disabled?: boolean;
+    "data-tracking-id"?: string;
 }
 
 interface LNBtype {
