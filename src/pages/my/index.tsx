@@ -15,12 +15,14 @@ const MyPage = () => {
             label: "마이페이지",
             iconType: "Profile",
             onClick: () => setSelectedMenu("1"),
+            "data-tracking-id": "my-page",
         },
         {
             key: "2",
             label: "구독 관리",
             iconType: "Card",
             onClick: () => setSelectedMenu("2"),
+            "data-tracking-id": "my-subscription",
         },
     ];
 
