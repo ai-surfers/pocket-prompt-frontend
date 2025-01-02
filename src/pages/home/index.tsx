@@ -31,6 +31,7 @@ export default function HomePage() {
             label: "텍스트 프롬프트",
             iconType: "TextBlock",
             onClick: () => setPromptListType("text"),
+            "data-tracking-id": "text-prompt",
         },
         {
             key: "2",
@@ -44,6 +45,7 @@ export default function HomePage() {
                     iconName: "Timer",
                 }),
             disabled: true,
+            "data-tracking-id": "image-prompt",
         },
         {
             key: "3",
@@ -57,6 +59,7 @@ export default function HomePage() {
                     iconName: "Timer",
                 }),
             disabled: true,
+            "data-tracking-id": "video-prompt",
         },
         ...(isUnderTablet
             ? []
@@ -66,6 +69,7 @@ export default function HomePage() {
             label: "저장한 프롬프트",
             iconType: "Bookmark",
             onClick: () => setPromptListType("saved"),
+            "data-tracking-id": "saved-prompt",
         },
     ];
 
