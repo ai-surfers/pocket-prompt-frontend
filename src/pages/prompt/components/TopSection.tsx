@@ -14,6 +14,7 @@ import { Flex } from "antd";
 import { ReactNode } from "react";
 import styled from "styled-components";
 import useToast from "@/hooks/useToast";
+import useDeviceSize from "@/hooks/useDeviceSize";
 
 interface TopSectionProps {
     prompt: PromptDetails;
@@ -22,6 +23,7 @@ interface TopSectionProps {
 export const TopSection = ({ prompt }: TopSectionProps) => {
     const { userData } = useUser();
     const showToast = useToast();
+    const { isMobile } = useDeviceSize();
 
     const handleShare = () => {
         const url = window.location.href;
@@ -40,7 +42,7 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
     };
 
     return (
-        <TopContainer>
+        <TopContainer $isMobile={isMobile}>
             <Wrapper>
                 <Flex justify="space-between" align="center" wrap gap={10}>
                     <Flex vertical>
@@ -124,10 +126,11 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
     );
 };
 
-const TopContainer = styled.div`
+const TopContainer = styled.div<{ $isMobile: boolean }>`
     width: 100%;
     background-color: ${({ theme }) => theme.colors.white};
-    padding: 40px 80px 32px;
+    padding: ${({ $isMobile }) =>
+        $isMobile ? "40px 20px 32px 20px" : "40px 80px 32px"};
 `;
 
 const InformationContainer = styled(Flex)`
