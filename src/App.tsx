@@ -10,7 +10,6 @@ import GlobalModal from "@/components/common/Modal/GlobalModal";
 import { useEffect } from "react";
 import TagManager from "react-gtm-module";
 import { HelmetProvider } from "react-helmet-async";
-import MetaTags from "./components/common/MetaTags/MetaTags";
 
 function App() {
     console.log(`🍀 Environment - ${import.meta.env.MODE}`);
@@ -43,11 +42,6 @@ function App() {
 
     return (
         <HelmetProvider>
-            <MetaTags
-                title="포켓 프롬프트 - ChatGPT 프롬프트 모음 | AI 프롬프트 템플릿 저장소"
-                description="ChatGPT, Claude 등 AI 프롬프트 작성이 어려우신가요? 검증된 프롬프트 템플릿을 저장하고 바로 사용하세요!"
-                url="https://pocket-prompt.com/"
-            />
             <Styles>
                 <RecoilRoot>
                     <QueryClientProvider client={queryClient}>

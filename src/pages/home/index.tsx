@@ -15,6 +15,7 @@ import {
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
+import MetaTags from "@/components/common/MetaTags/MetaTags";
 
 export default function HomePage() {
     const navigate = useNavigate();
@@ -118,6 +119,11 @@ export default function HomePage() {
 
     return (
         <HomeWrapper>
+            <MetaTags
+                title="포켓 프롬프트 - ChatGPT 프롬프트 모음 | AI 프롬프트 템플릿 저장소"
+                description="ChatGPT, Claude 등 AI 프롬프트 작성이 어려우신가요? 검증된 프롬프트 템플릿을 저장하고 바로 사용하세요!"
+                url="https://pocket-prompt.com/"
+            />
             <HomeContentWrapper $isUnderTablet={isUnderTablet}>
                 <LNB menuItems={menuItems} button={newPropmptButton} />
                 <ContentWrapper>{promptContent()}</ContentWrapper>
