@@ -1,8 +1,8 @@
-# 🌐 Pocket Prompt Frontend v2
+# 🌐 Pocket Prompt Frontend
 
 포켓 프롬프트 웹버전
 
--   [Pocket Prompt Frontend v1](https://github.com/ai-surfers/pocket-prompt-frontend)의 SEO 개선을 위하여 Next.js로 마이그레이션 진행 중
+-   SEO 개선을 위하여 React -> Next로 마이그레이션 완료
 
 ## ⚙️ 환경 설정
 
