@@ -1,3 +1,5 @@
+"use client";
+
 import { useMutation } from "@tanstack/react-query";
 import { BaseResponse, POST } from "../../../apis/client";
 import { InputType } from "@/core/Prompt";

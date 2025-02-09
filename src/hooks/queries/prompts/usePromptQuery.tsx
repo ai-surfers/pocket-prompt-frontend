@@ -1,3 +1,5 @@
+"use client";
+
 import { getPrompt } from "@/apis/prompt/prompt";
 import { PromptDetails } from "@/apis/prompt/prompt.model";
 import { PROMPT_KEYS } from "@/hooks/queries/QueryKeys";

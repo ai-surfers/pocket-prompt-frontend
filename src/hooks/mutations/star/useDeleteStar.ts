@@ -1,3 +1,5 @@
+"use client";
+
 import { BaseResponse, DELETE } from "@/apis/client";
 import { useMutation } from "@tanstack/react-query";
 

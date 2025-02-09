@@ -1,3 +1,5 @@
+"use client";
+
 import useModal from "@/hooks/useModal";
 import { Modal } from "antd";
 

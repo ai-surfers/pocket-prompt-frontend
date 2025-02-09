@@ -1,4 +1,6 @@
-import { HTMLAttributes } from "react";
+"use client";
+
+import { HTMLAttributes, forwardRef } from "react";
 import styled, { css } from "styled-components";
 
 type ButtonProps = {
@@ -9,28 +11,31 @@ type ButtonProps = {
     children?: React.ReactNode;
 } & HTMLAttributes<HTMLButtonElement>;
 
-export default function Button({
-    size = 56,
-    width,
-    hierarchy = "primary",
-    suffix,
-    children,
-    ...props
-}: ButtonProps) {
-    return (
-        <StyledButton
-            width={width}
-            size={size}
-            $hierarchy={hierarchy}
-            disabled={hierarchy === "disabled"}
-            {...props}
-            type="submit"
-        >
-            {children}
-            {suffix && suffix}
-        </StyledButton>
-    );
-}
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+    (
+        { size = 56, width, hierarchy = "primary", suffix, children, ...props },
+        ref
+    ) => {
+        return (
+            <StyledButton
+                ref={ref}
+                width={width}
+                size={size}
+                $hierarchy={hierarchy}
+                disabled={hierarchy === "disabled"}
+                {...props}
+                type="submit"
+            >
+                {children}
+                {suffix && suffix}
+            </StyledButton>
+        );
+    }
+);
+
+Button.displayName = "Button";
+
+export default Button;
 
 const StyledButton = styled.button<{
     width?: string;

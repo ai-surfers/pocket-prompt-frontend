@@ -1,3 +1,5 @@
+"use client";
+
 import { GET } from "@/apis/client";
 import { useQuery } from "@tanstack/react-query";
 import { CARD_INFO_KEYS } from "../QueryKeys";

@@ -1,3 +1,6 @@
+"use client";
+
+import React, { forwardRef } from "react";
 import styled, { css } from "styled-components";
 
 export interface TextareaProps {
@@ -9,39 +12,45 @@ export interface TextareaProps {
     isMini?: boolean;
 }
 
-export default function Textarea({
-    placeholder,
-    value = "",
-    onChange,
-    count,
-    disabled = false,
-    isMini = false,
-}: TextareaProps) {
-    console.log(isMini);
-    function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-        const value = e.target.value;
+const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+    (
+        {
+            placeholder,
+            value = "",
+            onChange,
+            count,
+            disabled = false,
+            isMini = false,
+        },
+        ref
+    ) => {
+        function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+            const value = e.target.value;
+            if (count && value.length > count) return;
+            onChange(value);
+        }
 
-        if (count && value.length > count) return;
-        onChange(value);
+        return (
+            <TextareaContainer $length={value.length} $disabled={disabled}>
+                <StyledTextarea
+                    ref={ref}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={handleChange}
+                    disabled={disabled}
+                    $isMini={isMini}
+                />
+                {count && (
+                    <CountBox $length={value.length}>
+                        <b>{value.length}</b>/{count}
+                    </CountBox>
+                )}
+            </TextareaContainer>
+        );
     }
+);
 
-    return (
-        <TextareaContainer $length={value.length} $disabled={disabled}>
-            <StyledTextarea
-                placeholder={placeholder}
-                value={value}
-                onChange={handleChange}
-                disabled={disabled}
-                $isMini={isMini}
-            />
-            {count && (
-                <CountBox $length={value.length}>
-                    <b>{value.length}</b>/{count}
-                </CountBox>
-            )}
-        </TextareaContainer>
-    );
-}
+export default Textarea;
 
 const TextareaContainer = styled.div<{ $length: number; $disabled?: boolean }>`
     position: relative;

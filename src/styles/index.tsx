@@ -1,7 +1,10 @@
+"use client";
+
 import { ThemeProvider } from "styled-components";
 import { ConfigProvider } from "antd";
 import GlobalStyle from "./GlobalStyle";
 import theme from "./theme";
+import StyledComponentsRegistry from "./StyledComponentRegistry";
 
 interface StylesProps {
     children: React.ReactNode;
@@ -9,29 +12,31 @@ interface StylesProps {
 
 const Styles = ({ children }: StylesProps) => {
     return (
-        <ConfigProvider
-            theme={{
-                token: {
-                    colorPrimary: "#7580EA",
-                    fontFamily: "Pretendard",
-                },
-                components: {
-                    Typography: {
-                        titleMarginBottom: "10px",
-                        titleMarginTop: 0,
+        <StyledComponentsRegistry>
+            <ConfigProvider
+                theme={{
+                    token: {
+                        colorPrimary: "#7580EA",
+                        fontFamily: "Pretendard",
                     },
-                    Select: {
-                        optionSelectedColor: "#7580EA",
-                        optionSelectedBg: "#F2F3FD",
+                    components: {
+                        Typography: {
+                            titleMarginBottom: "10px",
+                            titleMarginTop: 0,
+                        },
+                        Select: {
+                            optionSelectedColor: "#7580EA",
+                            optionSelectedBg: "#F2F3FD",
+                        },
                     },
-                },
-            }}
-        >
-            <ThemeProvider theme={theme}>
-                <GlobalStyle />
-                {children}
-            </ThemeProvider>
-        </ConfigProvider>
+                }}
+            >
+                <ThemeProvider theme={theme}>
+                    <GlobalStyle />
+                    {children}
+                </ThemeProvider>
+            </ConfigProvider>
+        </StyledComponentsRegistry>
     );
 };
 
