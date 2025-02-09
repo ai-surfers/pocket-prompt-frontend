@@ -19,6 +19,7 @@ frontend:
                     else
                       echo "Building for development..."
                       yarn run build:dev
+                    fi
     artifacts:
         baseDirectory: .next
         files:
