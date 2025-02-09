@@ -12,7 +12,13 @@ frontend:
         build:
             commands:
                 - yarn install --frozen-lockfile
-                - yarn run build:dev
+                - |
+                    if [ "$APP_ENV" = "production" ]; then
+                      echo "Building for production..."
+                      yarn run build:prod
+                    else
+                      echo "Building for development..."
+                      yarn run build:dev
     artifacts:
         baseDirectory: .next
         files:
