@@ -2,6 +2,8 @@
  * 닉네임 변경하기
  */
 
+"use client";
+
 import { BaseResponse, PUT } from "@/apis/client";
 import { useMutation } from "@tanstack/react-query";
 

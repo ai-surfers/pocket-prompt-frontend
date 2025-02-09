@@ -1,3 +1,4 @@
+import { JSX } from "react";
 import { atom } from "recoil";
 
 type ModalType = {

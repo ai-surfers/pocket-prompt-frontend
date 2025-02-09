@@ -1,0 +1,28 @@
+version: 1
+frontend:
+    phases:
+        preBuild:
+            commands:
+                - echo "https://${GITHUB_PAT}:x-oauth-basic@github.com" > ~/.git-credentials
+                - chmod 600 ~/.git-credentials
+                - git config --global credential.helper store
+                - git submodule sync --recursive
+                - git submodule update --init --recursive
+
+        build:
+            commands:
+                - yarn install --frozen-lockfile
+                - |
+                    if [ "$APP_ENV" = "production" ]; then
+                      echo "Building for production..."
+                      yarn run build:prod
+                    else
+                      echo "Building for development..."
+                      yarn run build:dev
+                    fi
+    artifacts:
+        baseDirectory: .next
+        files:
+            - "**/*"
+    cache:
+        paths: []

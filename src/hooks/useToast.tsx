@@ -1,3 +1,5 @@
+"use client";
+
 import { useSetRecoilState } from "recoil";
 import { toastState } from "@/states/toastState";
 import * as Icons from "iconsax-react";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useQuery } from "@tanstack/react-query";
 import { GET } from "../../../apis/client";
 import { PAYMENTS_KEYS } from "../QueryKeys";

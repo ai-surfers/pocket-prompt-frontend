@@ -1,3 +1,5 @@
+"use client";
+
 import { useMutation } from "@tanstack/react-query";
 import { CreatePromptResponse, PostPromptProps } from "./usePostPrompt";
 import { DELETE } from "@/apis/client";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useRecoilState } from "recoil";
 import { initialUserState, userState } from "../states/userState";
 import { UserResponse } from "@/apis/auth/auth.model";

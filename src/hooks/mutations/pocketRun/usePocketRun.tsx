@@ -1,3 +1,6 @@
+"use client";
+
+import { AxiosError } from "axios";
 import { POST } from "../../../apis/client";
 import { useMutation } from "@tanstack/react-query";
 
@@ -17,9 +20,13 @@ export interface PocketRunReturnTypes {
     context: Record<string, string>;
 }
 
+interface ErrorResponse {
+    detail: string;
+}
+
 interface PostPocketRunOptions {
     onSuccess?: (res: PocketRunReturnTypes) => void;
-    onError?: (e: Error) => void;
+    onError?: (e: AxiosError<ErrorResponse>) => void;
 }
 
 // API 호출 함수
@@ -46,7 +53,11 @@ const postPocketRun = async ({
 const usePocketRun = (options: PostPocketRunOptions = {}) => {
     const { onSuccess, onError } = options;
 
-    return useMutation<PocketRunReturnTypes, Error, PostPocketRunRequest>({
+    return useMutation<
+        PocketRunReturnTypes,
+        AxiosError<ErrorResponse>,
+        PostPocketRunRequest
+    >({
         mutationFn: postPocketRun,
         onSuccess,
         onError,

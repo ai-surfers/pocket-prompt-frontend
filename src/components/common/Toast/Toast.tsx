@@ -1,10 +1,11 @@
-// components/Toast.js
+"use client";
+
 import { useEffect } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { toastState } from "@/states/toastState";
 import styled from "styled-components";
 import Text from "../Text/Text";
-import Close from "@/assets/svg/home/Close";
+import Close from "@svg/Close";
 import Icon from "../Icon";
 import useDeviceSize from "@/hooks/useDeviceSize";
 
@@ -33,7 +34,7 @@ const Toast = () => {
             <MobileContainer $isOpen={isOpen}>
                 <Wrapper>
                     {iconName && (
-                        <Icon name={iconName} size={36} color="white"></Icon>
+                        <Icon name={iconName} size={36} color="white" />
                     )}
                     <TitlesWrapper>
                         <Text font="b2_16_semi" color="white">

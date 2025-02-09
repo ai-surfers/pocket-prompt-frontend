@@ -1,5 +1,7 @@
+"use client";
+
 import { modalState } from "@/states/modalState";
-import { useCallback } from "react";
+import { JSX, useCallback } from "react";
 import { useRecoilState } from "recoil";
 
 /**

@@ -1,3 +1,5 @@
+"use client";
+
 import { BaseResponse, PUT } from "@/apis/client";
 import { useMutation } from "@tanstack/react-query";
 

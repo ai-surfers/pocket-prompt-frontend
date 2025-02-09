@@ -16,7 +16,7 @@ export async function requestBillingKey(
     billingCycle: string
 ): Promise<SubscriptionRequest> {
     const issueResponse = await PortOne.requestIssueBillingKey({
-        storeId: PORTONE_STORE_ID,
+        storeId: PORTONE_STORE_ID ?? "",
         channelKey: PORTONE_CHANNEL_KEY,
         billingKeyMethod: "CARD",
     });

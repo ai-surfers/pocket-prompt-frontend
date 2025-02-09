@@ -1,7 +1,7 @@
 import { getLocalStorage, LOCALSTORAGE_KEYS } from "@/utils/storageUtils";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export const API = axios.create({
     baseURL: BASE_URL,
     headers: {
