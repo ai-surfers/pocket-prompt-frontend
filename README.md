@@ -8,7 +8,7 @@
 
 ### ➀ .env 서브모듈로 관리
 
-해당 레포지토리는 서브모듈로 환경 변수를 관리하고 있다 [pocket-prompt-frontend-envs-v2](https://github.com/ai-surfers/pocket-prompt-frontend-v2-envs)
+해당 레포지토리는 서브모듈로 환경 변수를 관리하고 있다 [pocket-prompt-frontend-envs-next](https://github.com/ai-surfers/pocket-prompt-frontend-next-envs)
 
 > 🔥 주의 <br/>
 > 처음 서브모듈을 받을 때는 `git submodule update --init --recursive` 명령어를 수행해 주어야 한다
@@ -38,15 +38,15 @@
 ### **Production 배포**
 
 -   개발환경에서 테스트 완료 후 작업 예정
-<!-- -   AWS S3 + CloudFront 사용
+-   AWS Amplify 사용
 -   **트리거 - `main`** 브랜치 merge 시
--   [https://pocket-prompt.com/](https://pocket-prompt.com/) -->
+-   [https://pocket-prompt.com/](https://pocket-prompt.com/)
 
 ### **Develop 배포**
 
--   AWS Amplify 사용 (작업 중)
+-   AWS Amplify 사용
 -   **트리거 -** `develop` 브랜치 merge 시
--   [https://develop.d2ggjieg648h6b.amplifyapp.com/](https://develop.d2ggjieg648h6b.amplifyapp.com/)
+-   [https://develop.db4dsu24cdkm9.amplifyapp.com](https://develop.db4dsu24cdkm9.amplifyapp.com/)
 
 <!-- ### **Preview 배포**
 
