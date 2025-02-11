@@ -38,15 +38,15 @@
 ### **Production 배포**
 
 -   개발환경에서 테스트 완료 후 작업 예정
-<!-- -   AWS S3 + CloudFront 사용
+-   AWS Amplify 사용
 -   **트리거 - `main`** 브랜치 merge 시
--   [https://pocket-prompt.com/](https://pocket-prompt.com/) -->
+-   [https://pocket-prompt.com/](https://pocket-prompt.com/)
 
 ### **Develop 배포**
 
--   AWS Amplify 사용 (작업 중)
+-   AWS Amplify 사용
 -   **트리거 -** `develop` 브랜치 merge 시
--   [https://develop.d2ggjieg648h6b.amplifyapp.com/](https://develop.d2ggjieg648h6b.amplifyapp.com/)
+-   [https://develop.db4dsu24cdkm9.amplifyapp.com](https://develop.db4dsu24cdkm9.amplifyapp.com/)
 
 <!-- ### **Preview 배포**
 
