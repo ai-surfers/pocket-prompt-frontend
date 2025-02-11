@@ -4,7 +4,7 @@ const path = require("path");
 // 환경 변수 파일 경로 설정
 const envFilePath = path.resolve(
     __dirname,
-    "pocket-prompt-frontend-v2-envs/.env.next." +
+    "pocket-prompt-frontend-next-envs/.env.next." +
         (process.env.APP_ENV || process.env.NODE_ENV || "development")
 );
 
