@@ -8,7 +8,7 @@
 
 ### ➀ .env 서브모듈로 관리
 
-해당 레포지토리는 서브모듈로 환경 변수를 관리하고 있다 [pocket-prompt-frontend-envs-v2](https://github.com/ai-surfers/pocket-prompt-frontend-v2-envs)
+해당 레포지토리는 서브모듈로 환경 변수를 관리하고 있다 [pocket-prompt-frontend-envs-next](https://github.com/ai-surfers/pocket-prompt-frontend-next-envs)
 
 > 🔥 주의 <br/>
 > 처음 서브모듈을 받을 때는 `git submodule update --init --recursive` 명령어를 수행해 주어야 한다
