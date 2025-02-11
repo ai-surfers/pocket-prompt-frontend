@@ -60,6 +60,11 @@ export default function RootLayout({
                     crossOrigin="anonymous"
                     href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
                 />
+                <script
+                    async
+                    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3373210774302054"
+                    crossOrigin="anonymous"
+                ></script>
             </head>
             <body>
                 <Styles>
