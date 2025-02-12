@@ -30,7 +30,7 @@ export default function Header({ onOpen }: HeaderProps) {
 
     useEffect(() => {
         const access_token = getLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
-        console.log(">> ", userData.accessToken);
+        // console.log(">> ", userData.accessToken);
 
         if (access_token) {
             getUser().then((res) => {

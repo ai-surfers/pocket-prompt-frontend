@@ -15,7 +15,6 @@ export default function PocketRunDropdown({
     onSelect,
     secondRun = false,
 }: PocketRunDropdownProps) {
-    console.log(secondRun);
     const handleOnSelect: MenuProps["onClick"] = ({ key }) => {
         onSelect(key);
     };
