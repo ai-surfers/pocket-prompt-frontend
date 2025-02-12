@@ -2,8 +2,8 @@ import theme from "@/styles/theme";
 import { useResetRecoilState } from "recoil";
 import { pocketRunState } from "@/states/pocketRunState";
 import styled from "styled-components";
+import { useRouter } from "next/navigation";
 import Icon from "@/components/common/Icon";
-import Link from "next/link";
 
 interface PromptProps {
     colored?: boolean;
@@ -28,40 +28,38 @@ const PromptBox = ({
 }: PromptProps) => {
     const pointColor = colored ? theme.colors.primary : theme.colors.G_400;
     const resetPocketRunState = useResetRecoilState(pocketRunState);
+    const router = useRouter();
+
+    const handleClick = () => {
+        router.push(`/prompt/${id}`);
+        resetPocketRunState();
+    };
 
     return (
-        <Link href={`/prompt/${id}`}>
-            <PromptWrapper $colored={colored} onClick={resetPocketRunState}>
-                {colored && <NumberTag>{index}</NumberTag>}
-                <TitlesWrapper>
-                    <Title $colored={colored}>{title}</Title>
-                    <Subtitle>{description}</Subtitle>
-                </TitlesWrapper>
-                <DetailsWrapper>
-                    <Details>
-                        <Icon
-                            name="Eye"
-                            color={colored ? "primary" : "G_400"}
-                        />
-                        <Numbers color={pointColor}>{views}</Numbers>
-                    </Details>
-                    <Details>
-                        <Icon
-                            name="Play"
-                            color={colored ? "primary" : "G_400"}
-                        />
-                        <Numbers color={pointColor}>{usages}</Numbers>
-                    </Details>
-                    <Details>
-                        <Icon
-                            name="Bookmark"
-                            color={colored ? "primary" : "G_400"}
-                        />
-                        <Numbers color={pointColor}>{star}</Numbers>
-                    </Details>
-                </DetailsWrapper>
-            </PromptWrapper>
-        </Link>
+        <PromptWrapper $colored={colored} onClick={handleClick}>
+            {colored && <NumberTag>{index}</NumberTag>}
+            <TitlesWrapper>
+                <Title $colored={colored}>{title}</Title>
+                <Subtitle>{description}</Subtitle>
+            </TitlesWrapper>
+            <DetailsWrapper>
+                <Details>
+                    <Icon name="Eye" color={colored ? "primary" : "G_400"} />
+                    <Numbers color={pointColor}>{views}</Numbers>
+                </Details>
+                <Details>
+                    <Icon name="Play" color={colored ? "primary" : "G_400"} />
+                    <Numbers color={pointColor}>{usages}</Numbers>
+                </Details>
+                <Details>
+                    <Icon
+                        name="Bookmark"
+                        color={colored ? "primary" : "G_400"}
+                    />
+                    <Numbers color={pointColor}>{star}</Numbers>
+                </Details>
+            </DetailsWrapper>
+        </PromptWrapper>
     );
 };
 
@@ -84,6 +82,9 @@ const PromptWrapper = styled.div<{ $colored: boolean }>`
     position: relative;
     cursor: pointer;
     transition: box-shadow 0.3s ease;
+
+    max-width: 350px;
+    flex-shrink: 0;
 
     &:hover {
         box-shadow: 0px 0px 64px 0px rgba(117, 128, 234, 0.18);
