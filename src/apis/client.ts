@@ -17,14 +17,15 @@ API.interceptors.request.use(
     async (config) => {
         const accessToken = getLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
 
-        console.log(accessToken);
+        // console.log(accessToken);
+
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         }
 
         config.headers["source-location"] = "web";
 
-        console.log(`${config.url} -- ✈ `, config.data || "");
+        // console.log(`${config.url} -- ✈ `, config.data || "");
         return config;
     },
     (error) => Promise.reject(error)

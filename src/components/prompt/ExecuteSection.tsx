@@ -225,7 +225,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
             return formValues[key] !== prevFormValues.current[key];
         });
 
-        if (hasFormChanged && pocketRunRes.length > 1) {
+        if (hasFormChanged && pocketRunRes[0].model !== "") {
             setHasChanged(true);
         }
 
