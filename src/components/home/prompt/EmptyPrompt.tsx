@@ -64,7 +64,7 @@ const EmptyPrompt = ({ viewType }: EmptyProps) => {
                     <Text font="b2_16_semi" color="G_700">
                         시간을 절약하세요!
                     </Text>
-                    <Link href="/saved-prompt">
+                    <Link href="/">
                         <Button
                             hierarchy="secondary"
                             size={44}
