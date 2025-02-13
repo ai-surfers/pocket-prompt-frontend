@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
@@ -5,6 +7,7 @@ import useToast from "@/hooks/useToast";
 import { Flex, Modal } from "antd";
 import styled from "styled-components";
 import Textarea from "../common/Textarea/Textarea";
+import { usePostVoc } from "@/hooks/mutations/voc/usePostVoc";
 
 interface VocModalProps {
     isOpen: boolean;
@@ -22,6 +25,23 @@ export default function VocModal({ isOpen, onClose }: VocModalProps) {
             setInputValue(value);
         }
     };
+
+    // usePostVoc를 이용한 피드백 제출 mutation 생성
+    const { mutate: postVoc } = usePostVoc({
+        onSuccess(res) {
+            showToast({
+                title: "피드백이 제출되었습니다!",
+                subTitle: "",
+                iconName: "TickCircle",
+            });
+            setInputValue("");
+            onClose();
+        },
+        onError(e) {
+            console.error("피드백 제출 실패:", e);
+            alert("피드백 제출에 실패하였습니다.");
+        },
+    });
 
     if (!isOpen) return null;
 
@@ -75,13 +95,7 @@ export default function VocModal({ isOpen, onClose }: VocModalProps) {
                         onClick={() => {
                             if (inputValue.length === 0) return;
 
-                            showToast({
-                                title: "피드백이 제출되었습니다!",
-                                subTitle: inputValue,
-                                iconName: "TickCircle",
-                            });
-                            setInputValue("");
-                            onClose();
+                            postVoc({ content: inputValue });
                         }}
                     >
                         제출하기
@@ -97,6 +111,4 @@ const TemplateBox = styled.div`
     padding: 16px;
     width: 100%;
     max-height: 300px;
-    /* overflow: scroll; */
-    /* border: 1px solid var(--primary-20, #e3e6fb); */
 `;
