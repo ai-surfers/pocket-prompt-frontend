@@ -92,6 +92,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                             gap={16}
                         >
                             <Button
+                                id="modal-close-button"
                                 hierarchy="default"
                                 style={{ flex: 1, justifyContent: "center" }}
                                 onClick={closeModal}
@@ -102,6 +103,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                                 // 운영 환경일 때만 utm 경로로 이동
                                 process.env.APP_ENV === "production" ? (
                                     <Button
+                                        id="modal-price-button"
                                         style={{
                                             flex: 1,
                                             justifyContent: "center",
@@ -242,6 +244,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                 >
                     <Text font="b1_18_semi">프롬프트 사용하기</Text>
                     <Text
+                        id="show-template-button"
                         font="b3_14_med"
                         color="G_400"
                         style={{
@@ -288,6 +291,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
 
                 <Flex gap={12}>
                     <Button
+                        id="copy-prompt-button"
                         size={44}
                         hierarchy={
                             !formState.isValid ? "disabled" : "secondary"
@@ -306,6 +310,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                     />
 
                     <PocketRunDropdown
+                        id="pocket-run-dropdown"
                         disabled={!formState.isValid || isPending}
                         onSelect={handleClickSubmit}
                         secondRun={hasChanged}

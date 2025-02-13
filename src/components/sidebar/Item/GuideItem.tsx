@@ -11,7 +11,7 @@ const GuideItem = () => {
         );
     };
     return (
-        <Item onClick={handleOnGuide}>
+        <Item id="guide-item" onClick={handleOnGuide}>
             <Flex justify="space-between">
                 <Flex gap={8}>
                     <Icon name="Book" />

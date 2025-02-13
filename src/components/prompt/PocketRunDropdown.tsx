@@ -5,6 +5,7 @@ import { PocketRunModel } from "@/core/Prompt";
 import { Dropdown, Flex, MenuProps } from "antd";
 
 interface PocketRunDropdownProps {
+    id: string;
     disabled: boolean;
     onSelect: (platform: string) => void;
     secondRun: boolean;

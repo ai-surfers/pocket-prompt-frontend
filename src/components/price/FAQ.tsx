@@ -64,6 +64,7 @@ export default function FAQ() {
             <FAQFrame>
                 {FAQ_ITEMS.map((faq) => (
                     <QnAToggle
+                        id={`plan-card-${faq.key}`}
                         key={faq.key}
                         question={faq.label}
                         answer={faq.children}

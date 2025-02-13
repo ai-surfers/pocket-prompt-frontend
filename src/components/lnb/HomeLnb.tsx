@@ -70,6 +70,7 @@ const HomeLnb = ({ initialMenu }: HomeLnbType) => {
     const newPropmptButton = (
         <Link href="/prompt-new">
             <Button
+                id="prompt-add-button"
                 onClick={handleClickNewButton}
                 style={{ padding: "8px 12px", gap: 2 }}
                 size={isUnderTablet ? 40 : 52}
