@@ -84,7 +84,10 @@ export default function Header({ onOpen }: HeaderProps) {
                     ) : (
                         <Flex gap={16}>
                             <GuideButton />
-                            <LoginButton isUnderTablet={false} />
+                            <LoginButton
+                                id="sidebar-login-button"
+                                isUnderTablet={false}
+                            />
                         </Flex>
                     )}
                 </HeaderRightContainer>
