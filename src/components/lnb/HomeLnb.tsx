@@ -9,6 +9,7 @@ import Icon from "@/components/common/Icon";
 import useToast from "@/hooks/useToast";
 import Button from "../common/Button/Button";
 import Link from "next/link";
+import { useUser } from "@/hooks/useUser";
 
 interface HomeLnbType {
     initialMenu: string;
@@ -18,6 +19,7 @@ const HomeLnb = ({ initialMenu }: HomeLnbType) => {
     const { isUnderTablet } = useDeviceSize();
     const router = useRouter();
     const showToast = useToast();
+    const { userData } = useUser();
 
     const menuItems: MenuItemsType[] = [
         {
@@ -64,14 +66,17 @@ const HomeLnb = ({ initialMenu }: HomeLnbType) => {
     ];
 
     const handleClickNewButton = () => {
-        router.push("/prompt-new");
+        showToast({
+            title: "로그인 후 이용 가능합니다.",
+            subTitle: "",
+            iconName: "TickCircle",
+        });
     };
 
-    const newPropmptButton = (
+    const newPropmptButton = userData.isLogin ? (
         <Link href="/prompt-new">
             <Button
                 id="prompt-add-button"
-                onClick={handleClickNewButton}
                 style={{ padding: "8px 12px", gap: 2 }}
                 size={isUnderTablet ? 40 : 52}
             >
@@ -81,6 +86,18 @@ const HomeLnb = ({ initialMenu }: HomeLnbType) => {
                 </Text>
             </Button>
         </Link>
+    ) : (
+        <Button
+            id="prompt-add-button"
+            onClick={handleClickNewButton}
+            style={{ padding: "8px 12px", gap: 2 }}
+            size={isUnderTablet ? 40 : 52}
+        >
+            <Icon name="Add" color="white" size={20} />
+            <Text font="b2_16_semi" color="white">
+                프롬프트 등록
+            </Text>
+        </Button>
     );
 
     if (typeof window === "undefined") return null;
