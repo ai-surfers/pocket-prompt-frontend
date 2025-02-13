@@ -5,6 +5,7 @@ import Text from "@/components/common/Text/Text";
 import CheckBox from "@svg/extension/CheckBox";
 
 interface PlanCardProps {
+    id: string;
     title: string;
     price: string;
     period: string;

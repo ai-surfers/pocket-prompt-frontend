@@ -8,6 +8,7 @@ import styled from "styled-components";
 import Image from "next/image";
 
 interface Props {
+    id: string;
     question: string;
     answer: React.ReactNode;
 }

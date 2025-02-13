@@ -26,6 +26,7 @@ const SearchBar = () => {
             </SearchIcon>
 
             <Input
+                id="search-input"
                 placeholder="필요한 프롬프트를 검색해보세요"
                 value={keyword}
                 onChange={setKeyword}
