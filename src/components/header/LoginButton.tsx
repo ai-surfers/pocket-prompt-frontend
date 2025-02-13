@@ -13,6 +13,7 @@ import {
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 interface LoginButtonProps {
+    id: string;
     isUnderTablet: boolean;
 }
 

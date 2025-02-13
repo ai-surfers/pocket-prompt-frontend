@@ -35,9 +35,8 @@ const Banner = () => {
 const BannerWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox("column")};
     border-radius: 16px;
-    background: ${({ theme }) => theme.mixins.gradientPrimary()}
+    background: ${({ theme }) => theme.mixins.gradientPrimary()};
     position: relative;
-
     padding: 40px 10px;
 `;
 

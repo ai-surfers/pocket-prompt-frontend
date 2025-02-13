@@ -112,6 +112,7 @@ const PaginatedPrompt = ({
                 {usePage && items.length > 1 && (
                     <SelectWrapper>
                         <Select
+                            id="prompt-sort-select"
                             value={sortBy}
                             defaultValue="created_at"
                             style={{ width: 123 }}
