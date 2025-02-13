@@ -15,12 +15,17 @@ import {
 } from "@/states/searchState";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import HomeLnb from "@/components/lnb/HomeLnb";
+import Icon from "../components/common/Icon";
+import VocModal from "@/components/home/VocModal";
 
 export default function HomePage() {
     const { isUnderTablet } = useDeviceSize();
     const resetSearchedKeyword = useResetRecoilState(searchedKeywordState);
     const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
     const [isInitialized, setIsInitialized] = useState(false);
+
+    // voc modal open
+    const [isVocModalOpen, setIsVocModalOpen] = useState(false);
 
     useEffect(() => {
         resetSearchedKeyword();
@@ -43,6 +48,14 @@ export default function HomePage() {
                     <PaginatedPromptSection />
                 </ContentWrapper>
             </HomeContentWrapper>
+            <IconWrap onClick={() => setIsVocModalOpen(true)}>
+                <Icon name={"MessageText"} color={"white"} size={30} />
+            </IconWrap>
+
+            <VocModal
+                isOpen={isVocModalOpen}
+                onClose={() => setIsVocModalOpen(false)}
+            />
         </HomeWrapper>
     );
 }
@@ -54,6 +67,7 @@ const HomeWrapper = styled.div`
     align-items: start;
     width: 100vw;
     background-color: white;
+    position: relative;
 `;
 
 const HomeContentWrapper = styled.div<{ $isUnderTablet: boolean }>`
@@ -77,4 +91,18 @@ const ContentWrapper = styled(Wrapper)`
 const BannerWrapper = styled.div`
     margin-bottom: 15px;
     width: 100%;
+`;
+
+const IconWrap = styled.div`
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: ${({ theme }) => theme.colors.G_900};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 `;
