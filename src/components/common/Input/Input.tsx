@@ -4,6 +4,7 @@ import React, { forwardRef } from "react";
 import styled from "styled-components";
 
 export interface InputProps {
+    id?: string;
     placeholder?: string;
     value: string;
     onChange: (value: string) => void;

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import styled from "styled-components";
 
 type MenuItemProps = {
+    id: string;
     menu: {
         label: string;
         path: string;

@@ -44,10 +44,12 @@ const EmptyPrompt = ({ viewType }: EmptyProps) => {
                         나만의 프롬프트를 등록하러 가볼까요?
                     </Text>
                     <Link href="/prompt-new">
-                        <Button>
-                            <Icon name="Add" color="white" />
-                            프롬프트 등록
-                        </Button>
+                        <Link href="/prompt-new">
+                            <Button id="empty-prompt-register-button">
+                                <Icon name="Add" color="white" />
+                                프롬프트 등록
+                            </Button>
+                        </Link>
                     </Link>
                 </Flex>
             </EmptyWrapper>
@@ -64,8 +66,9 @@ const EmptyPrompt = ({ viewType }: EmptyProps) => {
                     <Text font="b2_16_semi" color="G_700">
                         시간을 절약하세요!
                     </Text>
-                    <Link href="/saved-prompt">
+                    <Link href="/">
                         <Button
+                            id="empty-prompt-explore-button"
                             hierarchy="secondary"
                             size={44}
                             style={{ marginTop: "12px" }}

@@ -136,40 +136,52 @@ const PaginatedPrompt = ({
         ));
     };
 
-    return (
-        <Flex vertical gap={20} style={{ width: "100%" }}>
-            <TitleWrapper $viewType={viewType}>
-                <Title>{promptTitle}</Title>
-                {viewType === "my" ? (
-                    <TabBarContainer>
-                        <MyPageContentTab
-                            className={activeTab === "public" ? "active" : ""}
-                            onClick={() => setActiveTab("public")}
-                        >
-                            Public <CountText>{publicCount}개</CountText>
-                        </MyPageContentTab>
-                        <MyPageContentTab
-                            className={activeTab === "private" ? "active" : ""}
-                            onClick={() => setActiveTab("private")}
-                        >
-                            Private <CountText>{privateCount}개</CountText>
-                        </MyPageContentTab>
-                    </TabBarContainer>
-                ) : (
-                    usePage &&
-                    items.length > 1 && (
-                        <SelectWrapper>
-                            <Select
-                                value={sortBy}
-                                defaultValue="created_at"
-                                style={{ width: 123 }}
-                                onChange={handleSortChange}
-                                options={selectOptions}
-                            />
-                        </SelectWrapper>
-                    )
-                )}
-            </TitleWrapper>
+return (
+    <Flex vertical gap={20} style={{ width: "100%" }}>
+        <TitleWrapper $viewType={viewType}>
+            <Title>{promptTitle}</Title>
+            {viewType === "my" ? (
+                <TabBarContainer>
+                    <MyPageContentTab
+                        className={activeTab === "public" ? "active" : ""}
+                        onClick={() => setActiveTab("public")}
+                    >
+                        Public <CountText>{publicCount}개</CountText>
+                    </MyPageContentTab>
+                    <MyPageContentTab
+                        className={activeTab === "private" ? "active" : ""}
+                        onClick={() => setActiveTab("private")}
+                    >
+                        Private <CountText>{privateCount}개</CountText>
+                    </MyPageContentTab>
+                </TabBarContainer>
+            ) : (
+                usePage &&
+                items.length > 1 && (
+                    <SelectWrapper>
+                        <Select
+                            id="prompt-sort-select"
+                            value={sortBy}
+                            defaultValue="created_at"
+                            style={{ width: 123 }}
+                            onChange={handleChange}
+                            options={[
+                                { value: "created_at", label: "최신 순" },
+                                ...(!searchedKeyword
+                                    ? []
+                                    : [
+                                          {
+                                              value: "relevance",
+                                              label: "관련도 순",
+                                          },
+                                      ]),
+                                { value: "star", label: "인기 순" },
+                            ]}
+                        />
+                    </SelectWrapper>
+                )
+            )}
+        </TitleWrapper>
 
             <Row gutter={[16, 16]}>{renderContent()}</Row>
 

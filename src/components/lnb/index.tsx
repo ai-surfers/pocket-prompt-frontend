@@ -93,9 +93,10 @@ const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
                                 borderTop: "1.5px solid #DEE0E8",
                                 margin: "16px 0",
                             }}
+                            key="divider"
                         />
                     ) : (
-                        <Link href={item.route ?? ""}>
+                        <Link href={item.route ?? ""} key={item.key}>
                             <StyledMenuButton onClick={item.onClick}>
                                 <Flex gap={8} align="center">
                                     <Icon

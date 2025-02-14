@@ -34,7 +34,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             closable={false}
             style={{ background: "none" }}
         >
-            <HeaderContainer>
+            <HeaderContainer id="sidebar-logo">
                 <Logo style={{ width: "44px" }} />
                 <Close stroke="#3E4151" onClick={onClose} />
             </HeaderContainer>
@@ -47,7 +47,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                         style={{ padding: "12px", width: "100%" }}
                     >
                         <Link href="my">
-                            <UserWrapper onClick={handleClickUser}>
+                            <UserWrapper
+                                id="sidebar-user"
+                                onClick={handleClickUser}
+                            >
                                 <Icon name="User" color="G_800" />
                                 <Text font="b2_16_med">
                                     {userData.user?.nickname}
@@ -58,12 +61,20 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                     </Flex>
                 ) : (
                     <div style={{ margin: "12px 20px" }}>
-                        <LoginButton isUnderTablet={true} />
+                        <LoginButton
+                            id="sidebar-login-button"
+                            isUnderTablet={true}
+                        />
                     </div>
                 )}
 
                 {Menus.map((menu, idx) => (
-                    <MenuItem menu={menu} key={idx} onClose={onClose} />
+                    <MenuItem
+                        id={`sidebar-menu-item-${idx}`}
+                        menu={menu}
+                        key={idx}
+                        onClose={onClose}
+                    />
                 ))}
                 <GuideItem />
             </BodyContainer>
