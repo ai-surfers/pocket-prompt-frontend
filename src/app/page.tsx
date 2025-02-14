@@ -22,16 +22,27 @@ export default function HomePage() {
     const { isUnderTablet } = useDeviceSize();
     const resetSearchedKeyword = useResetRecoilState(searchedKeywordState);
     const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
+    const searchParams = useSearchParams();
     const [isInitialized, setIsInitialized] = useState(false);
 
     // voc modal open
     const [isVocModalOpen, setIsVocModalOpen] = useState(false);
 
+    const shouldReset = searchParams.get("reset") !== "false";
+
     useEffect(() => {
-        resetSearchedKeyword();
-        resetSearchedCategory();
+        if (shouldReset) {
+            resetSearchedKeyword();
+            resetSearchedCategory();
+        }
         setIsInitialized(true);
-    }, [resetSearchedCategory, resetSearchedKeyword]);
+    }, []);
+
+    // useEffect(() => {
+    //     resetSearchedKeyword();
+    //     resetSearchedCategory();
+    //     setIsInitialized(true);
+    // }, [resetSearchedCategory, resetSearchedKeyword]);
 
     if (!isInitialized) {
         return null; // hydration 에러 방지
