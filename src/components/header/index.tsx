@@ -19,6 +19,7 @@ import useDeviceSize from "@/hooks/useDeviceSize";
 import { Flex } from "antd";
 import LogoutButton from "./LogoutButton";
 import GuideButton from "./GuideButton";
+import useToast from "@/hooks/useToast";
 
 type HeaderProps = {
     onOpen: () => void;
@@ -27,25 +28,44 @@ export default function Header({ onOpen }: HeaderProps) {
     const { setUser, resetUserState, userData } = useUser();
     const [isReady, setIsReady] = useState(false);
     const { isUnderTablet } = useDeviceSize();
+    const showToast = useToast();
 
     useEffect(() => {
         const access_token = getLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
-        // console.log(">> ", userData.accessToken);
+        console.log(">> ", access_token);
 
         if (access_token) {
-            getUser().then((res) => {
-                const { success, data } = res.data;
-                if (!success) {
-                    alert("유저 조회에 실패하였습니다.");
+            getUser()
+                .then((res) => {
+                    const { success, data } = res.data;
+                    console.log(data);
+                    if (!success) {
+                        console.log("유저 조회에 실패하였습니다.");
 
-                    removeLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
-                    resetUserState();
-                    return;
-                }
+                        removeLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
+                        resetUserState();
+                        return;
+                    }
 
-                // 성공, 저장
-                setUser(data);
-            });
+                    // 성공, 저장
+                    setUser(data);
+                })
+                .catch((error) => {
+                    // 🔹 401 Unauthorized일 경우 로그아웃 처리
+                    if (error.response?.status === 401) {
+                        showToast({
+                            title: "세션이 만료되었습니다. 다시 로그인해주세요.",
+                            subTitle: "",
+                            iconName: "TickCircle",
+                        });
+                        removeLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
+                        resetUserState();
+                    } else {
+                        console.log(
+                            "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+                        );
+                    }
+                });
         }
         setIsReady(true);
     }, []);
