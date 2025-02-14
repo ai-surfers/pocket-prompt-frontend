@@ -138,7 +138,7 @@ const PaginatedPrompt = ({
 
     return (
         <Flex vertical gap={20} style={{ width: "100%" }}>
-            <TitleWrapper viewType={viewType}>
+            <TitleWrapper $viewType={viewType}>
                 <Title>{promptTitle}</Title>
                 {viewType === "my" ? (
                     <TabBarContainer>
@@ -202,15 +202,15 @@ const SelectWrapper = styled.div`
     width: 100%;
 `;
 
-const TitleWrapper = styled.div<{ viewType: ViewType }>`
-    ${({ theme, viewType }) =>
+const TitleWrapper = styled.div<{ $viewType: ViewType }>`
+    ${({ theme, $viewType }) =>
         theme.mixins.flexBox(
-            viewType === "my" ? "column" : "row",
+            $viewType === "my" ? "column" : "row",
             "space-between",
-            viewType === "my" ? "start" : "center"
+            $viewType === "my" ? "start" : "center"
         )};
     width: 100%;
-    ${({ viewType }) => viewType === "my" && "gap: 10px;"}
+    ${({ $viewType }) => $viewType === "my" && "gap: 10px;"}
 `;
 
 const Title = styled.div`
