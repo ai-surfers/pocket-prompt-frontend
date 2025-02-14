@@ -7,6 +7,7 @@ const Extension9 = () => {
             <Title>자주 묻는 질문</Title>
             {qnaData.map((data, index) => (
                 <QnAToggle
+                    id={`plan-card-${index}`}
                     key={index}
                     question={data.question}
                     answer={data.answer}
