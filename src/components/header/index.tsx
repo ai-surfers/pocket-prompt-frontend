@@ -30,7 +30,7 @@ export default function Header({ onOpen }: HeaderProps) {
 
     useEffect(() => {
         const access_token = getLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
-        console.log(">> ", userData.accessToken);
+        // console.log(">> ", userData.accessToken);
 
         if (access_token) {
             getUser().then((res) => {
@@ -84,7 +84,10 @@ export default function Header({ onOpen }: HeaderProps) {
                     ) : (
                         <Flex gap={16}>
                             <GuideButton />
-                            <LoginButton isUnderTablet={false} />
+                            <LoginButton
+                                id="sidebar-login-button"
+                                isUnderTablet={false}
+                            />
                         </Flex>
                     )}
                 </HeaderRightContainer>

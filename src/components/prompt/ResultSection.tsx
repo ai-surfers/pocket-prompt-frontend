@@ -101,7 +101,9 @@ export const ResultSection: React.FC = () => {
                                                 overflow: "visible",
                                             }}
                                         >
-                                            <DropdownButton>
+                                            <DropdownButton
+                                                id={`dropdown-button-${key}-${index}`}
+                                            >
                                                 <Text
                                                     font="b3_14_semi"
                                                     color="G_600"
@@ -161,6 +163,7 @@ export const ResultSection: React.FC = () => {
                                     </Text>
                                 </Box>
                                 <Button
+                                    id={`copy-result-button-${index}`}
                                     onClick={() =>
                                         handleClickCopy(res.response)
                                     }

@@ -154,6 +154,7 @@ export default function Subscription() {
                             <Text font="b1_18_bold">현재 구독 정보</Text>
                             <Link href={"/price"}>
                                 <Button
+                                    id="subscription-plan-change-button"
                                     hierarchy="normal"
                                     width="132px"
                                     size={44}
@@ -221,6 +222,7 @@ export default function Subscription() {
                         <TitleWrapper>
                             <Text font="b1_18_bold">결제 정보</Text>
                             <Button
+                                id="change-payment-info-button"
                                 hierarchy="normal"
                                 width="132px"
                                 size={44}
@@ -260,6 +262,7 @@ export default function Subscription() {
                     </Card>
 
                     <Button
+                        id="subscription-cancel-button"
                         hierarchy="default"
                         onClick={handleUnsubscription}
                         width="132px"

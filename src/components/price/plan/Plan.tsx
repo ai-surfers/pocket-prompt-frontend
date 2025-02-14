@@ -80,6 +80,7 @@ export default function Plan() {
                 {plans.map((plan, index) => (
                     <AnimatedCard key={plan.planType}>
                         <PlanCard
+                            id={`plan-card-${plan.planType}`}
                             title={plan.title}
                             price={plan.price}
                             period={plan.period}

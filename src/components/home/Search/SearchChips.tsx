@@ -40,6 +40,8 @@ const SearchChips = () => {
             {Object.entries(totalCategories).map(([key, category]) => (
                 <StyledButton
                     key={key}
+                    id={`category-button-${category.en}`}
+                    data-gtm-category={category.en}
                     onClick={() => handleChipClick(category.en)}
                     $selected={selectedButton === category.en}
                     $mobile={isUnderTablet}

@@ -36,6 +36,7 @@ ${reset}
     font-family: Pretendard;
     font-style: normal;
 
+
     scrollbar-width: none; /* 파이어폭스 스크롤바 숨김 */
     margin: 0 auto;
     padding: 0;
@@ -45,6 +46,8 @@ ${reset}
 
     /* 버튼 클릭 시 색 제거 */
     -webkit-tap-highlight-color: rgba(0,0,0,0);
+
+    align-items: flex-start;
 }
 #root::-webkit-scrollbar {
     display: none; /* 크롬, 사파리, 오페라, 엣지 스크롤바 숨김 */
