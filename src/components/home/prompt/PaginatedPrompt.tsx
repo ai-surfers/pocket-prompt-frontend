@@ -6,7 +6,7 @@ import usePromptsListQuery, {
 } from "@/hooks/queries/prompts/usePromptsListQuery";
 import { SortType, ViewType } from "@/apis/prompt/prompt.model";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
     searchedKeywordState,
     searchedCategoryState,
@@ -15,6 +15,7 @@ import { Categories } from "@/core/Prompt";
 import useDeviceSize from "@/hooks/useDeviceSize";
 import { useUser } from "@/hooks/useUser";
 import EmptyPrompt from "./EmptyPrompt";
+import { sortTypeState } from "@/states/sortState";
 
 interface PaginatedPromptProps {
     usePage?: boolean;
@@ -162,21 +163,10 @@ const PaginatedPrompt = ({
                             <Select
                                 id="prompt-sort-select"
                                 value={sortBy}
-                                defaultValue="created_at"
+                                // defaultValue="created_at"
                                 style={{ width: 123 }}
                                 onChange={handleSortChange}
-                                options={[
-                                    { value: "created_at", label: "최신 순" },
-                                    ...(!searchedKeyword
-                                        ? []
-                                        : [
-                                              {
-                                                  value: "relevance",
-                                                  label: "관련도 순",
-                                              },
-                                          ]),
-                                    { value: "star", label: "인기 순" },
-                                ]}
+                                options={selectOptions}
                             />
                         </SelectWrapper>
                     )
