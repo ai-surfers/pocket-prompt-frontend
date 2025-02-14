@@ -201,9 +201,19 @@ const MyPage = () => {
                         </Flex>
                     </Flex>
                 </MyInfoWrapper>
-                <Flex style={{ padding: "41px 40px", maxWidth: "1083px" }}>
-                    <PaginatedPromptSection viewType="my" />
-                </Flex>
+                <MyPromptWrapper>
+                    <Flex
+                        style={{
+                            padding: "41px 40px",
+                            width: "100%",
+                            maxWidth: "1083px;",
+                            flexWrap: "wrap",
+                            justifyContent: "flex-start",
+                        }}
+                    >
+                        <PaginatedPromptSection viewType="my" />
+                    </Flex>
+                </MyPromptWrapper>
             </ContentWrapper>
         </Container>
     );
@@ -266,4 +276,8 @@ const Chip = styled.div`
     border-radius: 6px;
     background: var(--gray-100, #f1f2f6);
     width: fit-content;
+`;
+const MyPromptWrapper = styled.div`
+    width: 100%;
+    margin: 0 auto;
 `;
