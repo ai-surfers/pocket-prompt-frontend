@@ -28,6 +28,12 @@ export default function HomePage() {
     // voc modal open
     const [isVocModalOpen, setIsVocModalOpen] = useState(false);
 
+    useEffect(() => {
+        resetSearchedKeyword();
+        resetSearchedCategory();
+        setIsInitialized(true);
+    }, []);
+
     if (!isInitialized) {
         return null; // hydration 에러 방지
     }
