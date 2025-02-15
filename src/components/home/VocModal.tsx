@@ -26,7 +26,7 @@ export default function VocModal({ isOpen, onClose }: VocModalProps) {
         }
     };
 
-    // usePostVoc를 이용한 피드백 제출 mutation 생성
+    // usePostVoc
     const { mutate: postVoc } = usePostVoc({
         onSuccess(res) {
             showToast({
@@ -95,7 +95,7 @@ export default function VocModal({ isOpen, onClose }: VocModalProps) {
                         onClick={() => {
                             if (inputValue.length === 0) return;
 
-                            postVoc({ content: inputValue });
+                            postVoc(inputValue);
                         }}
                     >
                         제출하기

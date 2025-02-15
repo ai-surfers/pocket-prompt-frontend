@@ -1,27 +1,28 @@
 "use client";
 
-import { POST } from "@/apis/client";
+import { BaseResponse, POST } from "@/apis/client";
 import { useMutation } from "@tanstack/react-query";
 
-/**
- *  VOC 피드백 등록하기
- */
-export const createVoc = async (content: string) => {
-    const { data } = await POST<{ feedback_id: string }>(`/feedback`, {
-        content,
-    });
-    return data.data;
-};
+interface AddVocResponse {
+    feedback_id: string;
+}
 
 interface PostVocMutationProps {
-    onSuccess: (res: { feedback_id: string }) => void;
+    onSuccess: (res: BaseResponse<AddVocResponse>) => void;
     onError: (e: Error) => void;
 }
 
+const addVoc = async (content: string) => {
+    const { data } = await POST<AddVocResponse>(`/feedback`, {
+        content: content,
+    });
+    return data;
+};
+
 export const usePostVoc = ({ onSuccess, onError }: PostVocMutationProps) => {
-    return useMutation<{ feedback_id: string }, Error, string>({
-        mutationFn: (content: string) => createVoc(content),
-        onSuccess,
-        onError,
+    return useMutation({
+        mutationFn: (content: string) => addVoc(content),
+        onSuccess: onSuccess,
+        onError: onError,
     });
 };
