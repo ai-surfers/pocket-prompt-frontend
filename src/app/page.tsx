@@ -7,7 +7,7 @@ import PaginatedPromptSection from "@/components/home/prompt/PaginatedPromptSect
 
 import useToast from "@/hooks/useToast";
 import useDeviceSize from "@/hooks/useDeviceSize";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useResetRecoilState } from "recoil";
 import {
     searchedCategoryState,
@@ -22,13 +22,16 @@ export default function HomePage() {
     const { isUnderTablet } = useDeviceSize();
     const resetSearchedKeyword = useResetRecoilState(searchedKeywordState);
     const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
+
     const searchParams = useSearchParams();
     const [isInitialized, setIsInitialized] = useState(false);
 
     // voc modal open
     const [isVocModalOpen, setIsVocModalOpen] = useState(false);
 
-    const shouldReset = searchParams.get("reset") !== "false";
+    const shouldReset = useMemo(() => {
+        return searchParams.get("reset") !== "false";
+    }, [searchParams]);
 
     useEffect(() => {
         if (shouldReset) {
