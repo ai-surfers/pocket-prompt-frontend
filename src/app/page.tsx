@@ -6,7 +6,7 @@ import styled from "styled-components";
 import PaginatedPromptSection from "@/components/home/prompt/PaginatedPromptSection";
 
 import useDeviceSize from "@/hooks/useDeviceSize";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useResetRecoilState } from "recoil";
 import {
     searchedCategoryState,
@@ -18,6 +18,14 @@ import VocModal from "@/components/home/VocModal";
 import { useSearchParams } from "next/navigation";
 
 export default function HomePage() {
+    return (
+        <Suspense fallback={null}>
+            <HomeContent />
+        </Suspense>
+    );
+}
+
+function HomeContent() {
     const { isUnderTablet } = useDeviceSize();
     const resetSearchedKeyword = useResetRecoilState(searchedKeywordState);
     const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
