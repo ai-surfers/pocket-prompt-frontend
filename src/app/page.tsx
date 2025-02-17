@@ -41,18 +41,10 @@ function HomeContent() {
     }, [searchParams]);
 
     useEffect(() => {
-        if (shouldReset) {
-            resetSearchedKeyword();
-            resetSearchedCategory();
-        }
+        resetSearchedKeyword();
+        resetSearchedCategory();
         setIsInitialized(true);
     }, []);
-
-    // useEffect(() => {
-    //     resetSearchedKeyword();
-    //     resetSearchedCategory();
-    //     setIsInitialized(true);
-    // }, [resetSearchedCategory, resetSearchedKeyword]);
 
     if (!isInitialized) {
         return null; // hydration 에러 방지
