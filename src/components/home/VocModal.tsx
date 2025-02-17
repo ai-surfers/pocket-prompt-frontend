@@ -8,7 +8,6 @@ import { Flex, Modal } from "antd";
 import styled from "styled-components";
 import Textarea from "../common/Textarea/Textarea";
 import { usePostVoc } from "@/hooks/mutations/voc/usePostVoc";
-import { getLocalStorage, LOCALSTORAGE_KEYS } from "@/utils/storageUtils";
 
 interface VocModalProps {
     isOpen: boolean;
@@ -20,7 +19,6 @@ const MAX_LENGTH = 300; // 최대 글자 수 설정
 export default function VocModal({ isOpen, onClose }: VocModalProps) {
     const showToast = useToast();
     const [inputValue, setInputValue] = useState("");
-    const access_token = getLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
 
     const handleInputChange = (value: string) => {
         if (value.length <= MAX_LENGTH) {
@@ -28,7 +26,7 @@ export default function VocModal({ isOpen, onClose }: VocModalProps) {
         }
     };
 
-    // usePostVoc
+    // usePostVoc를 이용한 피드백 제출 mutation 생성
     const { mutate: postVoc } = usePostVoc({
         onSuccess(res) {
             showToast({
@@ -95,12 +93,9 @@ export default function VocModal({ isOpen, onClose }: VocModalProps) {
                         }
                         style={{ flex: 1, justifyContent: "center" }}
                         onClick={() => {
-                            if (!access_token) {
-                                alert("로그인 후 이용해주세요!");
-                                return;
-                            }
                             if (inputValue.length === 0) return;
-                            postVoc(inputValue);
+
+                            postVoc({ content: inputValue });
                         }}
                     >
                         제출하기
