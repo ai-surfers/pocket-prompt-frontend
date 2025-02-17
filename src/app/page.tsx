@@ -15,13 +15,12 @@ import {
 import HomeLnb from "@/components/lnb/HomeLnb";
 import Icon from "../components/common/Icon";
 import VocModal from "@/components/home/VocModal";
-import { useSearchParams } from "next/navigation";
 
 export default function HomePage() {
     const { isUnderTablet } = useDeviceSize();
     const resetSearchedKeyword = useResetRecoilState(searchedKeywordState);
     const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
-    const searchParams = useSearchParams();
+
     const [shouldReset, setShouldReset] = useState<boolean>(false);
     const [isInitialized, setIsInitialized] = useState(false);
 
@@ -29,8 +28,9 @@ export default function HomePage() {
     const [isVocModalOpen, setIsVocModalOpen] = useState(false);
 
     useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
         setShouldReset(searchParams.get("reset") !== "false");
-    }, [searchParams]);
+    }, []);
 
     useEffect(() => {
         if (shouldReset) {
