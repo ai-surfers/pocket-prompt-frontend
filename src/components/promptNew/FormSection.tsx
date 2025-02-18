@@ -180,7 +180,7 @@ function FormSection({ onSumbit, isEdit }: FormSectionProps) {
             </form>
 
             <Button
-                id="prompt-submit-button"
+                id="register-prompt"
                 size={52}
                 width="100%"
                 style={{ marginTop: "60px", justifyContent: "center" }}
