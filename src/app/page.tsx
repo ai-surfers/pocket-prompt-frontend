@@ -16,11 +16,13 @@ import HomeLnb from "@/components/lnb/HomeLnb";
 import Icon from "../components/common/Icon";
 import VocModal from "@/components/home/VocModal";
 import { useSearchParams } from "next/navigation";
+import HomeSiderBar from "@/components/home/siderbarAd/HomeSiderBar";
 
 export default function HomePage() {
     return (
         <Suspense fallback={null}>
             <HomeContent />
+            {/* 사이드 광고가 렌더링 */}
         </Suspense>
     );
 }
@@ -61,7 +63,12 @@ function HomeContent() {
     return (
         <HomeWrapper>
             <HomeContentWrapper $isUnderTablet={isUnderTablet}>
-                <HomeLnb initialMenu="1" />
+                <LeftSection>
+                    <HomeLnb initialMenu="1" />
+                    <AdContainer>
+                        <HomeSiderBar />
+                    </AdContainer>
+                </LeftSection>
                 <ContentWrapper>
                     <BannerWrapper>
                         <Banner />
@@ -112,6 +119,17 @@ const ContentWrapper = styled(Wrapper)`
 const BannerWrapper = styled.div`
     margin-bottom: 15px;
     width: 100%;
+`;
+
+/*  HomeLnb와 HomeSiderBar를 수직으로 배치 */
+const LeftSection = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+`;
+
+const AdContainer = styled.div`
+    height: fit-content;
 `;
 
 const IconWrap = styled.div`
