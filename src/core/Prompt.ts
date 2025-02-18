@@ -22,6 +22,7 @@ export const AIPlatforms = {
     ChatGPT: "ChatGPT",
     Claude: "Claude",
     Gemini: "Gemini",
+    Perplexity: "Perplexity",
 };
 
 export const PocketRunModel: Record<string, { label: string; value: string }> =
