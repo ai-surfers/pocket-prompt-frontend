@@ -9,6 +9,7 @@ import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
 import { ErrorBoundary } from "@sentry/react";
 import { Wrapper } from "@/components/layout/LayoutClient";
 import useDeviceSize from "@/hooks/useDeviceSize";
+import DetailPageSiderBar from "@/components/home/siderbarAd/DetailPageSiderBar";
 
 interface PromptPageProps {
     params: { promptId: string };
@@ -85,6 +86,10 @@ export default function PromptPage({ params }: PromptPageProps) {
                     <BoxContainer>
                         <ResultSection />
                     </BoxContainer>
+
+                    <AdContainer>
+                        <DetailPageSiderBar />
+                    </AdContainer>
                 </BodySection>
             </Container>
         </ErrorBoundary>
@@ -103,7 +108,6 @@ const Container = styled.div`
 
 const BodySection = styled(Flex)<{ $isMobile: boolean }>`
     margin: 0 auto;
-
     max-width: 1240px;
     padding: ${({ $isMobile }) =>
         $isMobile ? "40px 20px 20px 20px" : "40px 80px 20px"};
@@ -127,5 +131,12 @@ const BoxContainer = styled.div`
         width: 100%;
     }
 
+    height: fit-content;
+`;
+
+const AdContainer = styled.div`
+    border-radius: 16px;
+    background-color: ${({ theme }) => theme.colors.white};
+    height: 100%;
     height: fit-content;
 `;
