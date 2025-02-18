@@ -45,7 +45,7 @@ const EmptyPrompt = ({ viewType }: EmptyProps) => {
                     </Text>
                     <Link href="/prompt-new">
                         <Link href="/prompt-new">
-                            <Button id="empty-prompt-register-button">
+                            <Button id="register-prompt">
                                 <Icon name="Add" color="white" />
                                 프롬프트 등록
                             </Button>
