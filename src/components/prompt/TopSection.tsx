@@ -54,6 +54,7 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
 
                     <Flex gap={12}>
                         <Button
+                            id="share-toggle"
                             size={44}
                             hierarchy="secondary"
                             suffix={
@@ -63,7 +64,8 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
                             onClick={handleShare}
                         />
                         <BookmarkButton
-                            id={prompt.id}
+                            // id={prompt.id}
+                            id="saved-toggle"
                             is_starred={prompt.is_starred_by_user}
                         />
 

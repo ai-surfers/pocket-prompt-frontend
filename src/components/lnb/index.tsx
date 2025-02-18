@@ -12,6 +12,7 @@ import Text from "../common/Text/Text";
 
 export interface MenuItemsType {
     key: string;
+    id?: string;
     label?: string;
     iconType?: keyof typeof Icons;
     type?: "divider";
