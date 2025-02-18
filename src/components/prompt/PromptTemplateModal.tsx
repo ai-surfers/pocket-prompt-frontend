@@ -61,6 +61,7 @@ export default function PromptTemplateModal({
                     </Button>
 
                     <Button
+                        id="prompt-template-copy"
                         style={{ flex: 1, justifyContent: "center" }}
                         onClick={handleOnCopy}
                     >
