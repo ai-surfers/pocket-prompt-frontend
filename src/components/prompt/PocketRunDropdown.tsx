@@ -26,6 +26,7 @@ export default function PocketRunDropdown({
                 key: key,
                 label: (
                     <Text
+                        id={value.id}
                         font="b3_14_med"
                         color="G_600"
                         style={{ padding: "8px 4px" }}

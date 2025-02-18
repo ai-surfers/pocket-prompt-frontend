@@ -52,6 +52,7 @@ export default function BookmarkButton({
                     </Button>
                     <Link href="/price">
                         <Button
+                            id="saved-prompts-limit-explore-plans"
                             style={{ flex: 1, justifyContent: "center" }}
                             onClick={() => {
                                 closeModal();

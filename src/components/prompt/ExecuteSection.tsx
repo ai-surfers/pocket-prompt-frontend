@@ -291,7 +291,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
 
                 <Flex gap={12}>
                     <Button
-                        id="copy-prompt-button"
+                        id="copy-prompt"
                         size={44}
                         hierarchy={
                             !formState.isValid ? "disabled" : "secondary"

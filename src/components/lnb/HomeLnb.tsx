@@ -59,6 +59,7 @@ const HomeLnb = ({ initialMenu }: HomeLnbType) => {
             : [{ type: "divider" as const, key: "divider-1" }]),
         {
             key: "4",
+            id: "saved-prompt",
             label: "저장한 프롬프트",
             iconType: "Bookmark",
             route: "/saved-prompt",
@@ -76,7 +77,7 @@ const HomeLnb = ({ initialMenu }: HomeLnbType) => {
     const newPropmptButton = userData.isLogin ? (
         <Link href="/prompt-new">
             <Button
-                id="prompt-add-button"
+                id="register-prompt"
                 style={{ padding: "8px 12px", gap: 2 }}
                 size={isUnderTablet ? 40 : 52}
             >
@@ -88,7 +89,7 @@ const HomeLnb = ({ initialMenu }: HomeLnbType) => {
         </Link>
     ) : (
         <Button
-            id="prompt-add-button"
+            id="register-prompt"
             onClick={handleClickNewButton}
             style={{ padding: "8px 12px", gap: 2 }}
             size={isUnderTablet ? 40 : 52}

@@ -25,11 +25,17 @@ export const AIPlatforms = {
     Perplexity: "Perplexity",
 };
 
-export const PocketRunModel: Record<string, { label: string; value: string }> =
-    {
-        Basic: { label: "기본 모델", value: "gpt-4o-mini" },
-        ChatGPT: { label: "ChatGPT", value: "gpt-4o" },
-    };
+export const PocketRunModel: Record<
+    string,
+    { id: string; label: string; value: string }
+> = {
+    Basic: {
+        id: "based-pocket-run-toggle",
+        label: "기본 모델",
+        value: "gpt-4o-mini",
+    },
+    ChatGPT: { id: "gpt-pocket-run-toggle", label: "ChatGPT", value: "gpt-4o" },
+};
 
 export enum InputType {
     TEXT = "text",
