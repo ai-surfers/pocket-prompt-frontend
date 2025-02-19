@@ -64,8 +64,7 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
                             onClick={handleShare}
                         />
                         <BookmarkButton
-                            // id={prompt.id}
-                            id="saved-toggle"
+                            promptId={prompt.id}
                             is_starred={prompt.is_starred_by_user}
                         />
 
