@@ -26,6 +26,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import useModal from "@/hooks/useModal";
+import Button from "../common/Button/Button";
 
 interface PromptNewPageProps {
     isEdit: boolean;
@@ -43,6 +45,7 @@ export default function NewPromptClient({
         isEdit && promptId ? usePromptQuery(promptId) : { data: null };
 
     const showToast = useToast();
+    const { openModal, closeModal } = useModal();
 
     const mode = !isEdit ? "등록" : "수정";
 
@@ -59,12 +62,35 @@ export default function NewPromptClient({
                 subTitle: "",
                 iconName: "TickCircle",
             });
-
+            form.reset(defaultPromptSchema);
             router.replace(`/prompt/${res.data.prompt_id}`);
         },
         onError(e) {
             console.error("Failed", e);
-            alert("프롬프트 등록에 실패하였습니다.");
+            openModal({
+                title: "프롬프트 등록에 실패하였습니다.",
+                content: (
+                    <Text font="b3_14_reg" color="G_700">
+                        {e.response?.data.detail}
+                    </Text>
+                ),
+                footer: (
+                    <Flex
+                        style={{ width: "100%", paddingTop: "20px" }}
+                        gap={16}
+                        justify="end"
+                    >
+                        <Button
+                            id="modal-close-button"
+                            hierarchy="default"
+                            style={{ flex: 1, justifyContent: "center" }}
+                            onClick={closeModal}
+                        >
+                            닫기
+                        </Button>
+                    </Flex>
+                ),
+            });
         },
     });
 
@@ -114,7 +140,7 @@ export default function NewPromptClient({
                     // 생성 모드일 때 createPrompt 호출
                     createPromptMutate(promptData);
                 }
-                form.reset(defaultPromptSchema);
+                // form.reset(defaultPromptSchema);
             },
             (errors) => {
                 console.error(">> error", errors);
