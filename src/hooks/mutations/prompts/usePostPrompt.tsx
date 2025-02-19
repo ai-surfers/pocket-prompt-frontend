@@ -3,6 +3,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { BaseResponse, POST } from "../../../apis/client";
 import { InputType } from "@/core/Prompt";
+import { AxiosError } from "axios";
 
 /**
  * CreatePromptRequest
@@ -29,6 +30,10 @@ export interface CreatePromptResponse {
     prompt_id: string;
 }
 
+interface ErrorResponse {
+    detail: string;
+}
+
 /**
  *  프롬프트 등록하기
  */
@@ -39,7 +44,7 @@ export const createPrompt = async (prompt: CreatePromptRequest) => {
 
 export interface PostPromptProps {
     onSuccess: (res: BaseResponse<CreatePromptResponse>) => void;
-    onError: (e: Error) => void;
+    onError: (e: AxiosError<ErrorResponse>) => void;
 }
 
 export const usePostPrompt = ({ onSuccess, onError }: PostPromptProps) => {
