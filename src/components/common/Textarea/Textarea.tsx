@@ -28,6 +28,12 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             const value = e.target.value;
             if (count && value.length > count) return;
             onChange(value);
+
+            // 높이 자동 조절
+            if (isMini) {
+                e.target.style.height = "auto";
+                e.target.style.height = `${e.target.scrollHeight}px`;
+            }
         }
 
         return (
@@ -39,6 +45,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                     onChange={handleChange}
                     disabled={disabled}
                     $isMini={isMini}
+                    rows={isMini ? 1 : undefined}
                 />
                 {count && (
                     <CountBox $length={value.length}>

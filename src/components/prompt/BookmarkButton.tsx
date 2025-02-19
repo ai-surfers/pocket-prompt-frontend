@@ -9,28 +9,30 @@ import { Flex, message } from "antd";
 import { AxiosError } from "axios";
 import Icon from "../common/Icon";
 import Link from "next/link";
+import useToast from "@/hooks/useToast";
 
 interface BookmarkButtonProps {
     is_starred: boolean;
-    id: string;
+    promptId: string;
 }
 export default function BookmarkButton({
     is_starred,
-    id,
+    promptId,
 }: BookmarkButtonProps) {
     const queryClient = useQueryClient();
 
     const [messageApi, contextHolder] = message.useMessage();
     const { openModal, closeModal } = useModal();
+    const showToast = useToast();
 
     const handleOnClick = () => {
-        if (!id) {
+        if (!promptId) {
             messageApi.error("존재하지 않은 프롬프트입니다.");
             return;
         }
 
-        if (is_starred) deleteStar(id);
-        else postStar(id);
+        if (is_starred) deleteStar(promptId);
+        else postStar(promptId);
     };
 
     const openLimitModal = (message: string) => {
@@ -76,7 +78,15 @@ export default function BookmarkButton({
                 return;
             }
 
-            queryClient.invalidateQueries({ queryKey: PROMPT_KEYS.detail(id) });
+            showToast({
+                title: "프롬프트가 즐겨찾기 되었어요.",
+                subTitle: "",
+                iconName: "TickCircle",
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: PROMPT_KEYS.detail(promptId),
+            });
             queryClient.invalidateQueries({ queryKey: PROMPT_KEYS.lists() });
         },
         onError: (error) => {
@@ -103,7 +113,15 @@ export default function BookmarkButton({
                 return;
             }
 
-            queryClient.invalidateQueries({ queryKey: PROMPT_KEYS.detail(id) });
+            showToast({
+                title: "프롬프트 즐겨찾기가 해제되었어요.",
+                subTitle: "",
+                iconName: "TickCircle",
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: PROMPT_KEYS.detail(promptId),
+            });
             queryClient.invalidateQueries({ queryKey: PROMPT_KEYS.lists() });
         },
         onError: (error) => {
@@ -128,6 +146,7 @@ export default function BookmarkButton({
                     suffix={<Icon name="Bookmark" color="white" size={20} />}
                     style={{ padding: "12px" }}
                     onClick={handleOnClick}
+                    id="saved-toggle"
                 />
                 {contextHolder}
             </>
@@ -141,6 +160,7 @@ export default function BookmarkButton({
                 suffix={<Icon name="Bookmark" color="primary_100" size={20} />}
                 style={{ padding: "12px" }}
                 onClick={handleOnClick}
+                id="saved-toggle"
             />
             {contextHolder}
         </>
