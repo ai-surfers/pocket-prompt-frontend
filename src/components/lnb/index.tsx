@@ -1,8 +1,7 @@
 "use client";
 
 import styled from "styled-components";
-import { Flex, Menu } from "antd";
-import type { MenuProps } from "antd";
+import { Flex } from "antd";
 import { ReactNode, useEffect, useState } from "react";
 import * as Icons from "iconsax-react";
 import Icon from "../common/Icon";
@@ -61,6 +60,7 @@ const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
                                     }
                                 }}
                                 key={item.key}
+                                id={item.id ?? item.key}
                             >
                                 {item.iconType && (
                                     <Icon
@@ -98,7 +98,10 @@ const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
                         />
                     ) : (
                         <Link href={item.route ?? ""} key={item.key}>
-                            <StyledMenuButton onClick={item.onClick}>
+                            <StyledMenuButton
+                                onClick={item.onClick}
+                                id={item.id ?? item.key}
+                            >
                                 <Flex gap={8} align="center">
                                     <Icon
                                         name={item.iconType ?? "Add"}
