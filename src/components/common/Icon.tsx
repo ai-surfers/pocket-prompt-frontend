@@ -14,5 +14,12 @@ export default function Icon({ name, color, size, onClick }: IconProps) {
     const Iconsax = Icons[name];
     const hexColor = color ? theme.colors[color] : theme.colors.primary;
 
-    return <Iconsax color={hexColor} size={size || 20} onClick={onClick} />;
+    return (
+        <Iconsax
+            color={hexColor}
+            size={size || 20}
+            onClick={onClick}
+            style={{ pointerEvents: "none" }}
+        />
+    );
 }
