@@ -1,3 +1,5 @@
+// 단일 프롬프트
+
 import theme from "@/styles/theme";
 import { useResetRecoilState } from "recoil";
 import { pocketRunState } from "@/states/pocketRunState";
@@ -14,9 +16,10 @@ interface PromptProps {
     usages: number;
     index: number;
     id: string;
+    isMiniHeight: boolean;
 }
 
-const PromptBox = ({
+const Prompt = ({
     colored = false,
     title,
     description,
@@ -25,6 +28,7 @@ const PromptBox = ({
     usages,
     index,
     id,
+    isMiniHeight,
 }: PromptProps) => {
     const pointColor = colored ? theme.colors.primary : theme.colors.G_400;
     const resetPocketRunState = useResetRecoilState(pocketRunState);
@@ -36,11 +40,15 @@ const PromptBox = ({
     };
 
     return (
-        <PromptWrapper $colored={colored} onClick={handleClick}>
+        <PromptWrapper
+            $colored={colored}
+            onClick={handleClick}
+            $isMiniHeight={isMiniHeight}
+        >
             {colored && <NumberTag>{index}</NumberTag>}
             <TitlesWrapper>
                 <Title $colored={colored}>{title}</Title>
-                <Subtitle>{description}</Subtitle>
+                <Subtitle $isMiniHeight={isMiniHeight}>{description}</Subtitle>
             </TitlesWrapper>
             <DetailsWrapper>
                 <Details>
@@ -63,13 +71,14 @@ const PromptBox = ({
     );
 };
 
-export default PromptBox;
+export default Prompt;
 
-const PromptWrapper = styled.div<{ $colored: boolean }>`
+const PromptWrapper = styled.div<{ $colored: boolean; $isMiniHeight: boolean }>`
     ${({ theme }) => theme.mixins.flexBox("column", "space-between")};
 
     padding: 16px;
-
+    width: 100%;
+    height: ${({ $isMiniHeight }) => ($isMiniHeight ? "133px" : "157px")};
     box-sizing: border-box;
     border-radius: 12px;
     border: 1.5px solid;
@@ -83,7 +92,6 @@ const PromptWrapper = styled.div<{ $colored: boolean }>`
     cursor: pointer;
     transition: box-shadow 0.3s ease;
 
-    max-width: 350px;
     flex-shrink: 0;
 
     &:hover {
@@ -107,11 +115,12 @@ const NumberTag = styled.div`
 
 const TitlesWrapper = styled.div`
     width: 100%;
+    height: 100%;
     box-sizing: content-box;
-    height: 76px;
     padding-bottom: 15.5px;
     border-bottom: 1.5px solid;
     border-color: ${({ theme }) => theme.colors.primary_20};
+    overflow: hidden;
 `;
 
 const Title = styled.div<{ $colored: boolean }>`
@@ -125,10 +134,10 @@ const Title = styled.div<{ $colored: boolean }>`
     width: ${({ $colored }) => ($colored ? "calc(100% - 33px)" : "100%")};
 `;
 
-const Subtitle = styled.div`
+const Subtitle = styled.div<{ $isMiniHeight: boolean }>`
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: ${({ $isMiniHeight }) => ($isMiniHeight ? 1 : 2)};
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-word;

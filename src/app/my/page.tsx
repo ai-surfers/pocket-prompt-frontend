@@ -9,7 +9,7 @@ import { useUser } from "@/hooks/useUser";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
 import useDeviceSize from "@/hooks/useDeviceSize";
-import PaginatedPromptSection from "@/components/home/prompt/PaginatedPromptSection";
+import PromptListSection from "@/components/home/prompt/PromptListSection";
 import { usePutNickname } from "@/hooks/mutations/usePutNickname";
 import useToast from "@/hooks/useToast";
 import {
@@ -211,7 +211,7 @@ const MyPage = () => {
                             justifyContent: "flex-start",
                         }}
                     >
-                        <PaginatedPromptSection viewType="my" />
+                        <PromptListSection viewType="my" />
                     </Flex>
                 </MyPromptWrapper>
             </ContentWrapper>
