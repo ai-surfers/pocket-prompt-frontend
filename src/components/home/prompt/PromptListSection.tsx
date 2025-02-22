@@ -1,3 +1,14 @@
+/**
+ * @component PromptListSection
+ * @description 어떤 프롬프트 리스트를 불러올지 결정하는 컴포넌트.
+ *
+ * @props {ViewType} viewType - api 요청할 viewtype 결정. ("open" | "starred" | "my") -> 검색어의 경우에는 open
+ *
+ * @features
+ * - 프롬프트 종류 결정 (키워드 검색 / 검색어 검색 / 저장한 프롬프트 / 전체 프롬프트 / 인기 또는 추천 프롬프트)
+ * - 프롬프트 종류에 따른 ui, 타이틀 결정
+ */
+
 import styled from "styled-components";
 import PromptList from "./PromptList";
 import {

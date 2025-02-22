@@ -1,3 +1,18 @@
+/**
+ * @component PromptList
+ * @description 프롬프트 리스트 api 결과를 보여 주고, pagination, sort, tab을 관리하는 컴포넌트.
+ *
+ * @props {boolean} usePage - 페이지네이션 사용 여부. 기본값은 true.
+ * @props {"total" | "popular" | "search" | "category"} searchType - API 요청 시 사용할 검색 타입을 결정.
+ * @props {ViewType} viewType - API 요청할 viewType을 결정. ("open" | "starred" | "my") -> 검색어의 경우에는 "open".
+ * @props {React.ReactNode} title - 리스트 상단에 표시할 타이틀 컴포넌트.
+ *
+ * @features
+ * - 프롬프트 종류에 따라 api 요청
+ * - 프롬프트 종류에 따라 pagination, sort, tab 관리
+ * - 검색어 및 카테고리 변경 시 정렬 초기화
+ */
+
 import { Col, Flex, Pagination, Row, Select } from "antd";
 import Prompt from "./Prompt";
 import styled from "styled-components";
