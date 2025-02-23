@@ -35,6 +35,7 @@ const StyledText = styled.div<{ $font: string; $color: string }>`
     ${({ theme, $font }) => theme.fonts[$font]};
     color: ${({ theme, $color }) => theme.colors[$color]};
     white-space: pre-wrap;
+    pointer-events: none;
 `;
 
 const MarkdownWrapper = styled.div`
