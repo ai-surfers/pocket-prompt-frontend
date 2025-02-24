@@ -102,7 +102,11 @@ const LNB = ({ menuItems, button, initialMenu = "1" }: LNBtype) => {
                                 onClick={item.onClick}
                                 id={item.id ?? item.key}
                             >
-                                <Flex gap={8} align="center">
+                                <Flex
+                                    gap={8}
+                                    align="center"
+                                    style={{ pointerEvents: "none" }}
+                                >
                                     <Icon
                                         name={item.iconType ?? "Add"}
                                         color={
