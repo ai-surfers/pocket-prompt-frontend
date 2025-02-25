@@ -250,6 +250,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                         style={{
                             textDecoration: "underline",
                             cursor: "pointer",
+                            pointerEvents: "all",
                         }}
                         onClick={handleShowTemplate}
                     >
