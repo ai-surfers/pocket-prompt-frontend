@@ -1,0 +1,76 @@
+\name: PR Build Check
+
+on:
+    pull_request:
+        branches:
+            - develop # PR 대상 브랜치
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            # ✅ 작업 브랜치 기준으로 서브모듈 포함 체크아웃
+            - name: Checkout source branch with submodules
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ github.head_ref }} # 작업 브랜치 기준
+                  submodules: recursive # ✅ 서브모듈까지 체크아웃
+                  fetch-depth: 0 # ✅ 전체 커밋 히스토리 가져오기
+
+            # ✅ 서브모듈 초기화 및 업데이트
+            - name: Initialize and update submodules
+              run: git submodule update --init --recursive
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "18"
+
+            - name: Install dependencies
+              run: yarn install
+
+            # 🔍 타입 체크
+            - name: Type Check
+              run: tsc --noEmit || echo "❌ Type Check Failed" >> build_output.txt
+
+            # 🧹 Linter 실행
+            - name: Run Linter
+              run: yarn lint || echo "❌ Linting Failed" >> build_output.txt
+
+            # ⚙️ 빌드 실행
+            - name: Run next build
+              id: build
+              run: |
+                  yarn build >> build_output.txt 2>&1 || echo "❌ Build Failed" >> build_output.txt
+
+            # 🚀 런타임 체크 (선택)
+            - name: Start App to Check Runtime Errors
+              run: |
+                  yarn start &
+                  sleep 10
+                  curl -f http://localhost:3000 || echo "❌ Runtime Error Detected" >> build_output.txt
+
+            # 💬 PR 코멘트로 결과 남기기
+            - name: Comment Build Result
+              uses: actions/github-script@v6
+              with:
+                  github-token: ${{ secrets.ACTION_TOKEN }} # ✅ 커스텀 토큰 사용
+                  script: |
+                      const fs = require('fs');
+                      const buildLog = fs.readFileSync('build_output.txt', 'utf8');
+                      const success = buildLog.includes("Compiled successfully") && !buildLog.includes("❌");
+
+                      let comment = "";
+                      if (success) {
+                        comment = "✅ **Build Passed!** 🎉\n\n```\n" + buildLog.slice(-500) + "\n```";
+                      } else {
+                        comment = "❌ **Build Failed!** 🚨\n\n### 🔎 Error Details:\n```\n" + buildLog.slice(-1000) + "\n```";
+                      }
+
+                      github.rest.issues.createComment({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: comment
+                      });
