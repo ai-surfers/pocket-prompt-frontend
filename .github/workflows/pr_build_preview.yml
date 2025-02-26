@@ -56,7 +56,7 @@ jobs:
 
                       let comment = "";
                       if (success) {
-                        comment = "✅ **Build Passed!** 🎉\n\n```\n" + buildLog.slice(-500) + "\n```";
+                        comment = "✅ **Build Passed!** 🎉\n\n🚀 Deployment in Progress on AWS Amplify... 🔄\nCheck the status here: [AWS Amplify Console](https://us-east-2.console.aws.amazon.com/amplify/apps/db4dsu24cdkm9/branches/develop/deployments)";
                       } else {
                         comment = "❌ **Build Failed!** 🚨\n\n### 🔎 Error Details:\n```\n" + buildLog.slice(-1000) + "\n```";
                       }
