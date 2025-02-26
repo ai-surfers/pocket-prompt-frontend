@@ -1,8 +1,11 @@
 // 인기순, 최신순 정렬
 import { atom } from "recoil";
-import { SortType } from "@/apis/prompt/prompt.model";
+import { recoilPersist } from "recoil-persist";
 
-export const sortTypeState = atom<SortType>({
+const { persistAtom } = recoilPersist();
+
+export const sortTypeState = atom({
     key: "sortTypeState",
     default: "created_at",
+    effects_UNSTABLE: [persistAtom],
 });
