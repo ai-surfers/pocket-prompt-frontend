@@ -17,6 +17,7 @@ jobs:
                   ref: ${{ github.head_ref }} # 작업 브랜치 기준
                   submodules: recursive # ✅ 서브모듈까지 체크아웃
                   fetch-depth: 0 # ✅ 전체 커밋 히스토리 가져오기
+                  token: ${{ secrets.ACTION_TOKEN }}
 
             # ✅ 서브모듈 초기화 및 업데이트
             - name: Initialize and update submodules
