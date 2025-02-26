@@ -23,6 +23,7 @@ function FormSecSection({ isEdit, goToNextTab }: FormSectionProps) {
     const {
         control,
         // formState: { isValid },
+        watch,
     } = useFormContext<PromptSchemaType>();
 
     // AI Suggestion 훅
@@ -33,6 +34,9 @@ function FormSecSection({ isEdit, goToNextTab }: FormSectionProps) {
         error,
         refetch: refetchSuggestionData,
     } = useGetAiSuggestions();
+
+    const promptTemplateValue = watch("prompt_template") || "";
+    const isValid = promptTemplateValue.length > 0;
 
     return (
         <Box>
@@ -92,7 +96,7 @@ function FormSecSection({ isEdit, goToNextTab }: FormSectionProps) {
                 width="100%"
                 style={{ marginTop: "60px", justifyContent: "center" }}
                 onClick={goToNextTab}
-                hierarchy={"primary"}
+                hierarchy={isValid ? "primary" : "disabled"}
             >
                 다음
             </Button>

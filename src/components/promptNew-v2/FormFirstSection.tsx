@@ -20,13 +20,11 @@ function FormFirstSection({ isEdit, goToNextTab }: FormSectionProps) {
     const {
         control,
         // formState: { isValid },
+        watch,
     } = useFormContext<PromptSchemaType>();
 
-    // function goToGuide() {
-    //     const url =
-    //         "https://pocket-prompt.notion.site/da477857a0cc44888b06dd23cf6682ff";
-    //     window.open(url, "_blank");
-    // }
+    const promptTemplateValue = watch("prompt_template") || "";
+    const isValid = promptTemplateValue.length > 0;
 
     return (
         <Box>
@@ -76,7 +74,7 @@ function FormFirstSection({ isEdit, goToNextTab }: FormSectionProps) {
                 width="100%"
                 style={{ marginTop: "60px", justifyContent: "center" }}
                 onClick={goToNextTab}
-                hierarchy={"primary"}
+                hierarchy={isValid ? "primary" : "disabled"}
             >
                 다음
             </Button>

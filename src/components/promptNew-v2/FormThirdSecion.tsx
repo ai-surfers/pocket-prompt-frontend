@@ -31,7 +31,11 @@ function FormThirdSecion({ onSubmit, isEdit }: FormSectionProps) {
     const {
         control,
         // formState: { isValid },
+        watch,
     } = useFormContext<PromptSchemaType>();
+
+    const promptTemplateValue = watch("prompt_template") || "";
+    const isValid = promptTemplateValue.length > 0;
 
     return (
         <Box>
@@ -116,8 +120,7 @@ function FormThirdSecion({ onSubmit, isEdit }: FormSectionProps) {
                 width="100%"
                 style={{ marginTop: "60px", justifyContent: "center" }}
                 onClick={onSubmit}
-                // isValid ? "primary" : "disabled"
-                hierarchy={"primary"}
+                hierarchy={isValid ? "primary" : "disabled"}
             >
                 프롬프트 등록 완료하기
             </Button>
