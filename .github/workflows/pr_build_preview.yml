@@ -33,17 +33,17 @@ jobs:
 
             # 🔍 타입 체크
             - name: Type Check
-              run: tsc --noEmit || echo "❌ Type Check Failed" >> build_output.txt
+              run: tsc --noEmit || (echo "❌ Type Check Failed" >> build_output.txt && exit 1)
 
             # 🧹 Linter 실행
             - name: Run Linter
-              run: yarn lint || echo "❌ Linting Failed" >> build_output.txt
+              run: yarn lint || (echo "❌ Linting Failed" >> build_output.txt && exit 1)
 
             # ⚙️ 빌드 실행
             - name: Run next build
               id: build
               run: |
-                  yarn build >> build_output.txt 2>&1 || echo "❌ Build Failed" >> build_output.txt
+                  yarn build:dev >> build_output.txt 2>&1 || (echo "❌ Build Failed" >> build_output.txt && exit 1)
 
             # 🚀 런타임 체크 (선택)
             - name: Start App to Check Runtime Errors
