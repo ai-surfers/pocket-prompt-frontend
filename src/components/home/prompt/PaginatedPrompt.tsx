@@ -28,7 +28,7 @@ const PaginatedPrompt = ({
     usePage = true,
     viewType,
 }: PaginatedPromptProps) => {
-    const [sortBy, setSortBy] = useState<SortType>("created_at");
+    const [sortBy, setSortBy] = useRecoilState(sortTypeState);
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchCategory = useRecoilValue(searchedCategoryState);
     const { userData } = useUser();
@@ -44,14 +44,21 @@ const PaginatedPrompt = ({
             case "popular":
                 return { sortBy: "star", limit: 3 };
             case "search":
-                return { sortBy, limit, query: searchedKeyword };
+                // 검색어와 카테고리 둘 다 반영
+                return {
+                    sortBy,
+                    limit,
+                    query: searchedKeyword,
+                    ...(searchCategory && searchCategory !== "total"
+                        ? { categories: searchCategory }
+                        : {}),
+                };
             case "category":
                 return searchCategory === "total"
                     ? { sortBy, limit }
                     : { sortBy, limit, categories: searchCategory };
         }
     };
-
     const promptQueryParams = getQueryParams();
 
     const {
@@ -99,9 +106,9 @@ const PaginatedPrompt = ({
     const promptTitle = getPromptTitle();
 
     // 검색어나 카테고리가 변경되면 정렬 기준 초기화
-    useEffect(() => {
-        setSortBy("created_at");
-    }, [searchCategory, searchedKeyword]);
+    // useEffect(() => {
+    //     setSortBy("created_at");
+    // }, [searchCategory, searchedKeyword]);
 
     //myPage 일 때 탭 추가
     const [activeTab, setActiveTab] = useState<"public" | "private">("public");
