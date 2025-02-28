@@ -6,6 +6,7 @@ import {
 } from "@/states/searchState";
 import { useRecoilValue } from "recoil";
 import { ViewType } from "@/apis/prompt/prompt.model";
+import { usePathname } from "next/navigation";
 
 interface PaginatedPromptSectionProps {
     viewType?: ViewType;
@@ -16,16 +17,21 @@ const PaginatedPromptSection = ({
 }: PaginatedPromptSectionProps) => {
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
+    const pathname = usePathname();
 
     const promptContent = () => {
-        if (searchedKeyword) {
+        if (searchedKeyword && pathname === "/") {
             // 키워드 검색시
             return (
                 <SectionWrapper>
                     <PaginatedPrompt searchType="search" viewType={viewType} />
                 </SectionWrapper>
             );
-        } else if (!!searchedCategory && searchedCategory !== "total") {
+        } else if (
+            !!searchedCategory &&
+            searchedCategory !== "total" &&
+            pathname === "/"
+        ) {
             // 카테고리 칩 검색시
             return (
                 <SectionWrapper>
