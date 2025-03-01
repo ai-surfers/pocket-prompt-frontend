@@ -46,6 +46,7 @@ export default function NewPromptClient({
 }: PromptNewPageProps) {
     // LNB 탭으로 관리
     const [activeTab, setActiveTab] = useState("1");
+    const [promptTemplate, setPromptTemplate] = useState("");
 
     const { isUnderTablet } = useDeviceSize();
     const [isClient, setIsClient] = useState(false);
@@ -198,7 +199,10 @@ export default function NewPromptClient({
         }
     };
 
-    const goToNextTab = () => {
+    const goToNextTab = (templateValue?: string) => {
+        if (templateValue) {
+            setPromptTemplate(templateValue);
+        }
         if (activeTab === "1") setActiveTab("2");
         else if (activeTab === "2") setActiveTab("3");
     };
@@ -250,6 +254,7 @@ export default function NewPromptClient({
                                 <FormSecSection
                                     isEdit={isEdit}
                                     goToNextTab={goToNextTab}
+                                    promptTemplate={promptTemplate}
                                 />
                             </SecondWriteSection>
                         )}

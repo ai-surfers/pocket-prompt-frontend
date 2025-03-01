@@ -7,23 +7,28 @@ import CheckDefaultIcon from "@public/svg/prompt-new/check-default";
 import CheckActiveIcon from "@public/svg/prompt-new/check-active";
 import { useState, useEffect } from "react";
 
+import { useQuery } from "@tanstack/react-query";
+import { useGetAiSuggestions } from "@/hooks/mutations/prompts/useGetAiSuggestions";
+
 interface AiRunBoxProps {
     title: string;
-    content?: string;
-    refetchSuggestionData: () => void;
+    promptTemplate: string;
 }
 
-export const AiRunBox = ({
-    title,
-    content,
-    refetchSuggestionData,
-}: AiRunBoxProps) => {
+export const AiRunBox = ({ title, promptTemplate }: AiRunBoxProps) => {
     const [checked, setChecked] = useState<boolean>(false);
     const [animationKey, setAnimationKey] = useState<number>(0);
 
-    // 버튼 클릭 시 refetch와 함께 애니메이션 key 업데이트
+    const {
+        data: suggestionData,
+        isLoading,
+        isError,
+        error,
+        refetch: refetchSuggestionData,
+    } = useGetAiSuggestions(promptTemplate);
+
     const handleRetry = () => {
-        refetchSuggestionData();
+        refetchSuggestionData(); // ✅ 해당 AiRunBox만 다시 API 요청
         setAnimationKey((prev) => prev + 1);
     };
 
@@ -31,10 +36,18 @@ export const AiRunBox = ({
         setChecked((prev) => !prev);
     };
 
-    // content가 변경되어도 애니메이션이 실행되도록 key 업데이트 (선택 사항)
     useEffect(() => {
         setAnimationKey((prev) => prev + 1);
-    }, [content]);
+    }, [suggestionData]);
+
+    let displayContent;
+    if (isLoading) {
+        displayContent = "생성 중입니다..";
+    } else if (isError) {
+        displayContent = "생성하지 못했습니다. 다시 시도해주세요.";
+    } else {
+        displayContent = suggestionData?.title || suggestionData?.description;
+    }
 
     return (
         <Flex vertical gap={16} style={{ height: "100%" }}>
@@ -52,31 +65,18 @@ export const AiRunBox = ({
                     </RetryWrapper>
                 </Flex>
 
-                {(content?.length ?? 0) > 0 ? (
-                    <TextBoxWrapper
-                        key={animationKey}
-                        justify="space-between"
-                        onClick={handleCheck}
-                    >
-                        <Text font="b2_16_reg" color="G_500">
-                            {content}
-                        </Text>
-                        <CheckIconWrapper>
-                            {checked ? (
-                                <CheckActiveIcon />
-                            ) : (
-                                <CheckDefaultIcon />
-                            )}
-                        </CheckIconWrapper>
-                    </TextBoxWrapper>
-                ) : (
-                    <TextBoxWrapper key={animationKey} justify="space-between">
-                        <Text font="b2_16_reg" color="G_500">
-                            생성하지 못했습니다. 다시 시도해주세요.
-                        </Text>
-                        <CheckDefaultIcon />
-                    </TextBoxWrapper>
-                )}
+                <TextBoxWrapper
+                    key={animationKey}
+                    justify="space-between"
+                    onClick={handleCheck}
+                >
+                    <Text font="b2_16_reg" color="G_500">
+                        {displayContent}
+                    </Text>
+                    <CheckIconWrapper>
+                        {checked ? <CheckActiveIcon /> : <CheckDefaultIcon />}
+                    </CheckIconWrapper>
+                </TextBoxWrapper>
             </EmptyBox>
         </Flex>
     );

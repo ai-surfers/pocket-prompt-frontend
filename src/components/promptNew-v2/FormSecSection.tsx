@@ -13,29 +13,27 @@ import Icon from "../common/Icon";
 import TextArea from "antd/es/input/TextArea";
 import { AiRunBox } from "./AiBox/AiRunBox";
 import { useGetAiSuggestions } from "@/hooks/mutations/prompts/useGetAiSuggestions";
+import { useEffect } from "react";
 
 interface FormSectionProps {
     isEdit: boolean;
+    promptTemplate: string;
     goToNextTab: () => void;
 }
 
-function FormSecSection({ isEdit, goToNextTab }: FormSectionProps) {
+function FormSecSection({
+    isEdit,
+    goToNextTab,
+    promptTemplate,
+}: FormSectionProps) {
     const {
         control,
         // formState: { isValid },
         watch,
     } = useFormContext<PromptSchemaType>();
 
-    // AI Suggestion 훅
-    const {
-        data: suggestionData,
-        isLoading,
-        isError,
-        error,
-        refetch: refetchSuggestionData,
-    } = useGetAiSuggestions();
-
     const promptTemplateValue = watch("prompt_template") || "";
+
     const isValid = promptTemplateValue.length > 0;
 
     return (
@@ -59,8 +57,7 @@ function FormSecSection({ isEdit, goToNextTab }: FormSectionProps) {
 
                     <AiRunBox
                         title="제목"
-                        content={suggestionData?.data.title}
-                        refetchSuggestionData={refetchSuggestionData}
+                        promptTemplate={promptTemplateValue}
                     />
 
                     <FormItem
@@ -84,8 +81,7 @@ function FormSecSection({ isEdit, goToNextTab }: FormSectionProps) {
 
                     <AiRunBox
                         title="설명"
-                        content={suggestionData?.data.description}
-                        refetchSuggestionData={refetchSuggestionData}
+                        promptTemplate={promptTemplateValue}
                     />
                 </Flex>
             </form>

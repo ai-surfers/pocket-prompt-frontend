@@ -13,7 +13,7 @@ import Icon from "../common/Icon";
 
 interface FormSectionProps {
     isEdit: boolean;
-    goToNextTab: () => void;
+    goToNextTab: (templateValue?: string) => void;
 }
 
 function FormFirstSection({ isEdit, goToNextTab }: FormSectionProps) {
@@ -73,7 +73,7 @@ function FormFirstSection({ isEdit, goToNextTab }: FormSectionProps) {
                 size={52}
                 width="100%"
                 style={{ marginTop: "60px", justifyContent: "center" }}
-                onClick={goToNextTab}
+                onClick={() => goToNextTab(promptTemplateValue)}
                 hierarchy={isValid ? "primary" : "disabled"}
             >
                 다음
