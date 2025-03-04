@@ -22,6 +22,7 @@ import { useUser } from "@/hooks/useUser";
 import { Flex } from "antd";
 import useDeviceSize from "@/hooks/useDeviceSize";
 import { usePathname } from "next/navigation";
+import { memo } from "react";
 
 interface PromptListSectionProps {
     viewType?: ViewType;
@@ -93,6 +94,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                         </Text>
                                     }
                                     limit={3}
+                                    defaultSortBy="star"
                                 />
                             </SmallWrapper>
                             <SmallWrapper>
@@ -106,6 +108,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                         </Text>
                                     }
                                     limit={3}
+                                    defaultSortBy="created_at"
                                 />
                             </SmallWrapper>
                         </Flex>

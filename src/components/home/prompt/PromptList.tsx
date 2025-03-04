@@ -9,8 +9,7 @@
  *
  * @features
  * - 프롬프트 종류에 따라 api 요청
- * - 프롬프트 종류에 따라 pagination, sort, tab 관리
- * - 검색어 및 카테고리 변경 시 정렬 초기화
+ * - props에 따라 pagination, sort, tab 관리
  */
 
 import { Col, Flex, Pagination, Row, Select } from "antd";
@@ -20,13 +19,12 @@ import usePromptsListQuery, {
     PromptQueryProps,
 } from "@/hooks/queries/prompts/usePromptsListQuery";
 import { SortType, ViewType } from "@/apis/prompt/prompt.model";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
     searchedKeywordState,
     searchedCategoryState,
 } from "@/states/searchState";
-import useDeviceSize from "@/hooks/useDeviceSize";
 import EmptyPrompt from "./EmptyPrompt";
 import { sortTypeState } from "@/states/sortState";
 
@@ -36,6 +34,7 @@ interface PromptListProps {
     viewType: ViewType;
     title: React.ReactNode;
     limit?: number;
+    defaultSortBy?: SortType;
 }
 
 const PromptList = ({
@@ -44,36 +43,22 @@ const PromptList = ({
     viewType,
     title,
     limit,
+    defaultSortBy,
 }: PromptListProps) => {
     const [sortBy, setSortBy] = useRecoilState(sortTypeState);
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchCategory = useRecoilValue(searchedCategoryState);
-    const { isUnderTablet } = useDeviceSize();
 
     // 쿼리 파라미터 로직
-    const getQueryParams = (): PromptQueryProps => {
-        switch (searchType) {
-            case "total":
-                return { sortBy, limit, viewType };
-            case "popular":
-                return { sortBy: "star", limit: limit };
-            case "search":
-                // 검색어와 카테고리 둘 다 반영
-                return {
-                    sortBy,
-                    limit,
-                    query: searchedKeyword,
-                    ...(searchCategory && searchCategory !== "total"
-                        ? { categories: searchCategory }
-                        : {}),
-                };
-            case "category":
-                return searchCategory === "total"
-                    ? { sortBy, limit }
-                    : { sortBy, limit, categories: searchCategory };
-        }
+    const queryParams = {
+        viewType: viewType,
+        sortBy: defaultSortBy || sortBy, // 필요할 경우만 sortBy 사용
+        limit,
+        ...(searchedKeyword ? { query: searchedKeyword } : {}),
+        ...(searchCategory && searchCategory !== "total"
+            ? { categories: searchCategory }
+            : {}),
     };
-    const promptQueryParams = getQueryParams();
 
     const {
         items,
@@ -82,7 +67,7 @@ const PromptList = ({
         itemsPerPage,
         handlePageChange,
         isLoading,
-    } = usePromptsListQuery(promptQueryParams);
+    } = usePromptsListQuery(queryParams);
 
     const handleSortChange = (value: SortType) => {
         setSortBy(value);
