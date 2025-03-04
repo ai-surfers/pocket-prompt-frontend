@@ -213,6 +213,35 @@ export default function NewPromptClient({
         else if (activeTab === "2") setActiveTab("3");
     };
 
+    const handleLNBChange = (newTab: string) => {
+        // LNB 클릭 시, 폼 검증
+        const { prompt_template, title, description } = form.getValues();
+
+        if (newTab === "2") {
+            // 탭 1 → 탭 2로 전환 시 prompt_template 필드가 필수
+            if (!prompt_template) {
+                showToast({
+                    title: `필수 항목을 작성해주세요.`,
+                    subTitle: "프롬프트 템플릿을 입력해주세요.",
+                    iconName: "Timer",
+                });
+                return;
+            }
+        } else if (newTab === "3") {
+            // 탭 2 → 탭 3로 전환 시 title과 description 필드가 필수
+            if (!title || !description) {
+                showToast({
+                    title: `필수 항목을 작성해주세요.`,
+                    subTitle: "제목과 설명을 입력해주세요.",
+                    iconName: "Timer",
+                });
+                return;
+            }
+        }
+
+        setActiveTab(newTab);
+    };
+
     return (
         <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(handleClickSubmit)}>
@@ -220,7 +249,7 @@ export default function NewPromptClient({
                     <LeftSection>
                         <PromptNewLnb
                             initialMenu={activeTab}
-                            onTabChange={setActiveTab}
+                            onTabChange={handleLNBChange}
                         />
                     </LeftSection>
 

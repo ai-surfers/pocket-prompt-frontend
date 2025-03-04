@@ -26,6 +26,7 @@ interface LNBtype {
     menuItems: MenuItemsType[];
     button?: ReactNode;
     initialMenu?: string;
+
     onTabChange?: (key: string) => void;
 }
 
@@ -76,7 +77,7 @@ const LNB = ({
                                     <Icon
                                         name={item.iconType}
                                         color={
-                                            selectedKey === item.key
+                                            initialMenu === item.key
                                                 ? "primary"
                                                 : "G_400"
                                         }
@@ -123,7 +124,7 @@ const LNB = ({
                                     <Icon
                                         name={item.iconType ?? "Add"}
                                         color={
-                                            selectedKey === item.key
+                                            initialMenu === item.key
                                                 ? "primary"
                                                 : "G_400"
                                         }
@@ -131,12 +132,12 @@ const LNB = ({
                                     />
                                     <Text
                                         font={
-                                            selectedKey === item.key
+                                            initialMenu === item.key
                                                 ? "b2_16_bold"
                                                 : "b2_16_med"
                                         }
                                         color={
-                                            selectedKey === item.key
+                                            initialMenu === item.key
                                                 ? "primary"
                                                 : "G_400"
                                         }
