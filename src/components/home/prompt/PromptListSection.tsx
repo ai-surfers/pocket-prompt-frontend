@@ -20,7 +20,6 @@ import { ViewType } from "@/apis/prompt/prompt.model";
 import Text from "@/components/common/Text/Text";
 import { useUser } from "@/hooks/useUser";
 import { Flex } from "antd";
-import { wrap } from "module";
 import useDeviceSize from "@/hooks/useDeviceSize";
 import { usePathname } from "next/navigation";
 
@@ -32,7 +31,8 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
     const { userData } = useUser();
-    const { isMobile } = useDeviceSize();
+    const { isMobile, isUnderTablet } = useDeviceSize();
+    const limit = isUnderTablet ? 5 : 18;
     const pathname = usePathname();
 
     const promptContent = () => {
@@ -48,6 +48,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                 검색 결과
                             </Text>
                         }
+                        limit={limit}
                     />
                 </LargeWrapper>
             );
@@ -67,6 +68,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                 {searchedCategory}
                             </Text>
                         }
+                        limit={limit}
                     />
                 </LargeWrapper>
             );
@@ -90,18 +92,20 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                             오늘의 인기 TOP 3
                                         </Text>
                                     }
+                                    limit={3}
                                 />
                             </SmallWrapper>
                             <SmallWrapper>
                                 <PromptList
-                                    searchType="popular"
+                                    searchType="total"
                                     usePage={false}
-                                    viewType={viewType}
+                                    viewType="featured"
                                     title={
                                         <Text font="b1_18_semi" color="G_800">
                                             AI 전문가의 추천 TOP 3
                                         </Text>
                                     }
+                                    limit={3}
                                 />
                             </SmallWrapper>
                         </Flex>
@@ -115,6 +119,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                         전체 프롬프트
                                     </Text>
                                 }
+                                limit={limit}
                             />
                         </LargeWrapper>
                     </Flex>
@@ -159,6 +164,7 @@ export default PromptListSection;
 
 const PromptSectionContainer = styled.section`
     width: 100%;
+    height: 100%;
     padding: 0 10px;
 `;
 
@@ -178,4 +184,5 @@ const SmallWrapper = styled.div`
     background: var(--primary-5, #f8f8fe);
     box-sizing: border-box;
     padding: 21px 12px;
+    justify-content: flex-start;
 `;

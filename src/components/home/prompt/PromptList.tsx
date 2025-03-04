@@ -35,6 +35,7 @@ interface PromptListProps {
     searchType: "total" | "popular" | "search" | "category";
     viewType: ViewType;
     title: React.ReactNode;
+    limit?: number;
 }
 
 const PromptList = ({
@@ -42,13 +43,12 @@ const PromptList = ({
     usePage = true,
     viewType,
     title,
+    limit,
 }: PromptListProps) => {
     const [sortBy, setSortBy] = useRecoilState(sortTypeState);
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchCategory = useRecoilValue(searchedCategoryState);
     const { isUnderTablet } = useDeviceSize();
-
-    const limit = isUnderTablet ? 5 : undefined;
 
     // 쿼리 파라미터 로직
     const getQueryParams = (): PromptQueryProps => {
@@ -56,7 +56,7 @@ const PromptList = ({
             case "total":
                 return { sortBy, limit, viewType };
             case "popular":
-                return { sortBy: "star", limit: 3 };
+                return { sortBy: "star", limit: limit };
             case "search":
                 // 검색어와 카테고리 둘 다 반영
                 return {
@@ -107,6 +107,8 @@ const PromptList = ({
     // 각 탭들의 임시 카운트 값 (실제 데이터에 맞게 설정)
     const publicCount = 0;
     const privateCount = 0;
+    const isPopularOrFeatured =
+        searchType === "popular" || viewType === "featured";
 
     // 콘텐츠 렌더링 분리 (로딩 중 스켈레톤, 데이터 없을 때, 데이터 있을 때)
     const renderContent = () => {
@@ -124,8 +126,8 @@ const PromptList = ({
             <Col
                 key={item.id}
                 xs={24}
-                sm={searchType === "popular" ? 24 : 12}
-                md={searchType === "popular" ? 24 : 8}
+                sm={isPopularOrFeatured ? 24 : 12}
+                md={isPopularOrFeatured ? 24 : 8}
                 style={{ flexShrink: 0, display: "flex" }}
             >
                 <Prompt
@@ -137,7 +139,7 @@ const PromptList = ({
                     usages={item.usages}
                     colored={false}
                     index={index + 1}
-                    isMiniHeight={searchType === "popular" ? true : false}
+                    isMiniHeight={isPopularOrFeatured ? true : false}
                 />
             </Col>
         ));
