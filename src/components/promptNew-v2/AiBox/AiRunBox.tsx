@@ -9,13 +9,19 @@ import { useState, useEffect } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import { useGetAiSuggestions } from "@/hooks/mutations/prompts/useGetAiSuggestions";
+import AIGenerateIcon from "@public/svg/prompt-new/ai-generate";
 
 interface AiRunBoxProps {
     title: string;
     promptTemplate: string;
+    onSelect: (selectedText: string) => void;
 }
 
-export const AiRunBox = ({ title, promptTemplate }: AiRunBoxProps) => {
+export const AiRunBox = ({
+    title,
+    promptTemplate,
+    onSelect,
+}: AiRunBoxProps) => {
     const [checked, setChecked] = useState<boolean>(false);
     const [animationKey, setAnimationKey] = useState<number>(0);
 
@@ -25,20 +31,32 @@ export const AiRunBox = ({ title, promptTemplate }: AiRunBoxProps) => {
         isError,
         error,
         refetch: refetchSuggestionData,
-    } = useGetAiSuggestions(promptTemplate);
+    } = useGetAiSuggestions(
+        promptTemplate,
+        title as "제목" | "설명",
+        animationKey
+    );
 
     const handleRetry = () => {
-        refetchSuggestionData(); // ✅ 해당 AiRunBox만 다시 API 요청
         setAnimationKey((prev) => prev + 1);
+        setChecked(false); // 체크 상태 초기화
+        refetchSuggestionData();
     };
 
     const handleCheck = () => {
         setChecked((prev) => !prev);
+        if (!checked && suggestionData) {
+            if (title === "제목") {
+                onSelect(suggestionData.title);
+            } else {
+                onSelect(suggestionData.description);
+            }
+        }
     };
 
-    useEffect(() => {
-        setAnimationKey((prev) => prev + 1);
-    }, [suggestionData]);
+    // useEffect(() => {
+    //     setAnimationKey((prev) => prev + 1);
+    // }, [suggestionData]);
 
     let displayContent;
     if (isLoading) {
@@ -46,7 +64,10 @@ export const AiRunBox = ({ title, promptTemplate }: AiRunBoxProps) => {
     } else if (isError) {
         displayContent = "생성하지 못했습니다. 다시 시도해주세요.";
     } else {
-        displayContent = suggestionData?.title || suggestionData?.description;
+        displayContent =
+            title === "제목"
+                ? suggestionData?.title
+                : suggestionData?.description;
     }
 
     return (
@@ -54,9 +75,13 @@ export const AiRunBox = ({ title, promptTemplate }: AiRunBoxProps) => {
             <EmptyBox>
                 <Flex
                     justify="space-between"
+                    align="center"
                     style={{ height: "100%", marginBottom: "15px" }}
                 >
-                    <Text font="b2_16_semi">자동 생성된 {title}</Text>
+                    <Flex gap="10px">
+                        <AIGenerateIcon />
+                        <Text font="b2_16_semi">자동 생성된 {title}</Text>
+                    </Flex>
                     <RetryWrapper gap={8} onClick={handleRetry}>
                         <Text font="b3_14_reg" color="G_400">
                             다시 생성하기
@@ -69,6 +94,7 @@ export const AiRunBox = ({ title, promptTemplate }: AiRunBoxProps) => {
                     key={animationKey}
                     justify="space-between"
                     onClick={handleCheck}
+                    $checked={checked}
                 >
                     <Text font="b2_16_reg" color="G_500">
                         {displayContent}
@@ -83,6 +109,7 @@ export const AiRunBox = ({ title, promptTemplate }: AiRunBoxProps) => {
 };
 
 const EmptyBox = styled.div`
+    box-sizing: border-box;
     border-radius: 8px;
     background: var(--gray-50, #f7f8f9);
     width: 100%;
@@ -106,11 +133,22 @@ const fadeSlide = keyframes`
   }
 `;
 
-const TextBoxWrapper = styled(Flex)`
-    background-color: ${({ theme }) => theme.colors.white};
+const TextBoxWrapper = styled(Flex)<{ $checked?: boolean }>`
+    box-sizing: border-box;
+    background-color: ${({ theme, $checked }) =>
+        $checked ? theme.colors.primary_10 : theme.colors.white};
     border-radius: 8px;
     padding: 10px;
     animation: ${fadeSlide} 300ms ease-in-out;
+    border: 1px solid
+        ${({ theme, $checked }) =>
+            $checked ? theme.colors.primary_60 : "transparent"};
+    transition: border-color 300ms ease-in-out,
+        background-color 300ms ease-in-out;
+
+    &:hover {
+        border-color: ${({ theme }) => theme.colors.primary_60};
+    }
 `;
 
 const CheckIconWrapper = styled.div`

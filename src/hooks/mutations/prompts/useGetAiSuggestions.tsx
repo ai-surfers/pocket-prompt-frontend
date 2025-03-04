@@ -22,7 +22,6 @@ interface AiSuggestionResponse {
 const getAiSuggestion = async (
     promptTemplate: string
 ): Promise<{ title: string; description: string }> => {
-    // 명확한 타입 적용
     const response: AxiosResponse<AiSuggestionResponse> = await POST(
         "/prompts/suggestions",
         {
@@ -35,9 +34,18 @@ const getAiSuggestion = async (
     return data.data;
 };
 
-export const useGetAiSuggestions = (promptTemplateValue: string) => {
+export const useGetAiSuggestions = (
+    promptTemplateValue: string,
+    suggestionType: "제목" | "설명",
+    retryKey: number
+) => {
     return useQuery<{ title: string; description: string }>({
-        queryKey: ["aiSuggestions", promptTemplateValue],
+        queryKey: [
+            "aiSuggestions",
+            promptTemplateValue,
+            suggestionType,
+            retryKey,
+        ],
         queryFn: () => getAiSuggestion(promptTemplateValue),
         enabled: !!promptTemplateValue, // promptTemplateValue가 있을 때만 요청
     });

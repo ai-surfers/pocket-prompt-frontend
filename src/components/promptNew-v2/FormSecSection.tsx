@@ -13,21 +13,25 @@ import Icon from "../common/Icon";
 import TextArea from "antd/es/input/TextArea";
 import { AiRunBox } from "./AiBox/AiRunBox";
 import { useGetAiSuggestions } from "@/hooks/mutations/prompts/useGetAiSuggestions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface FormSectionProps {
     isEdit: boolean;
     promptTemplate: string;
+    setSelectedTitle: (selectedText: string) => void;
+    setSelectedDescription: (selectedText: string) => void;
     goToNextTab: () => void;
 }
 
 function FormSecSection({
     isEdit,
     goToNextTab,
-    promptTemplate,
+    setSelectedTitle,
+    setSelectedDescription,
 }: FormSectionProps) {
     const {
         control,
+        setValue,
         // formState: { isValid },
         watch,
     } = useFormContext<PromptSchemaType>();
@@ -35,6 +39,16 @@ function FormSecSection({
     const promptTemplateValue = watch("prompt_template") || "";
 
     const isValid = promptTemplateValue.length > 0;
+
+    const handleSelectTitle = (selectedText: string) => {
+        setSelectedTitle(selectedText);
+        setValue("title", selectedText);
+    };
+
+    const handleSelectDescription = (selectedText: string) => {
+        setSelectedDescription(selectedText);
+        setValue("description", selectedText);
+    };
 
     return (
         <Box>
@@ -58,6 +72,7 @@ function FormSecSection({
                     <AiRunBox
                         title="제목"
                         promptTemplate={promptTemplateValue}
+                        onSelect={handleSelectTitle}
                     />
 
                     <FormItem
@@ -82,6 +97,7 @@ function FormSecSection({
                     <AiRunBox
                         title="설명"
                         promptTemplate={promptTemplateValue}
+                        onSelect={handleSelectDescription}
                     />
                 </Flex>
             </form>
