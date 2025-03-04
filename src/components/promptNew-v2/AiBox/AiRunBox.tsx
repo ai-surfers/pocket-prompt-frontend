@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import { useGetAiSuggestions } from "@/hooks/mutations/prompts/useGetAiSuggestions";
+import AIGenerateIcon from "@public/svg/prompt-new/ai-generate";
 
 interface AiRunBoxProps {
     title: string;
@@ -38,13 +39,18 @@ export const AiRunBox = ({
 
     const handleRetry = () => {
         setAnimationKey((prev) => prev + 1);
+        setChecked(false); // 체크 상태 초기화
         refetchSuggestionData();
     };
 
     const handleCheck = () => {
         setChecked((prev) => !prev);
         if (!checked && suggestionData) {
-            onSelect(suggestionData.title || suggestionData.description);
+            if (title === "제목") {
+                onSelect(suggestionData.title);
+            } else {
+                onSelect(suggestionData.description);
+            }
         }
     };
 
@@ -69,9 +75,13 @@ export const AiRunBox = ({
             <EmptyBox>
                 <Flex
                     justify="space-between"
+                    align="center"
                     style={{ height: "100%", marginBottom: "15px" }}
                 >
-                    <Text font="b2_16_semi">자동 생성된 {title}</Text>
+                    <Flex gap="10px">
+                        <AIGenerateIcon />
+                        <Text font="b2_16_semi">자동 생성된 {title}</Text>
+                    </Flex>
                     <RetryWrapper gap={8} onClick={handleRetry}>
                         <Text font="b3_14_reg" color="G_400">
                             다시 생성하기
@@ -84,6 +94,7 @@ export const AiRunBox = ({
                     key={animationKey}
                     justify="space-between"
                     onClick={handleCheck}
+                    $checked={checked}
                 >
                     <Text font="b2_16_reg" color="G_500">
                         {displayContent}
@@ -98,6 +109,7 @@ export const AiRunBox = ({
 };
 
 const EmptyBox = styled.div`
+    box-sizing: border-box;
     border-radius: 8px;
     background: var(--gray-50, #f7f8f9);
     width: 100%;
@@ -121,11 +133,22 @@ const fadeSlide = keyframes`
   }
 `;
 
-const TextBoxWrapper = styled(Flex)`
-    background-color: ${({ theme }) => theme.colors.white};
+const TextBoxWrapper = styled(Flex)<{ $checked?: boolean }>`
+    box-sizing: border-box;
+    background-color: ${({ theme, $checked }) =>
+        $checked ? theme.colors.primary_10 : theme.colors.white};
     border-radius: 8px;
     padding: 10px;
     animation: ${fadeSlide} 300ms ease-in-out;
+    border: 1px solid
+        ${({ theme, $checked }) =>
+            $checked ? theme.colors.primary_60 : "transparent"};
+    transition: border-color 300ms ease-in-out,
+        background-color 300ms ease-in-out;
+
+    &:hover {
+        border-color: ${({ theme }) => theme.colors.primary_60};
+    }
 `;
 
 const CheckIconWrapper = styled.div`
