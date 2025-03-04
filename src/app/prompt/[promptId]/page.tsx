@@ -18,7 +18,7 @@ interface PromptPageProps {
 export default function PromptPage({ params }: PromptPageProps) {
     const { promptId } = params;
     const { data, isLoading, isError } = usePromptQuery(promptId ?? "");
-    const { isMobile } = useDeviceSize();
+    const { isUnderTablet, isMobile } = useDeviceSize();
 
     const handleOnSelect = (value: string) => {
         alert(`${value} is Selected!`);
@@ -87,7 +87,7 @@ export default function PromptPage({ params }: PromptPageProps) {
                         <ResultSection />
                     </BoxContainer>
 
-                    <AdContainer>
+                    <AdContainer $isUnderTablet={isUnderTablet}>
                         <DetailPageSiderBar />
                     </AdContainer>
                 </BodySection>
@@ -134,9 +134,9 @@ const BoxContainer = styled.div`
     height: fit-content;
 `;
 
-const AdContainer = styled.div`
+const AdContainer = styled.div<{ $isUnderTablet: boolean }>`
     border-radius: 16px;
     background-color: ${({ theme }) => theme.colors.white};
-    height: 100%;
     height: fit-content;
+    display: ${({ $isUnderTablet }) => ($isUnderTablet ? "none" : "block")};
 `;

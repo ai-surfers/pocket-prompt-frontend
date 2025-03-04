@@ -1,65 +1,64 @@
+/**
+ * @component PromptList
+ * @description 프롬프트 리스트 api 결과를 보여 주고, pagination, sort, tab을 관리하는 컴포넌트.
+ *
+ * @props {boolean} usePage - 페이지네이션 사용 여부. 기본값은 true.
+ * @props {"total" | "popular" | "search" | "category"} searchType - API 요청 시 사용할 검색 타입을 결정.
+ * @props {ViewType} viewType - API 요청할 viewType을 결정. ("open" | "starred" | "my") -> 검색어의 경우에는 "open".
+ * @props {React.ReactNode} title - 리스트 상단에 표시할 타이틀 컴포넌트.
+ *
+ * @features
+ * - 프롬프트 종류에 따라 api 요청
+ * - props에 따라 pagination, sort, tab 관리
+ */
+
 import { Col, Flex, Pagination, Row, Select } from "antd";
-import PromptBox from "./PromptBox";
+import Prompt from "./Prompt";
 import styled from "styled-components";
 import usePromptsListQuery, {
     PromptQueryProps,
 } from "@/hooks/queries/prompts/usePromptsListQuery";
 import { SortType, ViewType } from "@/apis/prompt/prompt.model";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
     searchedKeywordState,
     searchedCategoryState,
 } from "@/states/searchState";
-import { Categories } from "@/core/Prompt";
-import useDeviceSize from "@/hooks/useDeviceSize";
-import { useUser } from "@/hooks/useUser";
 import EmptyPrompt from "./EmptyPrompt";
 import { sortTypeState } from "@/states/sortState";
 
-interface PaginatedPromptProps {
+interface PromptListProps {
     usePage?: boolean;
     searchType: "total" | "popular" | "search" | "category";
     viewType: ViewType;
+    title: React.ReactNode;
+    limit?: number;
+    defaultSortBy?: SortType;
 }
 
-const PaginatedPrompt = ({
+const PromptList = ({
     searchType,
     usePage = true,
     viewType,
-}: PaginatedPromptProps) => {
+    title,
+    limit,
+    defaultSortBy,
+}: PromptListProps) => {
     const [sortBy, setSortBy] = useRecoilState(sortTypeState);
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchCategory = useRecoilValue(searchedCategoryState);
-    const { userData } = useUser();
-    const { isUnderTablet } = useDeviceSize();
-
-    const limit = isUnderTablet ? 5 : undefined;
 
     // 쿼리 파라미터 로직
-    const getQueryParams = (): PromptQueryProps => {
-        switch (searchType) {
-            case "total":
-                return { sortBy, limit, viewType };
-            case "popular":
-                return { sortBy: "star", limit: 3 };
-            case "search":
-                // 검색어와 카테고리 둘 다 반영
-                return {
-                    sortBy,
-                    limit,
-                    query: searchedKeyword,
-                    ...(searchCategory && searchCategory !== "total"
-                        ? { categories: searchCategory }
-                        : {}),
-                };
-            case "category":
-                return searchCategory === "total"
-                    ? { sortBy, limit }
-                    : { sortBy, limit, categories: searchCategory };
-        }
+    const queryParams = {
+        viewType: viewType,
+        sortBy: defaultSortBy || sortBy, // 필요할 경우만 sortBy 사용
+        limit,
+        ...(searchedKeyword ? { query: searchedKeyword } : {}),
+        ...(searchCategory && searchCategory !== "total"
+            ? { categories: searchCategory }
+            : {}),
     };
-    const promptQueryParams = getQueryParams();
 
     const {
         items,
@@ -68,7 +67,7 @@ const PaginatedPrompt = ({
         itemsPerPage,
         handlePageChange,
         isLoading,
-    } = usePromptsListQuery(promptQueryParams);
+    } = usePromptsListQuery(queryParams);
 
     const handleSortChange = (value: SortType) => {
         setSortBy(value);
@@ -83,28 +82,6 @@ const PaginatedPrompt = ({
         { value: "star", label: "인기 순" },
     ];
 
-    // 타이틀 생성 로직
-    const getPromptTitle = () => {
-        if (searchType === "total") {
-            if (viewType === "open") return "📖 전체 프롬프트";
-            if (viewType === "starred")
-                return (
-                    <>
-                        💾 <span>{userData.user?.nickname}</span>님이 저장한
-                        프롬프트
-                    </>
-                );
-            if (viewType === "my") return "내가 등록한 프롬프트";
-        }
-        if (searchType === "popular") return "🔥 지금 인기 있는 프롬프트";
-        if (searchType === "search") return "검색된 프롬프트";
-        if (searchType === "category")
-            return `${Categories[searchCategory].emoji} ${Categories[searchCategory].ko} 프롬프트`;
-        return null;
-    };
-
-    const promptTitle = getPromptTitle();
-
     // 검색어나 카테고리가 변경되면 정렬 기준 초기화
     // useEffect(() => {
     //     setSortBy("created_at");
@@ -115,6 +92,8 @@ const PaginatedPrompt = ({
     // 각 탭들의 임시 카운트 값 (실제 데이터에 맞게 설정)
     const publicCount = 0;
     const privateCount = 0;
+    const isPopularOrFeatured =
+        searchType === "popular" || viewType === "featured";
 
     // 콘텐츠 렌더링 분리 (로딩 중 스켈레톤, 데이터 없을 때, 데이터 있을 때)
     const renderContent = () => {
@@ -129,16 +108,23 @@ const PaginatedPrompt = ({
             return <EmptyPrompt viewType={viewType} />;
         }
         return items.map((item, index) => (
-            <Col key={item.id} xs={24} sm={12} md={8} style={{ flexShrink: 0 }}>
-                <PromptBox
+            <Col
+                key={item.id}
+                xs={24}
+                sm={isPopularOrFeatured ? 24 : 12}
+                md={isPopularOrFeatured ? 24 : 8}
+                style={{ flexShrink: 0, display: "flex" }}
+            >
+                <Prompt
                     id={item.id}
                     title={item.title}
                     description={item.description}
                     views={item.views}
                     star={item.star}
                     usages={item.usages}
-                    colored={searchType === "popular"}
+                    colored={false}
                     index={index + 1}
+                    isMiniHeight={isPopularOrFeatured ? true : false}
                 />
             </Col>
         ));
@@ -147,7 +133,7 @@ const PaginatedPrompt = ({
     return (
         <Flex vertical gap={20} style={{ width: "100%" }}>
             <TitleWrapper $viewType={viewType}>
-                <Title>{promptTitle}</Title>
+                {title}
                 {viewType === "my" ? (
                     <TabBarContainer>
                         <MyPageContentTab
@@ -180,7 +166,13 @@ const PaginatedPrompt = ({
                 )}
             </TitleWrapper>
 
-            <Row gutter={[16, 16]}>{renderContent()}</Row>
+            <Row
+                gutter={[16, 16]}
+                align="stretch"
+                style={{ display: "flex", alignItems: "stretch" }}
+            >
+                {renderContent()}
+            </Row>
 
             {usePage && items.length > 1 && (
                 <div style={{ margin: "0 auto" }}>
@@ -197,7 +189,7 @@ const PaginatedPrompt = ({
     );
 };
 
-export default PaginatedPrompt;
+export default PromptList;
 
 const SkeletonBox = styled.div`
     ${({ theme }) => theme.mixins.skeleton()};
@@ -209,6 +201,7 @@ const SkeletonBox = styled.div`
 const SelectWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox("row", "end")};
     width: 100%;
+    flex: 1;
 `;
 
 const TitleWrapper = styled.div<{ $viewType: ViewType }>`
@@ -219,20 +212,7 @@ const TitleWrapper = styled.div<{ $viewType: ViewType }>`
             $viewType === "my" ? "start" : "center"
         )};
     width: 100%;
-    ${({ $viewType }) => $viewType === "my" && "gap: 10px;"}
-`;
-
-const Title = styled.div`
-    text-align: start;
-    width: 100%;
-    ${({ theme }) => theme.colors.G_800};
-    ${({ theme }) => theme.fonts.header1};
-    ${({ theme }) => theme.fonts.bold};
-    color: ${({ theme }) => theme.colors.G_800};
-
-    span {
-        color: ${({ theme }) => theme.colors.primary};
-    }
+    ${({ $viewType }) => $viewType === "my" && "gap: 10px;"};
 `;
 
 const TabBarContainer = styled.div`
