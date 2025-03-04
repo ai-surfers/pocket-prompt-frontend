@@ -3,7 +3,7 @@
 import Banner from "@components/home/Banner";
 import { Wrapper } from "@components/layout/LayoutClient";
 import styled from "styled-components";
-import PaginatedPromptSection from "@/components/home/prompt/PaginatedPromptSection";
+import PromptListSection from "@/components/home/prompt/PromptListSection";
 
 import useDeviceSize from "@/hooks/useDeviceSize";
 import { Suspense, useEffect, useState } from "react";
@@ -67,7 +67,7 @@ function HomeContent() {
                     <BannerWrapper>
                         <Banner />
                     </BannerWrapper>
-                    <PaginatedPromptSection />
+                    <PromptListSection />
                 </ContentWrapper>
             </HomeContentWrapper>
             <IconWrap onClick={() => setIsVocModalOpen(true)}>

@@ -66,7 +66,7 @@ const LNB = ({
             >
                 <Flex gap={20}>
                     {menuItems.map((item) => (
-                        <Link href={item.route ?? ""}>
+                        <Link href={item.route ?? ""} key={item.key}>
                             <button
                                 onClick={() => handleClick(item)}
                                 key={item.key}
