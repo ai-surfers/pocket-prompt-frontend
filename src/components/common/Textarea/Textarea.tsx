@@ -10,6 +10,7 @@ export interface TextareaProps {
     count?: number;
     disabled?: boolean;
     isMini?: boolean;
+    defaultHeight?: string;
 }
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -21,6 +22,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             count,
             disabled = false,
             isMini = false,
+            defaultHeight,
         },
         ref
     ) => {
@@ -46,6 +48,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                     disabled={disabled}
                     $isMini={isMini}
                     rows={isMini ? 1 : undefined}
+                    $defaultHeight={defaultHeight}
                 />
                 {count && (
                     <CountBox $length={value.length}>
@@ -94,9 +97,13 @@ const TextareaContainer = styled.div<{ $length: number; $disabled?: boolean }>`
         `}
 `;
 
-const StyledTextarea = styled.textarea<{ $isMini: boolean }>`
+const StyledTextarea = styled.textarea<{
+    $isMini: boolean;
+    $defaultHeight?: string;
+}>`
     ${({ theme }) => theme.fonts.b3_14_reg};
-    height: ${({ $isMini }) => ($isMini ? "23px" : "87px")};
+    height: ${({ $isMini, $defaultHeight }) =>
+        $isMini ? "23px" : $defaultHeight || "87px"};
     min-height: 23px;
     max-height: 300px;
 

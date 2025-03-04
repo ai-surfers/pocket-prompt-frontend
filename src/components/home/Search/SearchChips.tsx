@@ -12,28 +12,21 @@ import styled from "styled-components";
 
 const SearchChips = () => {
     const setKeyword = useSetRecoilState(keywordState);
-    const setSearchedCategory = useSetRecoilState(searchedCategoryState);
-    const [searchedKeyword, setSearchedKeyword] =
-        useRecoilState(searchedKeywordState);
+    const [searchedCategory, setSearchedCategory] = useRecoilState(
+        searchedCategoryState
+    );
     const [selectedButton, setSelectedButton] = useState("total");
 
     const { isUnderTablet } = useDeviceSize();
 
     const handleChipClick = (chipValue: string) => {
-        setSearchedKeyword("");
         setSearchedCategory(chipValue);
-        setSelectedButton(chipValue);
-        setKeyword("");
     };
 
     const totalCategories = {
         total: { ko: "전체", en: "total", emoji: "" },
         ...Categories,
     };
-
-    useEffect(() => {
-        if (searchedKeyword) setSelectedButton("total");
-    }, [searchedKeyword]);
 
     return (
         <SearchChipsWrapper>
@@ -43,7 +36,7 @@ const SearchChips = () => {
                     id={`category-button-${category.en}`}
                     data-gtm-category={category.en}
                     onClick={() => handleChipClick(category.en)}
-                    $selected={selectedButton === category.en}
+                    $selected={searchedCategory === category.en}
                     $mobile={isUnderTablet}
                 >
                     {category.ko}

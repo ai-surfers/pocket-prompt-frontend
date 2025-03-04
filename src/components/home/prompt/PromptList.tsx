@@ -21,13 +21,14 @@ import usePromptsListQuery, {
 } from "@/hooks/queries/prompts/usePromptsListQuery";
 import { SortType, ViewType } from "@/apis/prompt/prompt.model";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
     searchedKeywordState,
     searchedCategoryState,
 } from "@/states/searchState";
 import useDeviceSize from "@/hooks/useDeviceSize";
 import EmptyPrompt from "./EmptyPrompt";
+import { sortTypeState } from "@/states/sortState";
 
 interface PromptListProps {
     usePage?: boolean;
@@ -42,7 +43,7 @@ const PromptList = ({
     viewType,
     title,
 }: PromptListProps) => {
-    const [sortBy, setSortBy] = useState<SortType>("created_at");
+    const [sortBy, setSortBy] = useRecoilState(sortTypeState);
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchCategory = useRecoilValue(searchedCategoryState);
     const { isUnderTablet } = useDeviceSize();
@@ -57,14 +58,21 @@ const PromptList = ({
             case "popular":
                 return { sortBy: "star", limit: 3 };
             case "search":
-                return { sortBy, limit, query: searchedKeyword };
+                // 검색어와 카테고리 둘 다 반영
+                return {
+                    sortBy,
+                    limit,
+                    query: searchedKeyword,
+                    ...(searchCategory && searchCategory !== "total"
+                        ? { categories: searchCategory }
+                        : {}),
+                };
             case "category":
                 return searchCategory === "total"
                     ? { sortBy, limit }
                     : { sortBy, limit, categories: searchCategory };
         }
     };
-
     const promptQueryParams = getQueryParams();
 
     const {
@@ -90,9 +98,9 @@ const PromptList = ({
     ];
 
     // 검색어나 카테고리가 변경되면 정렬 기준 초기화
-    useEffect(() => {
-        setSortBy("created_at");
-    }, [searchCategory, searchedKeyword]);
+    // useEffect(() => {
+    //     setSortBy("created_at");
+    // }, [searchCategory, searchedKeyword]);
 
     //myPage 일 때 탭 추가
     const [activeTab, setActiveTab] = useState<"public" | "private">("public");

@@ -22,6 +22,7 @@ import { useUser } from "@/hooks/useUser";
 import { Flex } from "antd";
 import { wrap } from "module";
 import useDeviceSize from "@/hooks/useDeviceSize";
+import { usePathname } from "next/navigation";
 
 interface PromptListSectionProps {
     viewType?: ViewType;
@@ -32,9 +33,10 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
     const searchedCategory = useRecoilValue(searchedCategoryState);
     const { userData } = useUser();
     const { isMobile } = useDeviceSize();
+    const pathname = usePathname();
 
     const promptContent = () => {
-        if (searchedKeyword) {
+        if (searchedKeyword && pathname === "/") {
             // 키워드 검색시
             return (
                 <LargeWrapper>
@@ -49,7 +51,11 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                     />
                 </LargeWrapper>
             );
-        } else if (!!searchedCategory && searchedCategory !== "total") {
+        } else if (
+            !!searchedCategory &&
+            searchedCategory !== "total" &&
+            pathname === "/"
+        ) {
             // 카테고리 칩 검색시
             return (
                 <LargeWrapper>

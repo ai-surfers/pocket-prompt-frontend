@@ -75,7 +75,7 @@ const HomeLnb = ({ initialMenu }: HomeLnbType) => {
     };
 
     const newPropmptButton = userData.isLogin ? (
-        <Link href="/prompt-new">
+        <Link href="/prompt-new-v2">
             <Button
                 id="register-prompt"
                 style={{ padding: "8px 12px", gap: 2 }}

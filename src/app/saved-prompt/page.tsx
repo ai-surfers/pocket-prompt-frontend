@@ -1,7 +1,7 @@
 "use client";
 
 import HomeLnb from "@/components/lnb/HomeLnb";
-import PaginatedPromptSection from "@/components/home/prompt/PaginatedPromptSection";
+import PromptListSection from "@/components/home/prompt/PromptListSection";
 import useDeviceSize from "@/hooks/useDeviceSize";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
@@ -23,7 +23,7 @@ export default function SavedPromptPage() {
             <HomeContentWrapper $isUnderTablet={isUnderTablet}>
                 <HomeLnb initialMenu="4" />
                 <ContentWrapper>
-                    <PaginatedPromptSection viewType="starred" />
+                    <PromptListSection viewType="starred" />
                 </ContentWrapper>
             </HomeContentWrapper>
         </HomeWrapper>
