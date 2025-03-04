@@ -28,7 +28,7 @@ export default function HomePage() {
 }
 
 function HomeContent() {
-    const { isUnderTablet } = useDeviceSize();
+    const { isUnderTablet, isMobile } = useDeviceSize();
     const resetSearchedKeyword = useResetRecoilState(searchedKeywordState);
     const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
     const searchParams = useSearchParams();
@@ -59,7 +59,8 @@ function HomeContent() {
             <HomeContentWrapper $isUnderTablet={isUnderTablet}>
                 <LeftSection>
                     <HomeLnb initialMenu="1" />
-                    <AdContainer>
+
+                    <AdContainer $isUnderTablet={isUnderTablet}>
                         <HomeSiderBar />
                     </AdContainer>
                 </LeftSection>
@@ -122,8 +123,9 @@ const LeftSection = styled.div`
     gap: 20px;
 `;
 
-const AdContainer = styled.div`
+const AdContainer = styled.div<{ $isUnderTablet: boolean }>`
     height: fit-content;
+    display: ${({ $isUnderTablet }) => ($isUnderTablet ? "none" : "block")};
 `;
 
 const IconWrap = styled.div`
