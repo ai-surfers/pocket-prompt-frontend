@@ -30,11 +30,15 @@ export const AiRunBox = ({
         isError,
         error,
         refetch: refetchSuggestionData,
-    } = useGetAiSuggestions(promptTemplate);
+    } = useGetAiSuggestions(
+        promptTemplate,
+        title as "제목" | "설명",
+        animationKey
+    );
 
     const handleRetry = () => {
-        refetchSuggestionData();
         setAnimationKey((prev) => prev + 1);
+        refetchSuggestionData();
     };
 
     const handleCheck = () => {
@@ -44,9 +48,9 @@ export const AiRunBox = ({
         }
     };
 
-    useEffect(() => {
-        setAnimationKey((prev) => prev + 1);
-    }, [suggestionData]);
+    // useEffect(() => {
+    //     setAnimationKey((prev) => prev + 1);
+    // }, [suggestionData]);
 
     let displayContent;
     if (isLoading) {
@@ -54,7 +58,10 @@ export const AiRunBox = ({
     } else if (isError) {
         displayContent = "생성하지 못했습니다. 다시 시도해주세요.";
     } else {
-        displayContent = suggestionData?.title || suggestionData?.description;
+        displayContent =
+            title === "제목"
+                ? suggestionData?.title
+                : suggestionData?.description;
     }
 
     return (

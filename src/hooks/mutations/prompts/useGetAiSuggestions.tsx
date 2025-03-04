@@ -34,9 +34,18 @@ const getAiSuggestion = async (
     return data.data;
 };
 
-export const useGetAiSuggestions = (promptTemplateValue: string) => {
+export const useGetAiSuggestions = (
+    promptTemplateValue: string,
+    suggestionType: "제목" | "설명",
+    retryKey: number
+) => {
     return useQuery<{ title: string; description: string }>({
-        queryKey: ["aiSuggestions", promptTemplateValue],
+        queryKey: [
+            "aiSuggestions",
+            promptTemplateValue,
+            suggestionType,
+            retryKey,
+        ],
         queryFn: () => getAiSuggestion(promptTemplateValue),
         enabled: !!promptTemplateValue, // promptTemplateValue가 있을 때만 요청
     });
