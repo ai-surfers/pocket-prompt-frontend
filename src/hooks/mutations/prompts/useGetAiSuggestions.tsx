@@ -22,7 +22,6 @@ interface AiSuggestionResponse {
 const getAiSuggestion = async (
     promptTemplate: string
 ): Promise<{ title: string; description: string }> => {
-    // 명확한 타입 적용
     const response: AxiosResponse<AiSuggestionResponse> = await POST(
         "/prompts/suggestions",
         {

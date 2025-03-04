@@ -13,9 +13,14 @@ import { useGetAiSuggestions } from "@/hooks/mutations/prompts/useGetAiSuggestio
 interface AiRunBoxProps {
     title: string;
     promptTemplate: string;
+    onSelect: (selectedText: string) => void;
 }
 
-export const AiRunBox = ({ title, promptTemplate }: AiRunBoxProps) => {
+export const AiRunBox = ({
+    title,
+    promptTemplate,
+    onSelect,
+}: AiRunBoxProps) => {
     const [checked, setChecked] = useState<boolean>(false);
     const [animationKey, setAnimationKey] = useState<number>(0);
 
@@ -28,12 +33,15 @@ export const AiRunBox = ({ title, promptTemplate }: AiRunBoxProps) => {
     } = useGetAiSuggestions(promptTemplate);
 
     const handleRetry = () => {
-        refetchSuggestionData(); // ✅ 해당 AiRunBox만 다시 API 요청
+        refetchSuggestionData();
         setAnimationKey((prev) => prev + 1);
     };
 
     const handleCheck = () => {
         setChecked((prev) => !prev);
+        if (!checked && suggestionData) {
+            onSelect(suggestionData.title || suggestionData.description);
+        }
     };
 
     useEffect(() => {
