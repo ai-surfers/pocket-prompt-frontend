@@ -10,6 +10,7 @@ on:
         types:
             - opened # PR이 처음 생성될 때만 실행
             - reopened # PR이 다시 열릴 때 re-run
+            - synchronized
             - closed # PR이 닫힐 때 삭제 실행
         branches:
             - develop # develop 브랜치 대상 PR에서만 실행
@@ -42,19 +43,23 @@ jobs:
                   echo "AMPLIFY_APP_ID=$AMPLIFY_APP_ID" >> $GITHUB_ENV
                   echo "PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_ENV
 
-            - name: Check if Branch Exists (Using list-branches with jq)
+            - name: Check if Branch Exists
               id: check-branch
               run: |
-                  BRANCH_EXISTS=$(aws amplify list-branches --app-id $AMPLIFY_APP_ID | jq -r '.branches[] | select(.branchName=="'"$PR_BRANCH"'")')
+                  BRANCH_EXISTS=$(aws amplify list-branches --app-id $AMPLIFY_APP_ID --query "branches[].branchName" --output text | grep -w "$PR_BRANCH" || true)
 
-                  if [[ -n "$BRANCH_EXISTS" ]]; then
+                  if [[ -z "$BRANCH_EXISTS" ]]; then
+                      echo "Branch already exists in Amplify."
+                      echo "EXISTS=true" >> $GITHUB_ENV
+                      
+                  else
                       echo "Branch already exists in Amplify."
                       echo "EXISTS=true" >> $GITHUB_ENV
                       # 브랜치 삭제
+                      echo "Deleting existing branch: $PR_BRANCH"
                       aws amplify delete-branch --app-id $AMPLIFY_APP_ID --branch-name "$PR_BRANCH"
-                  else
-                      echo "Branch does not exist in Amplify."
-                      echo "EXISTS=false" >> $GITHUB_ENV
+                      echo "Waiting for deletion to propagate..."
+                      sleep 5  # Amplify에서 삭제가 반영될 시간을 기다림
                   fi
 
             - name: Create Branch if Not Exists
