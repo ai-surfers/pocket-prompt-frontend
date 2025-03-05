@@ -1,0 +1,55 @@
+name: PR Deploy Status Check
+
+on:
+    pull_request:
+        branches:
+            - develop # 테스트용
+            - main # PR 대상 브랜치 (main)
+
+jobs:
+    check-deployment:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: us-east-2
+
+            - name: Fetch AWS Amplify Deployment Status
+              id: amplify-status
+              run: |
+                  AMPLIFY_APP_ID="db4dsu24cdkm9" # ✅ AWS Amplify 앱 ID (수정 필요)
+                  BRANCH="develop" # ✅ 배포 상태를 조회할 브랜치
+
+                  # AWS Amplify 배포 상태 조회
+                  STATUS=$(aws amplify list-jobs --app-id $AMPLIFY_APP_ID --branch-name $BRANCH --query 'jobSummaries[0].status' --output text)
+                  BUILD_LOG_URL=$(aws amplify list-jobs --app-id $AMPLIFY_APP_ID --branch-name $BRANCH --query 'jobSummaries[0].logUrl' --output text)
+
+                  # 상태 메시지 생성
+                  if [[ "$STATUS" == "SUCCEED" ]]; then
+                      COMMENT="✅ **Latest Deploy on AWS Amplify Passed!** 🎉\n\n🚀 The latest deployment for \`$BRANCH\` branch was **successful**.\n[🔍 View Logs]($BUILD_LOG_URL)"
+                  elif [[ "$STATUS" == "FAILED" ]]; then
+                      COMMENT="❌ **Latest Deploy on AWS Amplify Failed!** 🚨\n\n🛑 The latest deployment for \`$BRANCH\` branch **failed**.\n[🔍 View Logs]($BUILD_LOG_URL)"
+                  else
+                      COMMENT="⏳ **AWS Amplify Deployment in Progress...** 🔄\n\n🔍 The latest deployment for \`$BRANCH\` branch is still in progress.\n[🔍 View Logs]($BUILD_LOG_URL)"
+                  fi
+
+                  echo "$COMMENT" > amplify_status.txt
+
+            - name: Comment Deployment Status on PR
+              uses: actions/github-script@v6
+              with:
+                  github-token: ${{ secrets.ACTION_TOKEN }} # ✅ GitHub Actions에서 사용할 토큰
+                  script: |
+                      const fs = require('fs');
+                      const statusMessage = fs.readFileSync('amplify_status.txt', 'utf8');
+
+                      github.rest.issues.createComment({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: statusMessage
+                      });
