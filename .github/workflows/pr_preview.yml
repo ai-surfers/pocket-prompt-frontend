@@ -61,7 +61,7 @@ jobs:
               if: env.EXISTS == 'false'
               run: |
                   echo "Branch does not exist. Creating..."
-                  CREATE_RESULT=$(aws amplify create-branch --app-id $AMPLIFY_APP_ID --branch-name $SAFE_BRANCH_NAME --enable-auto-build 2>&1) || true
+                  CREATE_RESULT=$(aws amplify create-branch --app-id $AMPLIFY_APP_ID --branch-name $PR_BRANCH --enable-auto-build 2>&1) || true
 
                   # "Display Name already exists" 오류가 발생하면 무시하고 넘어가기
                   if echo "$CREATE_RESULT" | grep -q "display name"; then
