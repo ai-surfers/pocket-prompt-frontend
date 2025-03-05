@@ -41,13 +41,20 @@ jobs:
                   echo "AMPLIFY_APP_ID=$AMPLIFY_APP_ID" >> $GITHUB_ENV
                   echo "PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_ENV
 
-            - name: Create and Deploy Preview Environment (PR Opened or Updated)
-              if: github.event.action != 'closed'
+            - name: Check if Branch Exists
+              id: check-branch
+              continue-on-error: true # ✅ 브랜치가 없으면 오류 무시
               run: |
-                  # 변환된 브랜치명을 사용하여 AWS Amplify에 등록
+                  aws amplify get-branch --app-id $AMPLIFY_APP_ID --branch-name $SAFE_BRANCH_NAME
+
+            - name: Create Branch if Not Exists
+              if: steps.check-branch.outcome == 'failure' # ✅ 브랜치가 없을 때만 실행
+              run: |
+                  echo "Branch does not exist. Creating..."
                   aws amplify create-branch --app-id $AMPLIFY_APP_ID --branch-name $SAFE_BRANCH_NAME --enable-auto-build
 
-                  # 배포 트리거
+            - name: Deploy to Amplify
+              run: |
                   aws amplify start-job --app-id $AMPLIFY_APP_ID --branch-name $SAFE_BRANCH_NAME --job-type RELEASE
 
             - name: Comment Preview URL on PR
