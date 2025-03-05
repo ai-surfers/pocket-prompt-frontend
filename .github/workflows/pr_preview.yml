@@ -16,7 +16,6 @@ on:
 
 jobs:
     amplify-preview:
-        if: github.event.action == 'opened'
         runs-on: ubuntu-latest
         steps:
             - name: Configure AWS Credentials
