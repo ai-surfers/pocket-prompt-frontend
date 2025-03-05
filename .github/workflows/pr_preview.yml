@@ -69,7 +69,7 @@ jobs:
 
             - name: Deploy to Amplify
               run: |
-                  aws amplify start-job --app-id $AMPLIFY_APP_ID --branch-name $SAFE_BRANCH_NAME --job-type RELEASE
+                  aws amplify start-job --app-id $AMPLIFY_APP_ID --branch-name $$PR_BRANCH --job-type RELEASE
 
             - name: Comment Preview URL on PR
               if: github.event.action != 'closed'
