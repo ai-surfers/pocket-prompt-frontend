@@ -9,7 +9,6 @@ on:
     pull_request:
         types:
             - opened # PR이 처음 생성될 때만 실행
-            - reopened # PR이 다시 열릴 때 re-run
             - synchronized
             - closed # PR이 닫힐 때 삭제 실행
         branches:
@@ -109,9 +108,6 @@ jobs:
               run: |
                   PR_BRANCH="${{ github.head_ref }}"  # ✅ PR 작업 브랜치
                   AMPLIFY_APP_ID="db4dsu24cdkm9" 
-
-                  # 슬래시(`/`)를 하이픈(`-`)으로 변환
-                  SAFE_BRANCH_NAME=$(echo "$PR_BRANCH" | tr '/' '-')
 
                   # 브랜치 삭제
                   aws amplify delete-branch --app-id $AMPLIFY_APP_ID --branch-name $PR_BRANCH
