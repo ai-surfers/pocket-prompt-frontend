@@ -41,14 +41,21 @@ jobs:
                   echo "AMPLIFY_APP_ID=$AMPLIFY_APP_ID" >> $GITHUB_ENV
                   echo "PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_ENV
 
-            - name: Check if Branch Exists
+            - name: Check if Branch Exists (Using list-branches)
               id: check-branch
-              continue-on-error: true # ✅ 브랜치가 없으면 오류 무시
               run: |
-                  aws amplify get-branch --app-id $AMPLIFY_APP_ID --branch-name $SAFE_BRANCH_NAME
+                  BRANCH_EXISTS=$(aws amplify list-branches --app-id $AMPLIFY_APP_ID --query "branches[?branchName=='$SAFE_BRANCH_NAME']" --output text)
+
+                  if [[ -n "$BRANCH_EXISTS" ]]; then
+                      echo "Branch already exists in Amplify."
+                      echo "EXISTS=true" >> $GITHUB_ENV
+                  else
+                      echo "Branch does not exist in Amplify."
+                      echo "EXISTS=false" >> $GITHUB_ENV
+                  fi
 
             - name: Create Branch if Not Exists
-              if: steps.check-branch.outcome == 'failure' # ✅ 브랜치가 없을 때만 실행
+              if: env.EXISTS == 'false' # ✅ 브랜치가 없을 때만 실행
               run: |
                   echo "Branch does not exist. Creating..."
                   aws amplify create-branch --app-id $AMPLIFY_APP_ID --branch-name $SAFE_BRANCH_NAME --enable-auto-build
