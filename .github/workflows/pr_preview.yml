@@ -9,6 +9,7 @@ on:
     pull_request:
         types:
             - opened # PR이 처음 생성될 때만 실행
+            - reopened # PR이 다시 열릴 때 re-run
             - closed # PR이 닫힐 때 삭제 실행
         branches:
             - develop # develop 브랜치 대상 PR에서만 실행
