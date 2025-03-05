@@ -44,7 +44,7 @@ jobs:
             - name: Check if Branch Exists (Using list-branches with jq)
               id: check-branch
               run: |
-                  BRANCH_EXISTS=$(aws amplify list-branches --app-id $AMPLIFY_APP_ID | jq -r '.branches[] | select(.branchName=="'"$SAFE_BRANCH_NAME"'")')
+                  BRANCH_EXISTS=$(aws amplify list-branches --app-id $AMPLIFY_APP_ID | jq -r '.branches[] | select(.branchName=="'"$PR_BRANCH"'")')
 
                   if [[ -n "$BRANCH_EXISTS" ]]; then
                       echo "Branch already exists in Amplify."
