@@ -1,5 +1,5 @@
-#작업 브랜치별 미리보기 환경 제공 및 자동 삭제 기능
-#트리거:
+# 작업 브랜치별 미리보기 환경 제공 및 자동 삭제 기능
+# 트리거:
 #      (미리보기 환경 생성) -> develop 브랜치에 PR 생성
 #      (미리보기 환경 삭제) -> 해당 PR close
 
@@ -17,20 +17,18 @@ on:
 jobs:
     amplify-preview:
         runs-on: ubuntu-latest
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_REGION: us-east-2
+            AMPLFIY_APP_ID: ${{ secrets.AMPLFIY_APP_ID }}
+            PR_BRANCH: ${{ github.head_ref }} # PR의 원본 작업 브랜치
         steps:
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v1
-              with:
-                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  aws-region: us-east-2
-
             - name: Set Variables
               id: vars
               run: |
-                  PR_BRANCH="${{ github.head_ref }}"  # ✅ PR의 원본 작업 브랜치
-                  AMPLIFY_APP_ID="db4dsu24cdkm9" 
-
                   # 슬래시(`/`)를 하이픈(`-`)으로 변환
                   SAFE_BRANCH_NAME=$(echo "$PR_BRANCH" | tr '/' '-')
 
@@ -38,7 +36,6 @@ jobs:
 
                   echo "PR_BRANCH=$PR_BRANCH" >> $GITHUB_ENV
                   echo "SAFE_BRANCH_NAME=$SAFE_BRANCH_NAME" >> $GITHUB_ENV
-                  echo "AMPLIFY_APP_ID=$AMPLIFY_APP_ID" >> $GITHUB_ENV
                   echo "PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_ENV
 
             - name: Check if Branch Exists
@@ -77,20 +74,62 @@ jobs:
               run: |
                   aws amplify start-job --app-id $AMPLIFY_APP_ID --branch-name $PR_BRANCH --job-type RELEASE
 
-            - name: Comment Preview URL on PR
-              if: github.event.action != 'closed'
+            - name: Wait for Amplify Deployment to Complete #Amplify 배포 완료 후에 PR comment 남기기
+              run: |
+                  echo "Waiting for Amplify deployment to complete..."
+                  APP_ID="${{ secrets.AMPLIFY_APP_ID }}"
+                  BRANCH_NAME="$PR_BRANCH"
+                  TIMEOUT=300  # 최대 5분(300초) 대기
+                  INTERVAL=10  # 10초마다 확인
+                  ELAPSED=0
+
+                  while [ $ELAPSED -lt $TIMEOUT ]; do
+                      STATUS=$(aws amplify list-jobs --app-id $APP_ID --branch-name $BRANCH_NAME --query "jobSummaries[0].status" --output text)
+
+                      if [[ "$STATUS" == "SUCCEED" ]]; then
+                          echo "✅ Deployment succeeded!"
+                          echo "DEPLOY_STATUS=success" >> $GITHUB_ENV
+                          break
+                      elif [[ "$STATUS" == "FAILED" ]]; then
+                          echo "❌ Deployment failed!"
+                          echo "DEPLOY_STATUS=failed" >> $GITHUB_ENV
+                          break
+                      fi
+
+                      echo "⏳ Deployment in progress... ($ELAPSED / $TIMEOUT seconds)"
+                      sleep $INTERVAL
+                      ELAPSED=$((ELAPSED + INTERVAL))
+                  done
+
+                  if [[ "$ELAPSED" -ge "$TIMEOUT" ]]; then
+                      echo "⚠️ Timeout reached! Deployment is still not complete."
+                      echo "DEPLOY_STATUS=timeout" >> $GITHUB_ENV
+                  fi
+
+            - name: Comment Deployment Status on PR
               uses: actions/github-script@v6
               with:
                   github-token: ${{ secrets.ACTION_TOKEN }}
                   script: |
+                      const status = process.env.DEPLOY_STATUS;
                       const previewUrl = process.env.PREVIEW_URL;
-                      const comment = `🚀 **Preview Environment Ready!**\n\n🔗 [**Click here to view the preview**](${previewUrl})\n\n🛠️ This preview environment will be deleted when the PR is merged.`;
-                      github.rest.issues.createComment({
-                        issue_number: context.issue.number,
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        body: comment
-                      });
+                      const amplifyConsole = "https://us-east-2.console.aws.amazon.com/amplify/apps/${process.env.AMPLIFY_APP_ID}/overview"
+                      let comment = "";
+
+                       if (status === "success") {
+                           comment = `✅ **Deployment Successful!**\n\n🚀 Preview is available at: [**${previewUrl}**](${previewUrl})`;
+                       } else if (status === "failed") {
+                           comment = `❌ **Deployment Failed!**\n\nPlease check AWS Amplify logs for more details.`;
+                       } else {
+                           comment = `⚠️ **Deployment Timeout!**\n\nAWS Amplify is still processing the deployment. Please check Amplify console manually.`;
+                       }
+
+                       github.rest.issues.createComment({
+                           issue_number: context.issue.number,
+                           owner: context.repo.owner,
+                           repo: context.repo.repo,
+                           body: comment
+                       });
 
     amplify-cleanup:
         runs-on: ubuntu-latest
@@ -98,10 +137,6 @@ jobs:
         steps:
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v1
-              with:
-                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  aws-region: us-east-2
 
             - name: Delete Preview Environment (PR Merged or Closed)
               run: |
