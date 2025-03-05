@@ -77,10 +77,10 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
             if (viewType === "open") {
                 // 기본 화면 (홈 화면 접근시 첫 화면)일 경우
                 return (
-                    <Flex vertical gap={63.5}>
+                    <Flex vertical gap={63.5} justify="center">
                         <Flex
                             gap={23}
-                            justify="space-between"
+                            justify={isMobile ? "center" : "space-between"}
                             wrap={isMobile ? "wrap" : "nowrap"}
                         >
                             <SmallWrapper>
