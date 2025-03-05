@@ -354,7 +354,7 @@ const SecondWriteSection = styled.div`
     /* max-width: 684px; */
     margin-top: 20px;
     min-width: 1080px;
-    padding-right: 300px;
+    padding-right: 200px;
 `;
 
 const ThridWriteSection = styled.div`

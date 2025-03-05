@@ -96,9 +96,9 @@ export const AiRunBox = ({
                     onClick={handleCheck}
                     $checked={checked}
                 >
-                    <Text font="b2_16_reg" color="G_500">
+                    <WrappedText font="b2_16_reg" color="G_500">
                         {displayContent}
-                    </Text>
+                    </WrappedText>
                     <CheckIconWrapper>
                         {checked ? <CheckActiveIcon /> : <CheckDefaultIcon />}
                     </CheckIconWrapper>
@@ -112,7 +112,7 @@ const EmptyBox = styled.div`
     box-sizing: border-box;
     border-radius: 8px;
     background: var(--gray-50, #f7f8f9);
-    width: 100%;
+    width: 800px;
     height: 100%;
     padding: 20px;
 `;
@@ -153,4 +153,11 @@ const TextBoxWrapper = styled(Flex)<{ $checked?: boolean }>`
 
 const CheckIconWrapper = styled.div`
     cursor: pointer;
+`;
+
+const WrappedText = styled(Text)`
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-width: 0;
+    flex: 1;
 `;

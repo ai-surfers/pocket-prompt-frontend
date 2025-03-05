@@ -123,7 +123,7 @@ const Box = styled.div`
     border-radius: 16px;
     /* border: 1.5px solid ${({ theme }) => theme.colors.primary_50}; */
     background: #fff;
-    padding-right: 20px;
+    padding-right: 80px;
 `;
 
 const HelpBox = styled.div`
