@@ -47,8 +47,8 @@ jobs:
                   BRANCH_EXISTS=$(aws amplify list-branches --app-id $AMPLIFY_APP_ID --query "branches[].branchName" --output text | grep -w "$PR_BRANCH" || true)
 
                   if [[ -z "$BRANCH_EXISTS" ]]; then
-                      echo "Branch already exists in Amplify."
-                      echo "EXISTS=true" >> $GITHUB_ENV
+                      echo "Branch does not exist in Amplify."
+                      echo "EXISTS=false" >> $GITHUB_ENV
                       
                   else
                       echo "Branch already exists in Amplify."
