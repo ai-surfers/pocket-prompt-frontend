@@ -8,14 +8,14 @@ name: PR Preview Deployment
 on:
     pull_request:
         types:
-            - opened
-            - synchronize
-            - closed
+            - opened # PR이 처음 생성될 때만 실행
+            - closed # PR이 닫힐 때 삭제 실행
         branches:
-            - develop # ✅ develop 브랜치 대상 PR에서만 실행
+            - develop # develop 브랜치 대상 PR에서만 실행
 
 jobs:
     amplify-preview:
+        if: github.event.action == 'opened'
         runs-on: ubuntu-latest
         steps:
             - name: Configure AWS Credentials
@@ -23,7 +23,7 @@ jobs:
               with:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  aws-region: us-east-2 # ✅ Amplify 리전
+                  aws-region: us-east-2
 
             - name: Set Variables
               id: vars
@@ -49,6 +49,8 @@ jobs:
                   if [[ -n "$BRANCH_EXISTS" ]]; then
                       echo "Branch already exists in Amplify."
                       echo "EXISTS=true" >> $GITHUB_ENV
+                      # 브랜치 삭제
+                      aws amplify delete-branch --app-id $AMPLIFY_APP_ID --branch-name "$PR_BRANCH"
                   else
                       echo "Branch does not exist in Amplify."
                       echo "EXISTS=false" >> $GITHUB_ENV
