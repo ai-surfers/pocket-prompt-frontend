@@ -1,0 +1,77 @@
+name: PR Preview Deployment
+
+on:
+    pull_request:
+        types:
+            - opened
+            - synchronize
+            - closed
+        branches:
+            - develop # ✅ develop 브랜치 대상 PR에서만 실행
+
+jobs:
+    amplify-preview:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: us-east-2
+
+            - name: Set Variables
+              id: vars
+              run: |
+                  PR_BRANCH="${{ github.head_ref }}"  # ✅ PR의 작업 브랜치
+                  AMPLIFY_APP_ID="db4dsu24cdkm9"  # ✅ AWS Amplify 앱 ID (수정 필요)
+                  echo "PR_BRANCH=$PR_BRANCH" >> $GITHUB_ENV
+                  echo "AMPLIFY_APP_ID=$AMPLIFY_APP_ID" >> $GITHUB_ENV
+
+            - name: Create and Deploy Preview Environment (PR Opened or Updated)
+              if: github.event.action != 'closed'
+              run: |
+                  # 작업 브랜치를 AWS Amplify에 등록
+                  aws amplify create-branch --app-id $AMPLIFY_APP_ID --branch-name $PR_BRANCH --enable-auto-build
+
+                  # 배포 트리거
+                  aws amplify start-job --app-id $AMPLIFY_APP_ID --branch-name $PR_BRANCH --job-type RELEASE
+
+                  # 배포된 환경의 URL 가져오기
+                  PREVIEW_URL="https://${PR_BRANCH}.amplifyapp.com"
+                  echo "PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_ENV
+                  echo "Preview URL: $PREVIEW_URL"
+
+            - name: Comment Preview URL on PR
+              if: github.event.action != 'closed'
+              uses: actions/github-script@v6
+              with:
+                  github-token: ${{ secrets.ACTION_TOKEN }}
+                  script: |
+                      const previewUrl = process.env.PREVIEW_URL;
+                      const comment = `🚀 **Preview Environment Ready!**\n\n🔗 [**Click here to view the preview**](${previewUrl})\n\n🛠️ This preview environment will be deleted when the PR is merged.`;
+                      github.rest.issues.createComment({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: comment
+                      });
+
+    amplify-cleanup:
+        runs-on: ubuntu-latest
+        if: github.event.action == 'closed'
+        steps:
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: us-east-2
+
+            - name: Delete Preview Environment (PR Merged or Closed)
+              run: |
+                  PR_BRANCH="${{ github.head_ref }}"  # ✅ PR 작업 브랜치
+                  AMPLIFY_APP_ID="db4dsu24cdkm9" 
+
+                  # 브랜치 삭제
+                  aws amplify delete-branch --app-id $AMPLIFY_APP_ID --branch-name $PR_BRANCH
