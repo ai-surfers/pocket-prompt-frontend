@@ -18,14 +18,16 @@ jobs:
     amplify-preview:
         runs-on: ubuntu-latest
         env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            AWS_REGION: us-east-2
-            AMPLFIY_APP_ID: ${{ secrets.AMPLFIY_APP_ID }}
-            PR_BRANCH: ${{ github.head_ref }} # PR의 원본 작업 브랜치
+            AMPLIFY_APP_ID: ${{ secrets.AMPLIFY_APP_ID }}
+            PR_BRANCH: ${{ github.head_ref }}
         steps:
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: us-east-2
+
             - name: Set Variables
               id: vars
               run: |
@@ -41,7 +43,7 @@ jobs:
             - name: Check if Branch Exists
               id: check-branch
               run: |
-                  BRANCH_EXISTS=$(aws amplify list-branches --app-id $AMPLIFY_APP_ID --query "branches[].branchName" --output text | grep -w "$PR_BRANCH" || true)
+                  BRANCH_EXISTS=$(aws amplify list-branches --app-id $AMPLIFY_APP_ID --region us-east-2 \ --query "branches[].branchName" --output text | grep -w "$PR_BRANCH" || true)
 
                   if [[ -z "$BRANCH_EXISTS" ]]; then
                       echo "Branch does not exist in Amplify."
@@ -144,4 +146,4 @@ jobs:
                   AMPLIFY_APP_ID="db4dsu24cdkm9" 
 
                   # 브랜치 삭제
-                  aws amplify delete-branch --app-id $AMPLIFY_APP_ID --branch-name $PR_BRANCH
+                  aws amplify delete-branch --app-id $AMPLIFY_APP_ID --branch-name $PR_BRANCH --region us-east-2
