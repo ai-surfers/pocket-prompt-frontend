@@ -9,7 +9,6 @@ on:
     pull_request:
         types:
             - opened # PR이 처음 생성될 때만 실행
-            - synchronize
             - closed # PR이 닫힐 때 삭제 실행
         branches:
             - develop # develop 브랜치 대상 PR에서만 실행
@@ -135,15 +134,20 @@ jobs:
 
     amplify-cleanup:
         runs-on: ubuntu-latest
+        env:
+            AMPLIFY_APP_ID: ${{ secrets.AMPLIFY_APP_ID }}
+            PR_BRANCH: ${{ github.head_ref }}
         if: github.event.action == 'closed'
         steps:
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: us-east-2
 
             - name: Delete Preview Environment (PR Merged or Closed)
               run: |
-                  PR_BRANCH="${{ github.head_ref }}"  # ✅ PR 작업 브랜치
-                  AMPLIFY_APP_ID="db4dsu24cdkm9" 
 
                   # 브랜치 삭제
                   aws amplify delete-branch --app-id $AMPLIFY_APP_ID --branch-name $PR_BRANCH --region us-east-2
