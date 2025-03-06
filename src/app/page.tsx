@@ -3,7 +3,7 @@
 import Banner from "@components/home/Banner";
 import { Wrapper } from "@components/layout/LayoutClient";
 import styled from "styled-components";
-import PaginatedPromptSection from "@/components/home/prompt/PaginatedPromptSection";
+import PromptListSection from "@/components/home/prompt/PromptListSection";
 
 import useDeviceSize from "@/hooks/useDeviceSize";
 import { Suspense, useEffect, useState } from "react";
@@ -28,7 +28,7 @@ export default function HomePage() {
 }
 
 function HomeContent() {
-    const { isUnderTablet } = useDeviceSize();
+    const { isUnderTablet, isMobile } = useDeviceSize();
     const resetSearchedKeyword = useResetRecoilState(searchedKeywordState);
     const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
     const searchParams = useSearchParams();
@@ -50,12 +50,6 @@ function HomeContent() {
         setIsInitialized(true);
     }, []);
 
-    // useEffect(() => {
-    //     resetSearchedKeyword();
-    //     resetSearchedCategory();
-    //     setIsInitialized(true);
-    // }, [resetSearchedCategory, resetSearchedKeyword]);
-
     if (!isInitialized) {
         return null; // hydration 에러 방지
     }
@@ -65,7 +59,8 @@ function HomeContent() {
             <HomeContentWrapper $isUnderTablet={isUnderTablet}>
                 <LeftSection>
                     <HomeLnb initialMenu="1" />
-                    <AdContainer>
+
+                    <AdContainer $isUnderTablet={isUnderTablet}>
                         <HomeSiderBar />
                     </AdContainer>
                 </LeftSection>
@@ -73,7 +68,7 @@ function HomeContent() {
                     <BannerWrapper>
                         <Banner />
                     </BannerWrapper>
-                    <PaginatedPromptSection />
+                    <PromptListSection />
                 </ContentWrapper>
             </HomeContentWrapper>
             <IconWrap onClick={() => setIsVocModalOpen(true)}>
@@ -128,8 +123,9 @@ const LeftSection = styled.div`
     gap: 20px;
 `;
 
-const AdContainer = styled.div`
+const AdContainer = styled.div<{ $isUnderTablet: boolean }>`
     height: fit-content;
+    display: ${({ $isUnderTablet }) => ($isUnderTablet ? "none" : "block")};
 `;
 
 const IconWrap = styled.div`

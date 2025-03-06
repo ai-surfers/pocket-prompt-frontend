@@ -34,7 +34,7 @@ export type GetPromptsListResponse = {
     page_meta_data: PaginationInfo;
 };
 
-export type ViewType = "open" | "starred" | "my";
+export type ViewType = "open" | "starred" | "my" | "featured";
 
 export type SortType = "created_at" | "star" | "usages" | "relevance";
 

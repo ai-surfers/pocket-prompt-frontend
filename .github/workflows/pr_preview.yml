@@ -1,0 +1,153 @@
+# 작업 브랜치별 미리보기 환경 제공 및 자동 삭제 기능
+# 트리거:
+#      (미리보기 환경 생성) -> develop 브랜치에 PR 생성
+#      (미리보기 환경 삭제) -> 해당 PR close
+
+name: PR Preview Deployment
+
+on:
+    pull_request:
+        types:
+            - opened # PR이 처음 생성될 때만 실행
+            - closed # PR이 닫힐 때 삭제 실행
+        branches:
+            - develop # develop 브랜치 대상 PR에서만 실행
+
+jobs:
+    amplify-preview:
+        runs-on: ubuntu-latest
+        env:
+            AMPLIFY_APP_ID: ${{ secrets.AMPLIFY_APP_ID }}
+            PR_BRANCH: ${{ github.head_ref }}
+        steps:
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: us-east-2
+
+            - name: Set Variables
+              id: vars
+              run: |
+                  # 슬래시(`/`)를 하이픈(`-`)으로 변환
+                  SAFE_BRANCH_NAME=$(echo "$PR_BRANCH" | tr '/' '-')
+
+                  PREVIEW_URL="https://${SAFE_BRANCH_NAME}.${AMPLIFY_APP_ID}.amplifyapp.com"
+
+                  echo "PR_BRANCH=$PR_BRANCH" >> $GITHUB_ENV
+                  echo "SAFE_BRANCH_NAME=$SAFE_BRANCH_NAME" >> $GITHUB_ENV
+                  echo "PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_ENV
+
+            - name: Check if Branch Exists
+              id: check-branch
+              run: |
+                  BRANCH_EXISTS=$(aws amplify list-branches --app-id $AMPLIFY_APP_ID --region us-east-2 \ --query "branches[].branchName" --output text | grep -w "$PR_BRANCH" || true)
+
+                  if [[ -z "$BRANCH_EXISTS" ]]; then
+                      echo "Branch does not exist in Amplify."
+                      echo "EXISTS=false" >> $GITHUB_ENV
+                      
+                  else
+                      echo "Branch already exists in Amplify."
+                      echo "EXISTS=true" >> $GITHUB_ENV
+                      # 브랜치 삭제
+                      echo "Deleting existing branch: $PR_BRANCH"
+                      aws amplify delete-branch --app-id $AMPLIFY_APP_ID --branch-name "$PR_BRANCH"
+                      echo "Waiting for deletion to propagate..."
+                      sleep 5  # Amplify에서 삭제가 반영될 시간을 기다림
+                  fi
+
+            - name: Create Branch if Not Exists
+              if: env.EXISTS == 'false'
+              run: |
+                  echo "Branch does not exist. Creating..."
+                  CREATE_RESULT=$(aws amplify create-branch --app-id $AMPLIFY_APP_ID --branch-name $PR_BRANCH --enable-auto-build 2>&1) || true
+
+                  # "Display Name already exists" 오류가 발생하면 무시하고 넘어가기
+                  if echo "$CREATE_RESULT" | grep -q "display name"; then
+                      echo "⚠️ Warning: Display name already exists. Skipping create-branch."
+                  else
+                      echo "✅ Branch created successfully."
+                  fi
+
+            - name: Deploy to Amplify
+              run: |
+                  aws amplify start-job --app-id $AMPLIFY_APP_ID --branch-name $PR_BRANCH --job-type RELEASE
+
+            - name: Wait for Amplify Deployment to Complete #Amplify 배포 완료 후에 PR comment 남기기
+              run: |
+                  echo "Waiting for Amplify deployment to complete..."
+                  APP_ID="${{ secrets.AMPLIFY_APP_ID }}"
+                  BRANCH_NAME="$PR_BRANCH"
+                  TIMEOUT=300  # 최대 5분(300초) 대기
+                  INTERVAL=10  # 10초마다 확인
+                  ELAPSED=0
+
+                  while [ $ELAPSED -lt $TIMEOUT ]; do
+                      STATUS=$(aws amplify list-jobs --app-id $APP_ID --branch-name $BRANCH_NAME --query "jobSummaries[0].status" --output text)
+
+                      if [[ "$STATUS" == "SUCCEED" ]]; then
+                          echo "✅ Deployment succeeded!"
+                          echo "DEPLOY_STATUS=success" >> $GITHUB_ENV
+                          break
+                      elif [[ "$STATUS" == "FAILED" ]]; then
+                          echo "❌ Deployment failed!"
+                          echo "DEPLOY_STATUS=failed" >> $GITHUB_ENV
+                          break
+                      fi
+
+                      echo "⏳ Deployment in progress... ($ELAPSED / $TIMEOUT seconds)"
+                      sleep $INTERVAL
+                      ELAPSED=$((ELAPSED + INTERVAL))
+                  done
+
+                  if [[ "$ELAPSED" -ge "$TIMEOUT" ]]; then
+                      echo "⚠️ Timeout reached! Deployment is still not complete."
+                      echo "DEPLOY_STATUS=timeout" >> $GITHUB_ENV
+                  fi
+
+            - name: Comment Deployment Status on PR
+              uses: actions/github-script@v6
+              with:
+                  github-token: ${{ secrets.ACTION_TOKEN }}
+                  script: |
+                      const status = process.env.DEPLOY_STATUS;
+                      const previewUrl = process.env.PREVIEW_URL;
+                      const amplifyConsole = "https://us-east-2.console.aws.amazon.com/amplify/apps/${process.env.AMPLIFY_APP_ID}/overview"
+                      let comment = "";
+
+                       if (status === "success") {
+                           comment = `✅ **Deployment Successful!**\n\n🚀 Preview is available at: [**${previewUrl}**](${previewUrl})`;
+                       } else if (status === "failed") {
+                           comment = `❌ **Deployment Failed!**\n\nPlease check AWS Amplify logs for more details.`;
+                       } else {
+                           comment = `⚠️ **Deployment Timeout!**\n\nAWS Amplify is still processing the deployment. Please check Amplify console manually.`;
+                       }
+
+                       github.rest.issues.createComment({
+                           issue_number: context.issue.number,
+                           owner: context.repo.owner,
+                           repo: context.repo.repo,
+                           body: comment
+                       });
+
+    amplify-cleanup:
+        runs-on: ubuntu-latest
+        env:
+            AMPLIFY_APP_ID: ${{ secrets.AMPLIFY_APP_ID }}
+            PR_BRANCH: ${{ github.head_ref }}
+        if: github.event.action == 'closed'
+        steps:
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: us-east-2
+
+            - name: Delete Preview Environment (PR Merged or Closed)
+              run: |
+
+                  # 브랜치 삭제
+                  aws amplify delete-branch --app-id $AMPLIFY_APP_ID --branch-name $PR_BRANCH --region us-east-2
