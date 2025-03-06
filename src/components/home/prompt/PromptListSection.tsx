@@ -22,7 +22,8 @@ import { useUser } from "@/hooks/useUser";
 import { Flex } from "antd";
 import useDeviceSize from "@/hooks/useDeviceSize";
 import { usePathname } from "next/navigation";
-import { memo } from "react";
+import { memo, useEffect, useRef, useState } from "react";
+import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
 
 interface PromptListSectionProps {
     viewType?: ViewType;
@@ -35,6 +36,54 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
     const { isMobile, isUnderTablet } = useDeviceSize();
     const limit = isUnderTablet ? 5 : 18;
     const pathname = usePathname();
+
+    const [currentScroll, setCurrentScroll] = useState<"right" | "left">(
+        "right"
+    );
+    const scrollLeftRef = useRef<HTMLDivElement>(null);
+    const scrollRightRef = useRef<HTMLDivElement>(null);
+
+    const handleScroll = () => {
+        if (currentScroll === "left" && scrollLeftRef.current) {
+            scrollLeftRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest",
+                inline: "start",
+            });
+        }
+        if (currentScroll === "right" && scrollRightRef.current) {
+            scrollRightRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest",
+                inline: "start",
+            });
+        }
+    };
+
+    useEffect(() => {
+        const observerOptions = {
+            root: null,
+            rootMargin: "0px",
+            threshold: 0.5, // 요소가 50% 이상 보일 때 감지
+        };
+
+        const leftObserver = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) setCurrentScroll("right");
+        }, observerOptions);
+
+        const rightObserver = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) setCurrentScroll("left");
+        }, observerOptions);
+
+        if (scrollLeftRef.current) leftObserver.observe(scrollLeftRef.current);
+        if (scrollRightRef.current)
+            rightObserver.observe(scrollRightRef.current);
+
+        return () => {
+            leftObserver.disconnect();
+            rightObserver.disconnect();
+        };
+    }, []);
 
     const promptContent = () => {
         if (searchedKeyword && pathname === "/") {
@@ -79,11 +128,13 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                 return (
                     <Flex vertical gap={63.5} justify="center">
                         <Flex
+                            // ref={scrollRef}
                             gap={23}
-                            justify={isMobile ? "center" : "space-between"}
-                            wrap={isMobile ? "wrap" : "nowrap"}
+                            justify="stretch"
+                            wrap="nowrap"
+                            style={{ overflowX: "scroll" }}
                         >
-                            <SmallWrapper>
+                            <SmallWrapper ref={scrollLeftRef}>
                                 <PromptList
                                     searchType="popular"
                                     usePage={false}
@@ -97,7 +148,11 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                     defaultSortBy="star"
                                 />
                             </SmallWrapper>
-                            <SmallWrapper>
+                            <ScrollButton
+                                direction={currentScroll}
+                                onClick={() => handleScroll()}
+                            />
+                            <SmallWrapper ref={scrollRightRef}>
                                 <PromptList
                                     searchType="total"
                                     usePage={false}
