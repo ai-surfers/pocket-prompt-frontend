@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import Icon from "../Icon";
+import { CurrentScrollType } from "@/components/home/prompt/PromptListSection";
 
 interface ScrollButtonProps {
-    currentScroll: "left" | "right" | "switching";
+    currentScroll: CurrentScrollType;
     onClick: () => void;
 }
 

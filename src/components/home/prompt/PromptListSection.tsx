@@ -30,6 +30,8 @@ interface PromptListSectionProps {
     viewType?: ViewType;
 }
 
+export type CurrentScrollType = "right" | "left" | "switching";
+
 const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
@@ -38,9 +40,8 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
     const limit = isUnderTablet ? 5 : 18;
     const pathname = usePathname();
 
-    const [currentScroll, setCurrentScroll] = useState<
-        "right" | "left" | "switching"
-    >("left");
+    const [currentScroll, setCurrentScroll] =
+        useState<CurrentScrollType>("left");
     const scrollLeftRef = useRef<HTMLDivElement>(null);
     const scrollRightRef = useRef<HTMLDivElement>(null);
 
@@ -67,7 +68,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
         const observerOptions = {
             root: null,
             rootMargin: "0px",
-            threshold: 0.9, // 요소가 90% 이상 보일 때 감지
+            threshold: 0.7, // 요소가 90% 이상 보일 때 감지
         };
         console.log("감지중");
 
@@ -111,6 +112,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
         if (scrollLeftRef.current) leftObserver.observe(scrollLeftRef.current);
         if (scrollRightRef.current)
             rightObserver.observe(scrollRightRef.current);
+
         return () => {
             leftObserver.disconnect();
             rightObserver.disconnect();
@@ -171,6 +173,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                             <SmallWrapper
                                 ref={scrollLeftRef}
                                 $isMobile={isMobile}
+                                $isFocused={currentScroll !== "right"}
                             >
                                 <PromptList
                                     searchType="popular"
@@ -195,6 +198,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                             <SmallWrapper
                                 ref={scrollRightRef}
                                 $isMobile={isMobile}
+                                $isFocused={currentScroll !== "left"}
                             >
                                 {isMobile && currentScroll === "right" && (
                                     <ScrollButton
@@ -287,16 +291,28 @@ const LargeWrapper = styled.div`
     margin: 9px 0 44px 0;
 `;
 
-const SmallWrapper = styled.div<{ $isMobile: boolean }>`
+const SmallWrapper = styled.div<{
+    $isMobile: boolean;
+    $isFocused: boolean;
+}>`
     ${({ theme }) => theme.mixins.flexBox("column", "center", "center")};
     width: ${({ $isMobile }) => ($isMobile ? "100%" : "540px")};
     height: 502px;
     // margin-bottom: 63.5px;
     border-radius: 12px;
-    border: 1.5px solid var(--primary-10, #f2f3fd);
-    background: var(--primary-5, #f8f8fe);
+    background: ${({ $isMobile, $isFocused, theme }) =>
+        $isMobile
+            ? $isFocused
+                ? theme.colors.primary_5
+                : theme.colors.primary_20
+            : "var(--primary-5, #f8f8fe)"};
     box-sizing: border-box;
     padding: 21px 12px;
     justify-content: flex-start;
     position: relative;
+    border: ${({ $isMobile, $isFocused, theme }) =>
+        $isMobile && $isFocused
+            ? `1.5px solid ${theme.colors.primary_10}`
+            : "none"};
+    transition: background-color 0.3s ease;
 `;
