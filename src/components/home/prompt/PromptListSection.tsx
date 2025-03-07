@@ -24,6 +24,7 @@ import useDeviceSize from "@/hooks/useDeviceSize";
 import { usePathname } from "next/navigation";
 import { memo, useEffect, useRef, useState } from "react";
 import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
+import { boolean } from "zod";
 
 interface PromptListSectionProps {
     viewType?: ViewType;
@@ -37,26 +38,28 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
     const limit = isUnderTablet ? 5 : 18;
     const pathname = usePathname();
 
-    const [currentScroll, setCurrentScroll] = useState<"right" | "left">(
-        "right"
-    );
+    const [currentScroll, setCurrentScroll] = useState<
+        "right" | "left" | "switching"
+    >("left");
     const scrollLeftRef = useRef<HTMLDivElement>(null);
     const scrollRightRef = useRef<HTMLDivElement>(null);
 
     const handleScroll = () => {
-        if (currentScroll === "left" && scrollLeftRef.current) {
-            scrollLeftRef.current.scrollIntoView({
-                behavior: "smooth",
-                block: "nearest",
-                inline: "start",
-            });
-        }
-        if (currentScroll === "right" && scrollRightRef.current) {
+        if (currentScroll === "left" && scrollRightRef.current) {
             scrollRightRef.current.scrollIntoView({
                 behavior: "smooth",
                 block: "nearest",
                 inline: "start",
             });
+            setCurrentScroll("right");
+        }
+        if (currentScroll === "right" && scrollLeftRef.current) {
+            scrollLeftRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest",
+                inline: "start",
+            });
+            setCurrentScroll("left");
         }
     };
 
@@ -64,21 +67,50 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
         const observerOptions = {
             root: null,
             rootMargin: "0px",
-            threshold: 0.5, // 요소가 50% 이상 보일 때 감지
+            threshold: 0.9, // 요소가 90% 이상 보일 때 감지
+        };
+        console.log("감지중");
+
+        const handleIntersection = () => {
+            const leftVisible =
+                scrollLeftRef.current?.getBoundingClientRect().left ?? -1 >= 0;
+            const rightVisible =
+                scrollRightRef.current?.getBoundingClientRect().right ??
+                window.innerWidth <= window.innerWidth;
+
+            if (leftVisible && !rightVisible) {
+                setCurrentScroll("left");
+                console.log("set to left");
+            } else if (!leftVisible && rightVisible) {
+                setCurrentScroll("right");
+                console.log("set to right");
+            } else {
+                setCurrentScroll("switching");
+                console.log("set to switching");
+            }
         };
 
         const leftObserver = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) setCurrentScroll("right");
+            if (entry.isIntersecting) {
+                setCurrentScroll("left");
+                console.log("90% left, set to left");
+            } else {
+                handleIntersection();
+            }
         }, observerOptions);
 
         const rightObserver = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) setCurrentScroll("left");
+            if (entry.isIntersecting) {
+                setCurrentScroll("right");
+                console.log("90% right, set to right");
+            } else {
+                handleIntersection();
+            }
         }, observerOptions);
 
         if (scrollLeftRef.current) leftObserver.observe(scrollLeftRef.current);
         if (scrollRightRef.current)
             rightObserver.observe(scrollRightRef.current);
-
         return () => {
             leftObserver.disconnect();
             rightObserver.disconnect();
@@ -128,13 +160,18 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                 return (
                     <Flex vertical gap={63.5} justify="center">
                         <Flex
-                            // ref={scrollRef}
                             gap={23}
                             justify="stretch"
                             wrap="nowrap"
-                            style={{ overflowX: "scroll" }}
+                            style={{
+                                overflowX: "scroll",
+                                position: "relative",
+                            }}
                         >
-                            <SmallWrapper ref={scrollLeftRef}>
+                            <SmallWrapper
+                                ref={scrollLeftRef}
+                                $isMobile={isMobile}
+                            >
                                 <PromptList
                                     searchType="popular"
                                     usePage={false}
@@ -147,12 +184,24 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                     limit={3}
                                     defaultSortBy="star"
                                 />
+                                {isMobile && currentScroll === "left" && (
+                                    <ScrollButton
+                                        currentScroll={currentScroll}
+                                        onClick={() => handleScroll()}
+                                    />
+                                )}
                             </SmallWrapper>
-                            <ScrollButton
-                                direction={currentScroll}
-                                onClick={() => handleScroll()}
-                            />
-                            <SmallWrapper ref={scrollRightRef}>
+
+                            <SmallWrapper
+                                ref={scrollRightRef}
+                                $isMobile={isMobile}
+                            >
+                                {isMobile && currentScroll === "right" && (
+                                    <ScrollButton
+                                        currentScroll={currentScroll}
+                                        onClick={() => handleScroll()}
+                                    />
+                                )}
                                 <PromptList
                                     searchType="total"
                                     usePage={false}
@@ -166,6 +215,12 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                     defaultSortBy="created_at"
                                 />
                             </SmallWrapper>
+                            {/* {isMobile && (
+                                <ScrollButton
+                                    currentScroll={currentScroll}
+                                    onClick={() => handleScroll()}
+                                />
+                            )} */}
                         </Flex>
 
                         <LargeWrapper>
@@ -232,9 +287,9 @@ const LargeWrapper = styled.div`
     margin: 9px 0 44px 0;
 `;
 
-const SmallWrapper = styled.div`
+const SmallWrapper = styled.div<{ $isMobile: boolean }>`
     ${({ theme }) => theme.mixins.flexBox("column", "center", "center")};
-    width: 540px;
+    width: ${({ $isMobile }) => ($isMobile ? "100%" : "540px")};
     height: 502px;
     // margin-bottom: 63.5px;
     border-radius: 12px;
@@ -243,4 +298,5 @@ const SmallWrapper = styled.div`
     box-sizing: border-box;
     padding: 21px 12px;
     justify-content: flex-start;
+    position: relative;
 `;

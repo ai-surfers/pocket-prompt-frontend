@@ -1,22 +1,29 @@
 import React from "react";
 import styled from "styled-components";
 import Icon from "../Icon";
-import { ArrowRight } from "iconsax-react";
 
 interface ScrollButtonProps {
-    direction: "left" | "right";
+    currentScroll: "left" | "right" | "switching";
     onClick: () => void;
 }
 
-const ScrollButton: React.FC<ScrollButtonProps> = ({ direction, onClick }) => {
-    return (
+const ScrollButton: React.FC<ScrollButtonProps> = ({
+    currentScroll,
+    onClick,
+}) => {
+    if (currentScroll === "switching") return <></>;
+    console.log(
+        "버튼 렌더링, 버튼 방향",
+        currentScroll === "left" ? "right" : "left"
+    );
+    return currentScroll === "left" ? (
         <StyledButton
             onClick={onClick}
             style={{
                 position: "absolute",
-                [direction === "left" ? "left" : "right"]: 0,
-                top: "40%",
-                transform: "translateY(-70%)",
+                left: "calc(100vw - 64px)",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
                 zIndex: 10,
                 background: "",
                 border: "none",
@@ -25,11 +32,25 @@ const ScrollButton: React.FC<ScrollButtonProps> = ({ direction, onClick }) => {
                 boxShadow: "0 0 5px rgba(0,0,0,0.2)",
             }}
         >
-            {direction === "left" ? (
-                <Icon name="ArrowLeft2" color="G_400" />
-            ) : (
-                <Icon name="ArrowRight2" color="G_400" />
-            )}
+            <Icon name="ArrowRight2" color="G_400" />
+        </StyledButton>
+    ) : (
+        <StyledButton
+            onClick={onClick}
+            style={{
+                position: "absolute",
+                right: "calc(100vw - 43px)",
+                top: "50%",
+                transform: "translate(100%, -50%)",
+                zIndex: 100,
+                background: "",
+                border: "none",
+                cursor: "pointer",
+                padding: "10px",
+                boxShadow: "0 0 5px rgba(0,0,0,0.2)",
+            }}
+        >
+            <Icon name="ArrowLeft2" color="G_400" />
         </StyledButton>
     );
 };
