@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Icon from "../Icon";
-import { CurrentScrollType } from "@/components/home/prompt/PromptListSection";
+import { CurrentScrollType } from "@/hooks/ui/useScrollButtonControl";
 
 interface ScrollButtonProps {
     currentScroll: CurrentScrollType;
