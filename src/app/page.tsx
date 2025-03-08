@@ -1,6 +1,6 @@
 "use client";
 
-import Banner from "@components/home/Banner";
+import SearchSection from "@components/home/SearchSection";
 import { Wrapper } from "@components/layout/LayoutClient";
 import styled from "styled-components";
 import PromptListSection from "@/components/home/prompt/PromptListSection";
@@ -65,9 +65,9 @@ function HomeContent() {
                     </AdContainer>
                 </LeftSection>
                 <ContentWrapper>
-                    <BannerWrapper>
-                        <Banner />
-                    </BannerWrapper>
+                    <SearchSectionWrapper>
+                        <SearchSection />
+                    </SearchSectionWrapper>
                     <PromptListSection />
                 </ContentWrapper>
             </HomeContentWrapper>
@@ -111,7 +111,7 @@ const ContentWrapper = styled(Wrapper)`
     padding: 0 10px;
 `;
 
-const BannerWrapper = styled.div`
+const SearchSectionWrapper = styled.div`
     margin-bottom: 15px;
     width: 100%;
 `;
