@@ -1,21 +1,18 @@
 import Button from "@/components/common/Button/Button";
+import Text from "@/components/common/Text/Text";
 import { Categories } from "@/core/Prompt";
 import useDeviceSize from "@/hooks/useDeviceSize";
-import {
-    keywordState,
-    searchedCategoryState,
-    searchedKeywordState,
-} from "@/states/searchState";
+import { keywordState, searchedCategoryState } from "@/states/searchState";
+import Total from "@public/svg/home/Total";
+import { Flex } from "antd";
 import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 const SearchChips = () => {
-    const setKeyword = useSetRecoilState(keywordState);
     const [searchedCategory, setSearchedCategory] = useRecoilState(
         searchedCategoryState
     );
-    const [selectedButton, setSelectedButton] = useState("total");
 
     const { isUnderTablet } = useDeviceSize();
 
@@ -24,9 +21,13 @@ const SearchChips = () => {
     };
 
     const totalCategories = {
-        total: { ko: "전체", en: "total", emoji: "" },
+        total: { ko: "전체", en: "total", emoji: <Total /> },
         ...Categories,
     };
+
+    useEffect(() => {
+        console.log(searchedCategory);
+    }, [searchedCategory]);
 
     return (
         <SearchChipsWrapper>
@@ -38,8 +39,21 @@ const SearchChips = () => {
                     onClick={() => handleChipClick(category.en)}
                     $selected={searchedCategory === category.en}
                     $mobile={isUnderTablet}
+                    hierarchy="normal"
                 >
-                    {category.ko}
+                    <Flex vertical justify="center">
+                        {category.emoji}
+                        <Text
+                            font={isUnderTablet ? "c1_12_semi" : "c1_12_reg"}
+                            color={
+                                searchedCategory === category.en
+                                    ? "primary"
+                                    : "G_400"
+                            }
+                        >
+                            {category.ko}
+                        </Text>
+                    </Flex>
                 </StyledButton>
             ))}
         </SearchChipsWrapper>
@@ -57,13 +71,11 @@ const SearchChipsWrapper = styled.div`
 `;
 
 const StyledButton = styled(Button)<{ $selected: boolean; $mobile: boolean }>`
-    height: 32px;
-    ${({ $mobile, theme }) =>
-        $mobile ? theme.fonts.c1_12_semi : theme.fonts.b3_14_med}
-
+    width: 60px;
+    height: 80px;
     background-color: ${({ $selected, theme }) =>
-        $selected ? theme.colors.primary : theme.colors.white};
-    color: ${({ $selected, theme }) =>
-        $selected ? theme.colors.white : theme.colors.primary};
-    border: 1px solid ${({ theme }) => theme.colors.primary_30};
+        $selected ? theme.colors.primary_10 : theme.colors.G_50};
+    border: ${({ $selected, theme }) =>
+        $selected ? "1px solid var(--primary-40, #C8CCF7)" : "none"};
+    ${({ theme }) => theme.mixins.flexBox("column", "center", "center")}
 `;

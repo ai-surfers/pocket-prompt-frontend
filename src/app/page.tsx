@@ -112,7 +112,7 @@ const ContentWrapper = styled(Wrapper)`
 `;
 
 const SearchSectionWrapper = styled.div`
-    margin-bottom: 15px;
+    margin-bottom: 60px;
     width: 100%;
 `;
 

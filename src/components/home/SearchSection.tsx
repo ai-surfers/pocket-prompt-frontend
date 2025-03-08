@@ -6,18 +6,12 @@ import SearchChips from "./Search/SearchChips";
 
 const SearchSection = () => {
     return (
-        <Wrapper>
-            <SearchWrapper>
-                <SearchBar />
-                <SearchChips />
-            </SearchWrapper>
-        </Wrapper>
+        <SearchWrapper>
+            <SearchBar />
+            <SearchChips />
+        </SearchWrapper>
     );
 };
-
-const Wrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("column")};
-`;
 
 const SearchWrapper = styled.div`
     width: 80%;

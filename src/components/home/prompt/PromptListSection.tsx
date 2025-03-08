@@ -26,6 +26,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
 import { boolean } from "zod";
 import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
+import { Categories, Category } from "@/core/Prompt";
 
 interface PromptListSectionProps {
     viewType?: ViewType;
@@ -41,6 +42,13 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
 
     const { scrollLeftRef, scrollRightRef, handleScroll, currentScroll } =
         useScrollButtonControl();
+
+    const totalCategories: Category = {
+        total: { ko: "전체", en: "total", emoji: <></> },
+        ...Categories,
+    };
+
+    console.log(searchedCategory, totalCategories[searchedCategory]);
 
     const promptContent = () => {
         if (searchedKeyword && pathname === "/") {
@@ -72,7 +80,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                         viewType={viewType}
                         title={
                             <Text font="h2_20_semi" color="G_800">
-                                {searchedCategory}
+                                {totalCategories[searchedCategory].ko} 프롬프트
                             </Text>
                         }
                         limit={limit}
