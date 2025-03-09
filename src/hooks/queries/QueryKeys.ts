@@ -10,6 +10,30 @@ const PROMPT_KEYS = {
     detail: (id: string) => [...PROMPT_KEYS.details(), id] as const, // ["prompts", "detail", "id"]
 };
 
+// src/constants/PROMPT_KEYS.ts
+export const PROMPT_QUERY_KEYS_FOR_PREFETCH = {
+    ALL_PROMPTS: {
+        viewType: "open",
+        currentPage: 1,
+        itemsPerPage: 18,
+        sortBy: "created_at",
+    },
+    POPULAR_PROMPTS: {
+        viewType: "open",
+        limit: 3,
+        sortBy: "star",
+        currentPage: 1,
+        itemsPerPage: 18,
+    },
+    FEATURED_PROMPTS: {
+        viewType: "featured",
+        limit: 3,
+        sortBy: "created_at",
+        currentPage: 1,
+        itemsPerPage: 18,
+    },
+} as const;
+
 const PAYMENTS_KEYS = {
     all: ["payments"] as const,
 };
