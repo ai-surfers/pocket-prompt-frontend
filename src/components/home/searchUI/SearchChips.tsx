@@ -2,17 +2,21 @@ import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
 import { Categories } from "@/core/Prompt";
 import useDeviceSize from "@/hooks/useDeviceSize";
-import { keywordState, searchedCategoryState } from "@/states/searchState";
+import {
+    searchedCategoryState,
+    searchedKeywordState,
+} from "@/states/searchState";
 import Total from "@public/svg/home/Total";
 import { Flex } from "antd";
 import { useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 const SearchChips = () => {
     const [searchedCategory, setSearchedCategory] = useRecoilState(
         searchedCategoryState
     );
+    const searchedkeyword = useRecoilValue(searchedKeywordState);
 
     const { isUnderTablet } = useDeviceSize();
 
@@ -25,12 +29,8 @@ const SearchChips = () => {
         ...Categories,
     };
 
-    useEffect(() => {
-        console.log(searchedCategory);
-    }, [searchedCategory]);
-
     return (
-        <SearchChipsWrapper>
+        <SearchChipsWrapper $isVisible={searchedkeyword === ""}>
             {Object.entries(totalCategories).map(([key, category]) => (
                 <StyledButton
                     key={key}
@@ -62,11 +62,18 @@ const SearchChips = () => {
 
 export default SearchChips;
 
-const SearchChipsWrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox()};
-    width: 100%;
-    flex-wrap: wrap;
+const SearchChipsWrapper = styled.div<{ $isVisible: boolean }>`
+    ${({ theme }) => theme.mixins.flexBox("row", "start", "center")};
     gap: 8px;
+    overflow-x: scroll;
+    width: 100%;
+
+    // 사라지는 모션
+    opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
+    max-height: ${({ $isVisible }) =>
+        $isVisible ? "80px" : "0px"}; /* 배너 높이 지정 */
+    overflow-y: hidden;
+    transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
 `;
 
 const StyledButton = styled(Button)<{ $selected: boolean; $mobile: boolean }>`
