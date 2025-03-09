@@ -48,8 +48,6 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
         ...Categories,
     };
 
-    console.log(searchedCategory, totalCategories[searchedCategory]);
-
     const promptContent = () => {
         if (searchedKeyword && pathname === "/") {
             // 키워드 검색시

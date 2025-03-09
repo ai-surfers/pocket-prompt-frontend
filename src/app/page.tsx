@@ -30,7 +30,8 @@ export default function HomePage() {
 }
 
 function HomeContent() {
-    const { isUnderTablet, isMobile } = useDeviceSize();
+    const { isUnderTablet } = useDeviceSize();
+
     const resetSearchedKeyword = useResetRecoilState(searchedKeywordState);
     const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
     const searchParams = useSearchParams();
@@ -67,7 +68,7 @@ function HomeContent() {
                     </AdContainer>
                 </LeftSection>
                 <Flex vertical>
-                    <Banner />
+                    {<Banner />}
                     <ContentWrapper>
                         <SearchSectionWrapper>
                             <SearchSection />
