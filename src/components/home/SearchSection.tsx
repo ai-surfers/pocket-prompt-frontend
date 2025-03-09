@@ -1,8 +1,8 @@
 "use client";
 
 import { styled } from "styled-components";
-import SearchBar from "./search/SearchBar";
-import SearchChips from "./search/SearchChips";
+import SearchBar from "./searchUI/SearchBar";
+import SearchChips from "./searchUI/SearchChips";
 
 const SearchSection = () => {
     return (
