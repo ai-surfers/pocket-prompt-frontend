@@ -17,6 +17,8 @@ import Icon from "../components/common/Icon";
 import VocModal from "@/components/home/VocModal";
 import { useSearchParams } from "next/navigation";
 import HomeSiderBar from "@/components/home/siderbarAd/HomeSiderBar";
+import Banner from "@/components/home/banner/Banner";
+import { Flex } from "antd";
 
 export default function HomePage() {
     return (
@@ -64,12 +66,15 @@ function HomeContent() {
                         <HomeSiderBar />
                     </AdContainer>
                 </LeftSection>
-                <ContentWrapper>
-                    <SearchSectionWrapper>
-                        <SearchSection />
-                    </SearchSectionWrapper>
-                    <PromptListSection />
-                </ContentWrapper>
+                <Flex vertical>
+                    <Banner />
+                    <ContentWrapper>
+                        <SearchSectionWrapper>
+                            <SearchSection />
+                        </SearchSectionWrapper>
+                        <PromptListSection />
+                    </ContentWrapper>
+                </Flex>
             </HomeContentWrapper>
             <IconWrap onClick={() => setIsVocModalOpen(true)}>
                 <Icon name={"MessageText"} color={"white"} size={30} />
