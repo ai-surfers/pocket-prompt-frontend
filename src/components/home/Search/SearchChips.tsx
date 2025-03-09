@@ -65,7 +65,6 @@ export default SearchChips;
 const SearchChipsWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox()};
     width: 100%;
-    max-width: 445px;
     flex-wrap: wrap;
     gap: 8px;
 `;
