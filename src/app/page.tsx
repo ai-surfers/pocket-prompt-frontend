@@ -1,6 +1,6 @@
 "use client";
 
-import Banner from "@components/home/Banner";
+import SearchSection from "@components/home/SearchSection";
 import { Wrapper } from "@components/layout/LayoutClient";
 import styled from "styled-components";
 import PromptListSection from "@/components/home/prompt/PromptListSection";
@@ -17,6 +17,8 @@ import Icon from "../components/common/Icon";
 import VocModal from "@/components/home/VocModal";
 import { useSearchParams } from "next/navigation";
 import HomeSiderBar from "@/components/home/siderbarAd/HomeSiderBar";
+import Banner from "@/components/home/banner/Banner";
+import { Flex } from "antd";
 
 export default function HomePage() {
     return (
@@ -28,7 +30,8 @@ export default function HomePage() {
 }
 
 function HomeContent() {
-    const { isUnderTablet, isMobile } = useDeviceSize();
+    const { isUnderTablet } = useDeviceSize();
+
     const resetSearchedKeyword = useResetRecoilState(searchedKeywordState);
     const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
     const searchParams = useSearchParams();
@@ -64,12 +67,15 @@ function HomeContent() {
                         <HomeSiderBar />
                     </AdContainer>
                 </LeftSection>
-                <ContentWrapper>
-                    <BannerWrapper>
-                        <Banner />
-                    </BannerWrapper>
-                    <PromptListSection />
-                </ContentWrapper>
+                <Flex vertical>
+                    <Banner />
+                    <ContentWrapper>
+                        <SearchSectionWrapper>
+                            <SearchSection />
+                        </SearchSectionWrapper>
+                        <PromptListSection />
+                    </ContentWrapper>
+                </Flex>
             </HomeContentWrapper>
             <IconWrap onClick={() => setIsVocModalOpen(true)}>
                 <Icon name={"MessageText"} color={"white"} size={30} />
@@ -104,6 +110,10 @@ const HomeContentWrapper = styled.div<{ $isUnderTablet: boolean }>`
     margin: 0 auto;
 `;
 
+const BannerWrapper = styled.div<{ $isUnderTablet: boolean }>`
+    padding: ${({ $isUnderTablet }) => ($isUnderTablet ? "0 10px" : "none")};
+`;
+
 const ContentWrapper = styled(Wrapper)`
     max-width: 1107px;
     width: 100vw;
@@ -111,8 +121,8 @@ const ContentWrapper = styled(Wrapper)`
     padding: 0 10px;
 `;
 
-const BannerWrapper = styled.div`
-    margin-bottom: 15px;
+const SearchSectionWrapper = styled.div`
+    margin-bottom: 60px;
     width: 100%;
 `;
 

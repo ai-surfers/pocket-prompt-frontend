@@ -18,6 +18,9 @@ const nextConfig = {
       },
     reactStrictMode: true,
     swcMinify: true,
+    images: {
+        formats: ["image/avif", "image/webp"],
+    },
     env: {
         APP_ENV: process.env.APP_ENV, 
         NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,

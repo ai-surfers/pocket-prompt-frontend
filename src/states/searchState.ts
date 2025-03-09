@@ -17,6 +17,6 @@ export const searchedKeywordState = atom({
 
 export const searchedCategoryState = atom({
     key: "searchedCategoryState",
-    default: "",
+    default: "total",
     effects_UNSTABLE: [persistAtom],
 });
