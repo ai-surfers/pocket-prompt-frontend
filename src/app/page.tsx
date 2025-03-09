@@ -68,7 +68,7 @@ function HomeContent() {
                     </AdContainer>
                 </LeftSection>
                 <Flex vertical>
-                    {<Banner />}
+                    <Banner />
                     <ContentWrapper>
                         <SearchSectionWrapper>
                             <SearchSection />
@@ -108,6 +108,10 @@ const HomeContentWrapper = styled.div<{ $isUnderTablet: boolean }>`
         )};
     gap: ${({ $isUnderTablet }) => ($isUnderTablet ? "20px" : "40px")};
     margin: 0 auto;
+`;
+
+const BannerWrapper = styled.div<{ $isUnderTablet: boolean }>`
+    padding: ${({ $isUnderTablet }) => ($isUnderTablet ? "0 10px" : "none")};
 `;
 
 const ContentWrapper = styled(Wrapper)`
