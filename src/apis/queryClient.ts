@@ -21,11 +21,11 @@ const queryClient = new QueryClient({
     }),
 });
 
-function isAxiosError(error: any): error is AxiosError {
+export function isAxiosError(error: any): error is AxiosError {
     return (error as AxiosError).isAxiosError !== undefined;
 }
 
-function handleAxiosError(error: any) {
+export function handleAxiosError(error: any) {
     if (isAxiosError(error) && error.response) {
         const errorMessage = (error.response.data as BaseResponse<string>)
             .detail;

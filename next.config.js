@@ -18,6 +18,9 @@ const nextConfig = {
       },
     reactStrictMode: true,
     swcMinify: true,
+    experimental: {
+        optimizeCss: true, // 자동으로 사용되지 않는 CSS 제거 & 압축
+      },
     env: {
         APP_ENV: process.env.APP_ENV, 
         NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
