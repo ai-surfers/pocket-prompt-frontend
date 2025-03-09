@@ -34,9 +34,9 @@ const Video = () => (
             rx="4.46629"
             transform="matrix(0.965978 -0.258625 0.259014 0.965874 11.4382 22.8142)"
             fill="#7580EA"
-            fill-opacity="0.37"
+            fillOpacity="0.37"
             stroke="url(#paint1_linear_5464_39682)"
-            stroke-width="0.210286"
+            strokeWidth="0.210286"
         />
         <path
             d="M34.9415 16.4894C37.3804 15.8365 39.8875 17.284 40.5415 19.7226L40.694 20.2915L12.789 27.7626L12.6364 27.1937C11.9825 24.7551 13.4294 22.2489 15.8683 21.596L34.9415 16.4894Z"
@@ -61,7 +61,7 @@ const Video = () => (
             rx="4.46629"
             transform="matrix(0.965978 -0.258625 0.259014 0.965874 11.4382 22.8142)"
             stroke="url(#paint2_linear_5464_39682)"
-            stroke-width="0.210286"
+            strokeWidth="0.210286"
         />
         <path
             d="M13.7379 22.9148L28.7539 10.4235C30.741 8.77059 33.7213 9.06812 35.3462 11.0817C35.6216 11.423 35.56 11.9205 35.2097 12.184L19.0644 24.3295C17.254 25.6914 14.6245 24.9931 13.7379 22.9148Z"
@@ -84,7 +84,7 @@ const Video = () => (
                 rx="1.51984"
                 transform="matrix(0.965978 -0.258625 -0.258189 -0.966094 17.1064 32.5044)"
                 fill="url(#paint4_linear_5464_39682)"
-                fill-opacity="0.81"
+                fillOpacity="0.81"
             />
             <rect
                 x="0.0813958"
@@ -94,8 +94,8 @@ const Video = () => (
                 rx="1.40484"
                 transform="matrix(0.965978 -0.258625 -0.258189 -0.966094 17.0729 32.2485)"
                 stroke="url(#paint5_linear_5464_39682)"
-                stroke-opacity="0.9"
-                stroke-width="0.23"
+                strokeOpacity="0.9"
+                strokeWidth="0.23"
             />
         </g>
         <foreignObject x="6.49946" y="21.3681" width="30.6671" height="27.2789">
@@ -115,7 +115,7 @@ const Video = () => (
                 rx="1.51984"
                 transform="matrix(0.965978 -0.258625 -0.258189 -0.966094 18.4434 37.4883)"
                 fill="url(#paint6_linear_5464_39682)"
-                fill-opacity="0.81"
+                fillOpacity="0.81"
             />
             <rect
                 x="0.0813958"
@@ -125,8 +125,8 @@ const Video = () => (
                 rx="1.40484"
                 transform="matrix(0.965978 -0.258625 -0.258189 -0.966094 18.4098 37.2324)"
                 stroke="url(#paint7_linear_5464_39682)"
-                stroke-opacity="0.9"
-                stroke-width="0.23"
+                strokeOpacity="0.9"
+                strokeWidth="0.23"
             />
         </g>
         <foreignObject x="2.55903" y="12.038" width="25.4337" height="25.4029">
@@ -146,7 +146,7 @@ const Video = () => (
             rx="1.19579"
             transform="matrix(0.965978 -0.258625 -0.258189 -0.966094 14.4082 26.2095)"
             fill="url(#paint8_linear_5464_39682)"
-            fill-opacity="0.9"
+            fillOpacity="0.9"
         />
         <defs>
             <clipPath
@@ -216,8 +216,8 @@ const Video = () => (
                 y2="7.23386"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#C9CFFF" />
-                <stop offset="1" stop-color="#626ED4" />
+                <stop stopColor="#C9CFFF" />
+                <stop offset="1" stopColor="#626ED4" />
             </linearGradient>
             <linearGradient
                 id="paint1_linear_5464_39682"
@@ -227,8 +227,8 @@ const Video = () => (
                 y2="24.0821"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
-                <stop offset="1" stop-color="white" stop-opacity="0" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="white" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint2_linear_5464_39682"
@@ -238,8 +238,8 @@ const Video = () => (
                 y2="24.0821"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
-                <stop offset="1" stop-color="white" stop-opacity="0" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="white" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint3_linear_5464_39682"
@@ -249,10 +249,10 @@ const Video = () => (
                 y2="21.7348"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#BEC4F6" />
-                <stop offset="0.427118" stop-color="#858EE1" />
-                <stop offset="0.721225" stop-color="#6874D6" />
-                <stop offset="1" stop-color="#626ED4" />
+                <stop stopColor="#BEC4F6" />
+                <stop offset="0.427118" stopColor="#858EE1" />
+                <stop offset="0.721225" stopColor="#6874D6" />
+                <stop offset="1" stopColor="#626ED4" />
             </linearGradient>
             <linearGradient
                 id="paint4_linear_5464_39682"
@@ -262,8 +262,8 @@ const Video = () => (
                 y2="1.26491"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#FCFDFE" />
-                <stop offset="1" stop-color="#FCFDFE" stop-opacity="0" />
+                <stop stopColor="#FCFDFE" />
+                <stop offset="1" stopColor="#FCFDFE" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint5_linear_5464_39682"
@@ -273,8 +273,8 @@ const Video = () => (
                 y2="0.350939"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
-                <stop offset="1" stop-color="white" stop-opacity="0" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="white" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint6_linear_5464_39682"
@@ -284,8 +284,8 @@ const Video = () => (
                 y2="1.50945"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#FCFDFE" />
-                <stop offset="1" stop-color="#FCFDFE" stop-opacity="0" />
+                <stop stopColor="#FCFDFE" />
+                <stop offset="1" stopColor="#FCFDFE" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint7_linear_5464_39682"
@@ -295,8 +295,8 @@ const Video = () => (
                 y2="-1.2932"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
-                <stop offset="1" stop-color="white" stop-opacity="0" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="white" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint8_linear_5464_39682"
@@ -306,8 +306,8 @@ const Video = () => (
                 y2="1.31072"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#FCFDFE" />
-                <stop offset="1" stop-color="#FCFDFE" stop-opacity="0" />
+                <stop stopColor="#FCFDFE" />
+                <stop offset="1" stopColor="#FCFDFE" stopOpacity="0" />
             </linearGradient>
         </defs>
     </svg>

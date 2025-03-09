@@ -33,9 +33,9 @@ const Marketing = () => (
             data-figma-bg-blur-radius="6.29302"
             d="M23.5407 13.397C24.5468 10.5875 28.1521 9.8136 30.2245 11.9622L45.3452 27.6388C46.4524 28.7867 46.813 30.4634 46.2755 31.9644C45.7279 33.4932 44.3466 34.5673 42.7304 34.7209L21.2685 36.7598C18.3329 37.0387 16.1023 34.1679 17.0968 31.3908L23.5407 13.397Z"
             fill="#7580EA"
-            fill-opacity="0.32"
+            fillOpacity="0.32"
             stroke="url(#paint2_linear_5464_39630)"
-            stroke-width="0.32093"
+            strokeWidth="0.32093"
         />
         <foreignObject x="8.01806" y="3.4204" width="33.0254" height="40.8018">
             <div
@@ -56,9 +56,9 @@ const Marketing = () => (
             rx="1.60663"
             transform="matrix(-0.33715 0.941451 0.941168 0.33794 25.5682 15.55)"
             fill="url(#paint3_linear_5464_39630)"
-            fill-opacity="0.9"
+            fillOpacity="0.9"
             stroke="url(#paint4_linear_5464_39630)"
-            stroke-width="0.32093"
+            strokeWidth="0.32093"
         />
         <rect
             width="6.85356"
@@ -109,8 +109,8 @@ const Marketing = () => (
                 y2="1.19325"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#BEC4F6" />
-                <stop offset="1" stop-color="#626ED4" />
+                <stop stopColor="#BEC4F6" />
+                <stop offset="1" stopColor="#626ED4" />
             </linearGradient>
             <linearGradient
                 id="paint1_linear_5464_39630"
@@ -120,8 +120,8 @@ const Marketing = () => (
                 y2="34.5206"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#AAB2F5" />
-                <stop offset="1" stop-color="#707BDB" />
+                <stop stopColor="#AAB2F5" />
+                <stop offset="1" stopColor="#707BDB" />
             </linearGradient>
             <linearGradient
                 id="paint2_linear_5464_39630"
@@ -131,8 +131,8 @@ const Marketing = () => (
                 y2="45.5273"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
-                <stop offset="1" stop-color="white" stop-opacity="0" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="white" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint3_linear_5464_39630"
@@ -142,8 +142,8 @@ const Marketing = () => (
                 y2="1.27163"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#FCFDFE" />
-                <stop offset="1" stop-color="#FCFDFE" stop-opacity="0" />
+                <stop stopColor="#FCFDFE" />
+                <stop offset="1" stopColor="#FCFDFE" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint4_linear_5464_39630"
@@ -153,8 +153,8 @@ const Marketing = () => (
                 y2="1.71007"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
-                <stop offset="1" stop-color="white" stop-opacity="0" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="white" stopOpacity="0" />
             </linearGradient>
         </defs>
     </svg>

@@ -34,9 +34,9 @@ const Productivity = () => (
             data-figma-bg-blur-radius="5"
             d="M21.4621 32.2143C20.1965 30.924 19.721 29.0341 20.4212 27.3817C21.0101 25.992 21.6983 24.651 22.4856 23.3587C23.7908 21.2167 25.3687 19.208 27.22 17.3327C30.1274 14.3875 33.4468 12.1878 37.1788 10.7326C40.8802 9.28918 44.3308 8.8439 47.5335 9.38946C48.0727 12.6352 47.6411 16.1319 46.2323 19.8822C44.8121 23.6629 42.6488 27.0255 39.7414 29.9706C37.9235 31.8122 35.9405 33.4107 33.7924 34.7665C32.5283 35.5644 31.2243 36.2607 29.8804 36.8555C28.1972 37.6005 26.2535 37.099 24.9548 35.775L21.4621 32.2143ZM32.9263 24.186C33.7112 24.9811 34.6778 25.3792 35.8188 25.3792C36.9597 25.3792 37.9263 24.9811 38.7112 24.186C39.4961 23.3909 39.8885 22.4125 39.8885 21.258C39.8885 20.1036 39.4961 19.1252 38.7112 18.3301C37.9263 17.535 36.9597 17.1369 35.8188 17.1369C34.6778 17.1369 33.7112 17.535 32.9263 18.3301C32.1414 19.1252 31.749 20.1036 31.749 21.258C31.749 22.4125 32.1414 23.3909 32.9263 24.186Z"
             fill="#7580EA"
-            fill-opacity="0.4"
+            fillOpacity="0.4"
             stroke="url(#paint3_linear_5464_39655)"
-            stroke-width="0.23"
+            strokeWidth="0.23"
         />
         <path
             d="M43.3042 25.0103C43.4111 24.8422 43.6663 24.9652 43.6029 25.1543L40.3193 34.9441C40.1729 35.3806 39.869 35.7462 39.4685 35.9675C38.7668 36.3552 37.8998 36.2327 37.3365 35.6663L34.7501 33.0651C34.6648 32.9794 34.6919 32.8332 34.8024 32.7833L35.0454 32.6733C36.6537 31.9456 38.1336 30.9544 39.4249 29.74C40.863 28.3876 42.1281 26.8586 43.1904 25.1891L43.3042 25.0103Z"
@@ -57,8 +57,8 @@ const Productivity = () => (
                 y2="22.0915"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#99A2FD" />
-                <stop offset="1" stop-color="#DBDEFF" />
+                <stop stopColor="#99A2FD" />
+                <stop offset="1" stopColor="#DBDEFF" />
             </linearGradient>
             <linearGradient
                 id="paint1_linear_5464_39655"
@@ -68,9 +68,9 @@ const Productivity = () => (
                 y2="44.9711"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#7C88FF" />
-                <stop offset="0.404973" stop-color="#A7AFFF" />
-                <stop offset="1" stop-color="#DBDEFF" />
+                <stop stopColor="#7C88FF" />
+                <stop offset="0.404973" stopColor="#A7AFFF" />
+                <stop offset="1" stopColor="#DBDEFF" />
             </linearGradient>
             <linearGradient
                 id="paint2_linear_5464_39655"
@@ -80,8 +80,8 @@ const Productivity = () => (
                 y2="41.0131"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
-                <stop offset="1" stop-color="#C4C9FF" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="#C4C9FF" />
             </linearGradient>
             <linearGradient
                 id="paint3_linear_5464_39655"
@@ -91,8 +91,8 @@ const Productivity = () => (
                 y2="38.0637"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
-                <stop offset="1" stop-color="white" stop-opacity="0" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="white" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint4_linear_5464_39655"
@@ -102,8 +102,8 @@ const Productivity = () => (
                 y2="34.3998"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#99A2FD" />
-                <stop offset="1" stop-color="#DBDFFF" />
+                <stop stopColor="#99A2FD" />
+                <stop offset="1" stopColor="#DBDFFF" />
             </linearGradient>
         </defs>
     </svg>

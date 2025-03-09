@@ -39,14 +39,14 @@ const Business = () => (
             height="23.5119"
             rx="5.885"
             fill="#7580EA"
-            fill-opacity="0.32"
+            fillOpacity="0.32"
             stroke="url(#paint2_linear_5464_39612)"
-            stroke-width="0.23"
+            strokeWidth="0.23"
         />
         <path
             d="M12 25.2578C12 21.9441 14.6863 19.2578 18 19.2578H42C45.3137 19.2578 48 21.9441 48 25.2578V30.7417C48 32.9508 46.2091 34.7417 44 34.7417H16C13.7909 34.7417 12 32.9508 12 30.7417V25.2578Z"
             fill="url(#paint3_linear_5464_39612)"
-            fill-opacity="0.4"
+            fillOpacity="0.4"
         />
         <foreignObject x="10.1862" y="22.6315" width="21.1139" height="24.2213">
             <div
@@ -67,9 +67,9 @@ const Business = () => (
             rx="1.45841"
             transform="matrix(-4.35553e-08 1 1 1.17592e-07 19.2002 31.6455)"
             fill="url(#paint4_linear_5464_39612)"
-            fill-opacity="0.9"
+            fillOpacity="0.9"
             stroke="url(#paint5_linear_5464_39612)"
-            stroke-width="0.168898"
+            strokeWidth="0.168898"
         />
         <foreignObject x="28.6999" y="22.6315" width="21.1139" height="24.2213">
             <div
@@ -90,9 +90,9 @@ const Business = () => (
             rx="1.45841"
             transform="matrix(-4.35553e-08 1 1 1.17592e-07 37.7139 31.6455)"
             fill="url(#paint6_linear_5464_39612)"
-            fill-opacity="0.9"
+            fillOpacity="0.9"
             stroke="url(#paint7_linear_5464_39612)"
-            stroke-width="0.168898"
+            strokeWidth="0.168898"
         />
         <defs>
             <clipPath
@@ -141,8 +141,8 @@ const Business = () => (
                 y2="27.9263"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#AAB2F5" />
-                <stop offset="1" stop-color="#626ED4" />
+                <stop stopColor="#AAB2F5" />
+                <stop offset="1" stopColor="#626ED4" />
             </linearGradient>
             <linearGradient
                 id="paint1_linear_5464_39612"
@@ -152,8 +152,8 @@ const Business = () => (
                 y2="21"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#747FDD" />
-                <stop offset="1" stop-color="#AAB2F5" />
+                <stop stopColor="#747FDD" />
+                <stop offset="1" stopColor="#AAB2F5" />
             </linearGradient>
             <linearGradient
                 id="paint2_linear_5464_39612"
@@ -163,8 +163,8 @@ const Business = () => (
                 y2="42.9997"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
-                <stop offset="1" stop-color="white" stop-opacity="0" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="white" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint3_linear_5464_39612"
@@ -174,13 +174,13 @@ const Business = () => (
                 y2="34.7417"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
+                <stop stopColor="white" />
                 <stop
                     offset="0.465688"
-                    stop-color="white"
-                    stop-opacity="0.711895"
+                    stopColor="white"
+                    stopOpacity="0.711895"
                 />
-                <stop offset="1" stop-color="white" stop-opacity="0.6" />
+                <stop offset="1" stopColor="white" stopOpacity="0.6" />
             </linearGradient>
             <linearGradient
                 id="paint4_linear_5464_39612"
@@ -190,8 +190,8 @@ const Business = () => (
                 y2="1.60627"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#FCFDFE" />
-                <stop offset="1" stop-color="#FCFDFE" stop-opacity="0" />
+                <stop stopColor="#FCFDFE" />
+                <stop offset="1" stopColor="#FCFDFE" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint5_linear_5464_39612"
@@ -201,8 +201,8 @@ const Business = () => (
                 y2="2.3694"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
-                <stop offset="1" stop-color="white" stop-opacity="0" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="white" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint6_linear_5464_39612"
@@ -212,8 +212,8 @@ const Business = () => (
                 y2="1.60627"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#FCFDFE" />
-                <stop offset="1" stop-color="#FCFDFE" stop-opacity="0" />
+                <stop stopColor="#FCFDFE" />
+                <stop offset="1" stopColor="#FCFDFE" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint7_linear_5464_39612"
@@ -223,8 +223,8 @@ const Business = () => (
                 y2="2.3694"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
-                <stop offset="1" stop-color="white" stop-opacity="0" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="white" stopOpacity="0" />
             </linearGradient>
         </defs>
     </svg>

@@ -34,7 +34,7 @@ const Writing = () => (
             <path
                 d="M31.7727 15.0025C32.6657 14.0356 34.1735 13.9758 35.1403 14.8688L42.1428 21.3368C43.1096 22.2298 43.1694 23.7375 42.2764 24.7044L28.6193 39.4902C28.0332 40.1247 27.2856 40.5881 26.4565 40.8307L22.3891 42.0207L16.0869 36.1997L16.9507 32.0505C17.1268 31.2048 17.5295 30.4228 18.1156 29.7883L31.7727 15.0025Z"
                 fill="#7580EA"
-                fill-opacity="0.2"
+                fillOpacity="0.2"
             />
             <path
                 d="M35.1403 14.8688L34.997 15.0239V15.0239L35.1403 14.8688ZM31.7727 15.0025L31.6176 14.8592L31.7727 15.0025ZM42.1428 21.3368L41.9995 21.4919V21.4919L42.1428 21.3368ZM42.2764 24.7044L42.4315 24.8476L42.2764 24.7044ZM28.6193 39.4902L28.4642 39.3469L28.6193 39.4902ZM26.4565 40.8307L26.5158 41.0333L26.4565 40.8307ZM22.3891 42.0207L22.2458 42.1758L22.3336 42.2569L22.4484 42.2234L22.3891 42.0207ZM16.0869 36.1997L15.8802 36.1566L15.8559 36.2736L15.9437 36.3547L16.0869 36.1997ZM16.9507 32.0505L16.744 32.0075L16.744 32.0075L16.9507 32.0505ZM18.1156 29.7883L17.9605 29.645H17.9605L18.1156 29.7883ZM35.2835 14.7138C34.2311 13.7416 32.5898 13.8067 31.6176 14.8592L31.9278 15.1457C32.7417 14.2645 34.1159 14.21 34.997 15.0239L35.2835 14.7138ZM42.286 21.1817L35.2835 14.7138L34.997 15.0239L41.9995 21.4919L42.286 21.1817ZM42.4315 24.8476C43.4036 23.7951 43.3385 22.1538 42.286 21.1817L41.9995 21.4919C42.8807 22.3058 42.9352 23.6799 42.1213 24.5611L42.4315 24.8476ZM28.7744 39.6334L42.4315 24.8476L42.1213 24.5611L28.4642 39.3469L28.7744 39.6334ZM26.5158 41.0333C27.3816 40.78 28.1623 40.2961 28.7744 39.6334L28.4642 39.3469C27.9041 39.9534 27.1896 40.3962 26.3972 40.628L26.5158 41.0333ZM22.4484 42.2234L26.5158 41.0333L26.3972 40.628L22.3298 41.8181L22.4484 42.2234ZM22.5323 41.8657L16.2302 36.0446L15.9437 36.3547L22.2458 42.1758L22.5323 41.8657ZM17.9605 29.645C17.3484 30.3077 16.9279 31.1243 16.744 32.0075L17.1574 32.0935C17.3257 31.2853 17.7105 30.538 18.2707 29.9315L17.9605 29.645ZM31.6176 14.8592L17.9605 29.645L18.2707 29.9315L31.9278 15.1457L31.6176 14.8592ZM16.2936 36.2427L17.1574 32.0935L16.744 32.0075L15.8802 36.1566L16.2936 36.2427Z"
@@ -61,9 +61,9 @@ const Writing = () => (
             rx="1.10712"
             transform="matrix(-0.734589 -0.678512 -0.678513 0.734589 38.807 21.6078)"
             fill="url(#paint2_linear_5464_39646)"
-            fill-opacity="0.9"
+            fillOpacity="0.9"
             stroke="url(#paint3_linear_5464_39646)"
-            stroke-width="0.168898"
+            strokeWidth="0.168898"
         />
         <path
             d="M22.3901 42.0208L16.0879 36.1997L14.7929 42.4179C14.6096 43.2985 15.4307 44.0571 16.2941 43.8045L22.3901 42.0208Z"
@@ -97,8 +97,8 @@ const Writing = () => (
                 y2="14.9765"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#AAB2F5" />
-                <stop offset="1" stop-color="#626ED4" />
+                <stop stopColor="#AAB2F5" />
+                <stop offset="1" stopColor="#626ED4" />
             </linearGradient>
             <linearGradient
                 id="paint1_linear_5464_39646"
@@ -108,8 +108,8 @@ const Writing = () => (
                 y2="40.8577"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
-                <stop offset="0.765625" stop-color="white" stop-opacity="0" />
+                <stop stopColor="white" />
+                <stop offset="0.765625" stopColor="white" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint2_linear_5464_39646"
@@ -119,8 +119,8 @@ const Writing = () => (
                 y2="1.21609"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#FCFDFE" />
-                <stop offset="1" stop-color="#FCFDFE" stop-opacity="0" />
+                <stop stopColor="#FCFDFE" />
+                <stop offset="1" stopColor="#FCFDFE" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint3_linear_5464_39646"
@@ -130,8 +130,8 @@ const Writing = () => (
                 y2="1.88237"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="white" />
-                <stop offset="1" stop-color="white" stop-opacity="0" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="white" stopOpacity="0" />
             </linearGradient>
             <linearGradient
                 id="paint4_linear_5464_39646"
@@ -141,8 +141,8 @@ const Writing = () => (
                 y2="45.0115"
                 gradientUnits="userSpaceOnUse"
             >
-                <stop stop-color="#CBD1FF" />
-                <stop offset="1" stop-color="#737FDC" />
+                <stop stopColor="#CBD1FF" />
+                <stop offset="1" stopColor="#737FDC" />
             </linearGradient>
         </defs>
     </svg>
