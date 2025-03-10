@@ -59,6 +59,7 @@ const PromptNewLnb = ({ initialMenu, onTabChange }: PromptNewType) => {
             menuItems={menuItems}
             initialMenu={initialMenu}
             onTabChange={onTabChange}
+            showTextOnUnderTablet={true}
         />
     );
 };

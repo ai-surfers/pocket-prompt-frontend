@@ -1,4 +1,5 @@
 import Text from "@/components/common/Text/Text";
+import useDeviceSize from "@/hooks/useDeviceSize";
 import { Flex } from "antd";
 import styled from "styled-components";
 
@@ -10,9 +11,14 @@ export default function ExampleContent({
     defaultValue,
     value,
 }: ExampleContentProps) {
+    const { isUnderTablet, isMobile } = useDeviceSize();
     if (!value || value.length < 1)
         return (
-            <EmptyText font="b3_14_reg" color="G_300">
+            <EmptyText
+                $isUnderTablet={isUnderTablet}
+                font="b3_14_reg"
+                color="G_300"
+            >
                 {defaultValue}
             </EmptyText>
         );
@@ -36,12 +42,13 @@ export default function ExampleContent({
     );
 }
 
-const EmptyText = styled(Text)`
+const EmptyText = styled(Text)<{ $isUnderTablet: boolean }>`
     width: 100%;
-    min-height: 400px;
+    height: ${({ $isUnderTablet }) => ($isUnderTablet ? "300px" : "400px")};
     border-radius: 8px;
     background: ${({ theme }) => theme.colors.G_50};
     padding: 11px 12px;
+    margin-top: 5px;
 `;
 
 const ExampleInput = styled.div`
