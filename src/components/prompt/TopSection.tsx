@@ -44,7 +44,13 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
     return (
         <TopContainer $isMobile={isMobile}>
             <Wrapper>
-                <Flex justify="space-between" align="center" wrap gap={10}>
+                <Flex
+                    justify="space-between"
+                    align="center"
+                    wrap
+                    gap={10}
+                    style={{ marginBottom: "12px" }}
+                >
                     <Flex vertical>
                         <Text font="h1_24_semi">{prompt.title}</Text>
                         <Text font="b1_18_reg" color="G_400">

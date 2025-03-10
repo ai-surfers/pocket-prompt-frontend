@@ -60,7 +60,7 @@ export const ResultSection: React.FC = () => {
         <Flex vertical gap={16} style={{ height: "100%" }}>
             <Text font="h2_20_semi">포켓런 결과</Text>
             {!pocketRunLoading && pocketRunRes[0].response.length === 0 ? (
-                <EmptyBox vertical gap={4} justify="center" align="center">
+                <EmptyBox>
                     <Text font="b2_16_semi">아직 포켓런 결과가 없어요!</Text>
                     <Text font="b3_14_reg" color="G_400">
                         프롬프트 사용하기를 채우고 포켓런을 활용하여 쉽고 빠르게
@@ -193,16 +193,19 @@ export const ResultSection: React.FC = () => {
     );
 };
 
-const EmptyBox = styled(Flex)`
+const EmptyBox = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("column", "center", "center")};
     border-radius: 8px;
     background: var(--gray-50, #f7f8f9);
-
     width: 100%;
     height: 100%;
+    min-height: 296px;
     padding: 60px 40px;
+    gap: 4px;
 `;
 
-const Box = styled(Flex)`
+const Box = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("column", "center", "center")};
     border-radius: 8px;
     border: 1.5px solid var(--primary-20, #e3e6fb);
     width: 100%;
