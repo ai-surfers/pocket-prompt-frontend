@@ -10,7 +10,7 @@ import { headers } from "next/headers";
 /**
  * 프롬프트 리스트를 서버 컴포넌트에서 미리 가져오는 함수
  */
-export const prefetchPrompts = async () => {
+export const prefetchPromptList = async () => {
     const queryClient = serverQueryClient();
     const { isUnderTablet } = detectDevice(headers().get("user-agent") || "");
     const queries = [

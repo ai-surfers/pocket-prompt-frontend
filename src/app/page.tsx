@@ -1,9 +1,9 @@
 import HomeContent from "@/components/home/HomeContent";
-import { prefetchPrompts } from "@/hooks/prefetches/usePrefetchPrompts";
+import { prefetchPromptList } from "@/hooks/prefetches/useprefetchPromptList";
 import { Suspense } from "react";
 
 export default async function HomePage() {
-    await prefetchPrompts();
+    await prefetchPromptList();
 
     return (
         <Suspense fallback={null}>
