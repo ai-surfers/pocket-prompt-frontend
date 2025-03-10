@@ -51,7 +51,6 @@ const usePromptsListQuery = ({
             }).then((res) => res),
         staleTime: 1000 * 60 * 5,
     });
-    console.log(queryKey);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
