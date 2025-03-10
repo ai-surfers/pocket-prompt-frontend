@@ -18,6 +18,12 @@ export const PROMPT_QUERY_KEYS_FOR_PREFETCH = {
         itemsPerPage: 18,
         sortBy: "created_at",
     },
+    ALL_PROMPTS_MOBILE: {
+        viewType: "open",
+        currentPage: 1,
+        itemsPerPage: 5,
+        sortBy: "created_at",
+    },
     POPULAR_PROMPTS: {
         viewType: "open",
         limit: 3,

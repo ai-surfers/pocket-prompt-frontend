@@ -4,22 +4,26 @@ import {
     PROMPT_KEYS,
     PROMPT_QUERY_KEYS_FOR_PREFETCH,
 } from "@/hooks/queries/QueryKeys";
+import { detectDevice } from "@/utils/deviceUtils";
+import { headers } from "next/headers";
 
 /**
  * 프롬프트 리스트를 서버 컴포넌트에서 미리 가져오는 함수
  */
 export const prefetchPrompts = async () => {
     const queryClient = serverQueryClient();
-
+    const { isUnderTablet } = detectDevice(headers().get("user-agent") || "");
     const queries = [
         {
-            key: PROMPT_QUERY_KEYS_FOR_PREFETCH.ALL_PROMPTS,
+            key: isUnderTablet
+                ? PROMPT_QUERY_KEYS_FOR_PREFETCH.ALL_PROMPTS_MOBILE
+                : PROMPT_QUERY_KEYS_FOR_PREFETCH.ALL_PROMPTS,
             fn: () =>
                 getPromptsList({
                     view_type: "open",
                     sort_by: "created_at",
                     page: 1,
-                    limit: 18,
+                    limit: isUnderTablet ? 5 : 18,
                     sort_order: "desc",
                 }),
         },
