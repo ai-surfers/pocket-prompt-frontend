@@ -5,7 +5,6 @@ import { Wrapper } from "@components/layout/LayoutClient";
 import styled from "styled-components";
 import PromptListSection from "@/components/home/prompt/PromptListSection";
 
-import useDeviceSize from "@/hooks/useDeviceSize";
 import { Suspense, useEffect, useState } from "react";
 import { useResetRecoilState } from "recoil";
 import {
@@ -17,6 +16,7 @@ import Icon from "@components/common/Icon";
 import VocModal from "@/components/home/VocModal";
 import { useSearchParams } from "next/navigation";
 import HomeSiderBar from "@/components/home/siderbarAd/HomeSiderBar";
+import { useDeviceSize } from "@components/DeviceContext";
 
 function HomeContent() {
     const { isUnderTablet } = useDeviceSize();
@@ -41,9 +41,9 @@ function HomeContent() {
         setIsInitialized(true);
     }, []);
 
-    if (!isInitialized) {
-        return null; // hydration 에러 방지
-    }
+    // if (!isInitialized) {
+    //     return null; // hydration 에러 방지
+    // }
 
     return (
         <HomeWrapper>

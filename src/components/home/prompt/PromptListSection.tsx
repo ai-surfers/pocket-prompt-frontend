@@ -20,7 +20,7 @@ import { ViewType } from "@/apis/prompt/prompt.model";
 import Text from "@/components/common/Text/Text";
 import { useUser } from "@/hooks/useUser";
 import { Flex } from "antd";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import { usePathname } from "next/navigation";
 import { memo, useEffect, useRef, useState } from "react";
 import ScrollButton from "@/components/common/ScrollButton/ScrollButton";

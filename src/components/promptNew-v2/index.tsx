@@ -30,7 +30,7 @@ import Button from "../common/Button/Button";
 import PreviewSection from "./PreviewSection";
 // import FormSection from "./FormSection";
 import PromptNewLnb from "../lnb/PromptNewLnb";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import FormFirstSection from "./FormFirstSection";
 import FormSecSection from "./FormSecSection";
 import FormThirdSecion from "./FormThirdSecion";

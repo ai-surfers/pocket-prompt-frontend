@@ -4,6 +4,7 @@ import { Suspense } from "react";
 
 export default async function HomePage() {
     await prefetchPrompts();
+
     return (
         <Suspense fallback={null}>
             <HomeContent />

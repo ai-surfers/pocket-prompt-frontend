@@ -8,7 +8,7 @@ import styled from "styled-components";
 import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
 import { ErrorBoundary } from "@sentry/react";
 import { Wrapper } from "@/components/layout/LayoutClient";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import DetailPageSiderBar from "@/components/home/siderbarAd/DetailPageSiderBar";
 
 interface PromptPageProps {

@@ -14,7 +14,7 @@ import { Flex } from "antd";
 import { ReactNode } from "react";
 import styled from "styled-components";
 import useToast from "@/hooks/useToast";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 
 interface TopSectionProps {
     prompt: PromptDetails;
