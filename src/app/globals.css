@@ -1,7 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("/fonts/pretendardvariable.css");
+
+@font-face {
+    font-family: "Pretendard";
+    src: url("/fonts/PretendardVariable.woff2") format("woff2");
+    font-display: swap;
+}
 
 :root {
     color: #213547;

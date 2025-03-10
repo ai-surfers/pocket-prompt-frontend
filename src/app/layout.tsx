@@ -57,15 +57,16 @@ export default function RootLayout({
           f.parentNode.insertBefore(j,f);
           })(window,document,'script','dataLayer','GTM-NV4289B5');`}
                 </Script>
-
+                <link
+                    rel="preload"
+                    as="font"
+                    type="font/woff2"
+                    href="/fonts/PretendardVariable.woff2"
+                    crossOrigin="anonymous"
+                />
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1"
-                />
-                <link
-                    rel="stylesheet"
-                    crossOrigin="anonymous"
-                    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
                 />
                 <Script
                     strategy="afterInteractive"
