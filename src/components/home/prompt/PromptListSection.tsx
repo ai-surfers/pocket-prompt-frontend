@@ -20,9 +20,9 @@ import { ViewType } from "@/apis/prompt/prompt.model";
 import Text from "@/components/common/Text/Text";
 import { useUser } from "@/hooks/useUser";
 import { Flex } from "antd";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import { usePathname } from "next/navigation";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, Suspense, useEffect, useRef, useState } from "react";
 import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
 import { boolean } from "zod";
 import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
@@ -117,7 +117,6 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                     />
                                 )}
                             </SmallWrapper>
-
                             <SmallWrapper
                                 ref={scrollRightRef}
                                 $isMobile={isMobile}
@@ -142,6 +141,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                     defaultSortBy="created_at"
                                 />
                             </SmallWrapper>
+
                             {/* {isMobile && (
                                 <ScrollButton
                                     currentScroll={currentScroll}
@@ -220,8 +220,9 @@ const SmallWrapper = styled.div<{
 }>`
     ${({ theme }) => theme.mixins.flexBox("column", "center", "center")};
     width: ${({ $isMobile }) => ($isMobile ? "100%" : "540px")};
+    min-width: ${({ $isMobile }) => ($isMobile ? "100%" : "540px")};
     height: 502px;
-    // margin-bottom: 63.5px;
+    min-height: 502px;
     border-radius: 12px;
     background: ${({ $isMobile, $isFocused, theme }) =>
         $isMobile

@@ -98,11 +98,18 @@ const PromptList = ({
     // 콘텐츠 렌더링 분리 (로딩 중 스켈레톤, 데이터 없을 때, 데이터 있을 때)
     const renderContent = () => {
         if (isLoading) {
-            return Array.from({ length: itemsPerPage }).map((_, idx) => (
-                <Col key={idx} xs={24} sm={12} md={8}>
-                    <SkeletonBox />
-                </Col>
-            ));
+            return Array.from({ length: limit ?? itemsPerPage }).map(
+                (_, idx) => (
+                    <Col
+                        key={idx}
+                        xs={24}
+                        sm={isPopularOrFeatured ? 24 : 12}
+                        md={isPopularOrFeatured ? 24 : 8}
+                    >
+                        <SkeletonBox />
+                    </Col>
+                )
+            );
         }
         if (!isLoading && items.length === 0) {
             return <EmptyPrompt viewType={viewType} />;
@@ -193,7 +200,8 @@ export default PromptList;
 
 const SkeletonBox = styled.div`
     ${({ theme }) => theme.mixins.skeleton()};
-    max-width: 358px;
+    width: 100%;
+    flex: 1;
     height: 157px;
     border-radius: 8px;
 `;

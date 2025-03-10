@@ -4,27 +4,38 @@
 import React, { useState } from "react";
 import { useServerInsertedHTML } from "next/navigation";
 import { ServerStyleSheet, StyleSheetManager } from "styled-components";
+import { extractStyle, createCache, StyleProvider } from "@ant-design/cssinjs";
+
+const cache = createCache();
 
 export default function StyledComponentsRegistry({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    // Only create stylesheet once with lazy initial state
-    // x-ref: https://reactjs.org/docs/hooks-reference.html#lazy-initial-state
     const [styledComponentsStyleSheet] = useState(() => new ServerStyleSheet());
 
     useServerInsertedHTML(() => {
         const styles = styledComponentsStyleSheet.getStyleElement();
-        styledComponentsStyleSheet.instance.clearTag();
-        return <>{styles}</>;
+        const antdStyles = extractStyle(cache);
+
+        return (
+            <>
+                {styles}
+                <style dangerouslySetInnerHTML={{ __html: antdStyles }} />{" "}
+                {/* ✅ `antd` 스타일을 서버에서 삽입 */}
+            </>
+        );
     });
 
-    if (typeof window !== "undefined") return <>{children}</>;
+    // ✅ 클라이언트에서 실행될 때는 `StyleSheetManager` 없이 렌더링
+    if (typeof window !== "undefined") {
+        return <>{children}</>;
+    }
 
     return (
         <StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
-            {children}
+            <StyleProvider cache={cache}>{children}</StyleProvider>
         </StyleSheetManager>
     );
 }

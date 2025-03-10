@@ -7,7 +7,7 @@ import styled from "styled-components";
 import Text from "../Text/Text";
 import Close from "@svg/Close";
 import Icon from "../Icon";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 
 const Toast = () => {
     const [{ isOpen, title, subTitle, iconName }] = useRecoilState(toastState);

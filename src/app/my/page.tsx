@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { useUser } from "@/hooks/useUser";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
-import useDeviceSize from "@/hooks/useDeviceSize";
 import PromptListSection from "@/components/home/prompt/PromptListSection";
 import { usePutNickname } from "@/hooks/mutations/usePutNickname";
 import useToast from "@/hooks/useToast";
@@ -19,6 +18,7 @@ import {
 } from "@/utils/storageUtils";
 import { getUser } from "@/apis/auth/auth";
 import MyLnb from "@/components/lnb/MyLnb";
+import { useDeviceSize } from "@/components/DeviceContext";
 // import { isValidNickname } from "@/utils/textUtils";
 
 const MyPage = () => {

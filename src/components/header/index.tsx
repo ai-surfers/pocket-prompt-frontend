@@ -15,7 +15,7 @@ import {
 } from "@/utils/storageUtils";
 import { MenuOutlined } from "@ant-design/icons";
 import { Menus } from "@/core/Menu";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import { Flex } from "antd";
 import LogoutButton from "./LogoutButton";
 import GuideButton from "./GuideButton";
@@ -26,7 +26,6 @@ type HeaderProps = {
 };
 export default function Header({ onOpen }: HeaderProps) {
     const { setUser, resetUserState, userData } = useUser();
-    const [isReady, setIsReady] = useState(false);
     const { isUnderTablet } = useDeviceSize();
     const showToast = useToast();
 
@@ -67,12 +66,7 @@ export default function Header({ onOpen }: HeaderProps) {
                     }
                 });
         }
-        setIsReady(true);
     }, []);
-
-    if (!isReady) {
-        return null; // 클라이언트가 준비되기 전에는 아무것도 렌더링하지 않음
-    }
 
     return (
         <HeaderContainer>

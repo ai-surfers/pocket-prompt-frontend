@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 import SearchBar from "./Search/SearchBar";
 import SearchChips from "./Search/SearchChips";
 import Text from "@/components/common/Text/Text";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import LogoNoLine from "@svg/LogoNoLine";
 
 const Banner = () => {

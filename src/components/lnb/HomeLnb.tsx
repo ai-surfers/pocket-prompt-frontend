@@ -2,8 +2,7 @@
 
 import React from "react";
 import LNB, { MenuItemsType } from "../lnb";
-import useDeviceSize from "@/hooks/useDeviceSize";
-import { useRouter } from "next/navigation";
+import { useDeviceSize } from "@components/DeviceContext";
 import Text from "@/components/common/Text/Text";
 import Icon from "@/components/common/Icon";
 import useToast from "@/hooks/useToast";
@@ -17,7 +16,6 @@ interface HomeLnbType {
 
 const HomeLnb = ({ initialMenu }: HomeLnbType) => {
     const { isUnderTablet } = useDeviceSize();
-    const router = useRouter();
     const showToast = useToast();
     const { userData } = useUser();
 
@@ -100,8 +98,6 @@ const HomeLnb = ({ initialMenu }: HomeLnbType) => {
             </Text>
         </Button>
     );
-
-    if (typeof window === "undefined") return null;
 
     return (
         <LNB

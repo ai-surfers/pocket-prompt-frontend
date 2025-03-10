@@ -13,29 +13,29 @@ interface StylesProps {
 const Styles = ({ children }: StylesProps) => {
     return (
         <StyledComponentsRegistry>
-            <ConfigProvider
-                theme={{
-                    token: {
-                        colorPrimary: "#7580EA",
-                        fontFamily: "Pretendard",
-                    },
-                    components: {
-                        Typography: {
-                            titleMarginBottom: "10px",
-                            titleMarginTop: 0,
+            <ThemeProvider theme={theme}>
+                <ConfigProvider
+                    theme={{
+                        token: {
+                            colorPrimary: "#7580EA",
+                            fontFamily: "Pretendard",
                         },
-                        Select: {
-                            optionSelectedColor: "#7580EA",
-                            optionSelectedBg: "#F2F3FD",
+                        components: {
+                            Typography: {
+                                titleMarginBottom: "10px",
+                                titleMarginTop: 0,
+                            },
+                            Select: {
+                                optionSelectedColor: "#7580EA",
+                                optionSelectedBg: "#F2F3FD",
+                            },
                         },
-                    },
-                }}
-            >
-                <ThemeProvider theme={theme}>
+                    }}
+                >
                     <GlobalStyle />
                     {children}
-                </ThemeProvider>
-            </ConfigProvider>
+                </ConfigProvider>
+            </ThemeProvider>
         </StyledComponentsRegistry>
     );
 };
