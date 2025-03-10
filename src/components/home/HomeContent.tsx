@@ -24,7 +24,6 @@ function HomeContent() {
     const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
     const searchParams = useSearchParams();
     const [shouldReset, setShouldReset] = useState<boolean>(false);
-    const [isInitialized, setIsInitialized] = useState(false);
 
     // voc modal open
     const [isVocModalOpen, setIsVocModalOpen] = useState(false);
@@ -38,12 +37,7 @@ function HomeContent() {
             resetSearchedKeyword();
             resetSearchedCategory();
         }
-        setIsInitialized(true);
     }, []);
-
-    // if (!isInitialized) {
-    //     return null; // hydration 에러 방지
-    // }
 
     return (
         <HomeWrapper>
