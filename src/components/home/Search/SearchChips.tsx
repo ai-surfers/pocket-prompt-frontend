@@ -1,12 +1,10 @@
+"use client";
+
 import Button from "@/components/common/Button/Button";
 import { Categories } from "@/core/Prompt";
+import { keywordState, searchedCategoryState } from "@/states/searchState";
 import { useDeviceSize } from "@components/DeviceContext";
-import {
-    keywordState,
-    searchedCategoryState,
-    searchedKeywordState,
-} from "@/states/searchState";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 

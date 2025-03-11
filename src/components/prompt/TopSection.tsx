@@ -1,20 +1,23 @@
+"use client";
+
 // TopSection.tsx
+
 import { PromptDetails } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
+import Icon from "@/components/common/Icon";
 import Text from "@/components/common/Text/Text";
 import { Categories } from "@/core/Prompt";
+import useToast from "@/hooks/useToast";
 import { useUser } from "@/hooks/useUser";
-import { Wrapper } from "../layout/LayoutClient";
-import Icon from "@/components/common/Icon";
-import BookmarkButton from "./BookmarkButton";
-import EditDropdown from "./EditDropdown";
 import { copyClipboard } from "@/utils/promptUtils";
 import { formatDate, formatNumber } from "@/utils/textUtils";
+import { useDeviceSize } from "@components/DeviceContext";
 import { Flex } from "antd";
 import { ReactNode } from "react";
 import styled from "styled-components";
-import useToast from "@/hooks/useToast";
-import { useDeviceSize } from "@components/DeviceContext";
+import { Wrapper } from "../layout/LayoutClient";
+import BookmarkButton from "./BookmarkButton";
+import EditDropdown from "./EditDropdown";
 
 interface TopSectionProps {
     prompt: PromptDetails;

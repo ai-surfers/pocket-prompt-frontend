@@ -1,9 +1,12 @@
+"use client";
+
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
 import Toggle from "@/components/common/Toggle/Toggle";
 import { AIPlatforms, Categories } from "@/core/Prompt";
 import { PromptSchemaType } from "@/schema/PromptSchema";
-import { Flex, Select } from "antd";
+import { useDeviceSize } from "@components/DeviceContext";
+import { Select } from "antd";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import FormItem from "./Form/FormItem";
@@ -25,67 +28,62 @@ interface FormSectionProps {
 }
 
 function FormThirdSecion({ onSubmit, isEdit }: FormSectionProps) {
-    const {
-        control,
-        // formState: { isValid },
-        watch,
-    } = useFormContext<PromptSchemaType>();
-
+    const { control, watch } = useFormContext<PromptSchemaType>();
+    const { isUnderTablet } = useDeviceSize();
     const promptTemplateValue = watch("prompt_template") || "";
     const isValid = promptTemplateValue.length > 0;
 
     return (
-        <Box>
-            <form onSubmit={onSubmit}>
-                <Flex vertical gap={32} style={{ marginTop: "9px" }}>
-                    <FormItem
-                        title="사용한 AI"
-                        tags={["필수", "복수 선택 가능"]}
-                        style={{ flex: 1 }}
-                    >
-                        <Controller
-                            name="ai_platforms_used"
-                            control={control}
-                            render={({ field }) => (
-                                <Select
-                                    placeholder="사용한 AI를 선택해주세요."
-                                    style={{
-                                        width: "100%",
-                                        marginTop: "8px",
-                                    }}
-                                    mode="multiple"
-                                    options={AI}
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                />
-                            )}
-                        />
-                    </FormItem>
+        <Box $isUnderTablet={isUnderTablet}>
+            <FormWrapper onSubmit={onSubmit}>
+                <FormItem
+                    title="사용한 AI"
+                    tags={["필수", "복수 선택 가능"]}
+                    style={{ flex: 1 }}
+                >
+                    <Controller
+                        name="ai_platforms_used"
+                        control={control}
+                        render={({ field }) => (
+                            <Select
+                                placeholder="사용한 AI를 선택해주세요."
+                                style={{
+                                    width: "100%",
+                                    marginTop: "8px",
+                                }}
+                                mode="multiple"
+                                options={AI}
+                                value={field.value}
+                                onChange={field.onChange}
+                            />
+                        )}
+                    />
+                </FormItem>
 
-                    <FormItem
-                        title="분야"
-                        tags={["필수", " 최대 5개 선택 가능"]}
-                        style={{ flex: 1 }}
-                    >
-                        <Controller
-                            name="categories"
-                            control={control}
-                            render={({ field }) => (
-                                <Select
-                                    placeholder="프롬프트의 분야를 선택해주세요."
-                                    style={{
-                                        width: "100%",
-                                        marginTop: "8px",
-                                    }}
-                                    mode="multiple"
-                                    maxCount={5}
-                                    options={CATEGORY}
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                />
-                            )}
-                        />
-                    </FormItem>
+                <FormItem
+                    title="분야"
+                    tags={["필수", " 최대 5개 선택 가능"]}
+                    style={{ flex: 1 }}
+                >
+                    <Controller
+                        name="categories"
+                        control={control}
+                        render={({ field }) => (
+                            <Select
+                                placeholder="프롬프트의 분야를 선택해주세요."
+                                style={{
+                                    width: "100%",
+                                    marginTop: "8px",
+                                }}
+                                mode="multiple"
+                                maxCount={5}
+                                options={CATEGORY}
+                                value={field.value}
+                                onChange={field.onChange}
+                            />
+                        )}
+                    />
+                </FormItem>
 
                     <ControllerWrapper>
                         <Text
@@ -127,19 +125,23 @@ function FormThirdSecion({ onSubmit, isEdit }: FormSectionProps) {
 
 export default FormThirdSecion;
 
-const Box = styled.div`
+const Box = styled.div<{ $isUnderTablet: boolean }>`
     flex: 7;
     border-radius: 16px;
-    /* border: 1.5px solid ${({ theme }) => theme.colors.primary_50}; */
     background: #fff;
-    padding-right: 20px;
+    padding-right: ${({ $isUnderTablet }) => ($isUnderTablet ? "10%" : "20px")};
+`;
+
+const FormWrapper = styled.form`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 `;
 
 const HelpBox = styled.div`
     ${({ theme }) => theme.mixins.flexBox()};
     gap: 4px;
     justify-self: flex-end;
-
     cursor: pointer;
     transition: opacity 0.2s;
     &:hover {
