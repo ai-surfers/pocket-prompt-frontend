@@ -10,27 +10,26 @@ import {
 import { usePutPrompt } from "@/hooks/mutations/prompts/usePutPrompt";
 import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
 import useToast from "@/hooks/useToast";
-import { Wrapper } from "@/components/layout/LayoutClient";
 
+import useModal from "@/hooks/useModal";
+import { extractOptions } from "@/utils/promptUtils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
     defaultPromptSchema,
     promptSchema,
     PromptSchemaType,
 } from "@schema/PromptSchema";
-import { extractOptions } from "@/utils/promptUtils";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Flex } from "antd";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
-import useModal from "@/hooks/useModal";
 import Button from "../common/Button/Button";
 import PreviewSection from "./PreviewSection";
 // import FormSection from "./FormSection";
-import PromptNewLnb from "../lnb/PromptNewLnb";
 import useDeviceSize from "@/hooks/useDeviceSize";
+import PromptNewLnb from "../lnb/PromptNewLnb";
 import FormFirstSection from "./FormFirstSection";
 import FormSecSection from "./FormSecSection";
 import FormThirdSecion from "./FormThirdSecion";
@@ -281,65 +280,61 @@ export default function NewPromptClient({
 
     return (
         <FormProvider {...form}>
-            <form onSubmit={form.handleSubmit(handleClickSubmit)}>
-                <Container $isUnderTablet={isUnderTablet}>
-                    <LeftSection>
-                        <PromptNewLnb
-                            initialMenu={activeTab}
-                            onTabChange={handleLNBChange}
-                        />
-                    </LeftSection>
+            <Container $isUnderTablet={isUnderTablet}>
+                <LeftSection>
+                    <PromptNewLnb
+                        initialMenu={activeTab}
+                        onTabChange={handleLNBChange}
+                    />
+                </LeftSection>
 
-                    <PromptNewWrapper $isUnderTablet={isUnderTablet}>
-                        <Flex
-                            gap={10}
-                            align="center"
-                            style={{ marginBottom: "20px" }}
-                        >
-                            <NumberBox>{activeTab}</NumberBox>
-                            <Text font="large_32_bold">
-                                {getHeaderText(activeTab)}
-                            </Text>
-                        </Flex>
+                <PromptNewWrapper $isUnderTablet={isUnderTablet}>
+                    <Flex
+                        gap={10}
+                        align="center"
+                        style={{ marginBottom: "20px" }}
+                    >
+                        <NumberBox>{activeTab}</NumberBox>
+                        <Text font="large_32_bold">
+                            {getHeaderText(activeTab)}
+                        </Text>
+                    </Flex>
 
-                        {/*  프롬프트 작성 tab */}
-                        {activeTab === "1" && (
-                            <FirstWriteSection $isUnderTablet={isUnderTablet}>
-                                <FormFirstSection
-                                    isEdit={isEdit}
-                                    goToNextTab={goToNextTab}
-                                />
-                                <PreviewSection />
-                            </FirstWriteSection>
-                        )}
+                    {/*  프롬프트 작성 tab */}
+                    {activeTab === "1" && (
+                        <FirstWriteSection $isUnderTablet={isUnderTablet}>
+                            <FormFirstSection
+                                isEdit={isEdit}
+                                goToNextTab={goToNextTab}
+                            />
+                            <PreviewSection />
+                        </FirstWriteSection>
+                    )}
 
-                        {/*  제목,설명 작성 tab */}
-                        {activeTab === "2" && (
-                            <SecondWriteSection $isUnderTablet={isUnderTablet}>
-                                <FormSecSection
-                                    isEdit={isEdit}
-                                    goToNextTab={goToNextTab}
-                                    promptTemplate={promptTemplate}
-                                    setSelectedTitle={setSelectedTitle}
-                                    setSelectedDescription={
-                                        setSelectedDescription
-                                    }
-                                />
-                            </SecondWriteSection>
-                        )}
+                    {/*  제목,설명 작성 tab */}
+                    {activeTab === "2" && (
+                        <SecondWriteSection $isUnderTablet={isUnderTablet}>
+                            <FormSecSection
+                                isEdit={isEdit}
+                                goToNextTab={goToNextTab}
+                                promptTemplate={promptTemplate}
+                                setSelectedTitle={setSelectedTitle}
+                                setSelectedDescription={setSelectedDescription}
+                            />
+                        </SecondWriteSection>
+                    )}
 
-                        {/* 추가 설정 tab */}
-                        {activeTab === "3" && (
-                            <ThridWriteSection $isUnderTablet={isUnderTablet}>
-                                <FormThirdSecion
-                                    onSubmit={handleClickSubmit}
-                                    isEdit={isEdit}
-                                />
-                            </ThridWriteSection>
-                        )}
-                    </PromptNewWrapper>
-                </Container>
-            </form>
+                    {/* 추가 설정 tab */}
+                    {activeTab === "3" && (
+                        <ThridWriteSection $isUnderTablet={isUnderTablet}>
+                            <FormThirdSecion
+                                onSubmit={handleClickSubmit}
+                                isEdit={isEdit}
+                            />
+                        </ThridWriteSection>
+                    )}
+                </PromptNewWrapper>
+            </Container>
 
             {isUnderTablet && (
                 <MobileButtonContainer>

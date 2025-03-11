@@ -1,20 +1,12 @@
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
-import Text from "@/components/common/Text/Text";
 import Textarea from "@/components/common/Textarea/Textarea";
-import Toggle from "@/components/common/Toggle/Toggle";
-import { AIPlatforms, Categories } from "@/core/Prompt";
-import FormItem from "./Form/FormItem";
+import useDeviceSize from "@/hooks/useDeviceSize";
 import { PromptSchemaType } from "@/schema/PromptSchema";
-import { Flex, Select } from "antd";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import Icon from "../common/Icon";
-import TextArea from "antd/es/input/TextArea";
 import { AiRunBox } from "./AiBox/AiRunBox";
-import { useGetAiSuggestions } from "@/hooks/mutations/prompts/useGetAiSuggestions";
-import { useEffect, useState } from "react";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import FormItem from "./Form/FormItem";
 
 interface FormSectionProps {
     isEdit: boolean;
@@ -39,7 +31,11 @@ function FormSecSection({
     const { isUnderTablet, isMobile } = useDeviceSize();
     const promptTemplateValue = watch("prompt_template") || "";
 
-    const isValid = promptTemplateValue.length > 0;
+    const promptTitleValue = watch("title") || "";
+    const promptDescriptionValue = watch("description") || "";
+
+    const isValid =
+        promptTitleValue.length > 0 && promptDescriptionValue.length > 0;
 
     const handleSelectTitle = (selectedText: string) => {
         setSelectedTitle(selectedText);
