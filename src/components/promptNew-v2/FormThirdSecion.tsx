@@ -1,15 +1,12 @@
 import Button from "@/components/common/Button/Button";
-import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
-import Textarea from "@/components/common/Textarea/Textarea";
 import Toggle from "@/components/common/Toggle/Toggle";
 import { AIPlatforms, Categories } from "@/core/Prompt";
-import FormItem from "./Form/FormItem";
 import { PromptSchemaType } from "@/schema/PromptSchema";
 import { Flex, Select } from "antd";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import Icon from "../common/Icon";
+import FormItem from "./Form/FormItem";
 
 const CATEGORY = Object.entries(Categories).map(([key, value]) => ({
     key: key,
@@ -122,7 +119,7 @@ function FormThirdSecion({ onSubmit, isEdit }: FormSectionProps) {
                 onClick={onSubmit}
                 hierarchy={isValid ? "primary" : "disabled"}
             >
-                프롬프트 등록 완료하기
+                {isEdit ? "프롬프트 수정 완료하기" : "프롬프트 등록 완료하기"}
             </Button>
         </Box>
     );
