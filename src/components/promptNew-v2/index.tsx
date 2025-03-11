@@ -244,72 +244,68 @@ export default function NewPromptClient({
 
     return (
         <FormProvider {...form}>
-            <form onSubmit={form.handleSubmit(handleClickSubmit)}>
-                <Container $isUnderTablet={isUnderTablet}>
-                    <LeftSection>
-                        <PromptNewLnb
-                            initialMenu={activeTab}
-                            onTabChange={handleLNBChange}
-                        />
-                    </LeftSection>
+            <Container $isUnderTablet={isUnderTablet}>
+                <LeftSection>
+                    <PromptNewLnb
+                        initialMenu={activeTab}
+                        onTabChange={handleLNBChange}
+                    />
+                </LeftSection>
 
-                    <PromptNewWrapper>
-                        <Flex gap={10} align="center">
-                            <NumberBox>{activeTab}</NumberBox>
-                            <Text
-                                font="large_32_bold"
-                                style={{ marginTop: "40px" }}
+                <PromptNewWrapper>
+                    <Flex gap={10} align="center">
+                        <NumberBox>{activeTab}</NumberBox>
+                        <Text
+                            font="large_32_bold"
+                            style={{ marginTop: "40px" }}
+                        >
+                            {getHeaderText(activeTab)}
+                        </Text>
+                    </Flex>
+
+                    {/*  프롬프트 작성 tab */}
+                    {activeTab === "1" && (
+                        <FirstWriteSection>
+                            <Flex
+                                justify="space-between"
+                                align="stretch"
+                                gap={16}
+                                wrap="wrap"
+                                style={{ marginTop: "20px" }}
                             >
-                                {getHeaderText(activeTab)}
-                            </Text>
-                        </Flex>
-
-                        {/*  프롬프트 작성 tab */}
-                        {activeTab === "1" && (
-                            <FirstWriteSection>
-                                <Flex
-                                    justify="space-between"
-                                    align="stretch"
-                                    gap={16}
-                                    wrap="wrap"
-                                    style={{ marginTop: "20px" }}
-                                >
-                                    <FormFirstSection
-                                        isEdit={isEdit}
-                                        goToNextTab={goToNextTab}
-                                    />
-                                    <PreviewSection />
-                                </Flex>
-                            </FirstWriteSection>
-                        )}
-
-                        {/*  제목,설명 작성 tab */}
-                        {activeTab === "2" && (
-                            <SecondWriteSection>
-                                <FormSecSection
+                                <FormFirstSection
                                     isEdit={isEdit}
                                     goToNextTab={goToNextTab}
-                                    promptTemplate={promptTemplate}
-                                    setSelectedTitle={setSelectedTitle}
-                                    setSelectedDescription={
-                                        setSelectedDescription
-                                    }
                                 />
-                            </SecondWriteSection>
-                        )}
+                                <PreviewSection />
+                            </Flex>
+                        </FirstWriteSection>
+                    )}
 
-                        {/* 추가 설정 tab */}
-                        {activeTab === "3" && (
-                            <ThridWriteSection>
-                                <FormThirdSecion
-                                    onSubmit={handleClickSubmit}
-                                    isEdit={isEdit}
-                                />
-                            </ThridWriteSection>
-                        )}
-                    </PromptNewWrapper>
-                </Container>
-            </form>
+                    {/*  제목,설명 작성 tab */}
+                    {activeTab === "2" && (
+                        <SecondWriteSection>
+                            <FormSecSection
+                                isEdit={isEdit}
+                                goToNextTab={goToNextTab}
+                                promptTemplate={promptTemplate}
+                                setSelectedTitle={setSelectedTitle}
+                                setSelectedDescription={setSelectedDescription}
+                            />
+                        </SecondWriteSection>
+                    )}
+
+                    {/* 추가 설정 tab */}
+                    {activeTab === "3" && (
+                        <ThridWriteSection>
+                            <FormThirdSecion
+                                onSubmit={handleClickSubmit}
+                                isEdit={isEdit}
+                            />
+                        </ThridWriteSection>
+                    )}
+                </PromptNewWrapper>
+            </Container>
         </FormProvider>
     );
 }
