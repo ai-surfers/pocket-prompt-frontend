@@ -83,22 +83,22 @@ const fonts = {
     `,
     // 볼드
     bold: css`
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-style: normal;
         font-weight: 700;
     `,
     semibold: css`
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-style: normal;
         font-weight: 600;
     `,
     medium: css`
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-style: normal;
         font-weight: 500;
     `,
     regular: css`
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-style: normal;
         font-weight: 400;
     `,
@@ -106,7 +106,7 @@ const fonts = {
     /** 조합으로 쓰고 싶은 경우, 명칭_크기_볼드 순으로 작성 */
     xlarge_36_bold: css`
         /* xlarge_36/bold */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 2.25rem;
         font-style: normal;
         font-weight: 700;
@@ -115,7 +115,7 @@ const fonts = {
     `,
     xlarge_36_regular: css`
         /* xlarge_36/reg */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 2.25rem;
         font-style: normal;
         font-weight: 400;
@@ -125,7 +125,7 @@ const fonts = {
 
     large_32_bold: css`
         /* large_32/bold */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 2rem;
         font-style: normal;
         font-weight: 700;
@@ -135,7 +135,7 @@ const fonts = {
 
     large_32_reg: css`
         /* large_32/reg */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 2rem;
         font-style: normal;
         font-weight: 400;
@@ -145,7 +145,7 @@ const fonts = {
 
     h1_24_bold: css`
         /* h1_24/bold */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 24px;
         font-style: normal;
         font-weight: 700;
@@ -154,7 +154,7 @@ const fonts = {
     `,
     h1_24_semi: css`
         /* h1_24/semi */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 24px;
         font-style: normal;
         font-weight: 600;
@@ -162,7 +162,7 @@ const fonts = {
         letter-spacing: -0.48px;
     `,
     h1_24_med: css`
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 24px;
         font-style: normal;
         font-weight: 500;
@@ -170,7 +170,7 @@ const fonts = {
         letter-spacing: -0.48px;
     `,
     h1_24_reg: css`
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 24px;
         font-style: normal;
         font-weight: 400;
@@ -180,7 +180,7 @@ const fonts = {
 
     h2_20_bold: css`
         /* h2_20/bold */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 1.25rem;
         line-height: 144%; /* 28.8px */
         letter-spacing: -0.4px;
@@ -189,7 +189,7 @@ const fonts = {
     `,
     h2_20_semi: css`
         /* h2_20/semi */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 1.25rem;
         line-height: 144%; /* 28.8px */
         letter-spacing: -0.4px;
@@ -198,7 +198,7 @@ const fonts = {
     `,
     h2_20_med: css`
         /* h2_20/med */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 1.25rem;
         line-height: 144%; /* 28.8px */
         letter-spacing: -0.4px;
@@ -207,7 +207,7 @@ const fonts = {
     `,
     h2_20_reg: css`
         /* h2_20/reg */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 1.25rem;
         line-height: 144%; /* 28.8px */
         letter-spacing: -0.4px;
@@ -216,7 +216,7 @@ const fonts = {
     `,
     b1_18_bold: css`
         /* b1_18/bold */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 1.125rem;
         font-style: normal;
         font-weight: 700;
@@ -225,7 +225,7 @@ const fonts = {
     `,
     b1_18_semi: css`
         /* b1_18/semi */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 1.125rem;
         font-style: normal;
         font-weight: 600;
@@ -234,7 +234,7 @@ const fonts = {
     `,
     b1_18_med: css`
         /* b1_18/med */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 1.125rem;
         font-style: normal;
         font-weight: 500;
@@ -243,7 +243,7 @@ const fonts = {
     `,
     b1_18_reg: css`
         /* b1_18/reg */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 1.125rem;
         font-style: normal;
         font-weight: 400;
@@ -253,7 +253,7 @@ const fonts = {
 
     b2_16_bold: css`
         /* b2_16/bold */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 1rem;
         font-style: normal;
         font-weight: 700;
@@ -261,7 +261,7 @@ const fonts = {
     `,
     b2_16_semi: css`
         /* b2_16/reg */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 1rem;
         font-style: normal;
         font-weight: 600;
@@ -269,7 +269,7 @@ const fonts = {
     `,
     b2_16_med: css`
         /* b2_16/med */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 1rem;
         font-style: normal;
         font-weight: 500;
@@ -277,7 +277,7 @@ const fonts = {
     `,
     b2_16_reg: css`
         /* b2_16/reg */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 1rem;
         font-style: normal;
         font-weight: 400;
@@ -286,7 +286,7 @@ const fonts = {
 
     b3_14_bold: css`
         /* b3_14/semi */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 0.875rem;
         font-style: normal;
         font-weight: 700;
@@ -295,7 +295,7 @@ const fonts = {
     `,
     b3_14_semi: css`
         /* b3_14/semi */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 0.875rem;
         font-style: normal;
         font-weight: 600;
@@ -304,7 +304,7 @@ const fonts = {
     `,
     b3_14_med: css`
         /* b3_14/med */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 0.875rem;
         font-style: normal;
         font-weight: 500;
@@ -313,7 +313,7 @@ const fonts = {
     `,
     b3_14_reg: css`
         /* b3_14/reg */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 0.875rem;
         font-style: normal;
         font-weight: 400;
@@ -323,7 +323,7 @@ const fonts = {
 
     c1_12_bold: css`
         /* c1_12/bold */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 0.75rem;
         font-style: normal;
         font-weight: 700;
@@ -331,7 +331,7 @@ const fonts = {
     `,
     c1_12_semi: css`
         /* c1_12/semi */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 0.75rem;
         font-style: normal;
         font-weight: 600;
@@ -339,7 +339,7 @@ const fonts = {
     `,
     c1_12_med: css`
         /* c1_12/med */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 0.75rem;
         font-style: normal;
         font-weight: 500;
@@ -347,7 +347,7 @@ const fonts = {
     `,
     c1_12_reg: css`
         /* c1_12/reg */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 0.75rem;
         font-style: normal;
         font-weight: 400;
@@ -356,7 +356,7 @@ const fonts = {
 
     c2_11_bold: css`
         /*  c2_11/bold */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 0.6875rem;
         font-style: normal;
         font-weight: 700;
@@ -364,7 +364,7 @@ const fonts = {
     `,
     c2_11_semi: css`
         /*  c2_11/semi */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 0.6875rem;
         font-style: normal;
         font-weight: 600;
@@ -372,7 +372,7 @@ const fonts = {
     `,
     c2_11_med: css`
         /*  c2_11/med */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 0.6875rem;
         font-style: normal;
         font-weight: 500;
@@ -380,7 +380,7 @@ const fonts = {
     `,
     c2_11_reg: css`
         /*  c2_11/reg */
-        font-family: Pretendard;
+        font-family: var(--font-pretendard);
         font-size: 0.6875rem;
         font-style: normal;
         font-weight: 400;

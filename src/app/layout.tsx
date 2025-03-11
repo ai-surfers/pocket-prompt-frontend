@@ -10,8 +10,16 @@ import GlobalModal from "@/components/common/Modal/GlobalModal";
 import { DeviceProvider } from "@components/DeviceContext";
 import { headers } from "next/headers";
 import { detectDevice } from "@/utils/deviceUtils";
+import localFont from "next/font/local";
 
 const webUrl = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3000";
+
+const pretendard = localFont({
+    src: "../fonts/PretendardVariable.woff2",
+    display: "swap",
+    weight: "400 900",
+    variable: "--font-pretendard",
+});
 
 export const defaultMetadata: Metadata = {
     title: "포켓 프롬프트 - ChatGPT 프롬프트 모음 | AI 프롬프트 템플릿 저장소",
@@ -55,7 +63,7 @@ export default function RootLayout({
     );
     return (
         <DeviceProvider isUnderTablet={isUnderTablet} isMobile={isMobile}>
-            <html lang="ko">
+            <html lang="ko" className={`${pretendard.variable}`}>
                 <head>
                     {/* Google Tag Manager */}
                     <Script id="gtm-script" strategy="afterInteractive">
@@ -64,13 +72,6 @@ export default function RootLayout({
           f.parentNode.insertBefore(j,f);
           })(window,document,'script','dataLayer','GTM-NV4289B5');`}
                     </Script>
-                    <link
-                        rel="preload"
-                        as="font"
-                        type="font/woff2"
-                        href="/fonts/PretendardVariable.woff2"
-                        crossOrigin="anonymous"
-                    />
                     <meta
                         name="viewport"
                         content="width=device-width, initial-scale=1"
