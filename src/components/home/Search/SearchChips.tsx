@@ -1,6 +1,6 @@
 import Button from "@/components/common/Button/Button";
 import { Categories } from "@/core/Prompt";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import {
     keywordState,
     searchedCategoryState,

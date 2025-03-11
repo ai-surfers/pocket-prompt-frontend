@@ -28,13 +28,15 @@ const usePromptsListQuery = ({
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 18;
     const queryKey = PROMPT_KEYS.list({
+        viewType,
         currentPage,
         itemsPerPage,
         sortBy,
-        limit,
-        query,
-        categories,
+        ...(limit !== undefined && { limit }),
+        ...(query !== undefined && { query }),
+        ...(categories !== undefined && { categories }),
     });
+
     const { data, isLoading } = useQuery<GetPromptsListResponse>({
         queryKey: queryKey,
         queryFn: () =>
@@ -47,6 +49,7 @@ const usePromptsListQuery = ({
                 query: query,
                 categories: categories,
             }).then((res) => res),
+        staleTime: 1000 * 60 * 5,
     });
 
     const handlePageChange = (page: number) => {
