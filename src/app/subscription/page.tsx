@@ -11,7 +11,7 @@ import { useGetCardInfo } from "@/hooks/queries/payments/useGetCardInfo";
 import { formatDate, formatNumber } from "@/utils/textUtils";
 import { usePutBillingKeys } from "@/hooks/mutations/payments/usePutBillingKey";
 import { requestBillingKey } from "@/utils/billingUtils";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import useToast from "@/hooks/useToast";
 import MyLnb from "@/components/lnb/MyLnb";
 import { useEffect, useState } from "react";

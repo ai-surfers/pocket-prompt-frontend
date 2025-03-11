@@ -2,7 +2,7 @@
 
 import HomeLnb from "@/components/lnb/HomeLnb";
 import PromptListSection from "@/components/home/prompt/PromptListSection";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 

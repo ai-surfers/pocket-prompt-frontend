@@ -20,9 +20,12 @@ import { ViewType } from "@/apis/prompt/prompt.model";
 import Text from "@/components/common/Text/Text";
 import { useUser } from "@/hooks/useUser";
 import { Flex } from "antd";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import { usePathname } from "next/navigation";
-import { memo } from "react";
+import { memo, Suspense, useEffect, useRef, useState } from "react";
+import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
+import { boolean } from "zod";
+import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
 
 interface PromptListSectionProps {
     viewType?: ViewType;
@@ -35,6 +38,9 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
     const { isMobile, isUnderTablet } = useDeviceSize();
     const limit = isUnderTablet ? 5 : 18;
     const pathname = usePathname();
+
+    const { scrollLeftRef, scrollRightRef, handleScroll, currentScroll } =
+        useScrollButtonControl();
 
     const promptContent = () => {
         if (searchedKeyword && pathname === "/") {
@@ -80,10 +86,18 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                     <Flex vertical gap={63.5} justify="center">
                         <Flex
                             gap={23}
-                            justify={isMobile ? "center" : "space-between"}
-                            wrap={isMobile ? "wrap" : "nowrap"}
+                            justify="stretch"
+                            wrap="nowrap"
+                            style={{
+                                overflowX: "scroll",
+                                position: "relative",
+                            }}
                         >
-                            <SmallWrapper>
+                            <SmallWrapper
+                                ref={scrollLeftRef}
+                                $isMobile={isMobile}
+                                $isFocused={currentScroll !== "right"}
+                            >
                                 <PromptList
                                     searchType="popular"
                                     usePage={false}
@@ -96,8 +110,24 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                     limit={3}
                                     defaultSortBy="star"
                                 />
+                                {isMobile && currentScroll === "left" && (
+                                    <ScrollButton
+                                        currentScroll={currentScroll}
+                                        onClick={() => handleScroll()}
+                                    />
+                                )}
                             </SmallWrapper>
-                            <SmallWrapper>
+                            <SmallWrapper
+                                ref={scrollRightRef}
+                                $isMobile={isMobile}
+                                $isFocused={currentScroll !== "left"}
+                            >
+                                {isMobile && currentScroll === "right" && (
+                                    <ScrollButton
+                                        currentScroll={currentScroll}
+                                        onClick={() => handleScroll()}
+                                    />
+                                )}
                                 <PromptList
                                     searchType="total"
                                     usePage={false}
@@ -111,6 +141,13 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                     defaultSortBy="created_at"
                                 />
                             </SmallWrapper>
+
+                            {/* {isMobile && (
+                                <ScrollButton
+                                    currentScroll={currentScroll}
+                                    onClick={() => handleScroll()}
+                                />
+                            )} */}
                         </Flex>
 
                         <LargeWrapper>
@@ -177,15 +214,29 @@ const LargeWrapper = styled.div`
     margin: 9px 0 44px 0;
 `;
 
-const SmallWrapper = styled.div`
+const SmallWrapper = styled.div<{
+    $isMobile: boolean;
+    $isFocused: boolean;
+}>`
     ${({ theme }) => theme.mixins.flexBox("column", "center", "center")};
-    width: 540px;
+    width: ${({ $isMobile }) => ($isMobile ? "100%" : "540px")};
+    min-width: ${({ $isMobile }) => ($isMobile ? "100%" : "540px")};
     height: 502px;
-    // margin-bottom: 63.5px;
+    min-height: 502px;
     border-radius: 12px;
-    border: 1.5px solid var(--primary-10, #f2f3fd);
-    background: var(--primary-5, #f8f8fe);
+    background: ${({ $isMobile, $isFocused, theme }) =>
+        $isMobile
+            ? $isFocused
+                ? theme.colors.primary_5
+                : theme.colors.primary_20
+            : "var(--primary-5, #f8f8fe)"};
     box-sizing: border-box;
     padding: 21px 12px;
     justify-content: flex-start;
+    position: relative;
+    border: ${({ $isMobile, $isFocused, theme }) =>
+        $isMobile && $isFocused
+            ? `1.5px solid ${theme.colors.primary_10}`
+            : "none"};
+    transition: background-color 0.3s ease;
 `;

@@ -39,7 +39,11 @@ function FormSecSection({
     const { isUnderTablet, isMobile } = useDeviceSize();
     const promptTemplateValue = watch("prompt_template") || "";
 
-    const isValid = promptTemplateValue.length > 0;
+    const promptTitleValue = watch("title") || "";
+    const promptDescriptionValue = watch("description") || "";
+
+    const isValid =
+        promptTitleValue.length > 0 && promptDescriptionValue.length > 0;
 
     const handleSelectTitle = (selectedText: string) => {
         setSelectedTitle(selectedText);
@@ -103,6 +107,7 @@ function FormSecSection({
                         onSelect={handleSelectDescription}
                     />
 
+
                     {/* </Flex> */}
                 </FormContainer>
             </form>
@@ -119,6 +124,7 @@ function FormSecSection({
                     다음
                 </Button>
             )}
+
         </Box>
     );
 }

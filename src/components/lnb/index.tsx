@@ -5,7 +5,7 @@ import { Flex } from "antd";
 import { ReactNode, useEffect, useState } from "react";
 import * as Icons from "iconsax-react";
 import Icon from "../common/Icon";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import Link from "next/link";
 import Text from "../common/Text/Text";
 
@@ -37,12 +37,8 @@ const LNB = ({
     showTextOnUnderTablet = false,
     onTabChange,
 }: LNBtype) => {
-    const [selectedKey, setSelectedKey] = useState<string>("1");
+    const [selectedKey, setSelectedKey] = useState<string>(initialMenu);
     const { isUnderTablet } = useDeviceSize();
-
-    useEffect(() => {
-        setSelectedKey(initialMenu);
-    }, [initialMenu]);
 
     const handleClick = (item: MenuItemsType) => {
         if (!item.disabled) {
@@ -53,10 +49,6 @@ const LNB = ({
             item.onClick();
         }
     };
-
-    if (typeof window === "undefined") {
-        return null; // 서버 렌더링 중에는 아무것도 렌더링하지 않음
-    }
 
     if (isUnderTablet) {
         return (

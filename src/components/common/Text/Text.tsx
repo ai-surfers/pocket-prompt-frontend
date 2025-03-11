@@ -17,7 +17,12 @@ export default function Text({
     ...props
 }: PropsWithChildren<TextProps>) {
     return (
-        <StyledText $font={font} $color={color} {...props}>
+        <StyledText
+            $font={font}
+            $color={color}
+            $hasEvent={!!props.onClick}
+            {...props}
+        >
             {markdown ? (
                 <MarkdownWrapper>
                     <ReactMarkdown components={markdownStyles}>
@@ -31,11 +36,15 @@ export default function Text({
     );
 }
 
-const StyledText = styled.div<{ $font: string; $color: string }>`
+const StyledText = styled.div<{
+    $font: string;
+    $color: string;
+    $hasEvent: boolean;
+}>`
     ${({ theme, $font }) => theme.fonts[$font]};
     color: ${({ theme, $color }) => theme.colors[$color]};
     white-space: pre-wrap;
-    pointer-events: none;
+    pointer-events: ${({ $hasEvent }) => ($hasEvent ? "all" : "none")};
 `;
 
 const MarkdownWrapper = styled.div`
