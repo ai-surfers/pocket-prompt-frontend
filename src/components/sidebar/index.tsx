@@ -46,7 +46,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                         gap={12}
                         style={{ padding: "12px", width: "100%" }}
                     >
-                        <Link href="my">
+                        <Link href="/my">
                             <UserWrapper
                                 id="sidebar-user"
                                 onClick={handleClickUser}

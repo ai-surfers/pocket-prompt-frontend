@@ -28,7 +28,7 @@ import { z } from "zod";
 import Button from "../common/Button/Button";
 import PreviewSection from "./PreviewSection";
 // import FormSection from "./FormSection";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import PromptNewLnb from "../lnb/PromptNewLnb";
 import FormFirstSection from "./FormFirstSection";
 import FormSecSection from "./FormSecSection";

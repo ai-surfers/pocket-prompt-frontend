@@ -48,8 +48,8 @@
 -   **트리거 -** `develop` 브랜치 merge 시
 -   [https://develop.db4dsu24cdkm9.amplifyapp.com](https://develop.db4dsu24cdkm9.amplifyapp.com/)
 
-<!-- ### **Preview 배포**
+### **Preview 배포**
 
--   Cloudflare Pages 사용
--   **트리거 -** Pull Request open 시
--   각 PR Comment 확인 [예시](https://github.com/ai-surfers/pocket-prompt-frontend/pull/11) -->
+-   github actions, AWS Amplify 사용
+-   **트리거 -** Pull Request open 시 생성, Pull Request close 시 삭제
+-   각 PR Comment 확인
