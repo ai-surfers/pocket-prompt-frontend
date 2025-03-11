@@ -1,16 +1,13 @@
+"use client";
+
 import Button from "@/components/common/Button/Button";
-import Input from "@/components/common/Input/Input";
-import Text from "@/components/common/Text/Text";
 import Textarea from "@/components/common/Textarea/Textarea";
-import Toggle from "@/components/common/Toggle/Toggle";
-import { AIPlatforms, Categories } from "@/core/Prompt";
-import FormItem from "./Form/FormItem";
 import { PromptSchemaType } from "@/schema/PromptSchema";
-import { Flex, Select } from "antd";
+import { useDeviceSize } from "@components/DeviceContext";
+import { Flex } from "antd";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import Icon from "../common/Icon";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import FormItem from "./Form/FormItem";
 
 interface FormSectionProps {
     isEdit: boolean;

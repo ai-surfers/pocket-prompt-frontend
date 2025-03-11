@@ -1,5 +1,7 @@
+"use client";
+
 import Text from "@/components/common/Text/Text";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import { Flex } from "antd";
 import styled from "styled-components";
 

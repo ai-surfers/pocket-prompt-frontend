@@ -1,13 +1,13 @@
+"use client";
+
 import Text from "@/components/common/Text/Text";
-import ExampleBox from "./Example/ExampleBox";
-import ExampleContent from "./Example/ExampleContent";
 import { PromptSchemaType } from "@/schema/PromptSchema";
 import { extractOptions } from "@/utils/promptUtils";
-import { Flex } from "antd";
+import { useDeviceSize } from "@components/DeviceContext";
 import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import ExampleContent from "./Example/ExampleContent";
 
 function PreviewSection() {
     const { watch } = useFormContext<PromptSchemaType>();

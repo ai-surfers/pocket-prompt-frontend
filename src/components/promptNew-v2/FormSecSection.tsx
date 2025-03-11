@@ -1,8 +1,10 @@
+"use client";
+
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Textarea from "@/components/common/Textarea/Textarea";
-import useDeviceSize from "@/hooks/useDeviceSize";
 import { PromptSchemaType } from "@/schema/PromptSchema";
+import { useDeviceSize } from "@components/DeviceContext";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { AiRunBox } from "./AiBox/AiRunBox";
@@ -99,7 +101,6 @@ function FormSecSection({
                         onSelect={handleSelectDescription}
                     />
 
-
                     {/* </Flex> */}
                 </FormContainer>
             </form>
@@ -116,7 +117,6 @@ function FormSecSection({
                     다음
                 </Button>
             )}
-
         </Box>
     );
 }
