@@ -113,7 +113,9 @@ function FormThirdSecion({ onSubmit, isEdit }: FormSectionProps) {
                     onClick={onSubmit}
                     hierarchy={isValid ? "primary" : "disabled"}
                 >
-                    프롬프트 등록 완료하기
+                    {isEdit
+                        ? "프롬프트 수정 완료하기"
+                        : "프롬프트 등록 완료하기"}
                 </Button>
             )}
         </Box>
