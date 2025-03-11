@@ -7,8 +7,19 @@ import ReactQueryProvider from "@/components/ReactQueryProvider";
 import LayoutClient from "@/components/layout/LayoutClient";
 import Toast from "@/components/common/Toast/Toast";
 import GlobalModal from "@/components/common/Modal/GlobalModal";
+import { DeviceProvider } from "@components/DeviceContext";
+import { headers } from "next/headers";
+import { detectDevice } from "@/utils/deviceUtils";
+import localFont from "next/font/local";
 
 const webUrl = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3000";
+
+const pretendard = localFont({
+    src: "../fonts/PretendardVariable.woff2",
+    display: "swap",
+    weight: "400 900",
+    variable: "--font-pretendard",
+});
 
 export const defaultMetadata: Metadata = {
     title: "포켓 프롬프트 - ChatGPT 프롬프트 모음 | AI 프롬프트 템플릿 저장소",
@@ -47,52 +58,51 @@ export const metadata = defaultMetadata;
 export default function RootLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
+    const { isMobile, isUnderTablet } = detectDevice(
+        headers().get("user-agent") || ""
+    );
     return (
-        <html lang="ko">
-            <head>
-                {/* Google Tag Manager */}
-                <Script id="gtm-script" strategy="afterInteractive">
-                    {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        <DeviceProvider isUnderTablet={isUnderTablet} isMobile={isMobile}>
+            <html lang="ko" className={`${pretendard.variable}`}>
+                <head>
+                    {/* Google Tag Manager */}
+                    <Script id="gtm-script" strategy="afterInteractive">
+                        {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
           j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
           f.parentNode.insertBefore(j,f);
           })(window,document,'script','dataLayer','GTM-NV4289B5');`}
-                </Script>
-
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1"
-                />
-                <link
-                    rel="stylesheet"
-                    crossOrigin="anonymous"
-                    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
-                />
-                <Script
-                    strategy="afterInteractive"
-                    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3373210774302054"
-                    crossOrigin="anonymous"
-                />
-            </head>
-            <body>
-                {/* Google Tag Manager (noscript) */}
-                <noscript>
-                    <iframe
-                        src="https://www.googletagmanager.com/ns.html?id=GTM-NV4289B5"
-                        height="0"
-                        width="0"
-                        style={{ display: "none", visibility: "hidden" }}
-                    ></iframe>
-                </noscript>
-                <Styles>
-                    <ReactQueryProvider>
-                        <RecoilProvider>
-                            <LayoutClient>{children}</LayoutClient>
-                            <Toast />
-                            <GlobalModal />
-                        </RecoilProvider>
-                    </ReactQueryProvider>
-                </Styles>
-            </body>
-        </html>
+                    </Script>
+                    <meta
+                        name="viewport"
+                        content="width=device-width, initial-scale=1"
+                    />
+                    <Script
+                        strategy="afterInteractive"
+                        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3373210774302054"
+                        crossOrigin="anonymous"
+                    />
+                </head>
+                <body>
+                    {/* Google Tag Manager (noscript) */}
+                    <noscript>
+                        <iframe
+                            src="https://www.googletagmanager.com/ns.html?id=GTM-NV4289B5"
+                            height="0"
+                            width="0"
+                            style={{ display: "none", visibility: "hidden" }}
+                        ></iframe>
+                    </noscript>
+                    <Styles>
+                        <ReactQueryProvider>
+                            <RecoilProvider>
+                                <LayoutClient>{children}</LayoutClient>
+                                <Toast />
+                                <GlobalModal />
+                            </RecoilProvider>
+                        </ReactQueryProvider>
+                    </Styles>
+                </body>
+            </html>
+        </DeviceProvider>
     );
 }

@@ -2,7 +2,7 @@
 
 import React from "react";
 import LNB, { MenuItemsType } from "../lnb";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@components/DeviceContext";
 import { useRouter } from "next/navigation";
 import Text from "@/components/common/Text/Text";
 import Icon from "@/components/common/Icon";

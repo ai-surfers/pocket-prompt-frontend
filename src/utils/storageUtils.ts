@@ -23,6 +23,7 @@ export function setLocalStorage(key: LOCALSTORAGE_KEYS, value: string) {
  */
 export function getLocalStorage(key: LOCALSTORAGE_KEYS) {
     try {
+        if (typeof window === "undefined") return null;
         return window.localStorage.getItem(key);
     } catch (e) {
         console.error("*️⃣ 값을 불러오는 데 실패하였습니다.", e);

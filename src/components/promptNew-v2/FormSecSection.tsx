@@ -38,7 +38,11 @@ function FormSecSection({
 
     const promptTemplateValue = watch("prompt_template") || "";
 
-    const isValid = promptTemplateValue.length > 0;
+    const promptTitleValue = watch("title") || "";
+    const promptDescriptionValue = watch("description") || "";
+
+    const isValid =
+        promptTitleValue.length > 0 && promptDescriptionValue.length > 0;
 
     const handleSelectTitle = (selectedText: string) => {
         setSelectedTitle(selectedText);
@@ -100,18 +104,17 @@ function FormSecSection({
                         onSelect={handleSelectDescription}
                     />
                 </Flex>
+                <Button
+                    id="register-prompt"
+                    size={52}
+                    width="100%"
+                    style={{ marginTop: "60px", justifyContent: "center" }}
+                    onClick={goToNextTab}
+                    hierarchy={isValid ? "primary" : "disabled"}
+                >
+                    다음
+                </Button>
             </form>
-
-            <Button
-                id="register-prompt"
-                size={52}
-                width="100%"
-                style={{ marginTop: "60px", justifyContent: "center" }}
-                onClick={goToNextTab}
-                hierarchy={isValid ? "primary" : "disabled"}
-            >
-                다음
-            </Button>
         </Box>
     );
 }
