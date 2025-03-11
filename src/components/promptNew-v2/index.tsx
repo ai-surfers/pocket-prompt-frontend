@@ -207,7 +207,15 @@ export default function NewPromptClient({
         }
     };
 
-    const getBtnText = () => (activeTab === "3" ? "프롬프트 등록하기" : "다음");
+    const getBtnText = () => {
+        if (activeTab !== "3") {
+            return "다음";
+        }
+        if (isEdit) {
+            return "프롬프트 수정 완료하기";
+        }
+        return "프롬프트 등록 완료하기";
+    };
 
     const handleButtonClick = () => {
         if (activeTab === "1") {

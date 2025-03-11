@@ -85,40 +85,39 @@ function FormThirdSecion({ onSubmit, isEdit }: FormSectionProps) {
                     />
                 </FormItem>
 
-                    <ControllerWrapper>
-                        <Text
-                            font="b1_18_semi"
-                            style={{ marginBottom: "10px" }}
-                        >
-                            공개범위
-                        </Text>
-                        <Controller
-                            name="visibility"
-                            control={control}
-                            render={({ field }) => (
-                                <div style={{ width: "300px" }}>
-                                    <Toggle
-                                        items={["Public", "Private"]}
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                    />
-                                </div>
-                            )}
-                        />
-                    </ControllerWrapper>
-                </Flex>
-            </form>
-
-            <Button
-                id="register-prompt"
-                size={52}
-                width="100%"
-                style={{ marginTop: "60px", justifyContent: "center" }}
-                onClick={onSubmit}
-                hierarchy={isValid ? "primary" : "disabled"}
-            >
-                {isEdit ? "프롬프트 수정 완료하기" : "프롬프트 등록 완료하기"}
-            </Button>
+                <ControllerWrapper>
+                    <Text font="b1_18_semi" style={{ marginBottom: "10px" }}>
+                        공개범위
+                    </Text>
+                    <Controller
+                        name="visibility"
+                        control={control}
+                        render={({ field }) => (
+                            <div style={{ width: "300px" }}>
+                                <Toggle
+                                    items={["Public", "Private"]}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
+                            </div>
+                        )}
+                    />
+                </ControllerWrapper>
+            </FormWrapper>
+            {!isUnderTablet && (
+                <Button
+                    id="register-prompt"
+                    size={52}
+                    width="100%"
+                    style={{ marginTop: "60px", justifyContent: "center" }}
+                    onClick={onSubmit}
+                    hierarchy={isValid ? "primary" : "disabled"}
+                >
+                    {isEdit
+                        ? "프롬프트 수정 완료하기"
+                        : "프롬프트 등록 완료하기"}
+                </Button>
+            )}
         </Box>
     );
 }
