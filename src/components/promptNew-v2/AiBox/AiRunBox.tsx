@@ -71,7 +71,7 @@ export const AiRunBox = ({
     }
 
     return (
-        <Flex vertical gap={16} style={{ height: "100%" }}>
+        <Flex vertical gap={16} style={{ width: "100%", height: "100%" }}>
             <EmptyBox>
                 <Flex
                     justify="space-between"
@@ -112,7 +112,7 @@ const EmptyBox = styled.div`
     box-sizing: border-box;
     border-radius: 8px;
     background: var(--gray-50, #f7f8f9);
-    width: 800px;
+    /* width: 100%; */
     height: 100%;
     padding: 20px;
 `;

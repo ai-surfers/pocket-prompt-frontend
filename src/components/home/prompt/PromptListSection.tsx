@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * @component PromptListSection
  * @description 어떤 프롬프트 리스트를 불러올지 결정하는 컴포넌트.
@@ -9,23 +11,21 @@
  * - 프롬프트 종류에 따른 ui, 타이틀 결정
  */
 
-import styled from "styled-components";
-import PromptList from "./PromptList";
+import { ViewType } from "@/apis/prompt/prompt.model";
+import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
+import Text from "@/components/common/Text/Text";
+import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
+import { useUser } from "@/hooks/useUser";
 import {
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
-import { useRecoilValue } from "recoil";
-import { ViewType } from "@/apis/prompt/prompt.model";
-import Text from "@/components/common/Text/Text";
-import { useUser } from "@/hooks/useUser";
-import { Flex } from "antd";
 import { useDeviceSize } from "@components/DeviceContext";
+import { Flex } from "antd";
 import { usePathname } from "next/navigation";
-import { memo, Suspense, useEffect, useRef, useState } from "react";
-import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
-import { boolean } from "zod";
-import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
+import { useRecoilValue } from "recoil";
+import styled from "styled-components";
+import PromptList from "./PromptList";
 
 interface PromptListSectionProps {
     viewType?: ViewType;

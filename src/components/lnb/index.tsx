@@ -26,7 +26,7 @@ interface LNBtype {
     menuItems: MenuItemsType[];
     button?: ReactNode;
     initialMenu?: string;
-
+    showTextOnUnderTablet?: boolean;
     onTabChange?: (key: string) => void;
 }
 
@@ -34,6 +34,7 @@ const LNB = ({
     menuItems,
     button,
     initialMenu = "1",
+    showTextOnUnderTablet = false,
     onTabChange,
 }: LNBtype) => {
     const [selectedKey, setSelectedKey] = useState<string>(initialMenu);
@@ -64,6 +65,11 @@ const LNB = ({
                                 onClick={() => handleClick(item)}
                                 key={item.key}
                                 id={item.id ?? item.key}
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "4px",
+                                }}
                             >
                                 {item.iconType && (
                                     <Icon
@@ -75,6 +81,19 @@ const LNB = ({
                                         }
                                         size={20}
                                     />
+                                )}
+                                {showTextOnUnderTablet && item.label && (
+                                    <Text
+                                        font="b2_16_med"
+                                        color={
+                                            initialMenu === item.key
+                                                ? "primary"
+                                                : "G_400"
+                                        }
+                                        style={{ marginLeft: 4 }}
+                                    >
+                                        {item.label}
+                                    </Text>
                                 )}
                             </button>
                         </Link>
