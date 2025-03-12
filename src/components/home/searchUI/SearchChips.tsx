@@ -90,8 +90,8 @@ const SearchChipsWrapper = styled.div<{ $isVisible: boolean }>`
         border-radius: 4px;
         background: var(--gray-200, #dee0e8);
         position: relative;
-        // margin-left: calc(50vw - 30px);
-        // margin-right: calc(50vw - 30px);
+        margin-left: calc(50vw - 30px);
+        margin-right: calc(50vw - 30px);
     }
 
     /* 스크롤바 핸들 */
