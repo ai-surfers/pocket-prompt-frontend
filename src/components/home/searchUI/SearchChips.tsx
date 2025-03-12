@@ -64,15 +64,41 @@ export default SearchChips;
 const SearchChipsWrapper = styled.div<{ $isVisible: boolean }>`
     ${({ theme }) => theme.mixins.flexBox("row", "start", "center")};
     gap: 8px;
-    overflow-x: scroll;
+    box-sizing: content-box;
+    overflow-x: scroll !important;
+    overflow-y: hidden;
     width: 100%;
+    height: 100%;
+    padding-bottom: 10px;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
 
     // 사라지는 모션
     opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
     max-height: ${({ $isVisible }) =>
-        $isVisible ? "80px" : "0px"}; /* 배너 높이 지정 */
-    overflow-y: hidden;
+        $isVisible ? "92px" : "0px"}; /* 배너 높이 지정 */
     transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
+
+    /* 전체 스크롤바 크기 조정 */
+    &::-webkit-scrollbar {
+        height: 4px;
+        display: block !important;
+    }
+
+    /* 스크롤바 트랙 (배경) */
+    &::-webkit-scrollbar-track {
+        border-radius: 4px;
+        background: var(--gray-200, #dee0e8);
+        position: relative;
+        // margin-left: calc(50vw - 30px);
+        // margin-right: calc(50vw - 30px);
+    }
+
+    /* 스크롤바 핸들 */
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background: var(--primary-100, #7580ea);
+    }
 `;
 
 const StyledButton = styled(Button)<{ $selected: boolean; $mobile: boolean }>`
