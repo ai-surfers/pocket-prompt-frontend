@@ -224,11 +224,11 @@ const SmallWrapper = styled.div<{
     $isMobile: boolean;
     $isFocused: boolean;
 }>`
-    ${({ theme }) => theme.mixins.flexBox("column", "center", "center")};
-    width: ${({ $isMobile }) => ($isMobile ? "100%" : "540px")};
-    min-width: ${({ $isMobile }) => ($isMobile ? "100%" : "540px")};
-    height: 502px;
-    min-height: 502px;
+    ${({ theme }) => theme.mixins.flexBox("column", "flex-start", "center")};
+    width: ${({ $isMobile }) => ($isMobile ? "100%" : "520px")};
+    min-width: ${({ $isMobile }) => ($isMobile ? "100%" : "520px")};
+    height: 512px;
+    min-height: 512px;
     border-radius: 12px;
     background: ${({ $isMobile, $isFocused, theme }) =>
         $isMobile
@@ -238,7 +238,6 @@ const SmallWrapper = styled.div<{
             : "var(--primary-5, #f8f8fe)"};
     box-sizing: border-box;
     padding: 21px 12px;
-    justify-content: flex-start;
     position: relative;
     border: ${({ $isMobile, $isFocused, theme }) =>
         $isMobile && $isFocused
