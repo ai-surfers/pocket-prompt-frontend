@@ -8,7 +8,7 @@ import {
     searchedKeywordState,
 } from "@/states/searchState";
 import { useRecoilValue } from "recoil";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@/components/DeviceContext";
 const Banner = () => {
     const searchedkeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);

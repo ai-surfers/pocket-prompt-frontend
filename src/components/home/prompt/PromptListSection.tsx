@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * @component PromptListSection
  * @description 어떤 프롬프트 리스트를 불러올지 결정하는 컴포넌트.
@@ -9,24 +11,22 @@
  * - 프롬프트 종류에 따른 ui, 타이틀 결정
  */
 
-import styled from "styled-components";
-import PromptList from "./PromptList";
+import { ViewType } from "@/apis/prompt/prompt.model";
+import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
+import Text from "@/components/common/Text/Text";
+import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
+import { useUser } from "@/hooks/useUser";
 import {
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
-import { useRecoilValue } from "recoil";
-import { ViewType } from "@/apis/prompt/prompt.model";
-import Text from "@/components/common/Text/Text";
-import { useUser } from "@/hooks/useUser";
+import { useDeviceSize } from "@components/DeviceContext";
 import { Flex } from "antd";
-import useDeviceSize from "@/hooks/useDeviceSize";
 import { usePathname } from "next/navigation";
-import { memo, useEffect, useRef, useState } from "react";
-import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
-import { boolean } from "zod";
-import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
 import { Categories, Category } from "@/core/Prompt";
+import { useRecoilValue } from "recoil";
+import styled from "styled-components";
+import PromptList from "./PromptList";
 
 interface PromptListSectionProps {
     viewType?: ViewType;
@@ -123,7 +123,6 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                     />
                                 )}
                             </SmallWrapper>
-
                             <SmallWrapper
                                 ref={scrollRightRef}
                                 $isMobile={isMobile}
@@ -148,6 +147,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                     defaultSortBy="created_at"
                                 />
                             </SmallWrapper>
+
                             {/* {isMobile && (
                                 <ScrollButton
                                     currentScroll={currentScroll}
@@ -226,8 +226,9 @@ const SmallWrapper = styled.div<{
 }>`
     ${({ theme }) => theme.mixins.flexBox("column", "center", "center")};
     width: ${({ $isMobile }) => ($isMobile ? "100%" : "540px")};
+    min-width: ${({ $isMobile }) => ($isMobile ? "100%" : "540px")};
     height: 502px;
-    // margin-bottom: 63.5px;
+    min-height: 502px;
     border-radius: 12px;
     background: ${({ $isMobile, $isFocused, theme }) =>
         $isMobile

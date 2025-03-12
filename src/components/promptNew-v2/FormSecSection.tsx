@@ -1,19 +1,14 @@
+"use client";
+
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
-import Text from "@/components/common/Text/Text";
 import Textarea from "@/components/common/Textarea/Textarea";
-import Toggle from "@/components/common/Toggle/Toggle";
-import { AIPlatforms, Categories } from "@/core/Prompt";
-import FormItem from "./Form/FormItem";
 import { PromptSchemaType } from "@/schema/PromptSchema";
-import { Flex, Select } from "antd";
+import { useDeviceSize } from "@components/DeviceContext";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import Icon from "../common/Icon";
-import TextArea from "antd/es/input/TextArea";
 import { AiRunBox } from "./AiBox/AiRunBox";
-import { useGetAiSuggestions } from "@/hooks/mutations/prompts/useGetAiSuggestions";
-import { useEffect, useState } from "react";
+import FormItem from "./Form/FormItem";
 
 interface FormSectionProps {
     isEdit: boolean;
@@ -35,10 +30,14 @@ function FormSecSection({
         // formState: { isValid },
         watch,
     } = useFormContext<PromptSchemaType>();
-
+    const { isUnderTablet, isMobile } = useDeviceSize();
     const promptTemplateValue = watch("prompt_template") || "";
 
-    const isValid = promptTemplateValue.length > 0;
+    const promptTitleValue = watch("title") || "";
+    const promptDescriptionValue = watch("description") || "";
+
+    const isValid =
+        promptTitleValue.length > 0 && promptDescriptionValue.length > 0;
 
     const handleSelectTitle = (selectedText: string) => {
         setSelectedTitle(selectedText);
@@ -51,9 +50,11 @@ function FormSecSection({
     };
 
     return (
-        <Box>
+        <Box $isUnderTablet={isUnderTablet}>
             <form>
-                <Flex vertical gap={32} style={{ marginTop: "9px" }}>
+                <FormContainer>
+                    {/* <Flex vertical gap={32} style={{ marginTop: "9px" }}> */}
+
                     <FormItem title="프롬프트 제목" tags={["필수"]}>
                         <Controller
                             name="title"
@@ -99,31 +100,39 @@ function FormSecSection({
                         promptTemplate={promptTemplateValue}
                         onSelect={handleSelectDescription}
                     />
-                </Flex>
+
+                    {/* </Flex> */}
+                </FormContainer>
             </form>
 
-            <Button
-                id="register-prompt"
-                size={52}
-                width="100%"
-                style={{ marginTop: "60px", justifyContent: "center" }}
-                onClick={goToNextTab}
-                hierarchy={isValid ? "primary" : "disabled"}
-            >
-                다음
-            </Button>
+            {!isUnderTablet && (
+                <Button
+                    id="register-prompt"
+                    size={52}
+                    width="100%"
+                    style={{ marginTop: "40px", justifyContent: "center" }}
+                    onClick={goToNextTab}
+                    hierarchy={isValid ? "primary" : "disabled"}
+                >
+                    다음
+                </Button>
+            )}
         </Box>
     );
 }
 
 export default FormSecSection;
 
-const Box = styled.div`
+const Box = styled.div<{ $isUnderTablet: boolean }>`
     flex: 7;
     border-radius: 16px;
     /* border: 1.5px solid ${({ theme }) => theme.colors.primary_50}; */
     background: #fff;
-    padding-right: 80px;
+`;
+
+const FormContainer = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("column", "")};
+    gap: 20px;
 `;
 
 const HelpBox = styled.div`

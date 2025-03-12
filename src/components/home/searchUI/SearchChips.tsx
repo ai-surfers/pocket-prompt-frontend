@@ -1,15 +1,14 @@
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
 import { Categories } from "@/core/Prompt";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { useDeviceSize } from "@/components/DeviceContext";
 import {
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
 import Total from "@public/svg/home/Total";
 import { Flex } from "antd";
-import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 
 const SearchChips = () => {

@@ -1,20 +1,23 @@
+"use client";
+
 // TopSection.tsx
+
 import { PromptDetails } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
+import Icon from "@/components/common/Icon";
 import Text from "@/components/common/Text/Text";
 import { Categories } from "@/core/Prompt";
+import useToast from "@/hooks/useToast";
 import { useUser } from "@/hooks/useUser";
-import { Wrapper } from "../layout/LayoutClient";
-import Icon from "@/components/common/Icon";
-import BookmarkButton from "./BookmarkButton";
-import EditDropdown from "./EditDropdown";
 import { copyClipboard } from "@/utils/promptUtils";
 import { formatDate, formatNumber } from "@/utils/textUtils";
+import { useDeviceSize } from "@components/DeviceContext";
 import { Flex } from "antd";
 import { ReactNode } from "react";
 import styled from "styled-components";
-import useToast from "@/hooks/useToast";
-import useDeviceSize from "@/hooks/useDeviceSize";
+import { Wrapper } from "../layout/LayoutClient";
+import BookmarkButton from "./BookmarkButton";
+import EditDropdown from "./EditDropdown";
 
 interface TopSectionProps {
     prompt: PromptDetails;
@@ -44,7 +47,13 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
     return (
         <TopContainer $isMobile={isMobile}>
             <Wrapper>
-                <Flex justify="space-between" align="center" wrap gap={10}>
+                <Flex
+                    justify="space-between"
+                    align="center"
+                    wrap
+                    gap={10}
+                    style={{ marginBottom: "12px" }}
+                >
                     <Flex vertical>
                         <Text font="h1_24_semi">{prompt.title}</Text>
                         <Text font="b1_18_reg" color="G_400">
