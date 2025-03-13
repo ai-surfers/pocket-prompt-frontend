@@ -51,7 +51,7 @@ function HomeContent() {
                     </AdContainer>
                 </LeftSection>
                 <Flex vertical>
-                    <Banner />
+                    {/* <Banner /> */}
                     <ContentWrapper>
                         <SearchSectionWrapper>
                             <SearchSection />
