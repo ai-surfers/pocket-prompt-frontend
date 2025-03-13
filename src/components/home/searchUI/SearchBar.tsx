@@ -16,7 +16,7 @@ const SearchBar = () => {
 
     const handleChange = () => {
         setSearchedKeyword(keyword);
-        // setSearchedCategory("");
+        setSearchedCategory("");
     };
 
     return (

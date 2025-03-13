@@ -18,6 +18,9 @@ const nextConfig = {
       },
     reactStrictMode: true,
     swcMinify: true,
+    images: {
+        formats: ["image/avif", "image/webp"],
+    },
     experimental: {
         optimizeCss: true, // 자동으로 사용되지 않는 CSS 제거 & 압축
       },
