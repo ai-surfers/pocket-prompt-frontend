@@ -1,13 +1,11 @@
-import Text from "@/components/common/Text/Text";
-import { Flex } from "antd";
-import styled, { keyframes } from "styled-components";
-import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
-import CheckDefaultIcon from "@public/svg/prompt-new/check-default";
+import Text from "@/components/common/Text/Text";
 import CheckActiveIcon from "@public/svg/prompt-new/check-active";
-import { useState, useEffect } from "react";
+import CheckDefaultIcon from "@public/svg/prompt-new/check-default";
+import { Flex } from "antd";
+import { useState } from "react";
+import styled, { keyframes } from "styled-components";
 
-import { useQuery } from "@tanstack/react-query";
 import { useGetAiSuggestions } from "@/hooks/mutations/prompts/useGetAiSuggestions";
 import AIGenerateIcon from "@public/svg/prompt-new/ai-generate";
 
@@ -71,7 +69,7 @@ export const AiRunBox = ({
     }
 
     return (
-        <Flex vertical gap={16} style={{ height: "100%" }}>
+        <Flex vertical gap={16} style={{ width: "100%", height: "100%" }}>
             <EmptyBox>
                 <Flex
                     justify="space-between"
@@ -112,7 +110,7 @@ const EmptyBox = styled.div`
     box-sizing: border-box;
     border-radius: 8px;
     background: var(--gray-50, #f7f8f9);
-    width: 800px;
+    /* width: 100%; */
     height: 100%;
     padding: 20px;
 `;
@@ -138,7 +136,7 @@ const TextBoxWrapper = styled(Flex)<{ $checked?: boolean }>`
     background-color: ${({ theme, $checked }) =>
         $checked ? theme.colors.primary_10 : theme.colors.white};
     border-radius: 8px;
-    padding: 10px;
+    padding: 10px !important;
     animation: ${fadeSlide} 300ms ease-in-out;
     border: 1px solid
         ${({ theme, $checked }) =>

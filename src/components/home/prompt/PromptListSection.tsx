@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * @component PromptListSection
  * @description 어떤 프롬프트 리스트를 불러올지 결정하는 컴포넌트.
@@ -9,23 +11,22 @@
  * - 프롬프트 종류에 따른 ui, 타이틀 결정
  */
 
-import styled from "styled-components";
-import PromptList from "./PromptList";
+import { ViewType } from "@/apis/prompt/prompt.model";
+import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
+import Text from "@/components/common/Text/Text";
+import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
+import { useUser } from "@/hooks/useUser";
 import {
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
-import { useRecoilValue } from "recoil";
-import { ViewType } from "@/apis/prompt/prompt.model";
-import Text from "@/components/common/Text/Text";
-import { useUser } from "@/hooks/useUser";
-import { Flex } from "antd";
 import { useDeviceSize } from "@components/DeviceContext";
+import { Flex } from "antd";
 import { usePathname } from "next/navigation";
-import { memo, Suspense, useEffect, useRef, useState } from "react";
-import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
-import { boolean } from "zod";
-import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
+import { Categories, Category } from "@/core/Prompt";
+import { useRecoilValue } from "recoil";
+import styled from "styled-components";
+import PromptList from "./PromptList";
 
 interface PromptListSectionProps {
     viewType?: ViewType;
@@ -41,6 +42,11 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
 
     const { scrollLeftRef, scrollRightRef, handleScroll, currentScroll } =
         useScrollButtonControl();
+
+    const totalCategories: Category = {
+        total: { ko: "전체", en: "total", emoji: <></> },
+        ...Categories,
+    };
 
     const promptContent = () => {
         if (searchedKeyword && pathname === "/") {
@@ -72,7 +78,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                         viewType={viewType}
                         title={
                             <Text font="h2_20_semi" color="G_800">
-                                {searchedCategory}
+                                {totalCategories[searchedCategory].ko} 프롬프트
                             </Text>
                         }
                         limit={limit}
@@ -218,11 +224,11 @@ const SmallWrapper = styled.div<{
     $isMobile: boolean;
     $isFocused: boolean;
 }>`
-    ${({ theme }) => theme.mixins.flexBox("column", "center", "center")};
-    width: ${({ $isMobile }) => ($isMobile ? "100%" : "540px")};
-    min-width: ${({ $isMobile }) => ($isMobile ? "100%" : "540px")};
-    height: 502px;
-    min-height: 502px;
+    ${({ theme }) => theme.mixins.flexBox("column", "flex-start", "center")};
+    width: ${({ $isMobile }) => ($isMobile ? "100%" : "520px")};
+    min-width: ${({ $isMobile }) => ($isMobile ? "100%" : "520px")};
+    height: 512px;
+    min-height: 512px;
     border-radius: 12px;
     background: ${({ $isMobile, $isFocused, theme }) =>
         $isMobile
@@ -232,7 +238,6 @@ const SmallWrapper = styled.div<{
             : "var(--primary-5, #f8f8fe)"};
     box-sizing: border-box;
     padding: 21px 12px;
-    justify-content: flex-start;
     position: relative;
     border: ${({ $isMobile, $isFocused, theme }) =>
         $isMobile && $isFocused

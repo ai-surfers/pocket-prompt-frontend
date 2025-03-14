@@ -1,11 +1,11 @@
 import { PromptDetails } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
-import Text from "@/components/common/Text/Text";
 import Icon from "@/components/common/Icon";
-import PromptDeleteModal from "./PromptDeleteModal";
+import Text from "@/components/common/Text/Text";
 import { Dropdown, MenuProps } from "antd";
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
+import PromptDeleteModal from "./PromptDeleteModal";
 
 interface EditDropdownProps {
     prompt: PromptDetails;
@@ -34,7 +34,7 @@ export default function EditDropdown({ prompt }: EditDropdownProps) {
         {
             key: "2",
             label: (
-                <Link href={`/prompt-edit/${prompt.id}`}>
+                <Link href={`/prompt-edit-v2/${prompt.id}`}>
                     <Text
                         font="b3_14_med"
                         color="G_600"

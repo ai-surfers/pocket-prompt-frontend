@@ -1,6 +1,6 @@
 "use client";
 
-import Banner from "@components/home/Banner";
+import Banner from "@components/home/banner/Banner";
 import { Wrapper } from "@components/layout/LayoutClient";
 import styled from "styled-components";
 import PromptListSection from "@/components/home/prompt/PromptListSection";
@@ -17,6 +17,8 @@ import VocModal from "@/components/home/VocModal";
 import { useSearchParams } from "next/navigation";
 import HomeSiderBar from "@/components/home/siderbarAd/HomeSiderBar";
 import { useDeviceSize } from "@components/DeviceContext";
+import SearchSection from "./SearchSection";
+import { Flex } from "antd";
 
 function HomeContent() {
     const { isUnderTablet } = useDeviceSize();
@@ -48,12 +50,15 @@ function HomeContent() {
                         <HomeSiderBar />
                     </AdContainer>
                 </LeftSection>
-                <ContentWrapper>
-                    <BannerWrapper>
-                        <Banner />
-                    </BannerWrapper>
-                    <PromptListSection />
-                </ContentWrapper>
+                <Flex vertical>
+                    {/* <Banner /> */}
+                    <ContentWrapper>
+                        <SearchSectionWrapper>
+                            <SearchSection />
+                        </SearchSectionWrapper>
+                        <PromptListSection />
+                    </ContentWrapper>
+                </Flex>
             </HomeContentWrapper>
             <IconWrap onClick={() => setIsVocModalOpen(true)}>
                 <Icon name={"MessageText"} color={"white"} size={30} />
@@ -97,7 +102,7 @@ const ContentWrapper = styled(Wrapper)`
     padding: 0 10px;
 `;
 
-const BannerWrapper = styled.div`
+const SearchSectionWrapper = styled.div`
     margin-bottom: 15px;
     width: 100%;
 `;
