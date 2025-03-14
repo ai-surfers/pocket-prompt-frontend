@@ -33,6 +33,11 @@ import PromptNewLnb from "../lnb/PromptNewLnb";
 import FormFirstSection from "./FormFirstSection";
 import FormSecSection from "./FormSecSection";
 import FormThirdSecion from "./FormThirdSecion";
+import { useInvalidateQueryKeys } from "@/hooks/queries/useInvalidateQueryKeys";
+import {
+    PROMPT_KEYS,
+    PROMPT_QUERY_KEYS_FOR_PREFETCH,
+} from "@/hooks/queries/QueryKeys";
 
 interface PromptNewPageProps {
     isEdit: boolean;
@@ -71,9 +76,20 @@ export default function NewPromptClient({
     const promptTemplateValue = form.watch("prompt_template") || "";
     const isValid = promptTemplateValue.length > 0;
 
+    const queryKey = isUnderTablet
+        ? PROMPT_QUERY_KEYS_FOR_PREFETCH.ALL_PROMPTS_MOBILE
+        : PROMPT_QUERY_KEYS_FOR_PREFETCH.ALL_PROMPTS;
+    const resetPromptListQueryKey = useInvalidateQueryKeys(
+        PROMPT_KEYS.list(queryKey)
+    );
+    const resetPromptQueryKey = useInvalidateQueryKeys(
+        PROMPT_KEYS.detail(promptId ?? "")
+    );
+
     const { mutate: createPromptMutate } = usePostPrompt({
         onSuccess(res) {
             console.log("Success", res);
+            resetPromptListQueryKey();
             showToast({
                 title: "프롬프트 등록이 완료되었어요.",
                 subTitle: "",
@@ -114,6 +130,8 @@ export default function NewPromptClient({
     const { mutate: updatePromptMutate } = usePutPrompt({
         onSuccess(res) {
             console.log("Success", res);
+            resetPromptQueryKey();
+            resetPromptListQueryKey();
             showToast({
                 title: "프롬프트 수정이 완료되었어요.",
                 subTitle: "",
