@@ -20,6 +20,7 @@ export type PromptDetails = {
     views: number;
     user_input_format: PromptInputField[];
     is_starred_by_user: boolean;
+    sample_images: string[];
 };
 
 export type PaginationInfo = {

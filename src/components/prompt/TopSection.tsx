@@ -18,6 +18,8 @@ import styled from "styled-components";
 import { Wrapper } from "../layout/LayoutClient";
 import BookmarkButton from "./BookmarkButton";
 import EditDropdown from "./EditDropdown";
+import Image from "next/image";
+import SampleImages from "./SampleImages";
 
 interface TopSectionProps {
     prompt: PromptDetails;
@@ -134,6 +136,9 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
                         </Flex>
                     </Flex>
                 </InformationContainer>
+                {prompt.sample_images?.length > 0 && (
+                    <SampleImages sampleImages={prompt.sample_images} />
+                )}
             </Wrapper>
         </TopContainer>
     );
