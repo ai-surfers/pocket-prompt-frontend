@@ -9,9 +9,8 @@ import {
 } from "@/hooks/mutations/prompts/usePostPrompt";
 import { usePutPrompt } from "@/hooks/mutations/prompts/usePutPrompt";
 import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
-import useToast from "@/hooks/useToast";
-
 import useModal from "@/hooks/useModal";
+import useToast from "@/hooks/useToast";
 import { extractOptions } from "@/utils/promptUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -28,16 +27,18 @@ import { z } from "zod";
 import Button from "../common/Button/Button";
 import PreviewSection from "./PreviewSection";
 // import FormSection from "./FormSection";
-import { useDeviceSize } from "@components/DeviceContext";
-import PromptNewLnb from "../lnb/PromptNewLnb";
-import FormFirstSection from "./FormFirstSection";
-import FormSecSection from "./FormSecSection";
-import FormThirdSecion from "./FormThirdSecion";
-import { useInvalidateQueryKeys } from "@/hooks/queries/useInvalidateQueryKeys";
+import { UTM_OVER_USAGE_LIMIT_URL, UTM_TIER_LIMIT_URL } from "@/core/UtmUri";
 import {
     PROMPT_KEYS,
     PROMPT_QUERY_KEYS_FOR_PREFETCH,
 } from "@/hooks/queries/QueryKeys";
+import { useInvalidateQueryKeys } from "@/hooks/queries/useInvalidateQueryKeys";
+import { useDeviceSize } from "@components/DeviceContext";
+import Link from "next/link";
+import PromptNewLnb from "../lnb/PromptNewLnb";
+import FormFirstSection from "./FormFirstSection";
+import FormSecSection from "./FormSecSection";
+import FormThirdSecion from "./FormThirdSecion";
 
 interface PromptNewPageProps {
     isEdit: boolean;
@@ -99,31 +100,115 @@ export default function NewPromptClient({
             router.replace(`/prompt/${res.data.prompt_id}`);
         },
         onError(e) {
-            console.error("Failed", e);
-            openModal({
-                title: "프롬프트 등록에 실패하였습니다.",
-                content: (
-                    <Text font="b3_14_reg" color="G_700">
-                        {e.response?.data.detail}
-                    </Text>
-                ),
-                footer: (
-                    <Flex
-                        style={{ width: "100%", paddingTop: "20px" }}
-                        gap={16}
-                        justify="end"
-                    >
-                        <Button
-                            id="modal-close-button"
-                            hierarchy="default"
-                            style={{ flex: 1, justifyContent: "center" }}
-                            onClick={closeModal}
+            const utmUrl =
+                e.message ===
+                "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요."
+                    ? UTM_OVER_USAGE_LIMIT_URL
+                    : UTM_TIER_LIMIT_URL;
+
+            const handleClickPriceInProduction = () => {
+                window.location.href = utmUrl;
+            };
+
+            //  402 에러 체크
+            if (e.response?.status === 402) {
+                openModal({
+                    title: "프롬프트 등록에 실패하였습니다.",
+                    content: (
+                        <Text
+                            font="b3_14_reg"
+                            color="G_700"
+                            style={{ whiteSpace: "pre-line" }}
                         >
-                            닫기
-                        </Button>
-                    </Flex>
-                ),
-            });
+                            안녕하세요! 현재 사용 중인 계정의 개인 프롬프트 저장
+                            한도에 도달했어요.
+                            {"\n\n"}방금 프롬프트를 삭제하셨다면, 잠시 후 다시
+                            시도해 주세요. 시스템에 반영되는데 약간의 시간이
+                            필요할 수 있어요.
+                            {"\n\n"}더 많은 아이디어를 저장하고 싶으신가요? lite
+                            플랜으로 업그레이드하시면 더 많은 개인 프롬프트를
+                            저장해 사용할 수 있습니다. 당신의 창의력에 날개를
+                            달아보세요!
+                        </Text>
+                    ),
+                    footer: (
+                        <Flex
+                            style={{ width: "100%", paddingTop: "20px" }}
+                            gap={16}
+                        >
+                            <Button
+                                id="modal-close-button"
+                                hierarchy="default"
+                                style={{ flex: 1, justifyContent: "center" }}
+                                onClick={closeModal}
+                            >
+                                닫기
+                            </Button>
+                            {
+                                // 운영 환경일 때만 utm 경로로 이동
+                                process.env.APP_ENV === "production" ? (
+                                    <Button
+                                        id="modal-price-button"
+                                        style={{
+                                            flex: 1,
+                                            justifyContent: "center",
+                                        }}
+                                        onClick={() => {
+                                            closeModal();
+                                            handleClickPriceInProduction();
+                                        }}
+                                    >
+                                        플랜 둘러보기
+                                    </Button>
+                                ) : (
+                                    // 개발환경 일때는 일반 경로로 이동
+                                    <Link href="/price">
+                                        <Button
+                                            id="modal-price-button"
+                                            style={{
+                                                flex: 1,
+                                                justifyContent: "center",
+                                            }}
+                                            onClick={() => {
+                                                closeModal();
+                                            }}
+                                        >
+                                            플랜 둘러보기
+                                        </Button>
+                                    </Link>
+                                )
+                            }
+                        </Flex>
+                    ),
+                });
+            } else {
+                // 그 외 에러
+                const errorDetail = e.response?.data?.detail;
+                openModal({
+                    title: "프롬프트 등록에 실패하였습니다.",
+                    content: (
+                        <Text font="b3_14_reg" color="G_700">
+                            {errorDetail}
+                        </Text>
+                    ),
+                    footer: (
+                        <Flex
+                            style={{ width: "100%", paddingTop: "20px" }}
+                            gap={16}
+                            justify="end"
+                        >
+                            <Button
+                                id="modal-close-button"
+                                hierarchy="default"
+                                style={{ flex: 1, justifyContent: "center" }}
+                                onClick={closeModal}
+                            >
+                                닫기
+                            </Button>
+                        </Flex>
+                    ),
+                });
+            }
         },
     });
 
@@ -270,8 +355,6 @@ export default function NewPromptClient({
         const { prompt_template, title, description } = form.getValues();
 
         if (newTab === "2") {
-            // prompt_template 길이가 30자 미만
-
             if (prompt_template.length < 30) {
                 showToast({
                     title: "프롬프트 템플릿은 30자 이상 작성해주세요.",
@@ -280,15 +363,6 @@ export default function NewPromptClient({
                 });
                 return;
             }
-            // 탭 1 → 탭 2로 전환 시 prompt_template 필드가 필수
-            // if (!prompt_template) {
-            //     showToast({
-            //         title: "필수 항목을 작성해주세요.",
-            //         subTitle: "프롬프트 템플릿을 입력해주세요.",
-            //         iconName: "Timer",
-            //     });
-            //     return;
-            // }
         } else if (newTab === "3") {
             // 탭 2 → 탭 3로 전환 시 title과 description 필드가 필수
             if (!title || !description) {
@@ -427,7 +501,6 @@ const FirstWriteSection = styled.div<{ $isUnderTablet: boolean }>`
         )};
     gap: ${({ $isUnderTablet }) => ($isUnderTablet ? "16px" : "16px")};
     flex-wrap: wrap;
-    /* min-width: 1080px; */
     width: 100%;
 `;
 
@@ -438,7 +511,6 @@ const SecondWriteSection = styled.div<{ $isUnderTablet: boolean }>`
             "space-between",
             ""
         )};
-
     width: 100%;
     padding-right: ${({ $isUnderTablet }) =>
         $isUnderTablet ? "0px" : "150px"};
@@ -451,14 +523,12 @@ const ThridWriteSection = styled.div<{ $isUnderTablet: boolean }>`
             "space-between",
             ""
         )};
-    /* max-width: 684px; */
     width: 100%;
     padding-right: ${({ $isUnderTablet }) =>
         $isUnderTablet ? "0px" : "150px"};
     padding-bottom: 40px;
 `;
 
-//   isUnderTablet 전용 버튼 컨테이너
 const MobileButtonContainer = styled.div`
     position: fixed;
     bottom: 0;
