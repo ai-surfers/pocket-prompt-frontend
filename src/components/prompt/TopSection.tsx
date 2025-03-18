@@ -83,11 +83,14 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
                     </Flex>
                 </Flex>
 
-                <InformationContainer wrap>
+                <InformationContainer
+                    wrap
+                    style={{ padding: "12px 16px 12px 12px" }}
+                >
                     <Flex gap={8}>
                         {prompt.categories.map((cat) => (
                             <Chip key={cat}>
-                                <Text font="b2_16_semi" color="G_600">
+                                <Text font="b3_14_med" color="white">
                                     {Categories[cat].ko}
                                 </Text>
                             </Chip>
@@ -95,37 +98,37 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
                     </Flex>
 
                     <Flex gap={20} wrap>
-                        <Flex gap={8} align="center">
-                            <Icon name="Profile" color="G_400" size={20} />
-                            <Text font="b3_14_med" color="G_400">
+                        <Flex gap={4} align="center">
+                            <Icon name="Profile" color="G_400" size={16} />
+                            <Text font="b3_14_reg" color="G_400">
                                 {prompt.author_nickname}
                             </Text>
                         </Flex>
 
-                        <Flex gap={8} align="center">
-                            <Icon name="Calendar2" color="G_400" size={20} />
-                            <Text font="b3_14_med" color="G_400">
+                        <Flex gap={4} align="center">
+                            <Icon name="Calendar2" color="G_400" size={16} />
+                            <Text font="b3_14_reg" color="G_400">
                                 {formatDate(prompt.created_at)}
                             </Text>
                         </Flex>
 
-                        <Flex gap={8} align="center">
-                            <Icon name="Eye" color="G_400" size={20} />
-                            <Text font="b3_14_med" color="G_400">
+                        <Flex gap={4} align="center">
+                            <Icon name="Eye" color="G_400" size={16} />
+                            <Text font="b3_14_reg" color="G_400">
                                 {formatNumber(prompt.views)}
                             </Text>
                         </Flex>
 
-                        <Flex gap={8} align="center">
-                            <Icon name="Play" color="G_400" size={20} />
-                            <Text font="b3_14_med" color="G_400">
+                        <Flex gap={4} align="center">
+                            <Icon name="Play" color="G_400" size={16} />
+                            <Text font="b3_14_reg" color="G_400">
                                 {formatNumber(prompt.usages)}
                             </Text>
                         </Flex>
 
-                        <Flex gap={8} align="center">
-                            <Icon name="Save2" color="G_400" size={20} />
-                            <Text font="b3_14_med" color="G_400">
+                        <Flex gap={4} align="center">
+                            <Icon name="Save2" color="G_400" size={16} />
+                            <Text font="b3_14_reg" color="G_400">
                                 {formatNumber(prompt.star)}
                             </Text>
                         </Flex>
@@ -145,11 +148,13 @@ const TopContainer = styled.div<{ $isMobile: boolean }>`
 
 const InformationContainer = styled(Flex)`
     margin-top: 32px;
-    gap: 32px;
+    gap: 20px;
+    background-color: ${({ theme }) => theme.colors.G_50};
+    border-radius: 12px;
 `;
 
 const Chip = styled.div`
     padding: 6px 12px;
     border-radius: 8px;
-    background-color: ${({ theme }) => theme.colors.G_100};
+    background-color: ${({ theme }) => theme.colors.G_600};
 `;
