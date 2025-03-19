@@ -12,21 +12,19 @@
  * - props에 따라 pagination, sort, tab 관리
  */
 
-import { Col, Flex, Pagination, Row, Select } from "antd";
-import Prompt from "./Prompt";
-import styled from "styled-components";
-import usePromptsListQuery, {
-    PromptQueryProps,
-} from "@/hooks/queries/prompts/usePromptsListQuery";
 import { SortType, ViewType } from "@/apis/prompt/prompt.model";
+import usePromptsListQuery from "@/hooks/queries/prompts/usePromptsListQuery";
+import {
+    searchedCategoryState,
+    searchedKeywordState,
+} from "@/states/searchState";
+import { sortTypeState } from "@/states/sortState";
+import { Col, Flex, Pagination, Row, Select } from "antd";
 import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-    searchedKeywordState,
-    searchedCategoryState,
-} from "@/states/searchState";
+import styled from "styled-components";
 import EmptyPrompt from "./EmptyPrompt";
-import { sortTypeState } from "@/states/sortState";
+import Prompt from "./Prompt";
 
 interface PromptListProps {
     usePage?: boolean;
@@ -52,7 +50,7 @@ const PromptList = ({
     // 쿼리 파라미터 로직
     const queryParams = {
         viewType: viewType,
-        sortBy: defaultSortBy || sortBy, // 필요할 경우만 sortBy 사용
+        sortBy: defaultSortBy || sortBy,
         limit,
         ...(searchedKeyword ? { query: searchedKeyword } : {}),
         ...(searchCategory && searchCategory !== "total"
@@ -67,7 +65,12 @@ const PromptList = ({
         itemsPerPage,
         handlePageChange,
         isLoading,
+        // refetch,
     } = usePromptsListQuery(queryParams);
+
+    // useEffect(() => {
+    //     refetch();
+    // }, [searchedKeyword, searchCategory, refetch]);
 
     const handleSortChange = (value: SortType) => {
         setSortBy(value);

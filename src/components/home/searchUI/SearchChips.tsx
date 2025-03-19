@@ -1,7 +1,7 @@
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
-import { Categories } from "@/core/Prompt";
 import { useDeviceSize } from "@/components/DeviceContext";
+import { Categories } from "@/core/Prompt";
 import {
     searchedCategoryState,
     searchedKeywordState,
@@ -29,7 +29,7 @@ const SearchChips = () => {
     };
 
     return (
-        <SearchChipsWrapper $isVisible={searchedkeyword === ""}>
+        <SearchChipsWrapper $isVisible={true}>
             {Object.entries(totalCategories).map(([key, category]) => (
                 <StyledButton
                     key={key}
@@ -74,9 +74,12 @@ const SearchChipsWrapper = styled.div<{ $isVisible: boolean }>`
     -webkit-overflow-scrolling: touch;
 
     // 사라지는 모션
-    opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
-    max-height: ${({ $isVisible }) =>
-        $isVisible ? "92px" : "0px"}; /* 배너 높이 지정 */
+    /* opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
+    max-height: ${({ $isVisible }) => ($isVisible ? "92px" : "0px")}; =
+    transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
+    */
+    opacity: 1;
+    max-height: 92px;
     transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
 
     /* 전체 스크롤바 크기 조정 */

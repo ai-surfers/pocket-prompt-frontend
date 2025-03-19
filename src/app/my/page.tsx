@@ -1,24 +1,30 @@
 "use client";
 
-import Text from "@/components/common/Text/Text";
-import styled from "styled-components";
-import { Flex } from "antd";
-import Input from "@/components/common/Input/Input";
-import { useEffect, useState } from "react";
-import { useUser } from "@/hooks/useUser";
+import { getUser } from "@/apis/auth/auth";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
+import Input from "@/components/common/Input/Input";
+import Text from "@/components/common/Text/Text";
+import { useDeviceSize } from "@/components/DeviceContext";
 import PromptListSection from "@/components/home/prompt/PromptListSection";
+import MyLnb from "@/components/lnb/MyLnb";
 import { usePutNickname } from "@/hooks/mutations/usePutNickname";
 import useToast from "@/hooks/useToast";
+import { useUser } from "@/hooks/useUser";
+import {
+    keywordState,
+    searchedCategoryState,
+    searchedKeywordState,
+} from "@/states/searchState";
 import {
     getLocalStorage,
     LOCALSTORAGE_KEYS,
     removeLocalStorage,
 } from "@/utils/storageUtils";
-import { getUser } from "@/apis/auth/auth";
-import MyLnb from "@/components/lnb/MyLnb";
-import { useDeviceSize } from "@/components/DeviceContext";
+import { Flex } from "antd";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import styled from "styled-components";
 // import { isValidNickname } from "@/utils/textUtils";
 
 const MyPage = () => {
@@ -27,6 +33,22 @@ const MyPage = () => {
     const { isUnderTablet, isMobile } = useDeviceSize();
     const showToast = useToast();
     const [isInitialized, setIsInitialized] = useState(false);
+
+    const [keyword, setKeyword] = useRecoilState(keywordState);
+    const [searchedKeyword, setSearchedKeyword] =
+        useRecoilState(searchedKeywordState);
+    const [searchedCategory, setSearchedCategory] = useRecoilState(
+        searchedCategoryState
+    );
+
+    useEffect(() => {
+        setIsInitialized(true);
+        return () => {
+            setKeyword("");
+            setSearchedKeyword("");
+            setSearchedCategory("");
+        };
+    }, []);
 
     const getUserData = () => {
         const access_token = getLocalStorage(LOCALSTORAGE_KEYS.ACCESS_TOKEN);
@@ -81,10 +103,6 @@ const MyPage = () => {
         // }
         updateNickname(nickname);
     };
-
-    useEffect(() => {
-        setIsInitialized(true);
-    }, []);
 
     if (!isInitialized) return null; // hydration 에러 방지
 

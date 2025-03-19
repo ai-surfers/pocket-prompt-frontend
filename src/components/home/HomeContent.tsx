@@ -1,24 +1,24 @@
 "use client";
 
-import Banner from "@components/home/banner/Banner";
+import PromptListSection from "@/components/home/prompt/PromptListSection";
 import { Wrapper } from "@components/layout/LayoutClient";
 import styled from "styled-components";
-import PromptListSection from "@/components/home/prompt/PromptListSection";
 
-import { Suspense, useEffect, useState } from "react";
-import { useResetRecoilState } from "recoil";
+import HomeSiderBar from "@/components/home/siderbarAd/HomeSiderBar";
+import VocModal from "@/components/home/VocModal";
+import HomeLnb from "@/components/lnb/HomeLnb";
 import {
+    keywordState,
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
-import HomeLnb from "@/components/lnb/HomeLnb";
 import Icon from "@components/common/Icon";
-import VocModal from "@/components/home/VocModal";
-import { useSearchParams } from "next/navigation";
-import HomeSiderBar from "@/components/home/siderbarAd/HomeSiderBar";
 import { useDeviceSize } from "@components/DeviceContext";
-import SearchSection from "./SearchSection";
 import { Flex } from "antd";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import SearchSection from "./SearchSection";
 
 function HomeContent() {
     const { isUnderTablet } = useDeviceSize();
@@ -26,12 +26,19 @@ function HomeContent() {
     const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
     const searchParams = useSearchParams();
     const [shouldReset, setShouldReset] = useState<boolean>(false);
+    const [keyword, setKeyword] = useRecoilState(keywordState);
+    const [searchedCategory, setSearchedCategory] = useRecoilState(
+        searchedCategoryState
+    );
 
     // voc modal open
     const [isVocModalOpen, setIsVocModalOpen] = useState(false);
 
     useEffect(() => {
-        setShouldReset(searchParams.get("reset") !== "false");
+        const keyword = searchParams.get("keyword") || "";
+        const category = searchParams.get("category") || "";
+        if (keyword) setKeyword(keyword);
+        if (category) setSearchedCategory(category);
     }, [searchParams]);
 
     useEffect(() => {

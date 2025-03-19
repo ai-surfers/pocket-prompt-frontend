@@ -1,7 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import { getPromptsList } from "@/apis/prompt/prompt";
 import {
     GetPromptsListResponse,
@@ -9,6 +7,8 @@ import {
     ViewType,
 } from "@/apis/prompt/prompt.model";
 import { PROMPT_KEYS } from "@/hooks/queries/QueryKeys";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 export interface PromptQueryProps {
     sortBy: SortType;
@@ -37,7 +37,7 @@ const usePromptsListQuery = ({
         ...(categories !== undefined && { categories }),
     });
 
-    const { data, isLoading } = useQuery<GetPromptsListResponse>({
+    const { data, isLoading, refetch } = useQuery<GetPromptsListResponse>({
         queryKey: queryKey,
         queryFn: () =>
             getPromptsList({
@@ -49,9 +49,9 @@ const usePromptsListQuery = ({
                 query: query,
                 categories: categories,
             }).then((res) => res),
-        staleTime: 1000 * 60 * 5,
+        staleTime: 0,
+        refetchOnMount: "always",
     });
-
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
@@ -67,6 +67,7 @@ const usePromptsListQuery = ({
         currentPage,
         itemsPerPage,
         handlePageChange,
+        refetch,
     };
 };
 

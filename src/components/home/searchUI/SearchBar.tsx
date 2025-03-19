@@ -1,3 +1,5 @@
+"use client";
+
 // import Search from "@/assets/svg/home/Search";
 import Icon from "@/components/common/Icon";
 import Input from "@/components/common/Input/Input";
@@ -6,6 +8,7 @@ import {
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
+import { useEffect } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
@@ -18,6 +21,12 @@ const SearchBar = () => {
         setSearchedKeyword(keyword);
         setSearchedCategory("");
     };
+
+    useEffect(() => {
+        return () => {
+            // setSearchedKeyword("");
+        };
+    }, []);
 
     return (
         <InputWrapper>
