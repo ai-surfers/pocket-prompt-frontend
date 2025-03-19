@@ -1,18 +1,36 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import Text from "@/components/common/Text/Text";
 import { Wrapper } from "@/components/layout/LayoutClient";
-import Plan from "@/components/price/plan/Plan";
 import FAQ from "@/components/price/FAQ";
 import Footer from "@/components/price/Footer";
-import Text from "@/components/common/Text/Text";
+import Plan from "@/components/price/plan/Plan";
+import {
+    keywordState,
+    searchedCategoryState,
+    searchedKeywordState,
+} from "@/states/searchState";
+import React, { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import styled from "styled-components";
 
 const PricePage: React.FC = () => {
     const [isClient, setIsClient] = useState(false);
+    const [keyword, setKeyword] = useRecoilState(keywordState);
+    const [searchedKeyword, setSearchedKeyword] =
+        useRecoilState(searchedKeywordState);
+    const [searchedCategory, setSearchedCategory] = useRecoilState(
+        searchedCategoryState
+    );
 
     useEffect(() => {
         setIsClient(true); // 클라이언트에서만 렌더링 허용
+
+        return () => {
+            setKeyword("");
+            setSearchedKeyword("");
+            setSearchedCategory("");
+        };
     }, []);
 
     if (!isClient) {
