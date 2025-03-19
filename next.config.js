@@ -20,6 +20,12 @@ const nextConfig = {
     swcMinify: true,
     images: {
         formats: ["image/avif", "image/webp"],
+        remotePatterns:[
+            {
+                protocol: "https",
+                hostname: "test-bucket-12398471203.s3.amazonaws.com",
+            }
+        ]
     },
     experimental: {
         optimizeCss: true, // 자동으로 사용되지 않는 CSS 제거 & 압축
