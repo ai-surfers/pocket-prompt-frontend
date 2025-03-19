@@ -1,11 +1,9 @@
 // 인기순, 최신순 정렬
+import { SortType } from "@/apis/prompt/prompt.model";
 import { atom } from "recoil";
-import { recoilPersist } from "recoil-persist";
+// 예: SortType이 "created_at" | "star" | "relevance" 등으로 정의돼 있다고 가정
 
-const { persistAtom } = recoilPersist();
-
-export const sortTypeState = atom({
+export const sortTypeState = atom<SortType>({
     key: "sortTypeState",
-    default: "created_at",
-    effects_UNSTABLE: [persistAtom],
+    default: "created_at", // 기본값
 });

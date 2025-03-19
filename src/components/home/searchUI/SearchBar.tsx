@@ -1,5 +1,3 @@
-"use client";
-
 // import Search from "@/assets/svg/home/Search";
 import Icon from "@/components/common/Icon";
 import Input from "@/components/common/Input/Input";
