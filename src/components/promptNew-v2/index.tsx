@@ -148,7 +148,7 @@ export default function NewPromptClient({
                                 // 운영 환경일 때만 utm 경로로 이동
                                 process.env.APP_ENV === "production" ? (
                                     <Button
-                                        id="modal-price-button"
+                                        id="modal-plan-buttonn"
                                         style={{
                                             flex: 1,
                                             justifyContent: "center",
@@ -164,7 +164,7 @@ export default function NewPromptClient({
                                     // 개발환경 일때는 일반 경로로 이동
                                     <Link href="/price">
                                         <Button
-                                            id="modal-price-button"
+                                            id="modal-plan-button"
                                             style={{
                                                 flex: 1,
                                                 justifyContent: "center",

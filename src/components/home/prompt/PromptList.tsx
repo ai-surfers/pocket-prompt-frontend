@@ -12,21 +12,20 @@
  * - props에 따라 pagination, sort, tab 관리
  */
 
-import { Col, Flex, Pagination, Row, Select } from "antd";
-import Prompt from "./Prompt";
-import styled from "styled-components";
-import usePromptsListQuery, {
-    PromptQueryProps,
-} from "@/hooks/queries/prompts/usePromptsListQuery";
 import { SortType, ViewType } from "@/apis/prompt/prompt.model";
-import { useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import usePromptsListQuery from "@/hooks/queries/prompts/usePromptsListQuery";
 import {
-    searchedKeywordState,
     searchedCategoryState,
+    searchedKeywordState,
 } from "@/states/searchState";
-import EmptyPrompt from "./EmptyPrompt";
 import { sortTypeState } from "@/states/sortState";
+import { Col, Flex, Pagination, Row, Select } from "antd";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import styled from "styled-components";
+import EmptyPrompt from "./EmptyPrompt";
+import Prompt from "./Prompt";
 
 interface PromptListProps {
     usePage?: boolean;
@@ -45,6 +44,7 @@ const PromptList = ({
     limit,
     defaultSortBy,
 }: PromptListProps) => {
+    const pathname = usePathname();
     const [sortBy, setSortBy] = useRecoilState(sortTypeState);
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchCategory = useRecoilValue(searchedCategoryState);
@@ -52,7 +52,7 @@ const PromptList = ({
     // 쿼리 파라미터 로직
     const queryParams = {
         viewType: viewType,
-        sortBy: defaultSortBy || sortBy, // 필요할 경우만 sortBy 사용
+        sortBy: defaultSortBy || sortBy,
         limit,
         ...(searchedKeyword ? { query: searchedKeyword } : {}),
         ...(searchCategory && searchCategory !== "total"
@@ -67,7 +67,14 @@ const PromptList = ({
         itemsPerPage,
         handlePageChange,
         isLoading,
+        // refetch,
     } = usePromptsListQuery(queryParams);
+
+    useEffect(() => {
+        if (pathname !== "/" && !pathname.startsWith("/prompt/")) {
+            setSortBy("created_at");
+        }
+    }, [pathname, setSortBy]);
 
     const handleSortChange = (value: SortType) => {
         setSortBy(value);

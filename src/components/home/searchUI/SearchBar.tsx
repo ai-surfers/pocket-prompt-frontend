@@ -6,6 +6,7 @@ import {
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
+import { useEffect } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
@@ -18,6 +19,12 @@ const SearchBar = () => {
         setSearchedKeyword(keyword);
         setSearchedCategory("");
     };
+
+    useEffect(() => {
+        return () => {
+            // setSearchedKeyword("");
+        };
+    }, []);
 
     return (
         <InputWrapper>

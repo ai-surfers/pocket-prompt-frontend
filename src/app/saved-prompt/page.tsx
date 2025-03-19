@@ -1,17 +1,34 @@
 "use client";
 
-import HomeLnb from "@/components/lnb/HomeLnb";
 import PromptListSection from "@/components/home/prompt/PromptListSection";
+import HomeLnb from "@/components/lnb/HomeLnb";
+import {
+    keywordState,
+    searchedCategoryState,
+    searchedKeywordState,
+} from "@/states/searchState";
 import { useDeviceSize } from "@components/DeviceContext";
-import styled from "styled-components";
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import styled from "styled-components";
 
 export default function SavedPromptPage() {
     const { isUnderTablet } = useDeviceSize();
     const [isInitialized, setIsInitialized] = useState(false);
+    const [keyword, setKeyword] = useRecoilState(keywordState);
+    const [searchedKeyword, setSearchedKeyword] =
+        useRecoilState(searchedKeywordState);
+    const [searchedCategory, setSearchedCategory] = useRecoilState(
+        searchedCategoryState
+    );
 
     useEffect(() => {
         setIsInitialized(true);
+        return () => {
+            setKeyword("");
+            setSearchedKeyword("");
+            setSearchedCategory("");
+        };
     }, []);
 
     if (!isInitialized) {
