@@ -20,7 +20,8 @@ import {
 } from "@/states/searchState";
 import { sortTypeState } from "@/states/sortState";
 import { Col, Flex, Pagination, Row, Select } from "antd";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import EmptyPrompt from "./EmptyPrompt";
@@ -43,6 +44,7 @@ const PromptList = ({
     limit,
     defaultSortBy,
 }: PromptListProps) => {
+    const pathname = usePathname();
     const [sortBy, setSortBy] = useRecoilState(sortTypeState);
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchCategory = useRecoilValue(searchedCategoryState);
@@ -68,9 +70,11 @@ const PromptList = ({
         // refetch,
     } = usePromptsListQuery(queryParams);
 
-    // useEffect(() => {
-    //     refetch();
-    // }, [searchedKeyword, searchCategory, refetch]);
+    useEffect(() => {
+        if (pathname !== "/" && !pathname.startsWith("/prompt/")) {
+            setSortBy("created_at");
+        }
+    }, [pathname, setSortBy]);
 
     const handleSortChange = (value: SortType) => {
         setSortBy(value);
