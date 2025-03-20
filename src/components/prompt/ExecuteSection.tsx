@@ -1,24 +1,24 @@
 import { PromptInputField } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
+import Icon from "@/components/common/Icon";
 import Text from "@/components/common/Text/Text";
+import Textarea from "@/components/common/Textarea/Textarea";
 import { PocketRunModel } from "@/core/Prompt";
 import { UTM_OVER_USAGE_LIMIT_URL, UTM_TIER_LIMIT_URL } from "@/core/UtmUri";
 import usePocketRun from "@/hooks/mutations/pocketRun/usePocketRun";
-import Icon from "@/components/common/Icon";
 import useModal from "@/hooks/useModal";
 import useToast from "@/hooks/useToast";
 import { useUser } from "@/hooks/useUser";
-import PocketRunDropdown from "./PocketRunDropdown";
-import PromptTemplateModal from "./PromptTemplateModal";
-import FormItem from "../promptNew/Form/FormItem";
 import { pocketRunLoadingState, pocketRunState } from "@/states/pocketRunState";
 import { copyClipboard, populateTemplate } from "@/utils/promptUtils";
 import { Flex } from "antd";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import Textarea from "@/components/common/Textarea/Textarea";
-import Link from "next/link";
+import FormItem from "../promptNew/Form/FormItem";
+import PocketRunDropdown from "./PocketRunDropdown";
+import PromptTemplateModal from "./PromptTemplateModal";
 
 interface ExecuteSectionProps {
     onSelect: (value: string) => void;
@@ -103,7 +103,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                                 // 운영 환경일 때만 utm 경로로 이동
                                 process.env.APP_ENV === "production" ? (
                                     <Button
-                                        id="modal-price-button"
+                                        id="advanced-model-explore-plans"
                                         style={{
                                             flex: 1,
                                             justifyContent: "center",
