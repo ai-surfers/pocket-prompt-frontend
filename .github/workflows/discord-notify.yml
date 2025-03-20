@@ -1,5 +1,4 @@
 name: Discord Notification on Push
-
 on:
   push:
     branches:
@@ -9,11 +8,32 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
+      # 1. 이 커밋과 연결된(머지된) PR 정보를 가져오기
+      - name: Get Pull Request Info
+        id: prinfo
+        uses: octokit/request-action@v2
+        with:
+          route: GET /repos/${{ github.repository }}/commits/${{ github.sha }}/pulls
+          mediaType: 'format=json'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2. Discord로 알림 보내기
       - name: Send Discord Notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
+          PR_TITLE=$(echo '${{ steps.prinfo.outputs.data }}' | jq -r '.[0].title // ""')
+          PR_LINK=$(echo '${{ steps.prinfo.outputs.data }}' | jq -r '.[0].html_url // ""')
+
+          # 머지된 PR이 없으면, main에 직접 push된 커밋으로 간주
+          if [ "$PR_TITLE" = "" ] || [ "$PR_TITLE" = "null" ]; then
+            MSG="🚀 코드가 main 브랜치에 바로 push되었습니다! PR 없이 올라간 커밋이므로 확인해주세요. 📌\n**코드 확인**: https://github.com/${{ github.repository }}/tree/main"
+          else
+            MSG="🚀 코드가 main 브랜치에 push되었습니다!\n**PR 제목**: ${PR_TITLE}\n**PR 링크**: ${PR_LINK}"
+          fi
+
           curl -H "Content-Type: application/json" \
                -X POST \
-               -d '{"content": "🚀 코드가 main 브랜치에 push되었습니다! 확인해 주세요. 📌"}' \
+               -d "{\"content\": \"${MSG}\"}" \
                "$DISCORD_WEBHOOK"
