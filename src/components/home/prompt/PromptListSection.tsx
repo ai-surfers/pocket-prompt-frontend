@@ -107,14 +107,14 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                 <PromptList
                                     searchType="popular"
                                     usePage={false}
-                                    viewType={viewType}
+                                    viewType="open"
                                     title={
                                         <Text font="b1_18_semi" color="G_800">
-                                            오늘의 인기 TOP 3
+                                            이번 주 인기 프롬프트 TOP 3
                                         </Text>
                                     }
                                     limit={3}
-                                    defaultSortBy="star"
+                                    defaultSortBy="usages_7_days"
                                 />
                                 {isMobile && currentScroll === "left" && (
                                     <ScrollButton
@@ -135,25 +135,18 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                                     />
                                 )}
                                 <PromptList
-                                    searchType="total"
+                                    searchType="popular"
                                     usePage={false}
-                                    viewType="featured"
+                                    viewType="open"
                                     title={
                                         <Text font="b1_18_semi" color="G_800">
-                                            AI 전문가의 추천 TOP 3
+                                            이번 달 인기 프롬프트 TOP 3
                                         </Text>
                                     }
                                     limit={3}
-                                    defaultSortBy="created_at"
+                                    defaultSortBy="usages_30_days"
                                 />
                             </SmallWrapper>
-
-                            {/* {isMobile && (
-                                <ScrollButton
-                                    currentScroll={currentScroll}
-                                    onClick={() => handleScroll()}
-                                />
-                            )} */}
                         </Flex>
 
                         <LargeWrapper>
