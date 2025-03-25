@@ -14,11 +14,12 @@ import {
 } from "@/states/searchState";
 import Icon from "@components/common/Icon";
 import { useDeviceSize } from "@components/DeviceContext";
-import { Flex } from "antd";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import SearchSection from "./SearchSection";
+import Banner from "./banner/Banner";
+import { useGetSubscription } from "@/hooks/queries/payments/useGetSubscription";
 
 function HomeContent() {
     const { isUnderTablet } = useDeviceSize();
@@ -33,6 +34,8 @@ function HomeContent() {
 
     // voc modal open
     const [isVocModalOpen, setIsVocModalOpen] = useState(false);
+
+    const { data: userPaymentData } = useGetSubscription();
 
     useEffect(() => {
         const keyword = searchParams.get("keyword") || "";
@@ -53,19 +56,19 @@ function HomeContent() {
             <HomeContentWrapper $isUnderTablet={isUnderTablet}>
                 <LeftSection>
                     <HomeLnb initialMenu="1" />
-                    <AdContainer $isUnderTablet={isUnderTablet}>
-                        <HomeSiderBar />
-                    </AdContainer>
+                    {userPaymentData?.subscription_status !== "active" && (
+                        <AdContainer $isUnderTablet={isUnderTablet}>
+                            <HomeSiderBar />
+                        </AdContainer>
+                    )}
                 </LeftSection>
-                <Flex vertical>
-                    {/* <Banner /> */}
-                    <ContentWrapper>
-                        <SearchSectionWrapper>
-                            <SearchSection />
-                        </SearchSectionWrapper>
-                        <PromptListSection />
-                    </ContentWrapper>
-                </Flex>
+                <ContentWrapper>
+                    <Banner />
+                    <SearchSectionWrapper>
+                        <SearchSection />
+                    </SearchSectionWrapper>
+                    <PromptListSection />
+                </ContentWrapper>
             </HomeContentWrapper>
             <IconWrap onClick={() => setIsVocModalOpen(true)}>
                 <Icon name={"MessageText"} color={"white"} size={30} />

@@ -37,7 +37,13 @@ export type GetPromptsListResponse = {
 
 export type ViewType = "open" | "starred" | "my" | "featured";
 
-export type SortType = "created_at" | "star" | "usages" | "relevance";
+export type SortType =
+    | "created_at"
+    | "star"
+    | "usages"
+    | "relevance"
+    | "usages_7_days"
+    | "usages_30_days";
 
 export type GetPromptsListParams = {
     view_type: ViewType;
