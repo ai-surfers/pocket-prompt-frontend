@@ -91,7 +91,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                 return (
                     <Flex vertical gap={63.5} justify="center">
                         <Flex
-                            gap={23}
+                            // gap={23}
                             justify="stretch"
                             wrap="nowrap"
                             style={{
@@ -237,6 +237,7 @@ const SmallWrapper = styled.div<{
             : "var(--primary-5, #f8f8fe)"};
     box-sizing: border-box;
     padding: 21px 12px;
+    margin: 0 11px;
     position: relative;
     border: ${({ $isMobile, $isFocused, theme }) =>
         $isMobile && $isFocused
