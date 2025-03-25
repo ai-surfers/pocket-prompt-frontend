@@ -6,7 +6,7 @@ import {
 } from "@/states/searchState";
 import { useRecoilValue } from "recoil";
 import { useDeviceSize } from "@/components/DeviceContext";
-import { SLIDES } from "@/core/Banner";
+import { HOME_BANNER_SLIDES } from "@/core/Banner";
 import useEmblaLoop from "@/hooks/ui/useEmblaLoop";
 
 const Banner = () => {
@@ -20,7 +20,7 @@ const Banner = () => {
         window.open(src, "_blank");
     };
 
-    const slides = SLIDES.map((slide) => (
+    const slides = HOME_BANNER_SLIDES.map((slide) => (
         <Image
             src={slide.imgSrc}
             alt="banner-ai-prompt"

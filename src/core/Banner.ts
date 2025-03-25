@@ -8,7 +8,7 @@ import EntertainmentBanner from "@img/banner/banner-entertainment.png";
 import EntertainmentBannerMobile from "@img/banner/banner-entertainment-mobile.png";
 import { StaticImageData } from "next/image";
 
-export const SLIDES: {
+export const HOME_BANNER_SLIDES: {
     imgSrc: StaticImageData;
     mobileImgSrc: StaticImageData;
     linkSrc: string;
