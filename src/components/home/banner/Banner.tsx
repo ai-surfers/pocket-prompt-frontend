@@ -22,7 +22,7 @@ const Banner = () => {
 
     const slides = HOME_BANNER_SLIDES.map((slide) => (
         <Image
-            src={slide.imgSrc}
+            src={isMobile ? slide.mobileImgSrc : slide.imgSrc}
             alt="banner-ai-prompt"
             width={isMobile ? 736 : 808}
             height={isMobile ? 320 : 124}
