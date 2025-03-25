@@ -19,6 +19,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import SearchSection from "./SearchSection";
+import Banner from "./banner/Banner";
 
 function HomeContent() {
     const { isUnderTablet } = useDeviceSize();
@@ -57,15 +58,13 @@ function HomeContent() {
                         <HomeSiderBar />
                     </AdContainer>
                 </LeftSection>
-                <Flex vertical>
-                    {/* <Banner /> */}
-                    <ContentWrapper>
-                        <SearchSectionWrapper>
-                            <SearchSection />
-                        </SearchSectionWrapper>
-                        <PromptListSection />
-                    </ContentWrapper>
-                </Flex>
+                <ContentWrapper>
+                    <Banner />
+                    <SearchSectionWrapper>
+                        <SearchSection />
+                    </SearchSectionWrapper>
+                    <PromptListSection />
+                </ContentWrapper>
             </HomeContentWrapper>
             <IconWrap onClick={() => setIsVocModalOpen(true)}>
                 <Icon name={"MessageText"} color={"white"} size={30} />

@@ -211,7 +211,6 @@ export default PromptListSection;
 const PromptSectionContainer = styled.section`
     width: 100%;
     height: 100%;
-    padding: 0 10px;
 `;
 
 const LargeWrapper = styled.div`
