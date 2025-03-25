@@ -285,7 +285,6 @@ export default function Subscription() {
 // Styled Components
 const Container = styled.div<{ $isUnderTablet: boolean }>`
     width: 100%;
-    height: 100vh;
     padding-top: 52px;
     padding-left: ${({ $isUnderTablet }) => ($isUnderTablet ? "0px" : "36px")};
     ${({ theme, $isUnderTablet }) =>
