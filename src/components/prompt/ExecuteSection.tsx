@@ -37,7 +37,16 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
 
     const [isPromptTemplateOpen, setIsPromptTemplateOpen] = useState(false);
     const handleShowTemplate = () => {
-        setIsPromptTemplateOpen(true);
+        if (!userData.isLogin) {
+            showToast({
+                title: "로그인 후 이용 가능합니다.",
+                subTitle: "",
+                iconName: "TickCircle",
+            });
+            return;
+        } else {
+            setIsPromptTemplateOpen(true);
+        }
     };
 
     const [pocketRunRes, setPocketRunRes] = useRecoilState(pocketRunState);
