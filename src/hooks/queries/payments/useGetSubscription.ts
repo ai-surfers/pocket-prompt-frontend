@@ -30,7 +30,7 @@ interface PaymentDocumentListType {
     is_success: boolean;
 }
 
-const Subscription_LIST_LIMIT = 12;
+export const Subscription_LIST_LIMIT = 12;
 
 /**
  *  정기 결제 정보 확인
