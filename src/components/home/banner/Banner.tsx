@@ -1,7 +1,13 @@
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
 import AIBanner from "@img/banner/banner-ai-prompt.png";
 import AIBannerMobile from "@img/banner/banner-ai-prompt-mobile.png";
+import BlogBanner from "@img/banner/banner-blog.png";
+import BlogBannerMobile from "@img/banner/banner-blog-mobile.png";
+import RecommendationBanner from "@img/banner/banner-recommendation.png";
+import RecommendationBannerMobile from "@img/banner/banner-recommendation-mobile.png";
+import EntertainmentBanner from "@img/banner/banner-entertainment.png";
+import EntertainmentBannerMobile from "@img/banner/banner-entertainment-mobile.png";
 import styled from "styled-components";
 import {
     searchedCategoryState,
@@ -11,13 +17,36 @@ import { useRecoilValue } from "recoil";
 import { useDeviceSize } from "@/components/DeviceContext";
 import useEmblaCarousel from "embla-carousel-react";
 
-const SLIDES = [0, 1, 2];
 const Banner = () => {
     const searchedkeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
     const { isUnderTablet, isMobile } = useDeviceSize();
 
     const isVisible = !searchedkeyword && searchedCategory === "total";
+
+    const SLIDES: { imgSrc: StaticImageData; linkSrc: string }[] = [
+        {
+            imgSrc: isMobile ? AIBannerMobile : AIBanner,
+            linkSrc:
+                "https://pocket-prompt.notion.site/1bbd02185fca805f92e8f79e371dd309",
+        },
+        {
+            imgSrc: isMobile
+                ? RecommendationBannerMobile
+                : RecommendationBanner,
+            linkSrc:
+                "https://pocket-prompt.notion.site/10-1bbd02185fca802cab85ec783aba88b2",
+        },
+        {
+            imgSrc: isMobile ? BlogBannerMobile : BlogBanner,
+            linkSrc:
+                "https://pocket-prompt.notion.site/10-1bbd02185fca8086b375ec5e23d0d521",
+        },
+        // TODO: 재미 프롬프트 배너 추후 추가 예정
+        // {
+        //     imgSrc: isMobile ? EntertainmentBannerMobile : EntertainmentBanner,
+        // },
+    ];
 
     const [emblaRef, emblaApi] = useEmblaCarousel({
         loop: true,
@@ -33,9 +62,14 @@ const Banner = () => {
         setSelectedIndex(emblaApi.selectedScrollSnap());
     }, [emblaApi]);
 
+    // Dot 네비게이션 클릭시 index, 현재 슬라이드 이동
     const handleClickDot = (key: number) => {
         setSelectedIndex(key);
         emblaApi?.scrollTo(key);
+    };
+
+    const handleClickBanner = (src: string) => {
+        window.open(src, "_blank");
     };
 
     // 자동 슬라이드
@@ -60,14 +94,15 @@ const Banner = () => {
         >
             <div className="embla" ref={emblaRef}>
                 <div className="embla__container">
-                    {SLIDES.map((_, i) => (
+                    {SLIDES.map((slide, i) => (
                         <div className="embla__slide" key={i}>
                             <Image
-                                src={isMobile ? AIBannerMobile : AIBanner}
+                                src={slide.imgSrc}
                                 alt="banner-ai-prompt"
                                 width={isMobile ? 736 : 808}
                                 height={isMobile ? 320 : 124}
                                 style={{ borderRadius: "15px" }}
+                                onClick={() => handleClickBanner(slide.linkSrc)}
                             />
                         </div>
                     ))}
@@ -127,6 +162,10 @@ const Wrapper = styled.div<{
         // width: 100%;
         flex: 0 0 ${({ $isUnderTablet }) => ($isUnderTablet ? "85%" : "808px")};
         width: ${({ $isUnderTablet }) => ($isUnderTablet ? "100%" : "808px")};
+
+        &:hover {
+            cursor: pointer;
+        }
     }
 
     .embla::before,
