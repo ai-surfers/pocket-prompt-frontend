@@ -8,16 +8,21 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      # 1. 이 커밋과 연결된(머지된) PR 정보를 가져오기
       - name: Get Pull Request Info
         id: prinfo
         uses: actions/github-script@v6
         with:
           script: |
-            const response = await github.request('GET /repos/${{ context.repo.owner }}/${{ context.repo.repo }}/commits/${{ context.sha }}/pulls');
-            core.setOutput("data", JSON.stringify(response.data));
+            // GitHub에서 자동으로 세팅되는 환경변수를 활용
+            const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
+            const sha = process.env.GITHUB_SHA;
 
-      # 2. Discord로 알림 보내기
+            // REST API 요청
+            const response = await github.request(`GET /repos/${owner}/${repo}/commits/${sha}/pulls`);
+            
+            // PR 정보 출력
+            core.setOutput('data', JSON.stringify(response.data));
+
       - name: Send Discord Notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
