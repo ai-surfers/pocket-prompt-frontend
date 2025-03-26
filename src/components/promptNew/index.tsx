@@ -18,7 +18,7 @@ import {
     promptSchema,
     PromptSchemaType,
 } from "@schema/PromptSchema";
-import { Flex, Select, UploadFile } from "antd";
+import { Flex, UploadFile } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -483,7 +483,7 @@ export default function NewPromptClient({
                         </Flex>
 
                         {/* 오른쪽: 셀렉트박스 (tab이 1일 때만) */}
-                        {activeTab === "1" && (
+                        {/* {activeTab === "1" && (
                             <Select
                                 id="prompt-new-select"
                                 value={contentBy}
@@ -491,7 +491,7 @@ export default function NewPromptClient({
                                 onChange={handleContentChange}
                                 options={selectOptions}
                             />
-                        )}
+                        )} */}
                     </Flex>
 
                     {/*  프롬프트 작성 tab */}
