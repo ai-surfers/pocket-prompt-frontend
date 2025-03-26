@@ -1,12 +1,12 @@
-import { Flex } from "antd";
-import styled from "styled-components";
+import { ViewType } from "@apis/prompt/prompt.model";
 import Button from "@components/common/Button/Button";
 import Icon from "@components/common/Icon";
+import Text from "@components/common/Text/Text";
 import ImgEmpty from "@svg/ImgEmpty";
 import ImgEmptyColor from "@svg/ImgEmptyColor";
-import Text from "@components/common/Text/Text";
-import { ViewType } from "@apis/prompt/prompt.model";
+import { Flex } from "antd";
 import Link from "next/link";
+import styled from "styled-components";
 
 interface EmptyProps {
     viewType: ViewType;
@@ -43,8 +43,8 @@ const EmptyPrompt = ({ viewType }: EmptyProps) => {
                         프롬프트를 등록하면 이곳에 나타나요 <br />
                         나만의 프롬프트를 등록하러 가볼까요?
                     </Text>
-                    <Link href="/prompt-new-v2">
-                        <Link href="/prompt-new-v2">
+                    <Link href="/prompt-new-">
+                        <Link href="/prompt-new">
                             <Button id="register-prompt">
                                 <Icon name="Add" color="white" />
                                 프롬프트 등록
