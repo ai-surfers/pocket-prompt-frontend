@@ -18,7 +18,7 @@ import {
     promptSchema,
     PromptSchemaType,
 } from "@schema/PromptSchema";
-import { Flex } from "antd";
+import { Flex, Select, UploadFile } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -34,11 +34,15 @@ import {
 } from "@/hooks/queries/QueryKeys";
 import { useInvalidateQueryKeys } from "@/hooks/queries/useInvalidateQueryKeys";
 import { useDeviceSize } from "@components/DeviceContext";
+import ImgPromptOptionIcon from "@public/svg/prompt-new/img-prompt";
+import TextPromptOptionIcon from "@public/svg/prompt-new/text-prompt";
 import Link from "next/link";
 import PromptNewLnb from "../lnb/PromptNewLnb";
 import FormFirstSection from "./FormFirstSection";
 import FormSecSection from "./FormSecSection";
 import FormThirdSecion from "./FormThirdSecion";
+import ImgUploadSection from "./ImgUploadSection";
+import PromptTypeChangeModal from "./PromptTypeChangeModal";
 
 interface PromptNewPageProps {
     isEdit: boolean;
@@ -66,6 +70,58 @@ export default function NewPromptClient({
 
     const showToast = useToast();
     const { openModal, closeModal } = useModal();
+    // 이미지 업로드 관련 state
+    const [imageFileList, setImageFileList] = useState<UploadFile[]>([]);
+
+    // 프롬프트 작성 방식 선택관련 state
+    const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
+    const [nextContentBy, setNextContentBy] = useState<string | null>(null);
+    const [contentBy, setContentBy] = useState("텍스트 프롬프트");
+
+    const handleContentChange = (value: string) => {
+        if (value !== contentBy) {
+            setNextContentBy(value);
+            setIsChangeModalOpen(true);
+        }
+    };
+
+    const handleModalConfirm = () => {
+        if (nextContentBy) {
+            setContentBy(nextContentBy);
+            setNextContentBy(null);
+        }
+        setIsChangeModalOpen(false);
+    };
+
+    const handleModalCancel = () => {
+        setNextContentBy(null);
+        setIsChangeModalOpen(false);
+    };
+
+    const selectOptions = [
+        {
+            value: "텍스트 프롬프트",
+            icon: TextPromptOptionIcon,
+        },
+        {
+            value: "이미지 프롬프트",
+            icon: ImgPromptOptionIcon,
+        },
+    ].map(({ value, icon: Icon }) => ({
+        value,
+        label: (
+            <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Icon fill={contentBy === value ? "#7580EA" : "#5B5F70"} />
+                <span
+                    style={{
+                        color: contentBy === value ? "#7580EA" : "#5B5F70",
+                    }}
+                >
+                    {value}
+                </span>
+            </span>
+        ),
+    }));
 
     const mode = !isEdit ? "등록" : "수정";
 
@@ -230,7 +286,6 @@ export default function NewPromptClient({
     });
 
     const handleClickSubmit = async () => {
-        console.log(">> handleClickSubmit");
         form.handleSubmit(
             async (values: unknown) => {
                 const input = values as z.infer<typeof promptSchema>;
@@ -244,24 +299,32 @@ export default function NewPromptClient({
                     })
                 );
 
-                const promptData: CreatePromptRequest = {
+                type PromptTypeMap = {
+                    "텍스트 프롬프트": "text";
+                    "이미지 프롬프트": "image";
+                };
+
+                const typeMap: PromptTypeMap = {
+                    "텍스트 프롬프트": "text",
+                    "이미지 프롬프트": "image",
+                };
+
+                const promptData: CreatePromptRequest & {
+                    type: "text" | "image";
+                } = {
                     ...input,
                     title: selectedTitle || input.title,
                     description: selectedDescription || input.description,
                     visibility: input.visibility.toLowerCase(),
                     user_input_format: user_input_formats,
+                    type: typeMap[contentBy as keyof PromptTypeMap],
                 };
 
-                console.log(">> promptData", promptData);
-
                 if (isEdit && promptId) {
-                    // 수정 모드일 때 updatePrompt 호출
                     updatePromptMutate({ prompt: promptData, id: promptId });
                 } else {
-                    // 생성 모드일 때 createPrompt 호출
                     createPromptMutate(promptData);
                 }
-                // form.reset(defaultPromptSchema);
             },
             (errors) => {
                 console.error(">> error", errors);
@@ -330,7 +393,6 @@ export default function NewPromptClient({
     };
 
     const goToNextTab = (templateValue?: string) => {
-        // 탭 1에서 다음으로 넘어가기 전, prompt_template의 길이가 30자 미만이면 알림 표시
         if (activeTab === "1") {
             if (!templateValue || templateValue.length < 30) {
                 showToast({
@@ -342,9 +404,28 @@ export default function NewPromptClient({
             }
         }
 
-        if (templateValue) {
-            setPromptTemplate(templateValue);
+        if (activeTab === "2") {
+            const { title, description } = form.getValues();
+            if (!title || !description) {
+                showToast({
+                    title: "필수 항목을 작성해주세요.",
+                    subTitle: "제목과 설명을 입력해주세요.",
+                    iconName: "Timer",
+                });
+                return;
+            }
+
+            if (contentBy === "이미지 프롬프트" && imageFileList.length === 0) {
+                showToast({
+                    title: "이미지는 최소 1개 업로드해야 해요!",
+                    subTitle: "",
+                    iconName: "Timer",
+                });
+                return;
+            }
         }
+
+        if (templateValue) setPromptTemplate(templateValue);
         if (activeTab === "1") setActiveTab("2");
         else if (activeTab === "2") setActiveTab("3");
     };
@@ -389,14 +470,28 @@ export default function NewPromptClient({
 
                 <PromptNewWrapper $isUnderTablet={isUnderTablet}>
                     <Flex
-                        gap={10}
                         align="center"
-                        style={{ marginBottom: "20px" }}
+                        justify="space-between"
+                        style={{ marginBottom: "20px", width: "100%" }}
                     >
-                        <NumberBox>{activeTab}</NumberBox>
-                        <Text font="large_32_bold">
-                            {getHeaderText(activeTab)}
-                        </Text>
+                        {/* 왼쪽: 번호 + 헤더 */}
+                        <Flex align="center" gap={10}>
+                            <NumberBox>{activeTab}</NumberBox>
+                            <Text font="large_32_bold">
+                                {getHeaderText(activeTab)}
+                            </Text>
+                        </Flex>
+
+                        {/* 오른쪽: 셀렉트박스 (tab이 1일 때만) */}
+                        {activeTab === "1" && (
+                            <Select
+                                id="prompt-new-select"
+                                value={contentBy}
+                                style={{ width: 200, height: 45 }}
+                                onChange={handleContentChange}
+                                options={selectOptions}
+                            />
+                        )}
                     </Flex>
 
                     {/*  프롬프트 작성 tab */}
@@ -420,6 +515,9 @@ export default function NewPromptClient({
                                 setSelectedTitle={setSelectedTitle}
                                 setSelectedDescription={setSelectedDescription}
                             />
+                            {contentBy === "이미지 프롬프트" && (
+                                <ImgUploadSection />
+                            )}
                         </SecondWriteSection>
                     )}
 
@@ -449,6 +547,12 @@ export default function NewPromptClient({
                     </Button>
                 </MobileButtonContainer>
             )}
+
+            <PromptTypeChangeModal
+                isOpen={isChangeModalOpen}
+                onCancel={handleModalCancel}
+                onConfirm={handleModalConfirm}
+            />
         </FormProvider>
     );
 }
