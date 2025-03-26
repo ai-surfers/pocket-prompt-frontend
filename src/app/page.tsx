@@ -5,7 +5,6 @@ import { Suspense } from "react";
 
 export default async function HomePage() {
     await usePrefetchPromptList();
-    await usePrefetchSubscription();
 
     return (
         <Suspense fallback={null}>
