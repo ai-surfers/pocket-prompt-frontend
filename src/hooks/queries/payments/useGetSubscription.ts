@@ -45,7 +45,7 @@ export const getSubscription = async ({
     return res.data.data;
 };
 
-export const useGetSubscription = () => {
+export const useGetSubscription = ({ isLogin }: { isLogin?: boolean }) => {
     const [currentPage, setCurrentPage] = useState(1);
 
     const QUERY_KEY = PAYMENTS_KEYS.all;
@@ -57,6 +57,7 @@ export const useGetSubscription = () => {
                 page: currentPage,
                 limit: Subscription_LIST_LIMIT,
             }).then((res) => res),
+        enabled: !!isLogin,
     });
 
     const handlePageChange = (page: number) => {

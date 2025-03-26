@@ -20,6 +20,7 @@ import { useRecoilState, useResetRecoilState } from "recoil";
 import SearchSection from "./SearchSection";
 import Banner from "./banner/Banner";
 import { useGetSubscription } from "@/hooks/queries/payments/useGetSubscription";
+import { useUser } from "@/hooks/useUser";
 
 function HomeContent() {
     const { isUnderTablet } = useDeviceSize();
@@ -35,7 +36,13 @@ function HomeContent() {
     // voc modal open
     const [isVocModalOpen, setIsVocModalOpen] = useState(false);
 
-    const { data: userPaymentData } = useGetSubscription();
+    const { userData } = useUser();
+    const { data: userPaymentData } = useGetSubscription({
+        isLogin: userData.isLogin,
+    });
+
+    const isSubscriber =
+        userData.isLogin && userPaymentData?.subscription_status === "active";
 
     useEffect(() => {
         const keyword = searchParams.get("keyword") || "";
@@ -56,7 +63,7 @@ function HomeContent() {
             <HomeContentWrapper $isUnderTablet={isUnderTablet}>
                 <LeftSection>
                     <HomeLnb initialMenu="1" />
-                    {userPaymentData?.subscription_status !== "active" && (
+                    {!isSubscriber && (
                         <AdContainer $isUnderTablet={isUnderTablet}>
                             <HomeSiderBar />
                         </AdContainer>

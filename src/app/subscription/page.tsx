@@ -16,6 +16,7 @@ import useToast from "@/hooks/useToast";
 import MyLnb from "@/components/lnb/MyLnb";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useUser } from "@/hooks/useUser";
 
 const SUBSCRIPTION_STATUS = {
     active: "활성",
@@ -45,9 +46,10 @@ export default function Subscription() {
     const { isUnderTablet } = useDeviceSize();
     const showToast = useToast();
     const [isInitialized, setIsInitialized] = useState(false);
+    const { userData } = useUser();
 
     const { data: subscriptionData, refetch: refetchSubscriptionData } =
-        useGetSubscription();
+        useGetSubscription({ isLogin: userData.isLogin });
     const { data: cardInfoData, refetch: refetchCardInfoData } =
         useGetCardInfo();
 
