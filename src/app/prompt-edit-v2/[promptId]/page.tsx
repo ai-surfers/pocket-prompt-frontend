@@ -1,4 +1,4 @@
-import NewPromptClient from "@/components/promptNew-v2";
+import NewPromptClient from "@/components/promptNew";
 
 interface EditPromptPageProps {
     params: { promptId: string };

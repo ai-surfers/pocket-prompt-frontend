@@ -1,5 +1,4 @@
-import NewPromptClient from "@/components/promptNew-v2";
-import React from "react";
+import NewPromptClient from "@/components/promptNew";
 
 const NewPromptPage = () => {
     return <NewPromptClient isEdit={false} />;
