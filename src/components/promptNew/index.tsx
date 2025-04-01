@@ -94,6 +94,7 @@ export default function NewPromptClient({
     // 이미지 업로드 관련 state
     const [imageFileList, setImageFileList] = useState<UploadFile[]>([]);
     const [sampleMediaUrls, setSampleMediaUrls] = useState<string[]>([]);
+    const isImagePrompt = typeFromQuery === "image";
     // 프롬프트 작성 방식 선택관련 state
     const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
     const [nextContentBy, setNextContentBy] = useState<string | null>(null);
@@ -508,26 +509,6 @@ export default function NewPromptClient({
     };
 
     /////////////// 이미지 업로드 관련 함수 ///////////////
-
-    const handleImageUpload = async (
-        files: UploadFile[]
-    ): Promise<string[]> => {
-        const uploadedUrls: string[] = [];
-
-        for (const file of files) {
-            if (!file.originFileObj) continue;
-
-            try {
-                const res = await uploadMedia(file.originFileObj);
-                uploadedUrls.push(res.media_url);
-            } catch (error) {
-                console.error("이미지 업로드 실패", error);
-            }
-        }
-
-        return uploadedUrls;
-    };
-
     const handleImageFileListChange = async (newFiles: UploadFile[]) => {
         const validFiles = newFiles.filter((file) => file.originFileObj);
 
@@ -536,7 +517,7 @@ export default function NewPromptClient({
 
         for (const file of validFiles) {
             try {
-                const url = await uploadMedia(file.originFileObj!); // ✅ 업로드 API 호출
+                const url = await uploadMedia(file.originFileObj!); // 업로드 API 호출
 
                 const uploadedFile: UploadFile = {
                     uid: `${Date.now()}-${Math.random()}`,
@@ -635,6 +616,7 @@ export default function NewPromptClient({
                             <FormThirdSecion
                                 onSubmit={handleClickSubmit}
                                 isEdit={isEdit}
+                                isImagePrompt={isImagePrompt}
                             />
                         </ThridWriteSection>
                     )}
