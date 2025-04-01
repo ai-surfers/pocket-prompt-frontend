@@ -1,20 +1,23 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
-import { BaseResponse, POST } from "../../../apis/client";
 import { InputType } from "@/core/Prompt";
+import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { BaseResponse, POST } from "../../../apis/client";
 
 /**
  * CreatePromptRequest
  */
 export interface CreatePromptRequest {
+    type: string;
     title: string;
     description: string;
     visibility: string;
     categories: string[];
     prompt_template: string;
     user_input_format: InputFormat[];
+    ai_platforms_used: string[];
+    sample_media: string[];
 }
 
 export interface InputFormat {
