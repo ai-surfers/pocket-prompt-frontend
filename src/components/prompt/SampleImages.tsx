@@ -1,8 +1,7 @@
 import { Flex } from "antd";
-import React from "react";
+import Image from "next/image";
 import styled from "styled-components";
 import Text from "../common/Text/Text";
-import Image from "next/image";
 
 const SampleImages = ({ sampleImages }: { sampleImages: string[] }) => {
     return (
@@ -14,6 +13,7 @@ const SampleImages = ({ sampleImages }: { sampleImages: string[] }) => {
             <SampleImageContainer style={{ paddingBottom: "10px" }}>
                 {sampleImages.map((imgSrc, index) => (
                     <CustomImage
+                        key={index}
                         src={imgSrc}
                         alt={`sample${index}`}
                         width={112}

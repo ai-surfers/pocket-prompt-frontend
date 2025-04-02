@@ -22,7 +22,6 @@ export type PromptDetails = {
     user_input_format: PromptInputField[];
     is_starred_by_user: boolean;
     sample_media: string[];
-    sample_images: string[];
 };
 
 export type PaginationInfo = {

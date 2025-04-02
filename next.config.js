@@ -15,23 +15,28 @@ dotenv.config({ path: envFilePath });
 const nextConfig = {
     compiler: {
         styledComponents: true, // SSR 활성화
-      },
+    },
     reactStrictMode: true,
     swcMinify: true,
     images: {
         formats: ["image/avif", "image/webp"],
-        remotePatterns:[
+        remotePatterns: [
             {
                 protocol: "https",
                 hostname: "test-bucket-12398471203.s3.amazonaws.com",
-            }
-        ]
+            },
+            {
+                protocol: "https",
+                hostname: "pocket-prompt-resources-dev.s3.amazonaws.com",
+                pathname: "/**",
+            },
+        ],
     },
     experimental: {
         optimizeCss: true, // 자동으로 사용되지 않는 CSS 제거 & 압축
-      },
+    },
     env: {
-        APP_ENV: process.env.APP_ENV, 
+        APP_ENV: process.env.APP_ENV,
         NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
         NEXT_PUBLIC_WEB_URL: process.env.NEXT_PUBLIC_WEB_URL,
         NEXT_PUBLIC_PORTONE_STORE_ID: process.env.NEXT_PUBLIC_PORTONE_STORE_ID,
