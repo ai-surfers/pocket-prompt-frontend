@@ -150,6 +150,7 @@ const Box = styled.div<{ $isUnderTablet: boolean }>`
     border-radius: 16px;
     background: #fff;
     padding-right: ${({ $isUnderTablet }) => ($isUnderTablet ? "10%" : "20px")};
+    width: ${({ $isUnderTablet }) => ($isUnderTablet ? "100%" : "")};
 `;
 
 const FormWrapper = styled.form`

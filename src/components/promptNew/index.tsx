@@ -651,9 +651,10 @@ const Container = styled.div<{ $isUnderTablet: boolean }>`
     ${({ theme, $isUnderTablet }) =>
         theme.mixins.flexBox(
             $isUnderTablet ? "column" : "row",
-            "center",
+            $isUnderTablet ? "start" : "center",
             "start"
         )};
+
     gap: 30px;
     align-items: start;
     width: 100vw;
@@ -700,23 +701,26 @@ const FirstWriteSection = styled.div<{ $isUnderTablet: boolean }>`
 const SecondWriteSection = styled.div<{ $isUnderTablet: boolean }>`
     ${({ theme, $isUnderTablet }) =>
         theme.mixins.flexBox(
-            $isUnderTablet ? "column" : "",
+            $isUnderTablet ? "column" : "row",
             "space-between",
-            ""
+            "start"
         )};
     width: 100%;
-    padding-right: ${({ $isUnderTablet }) =>
-        $isUnderTablet ? "0px" : "150px"};
+    flex-wrap: wrap;
+    gap: ${({ $isUnderTablet }) => ($isUnderTablet ? "16px" : "16px")};
+    /* padding-right: ${({ $isUnderTablet }) =>
+        $isUnderTablet ? "0px" : "150px"}; */
 `;
 
 const ThridWriteSection = styled.div<{ $isUnderTablet: boolean }>`
     ${({ theme, $isUnderTablet }) =>
         theme.mixins.flexBox(
-            $isUnderTablet ? "column" : "",
+            $isUnderTablet ? "column" : "row",
             "space-between",
-            ""
+            "start"
         )};
     width: 100%;
+    flex-wrap: wrap;
     padding-right: ${({ $isUnderTablet }) =>
         $isUnderTablet ? "0px" : "150px"};
     padding-bottom: 40px;
