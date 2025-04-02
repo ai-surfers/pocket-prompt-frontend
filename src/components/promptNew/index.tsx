@@ -118,9 +118,14 @@ export default function NewPromptClient({
             setContentBy(nextContentBy);
             setNextContentBy(null);
 
-            // 프롬프트 작성 필드 초기화
-            form.setValue("prompt_template", "");
-            form.clearErrors("prompt_template");
+            // 전체 form 초기화
+            form.reset(defaultPromptSchema);
+
+            // 이미지 파일 및 기타 상태도 초기화
+            setImageFileList([]);
+            setSampleMediaUrls([]);
+            setSelectedTitle(null);
+            setSelectedDescription(null);
         }
 
         setIsChangeModalOpen(false);
