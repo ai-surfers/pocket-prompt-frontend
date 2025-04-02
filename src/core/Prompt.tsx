@@ -64,6 +64,12 @@ export const AIPlatforms = {
     Perplexity: "Perplexity",
 };
 
+export const ImgAIPlatforms = {
+    DallE: "DallE",
+    Midjourney: "Midjourney",
+    Flux: "Flux",
+};
+
 export const PocketRunModel: Record<
     string,
     { id: string; label: string; value: string }

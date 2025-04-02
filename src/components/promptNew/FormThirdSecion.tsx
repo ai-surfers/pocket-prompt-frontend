@@ -3,7 +3,12 @@
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
 import Toggle from "@/components/common/Toggle/Toggle";
-import { AIPlatforms, Categories, ImageCategories } from "@/core/Prompt";
+import {
+    AIPlatforms,
+    Categories,
+    ImageCategories,
+    ImgAIPlatforms,
+} from "@/core/Prompt";
 import { PromptSchemaType } from "@/schema/PromptSchema";
 import { useDeviceSize } from "@components/DeviceContext";
 import { Select } from "antd";
@@ -30,6 +35,11 @@ const IMAGE_CATEGORY_OPTIONS = Object.entries(ImageCategories).map(
 );
 
 const AI = Object.entries(AIPlatforms).map(([key, value]) => ({
+    key: key,
+    value: value,
+}));
+
+const IMG_AI = Object.entries(ImgAIPlatforms).map(([key, value]) => ({
     key: key,
     value: value,
 }));
@@ -69,7 +79,7 @@ function FormThirdSecion({
                                     marginTop: "8px",
                                 }}
                                 mode="multiple"
-                                options={AI}
+                                options={isImagePrompt ? IMG_AI : AI}
                                 value={field.value}
                                 onChange={field.onChange}
                             />
