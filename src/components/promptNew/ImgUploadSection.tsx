@@ -7,36 +7,49 @@ import { useDeviceSize } from "@components/DeviceContext";
 import ImgUploadIcon from "@public/svg/prompt-new/img-upload";
 import { Flex, Upload } from "antd";
 import type { UploadFile } from "antd/es/upload/interface";
-import { useState } from "react";
 import styled from "styled-components";
 
 interface ImgUploadSectionProps {
     maxCount?: number;
+    fileList: UploadFile[];
     onFileListChange?: (files: UploadFile[]) => void;
 }
 
 const ImgUploadSection = ({
     maxCount = 8,
+    fileList,
     onFileListChange,
 }: ImgUploadSectionProps) => {
-    const [fileList, setFileList] = useState<UploadFile[]>([]);
     const { isUnderTablet } = useDeviceSize();
     const showToast = useToast();
-    const handleChange = ({ fileList: newFileList }: any) => {
-        if (newFileList.length > maxCount) {
+
+    const handleChange = ({ fileList: newFiles }: any) => {
+        const combinedList = [...fileList, ...newFiles];
+
+        // 중복 제거 (같은 uid 기준)
+        const deduplicatedList = Array.from(
+            new Map(combinedList.map((file) => [file.uid, file])).values()
+        );
+
+        // 유효한 파일만 (originFileObj가 있는) 필터링
+        const validFiles = deduplicatedList.filter((f) => f.originFileObj);
+
+        if (validFiles.length > maxCount) {
             showToast({
-                title: "이미지는 최대 8개까지만 업로드할 수 있어요!",
-                subTitle: "",
+                title: `이미지는 최대 ${maxCount}개까지만 업로드할 수 있어요!`,
+                subTitle: "업로드한 이미지를 삭제 후 다시 시도해주세요.",
                 iconName: "TickCircle",
             });
+            return;
         }
 
-        setFileList(newFileList);
-        onFileListChange?.(newFileList); // 부모로 전달
+        // 유효한 파일만 부모로 전달
+        onFileListChange?.(validFiles);
     };
 
     const handleRemove = (file: UploadFile) => {
-        setFileList((prev) => prev.filter((f) => f.uid !== file.uid));
+        const newList = fileList.filter((f) => f.uid !== file.uid);
+        onFileListChange?.(newList);
     };
 
     return (
@@ -54,10 +67,33 @@ const ImgUploadSection = ({
                         multiple
                         listType="text"
                         showUploadList={false}
-                        beforeUpload={() => false}
+                        beforeUpload={(file) => {
+                            const totalCount = fileList.length + 1;
+
+                            if (totalCount > maxCount) {
+                                showToast({
+                                    title: `이미지는 최대 ${maxCount}개까지만 업로드할 수 있어요!`,
+                                    subTitle:
+                                        "업로드한 이미지를 삭제 후 다시 시도해주세요.",
+                                    iconName: "TickCircle",
+                                });
+                                return Upload.LIST_IGNORE; // 업로드 무시
+                            }
+
+                            const uploadFile: UploadFile = {
+                                uid: `${Date.now()}-${Math.random()}`,
+                                name: file.name,
+                                status: "uploading",
+                                originFileObj: file,
+                            };
+
+                            onFileListChange?.([...fileList, uploadFile]);
+
+                            return false; // 기본 업로드 막기
+                        }}
                         accept="image/jpeg,image/png,image/webp"
-                        fileList={[]}
-                        onChange={handleChange}
+                        fileList={fileList}
+                        // onChange={handleChange}
                         style={{
                             background: "#f2f3fd",
                             border: "1.5px dashed #d6d9f9",
