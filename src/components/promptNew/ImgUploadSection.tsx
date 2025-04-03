@@ -148,7 +148,7 @@ const Box = styled.div<{ $isUnderTablet: boolean }>`
     border: 1.5px solid ${({ theme }) => theme.colors.G_100};
     background: #fff;
     padding: 20px;
-    width: ${({ $isUnderTablet }) => ($isUnderTablet ? "100%" : "30%")};
+    width: ${({ $isUnderTablet }) => ($isUnderTablet ? "100%" : "28%")};
     height: fit-content;
 `;
 
