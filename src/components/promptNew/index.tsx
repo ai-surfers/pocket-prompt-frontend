@@ -18,9 +18,9 @@ import {
     promptSchema,
     PromptSchemaType,
 } from "@schema/PromptSchema";
-import { Flex, UploadFile } from "antd";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Flex, Select, UploadFile } from "antd";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { z } from "zod";
@@ -28,6 +28,7 @@ import Button from "../common/Button/Button";
 import PreviewSection from "./PreviewSection";
 // import FormSection from "./FormSection";
 import { UTM_OVER_USAGE_LIMIT_URL, UTM_TIER_LIMIT_URL } from "@/core/UtmUri";
+import { useUploadMedia } from "@/hooks/mutations/prompts/useUploadMedia";
 import {
     PROMPT_KEYS,
     PROMPT_QUERY_KEYS_FOR_PREFETCH,
@@ -53,6 +54,8 @@ export default function NewPromptClient({
     isEdit,
     promptId,
 }: PromptNewPageProps) {
+    const { mutateAsync: uploadMedia } = useUploadMedia();
+
     // LNB 탭으로 관리
     const [activeTab, setActiveTab] = useState("1");
     const [promptTemplate, setPromptTemplate] = useState("");
@@ -64,6 +67,24 @@ export default function NewPromptClient({
     const { isUnderTablet } = useDeviceSize();
     const [isClient, setIsClient] = useState(false);
     const router = useRouter();
+    // query
+    const searchParams = useSearchParams();
+    const typeFromQuery = searchParams.get("type");
+
+    const getContentByFromQuery = useMemo(() => {
+        switch (typeFromQuery) {
+            case "image":
+                return "이미지 프롬프트";
+            case "video":
+                return "비디오 프롬프트";
+            case "text":
+            default:
+                return "텍스트 프롬프트";
+        }
+    }, [typeFromQuery]);
+
+    const [contentBy, setContentBy] = useState<string>(getContentByFromQuery);
+
     // 수정 모드일 때 uri id 값으로 프롬프트 상세 조회
     const { data } =
         isEdit && promptId ? usePromptQuery(promptId) : { data: null };
@@ -72,11 +93,18 @@ export default function NewPromptClient({
     const { openModal, closeModal } = useModal();
     // 이미지 업로드 관련 state
     const [imageFileList, setImageFileList] = useState<UploadFile[]>([]);
-
+    const [sampleMediaUrls, setSampleMediaUrls] = useState<string[]>([]);
+    const isImagePrompt = typeFromQuery === "image";
     // 프롬프트 작성 방식 선택관련 state
     const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
     const [nextContentBy, setNextContentBy] = useState<string | null>(null);
-    const [contentBy, setContentBy] = useState("텍스트 프롬프트");
+
+    useEffect(() => {
+        const uploading = imageFileList.filter((f) => f.status === "uploading");
+        if (uploading.length > 0) {
+            handleImageFileListChange(imageFileList);
+        }
+    }, [imageFileList]);
 
     const handleContentChange = (value: string) => {
         if (value !== contentBy) {
@@ -89,7 +117,24 @@ export default function NewPromptClient({
         if (nextContentBy) {
             setContentBy(nextContentBy);
             setNextContentBy(null);
+
+            // form 초기화: 빈 값 명시적으로 세팅
+            form.reset({
+                title: "",
+                description: "",
+                prompt_template: "",
+                visibility: "Public",
+                categories: [],
+                ai_platforms_used: [],
+            });
+
+            // 나머지 상태도 초기화
+            setImageFileList([]);
+            setSampleMediaUrls([]);
+            setSelectedTitle(null);
+            setSelectedDescription(null);
         }
+
         setIsChangeModalOpen(false);
     };
 
@@ -309,15 +354,16 @@ export default function NewPromptClient({
                     "이미지 프롬프트": "image",
                 };
 
-                const promptData: CreatePromptRequest & {
-                    type: "text" | "image";
-                } = {
+                const promptData: CreatePromptRequest = {
                     ...input,
+                    type: typeMap[contentBy as keyof typeof typeMap],
                     title: selectedTitle || input.title,
                     description: selectedDescription || input.description,
                     visibility: input.visibility.toLowerCase(),
                     user_input_format: user_input_formats,
-                    type: typeMap[contentBy as keyof PromptTypeMap],
+                    categories: input.categories || [],
+                    ai_platforms_used: input.ai_platforms_used || [],
+                    sample_media: sampleMediaUrls,
                 };
 
                 if (isEdit && promptId) {
@@ -332,6 +378,14 @@ export default function NewPromptClient({
         )();
     };
 
+    const convertToUploadFile = (url: string): UploadFile => ({
+        uid: `${Date.now()}-${Math.random()}`,
+        name: url.split("/").pop() || "image",
+        status: "done",
+        url,
+        thumbUrl: url,
+    });
+
     // 수정 모드일 때 form reset
     useEffect(() => {
         if (isEdit && data) {
@@ -344,7 +398,16 @@ export default function NewPromptClient({
                         ? "Private"
                         : data.visibility,
             };
+
             form.reset(formattedData);
+
+            // ample_media → UploadFile[] 변환
+            if (data.sample_media?.length > 0) {
+                const restoredFiles =
+                    data.sample_media.map(convertToUploadFile);
+                setImageFileList(restoredFiles);
+                setSampleMediaUrls(data.sample_media);
+            }
         }
     }, [isEdit, data, form]);
 
@@ -414,7 +477,6 @@ export default function NewPromptClient({
                 });
                 return;
             }
-
             if (contentBy === "이미지 프롬프트" && imageFileList.length === 0) {
                 showToast({
                     title: "이미지는 최소 1개 업로드해야 해요!",
@@ -458,6 +520,41 @@ export default function NewPromptClient({
         setActiveTab(newTab);
     };
 
+    /////////////// 이미지 업로드 관련 함수 ///////////////
+    const handleImageFileListChange = async (newFiles: UploadFile[]) => {
+        const validFiles = newFiles.filter((file) => file.originFileObj);
+
+        const uploadedFileList: UploadFile[] = [];
+        const uploadedUrls: string[] = [];
+
+        for (const file of validFiles) {
+            try {
+                const url = await uploadMedia(file.originFileObj!); // 업로드 API 호출
+
+                const uploadedFile: UploadFile = {
+                    uid: `${Date.now()}-${Math.random()}`,
+                    name: file.name,
+                    status: "done",
+                    url: url.media_url,
+                    thumbUrl: url.media_url,
+                };
+
+                uploadedFileList.push(uploadedFile);
+                uploadedUrls.push(url.media_url);
+            } catch (err) {
+                showToast({
+                    title: "이미지 업로드 실패",
+                    subTitle: (err as any)?.response?.data?.detail || "",
+                    iconName: "Timer",
+                });
+            }
+        }
+
+        // ✅ UI에 반영
+        setImageFileList((prev) => [...prev, ...uploadedFileList]);
+        setSampleMediaUrls((prev) => [...prev, ...uploadedUrls]);
+    };
+
     return (
         <FormProvider {...form}>
             <Container $isUnderTablet={isUnderTablet}>
@@ -483,7 +580,7 @@ export default function NewPromptClient({
                         </Flex>
 
                         {/* 오른쪽: 셀렉트박스 (tab이 1일 때만) */}
-                        {/* {activeTab === "1" && (
+                        {activeTab === "1" && (
                             <Select
                                 id="prompt-new-select"
                                 value={contentBy}
@@ -491,7 +588,7 @@ export default function NewPromptClient({
                                 onChange={handleContentChange}
                                 options={selectOptions}
                             />
-                        )} */}
+                        )}
                     </Flex>
 
                     {/*  프롬프트 작성 tab */}
@@ -516,7 +613,11 @@ export default function NewPromptClient({
                                 setSelectedDescription={setSelectedDescription}
                             />
                             {contentBy === "이미지 프롬프트" && (
-                                <ImgUploadSection />
+                                <ImgUploadSection
+                                    maxCount={8}
+                                    fileList={imageFileList}
+                                    onFileListChange={handleImageFileListChange}
+                                />
                             )}
                         </SecondWriteSection>
                     )}
@@ -527,6 +628,7 @@ export default function NewPromptClient({
                             <FormThirdSecion
                                 onSubmit={handleClickSubmit}
                                 isEdit={isEdit}
+                                isImagePrompt={contentBy === "이미지 프롬프트"}
                             />
                         </ThridWriteSection>
                     )}
@@ -561,9 +663,10 @@ const Container = styled.div<{ $isUnderTablet: boolean }>`
     ${({ theme, $isUnderTablet }) =>
         theme.mixins.flexBox(
             $isUnderTablet ? "column" : "row",
-            "center",
+            $isUnderTablet ? "start" : "center",
             "start"
         )};
+
     gap: 30px;
     align-items: start;
     width: 100vw;
@@ -610,23 +713,26 @@ const FirstWriteSection = styled.div<{ $isUnderTablet: boolean }>`
 const SecondWriteSection = styled.div<{ $isUnderTablet: boolean }>`
     ${({ theme, $isUnderTablet }) =>
         theme.mixins.flexBox(
-            $isUnderTablet ? "column" : "",
+            $isUnderTablet ? "column" : "row",
             "space-between",
-            ""
+            "start"
         )};
     width: 100%;
-    padding-right: ${({ $isUnderTablet }) =>
-        $isUnderTablet ? "0px" : "150px"};
+    flex-wrap: wrap;
+    gap: ${({ $isUnderTablet }) => ($isUnderTablet ? "16px" : "16px")};
+    /* padding-right: ${({ $isUnderTablet }) =>
+        $isUnderTablet ? "0px" : "150px"}; */
 `;
 
 const ThridWriteSection = styled.div<{ $isUnderTablet: boolean }>`
     ${({ theme, $isUnderTablet }) =>
         theme.mixins.flexBox(
-            $isUnderTablet ? "column" : "",
+            $isUnderTablet ? "column" : "row",
             "space-between",
-            ""
+            "start"
         )};
     width: 100%;
+    flex-wrap: wrap;
     padding-right: ${({ $isUnderTablet }) =>
         $isUnderTablet ? "0px" : "150px"};
     padding-bottom: 40px;

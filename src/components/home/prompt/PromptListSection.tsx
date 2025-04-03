@@ -14,6 +14,7 @@
 import { ViewType } from "@/apis/prompt/prompt.model";
 import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
 import Text from "@/components/common/Text/Text";
+import { Categories, Category } from "@/core/Prompt";
 import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
 import { useUser } from "@/hooks/useUser";
 import {
@@ -23,7 +24,6 @@ import {
 import { useDeviceSize } from "@components/DeviceContext";
 import { Flex } from "antd";
 import { usePathname } from "next/navigation";
-import { Categories, Category } from "@/core/Prompt";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import PromptList from "./PromptList";
@@ -49,8 +49,8 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
     };
 
     const promptContent = () => {
-        if (searchedKeyword && pathname === "/") {
-            // 키워드 검색시
+        if (viewType === "open" && searchedKeyword && pathname === "/") {
+            // 홈 화면에서 키워드 검색 시
             return (
                 <LargeWrapper>
                     <PromptList
@@ -66,11 +66,12 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                 </LargeWrapper>
             );
         } else if (
+            viewType === "open" &&
             !!searchedCategory &&
             searchedCategory !== "total" &&
             pathname === "/"
         ) {
-            // 카테고리 칩 검색시
+            // 홈 화면에서 카테고리 칩 검색 시
             return (
                 <LargeWrapper>
                     <PromptList
@@ -87,11 +88,11 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
             );
         } else {
             if (viewType === "open") {
-                // 기본 화면 (홈 화면 접근시 첫 화면)일 경우
+                // 홈 화면 기본: 인기 프롬프트 & 전체 프롬프트 (검색 쿼리 무시)
                 return (
                     <Flex vertical gap={63.5} justify="center">
                         <Flex
-                            // gap={23}
+                            gap={23}
                             justify="stretch"
                             wrap="nowrap"
                             style={{
@@ -164,6 +165,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                     </Flex>
                 );
             } else if (viewType === "starred") {
+                // 저장한 프롬프트는 검색 쿼리 무시
                 return (
                     <LargeWrapper>
                         <PromptList
@@ -179,6 +181,7 @@ const PromptListSection = ({ viewType = "open" }: PromptListSectionProps) => {
                     </LargeWrapper>
                 );
             } else if (viewType === "my") {
+                // 내가 등록한 프롬프트는 검색 쿼리 무시
                 return (
                     <LargeWrapper>
                         <PromptList

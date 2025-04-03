@@ -8,6 +8,7 @@ export type PromptInputField = {
 
 export type PromptDetails = {
     id: string;
+    type?: "text" | "image" | "video";
     title: string;
     description: string;
     prompt_template: string;
@@ -20,7 +21,7 @@ export type PromptDetails = {
     views: number;
     user_input_format: PromptInputField[];
     is_starred_by_user: boolean;
-    sample_images: string[];
+    sample_media: string[];
 };
 
 export type PaginationInfo = {

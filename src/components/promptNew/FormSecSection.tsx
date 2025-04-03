@@ -124,12 +124,13 @@ function FormSecSection({
 export default FormSecSection;
 
 const Box = styled.div<{ $isUnderTablet: boolean }>`
-    flex: 7;
     border-radius: 16px;
-    /* border: 1.5px solid ${({ theme }) => theme.colors.primary_50}; */
     background: #fff;
-`;
 
+    width: ${({ $isUnderTablet }) => ($isUnderTablet ? "100%" : "70%")};
+    max-width: 100%;
+    flex-shrink: 0;
+`;
 const FormContainer = styled.div`
     ${({ theme }) => theme.mixins.flexBox("column", "")};
     gap: 20px;
