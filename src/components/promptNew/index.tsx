@@ -118,10 +118,17 @@ export default function NewPromptClient({
             setContentBy(nextContentBy);
             setNextContentBy(null);
 
-            // 전체 form 초기화
-            form.reset(defaultPromptSchema);
+            // form 초기화: 빈 값 명시적으로 세팅
+            form.reset({
+                title: "",
+                description: "",
+                prompt_template: "",
+                visibility: "Public",
+                categories: [],
+                ai_platforms_used: [],
+            });
 
-            // 이미지 파일 및 기타 상태도 초기화
+            // 나머지 상태도 초기화
             setImageFileList([]);
             setSampleMediaUrls([]);
             setSelectedTitle(null);
@@ -621,7 +628,7 @@ export default function NewPromptClient({
                             <FormThirdSecion
                                 onSubmit={handleClickSubmit}
                                 isEdit={isEdit}
-                                isImagePrompt={isImagePrompt}
+                                isImagePrompt={contentBy === "이미지 프롬프트"}
                             />
                         </ThridWriteSection>
                     )}
