@@ -1,14 +1,28 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { styled } from "styled-components";
 import SearchBar from "./searchUI/SearchBar";
-import SearchChips from "./searchUI/SearchChips";
+import SearchChipsImage from "./searchUI/SearchChipsImage";
+import SearchChipsText from "./searchUI/SearchChipsText";
 
 const SearchSection = () => {
+    const pathname = usePathname();
+
+    const renderSearchChips = () => {
+        switch (pathname) {
+            case "/image":
+                return <SearchChipsImage />;
+            case "/text":
+            default:
+                return <SearchChipsText />;
+        }
+    };
+
     return (
         <SearchWrapper>
             <SearchBar />
-            <SearchChips />
+            {renderSearchChips()}
         </SearchWrapper>
     );
 };
