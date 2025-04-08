@@ -1,28 +1,36 @@
 "use client";
 
-import PromptListSection from "@/components/home/prompt/PromptListSection";
 import { Wrapper } from "@components/layout/LayoutClient";
 import styled from "styled-components";
 
-import HomeSiderBar from "@/components/home/siderbarAd/HomeSiderBar";
 import VocModal from "@/components/home/VocModal";
+import HomeSiderBar from "@/components/home/siderbarAd/HomeSiderBar";
 import HomeLnb from "@/components/lnb/HomeLnb";
+import SearchSection from "./SearchSection";
+import Banner from "./banner/Banner";
+
+import { useGetSubscription } from "@/hooks/queries/payments/useGetSubscription";
+import { useUser } from "@/hooks/useUser";
 import {
     keywordState,
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
-import Icon from "@components/common/Icon";
 import { useDeviceSize } from "@components/DeviceContext";
+import Icon from "@components/common/Icon";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
-import SearchSection from "./SearchSection";
-import Banner from "./banner/Banner";
-import { useGetSubscription } from "@/hooks/queries/payments/useGetSubscription";
-import { useUser } from "@/hooks/useUser";
 
-function HomeContent() {
+type HomeContentBaseProps = {
+    PromptListSection: React.ComponentType;
+    initialMenu: string;
+};
+
+export default function HomeContentBase({
+    PromptListSection,
+    initialMenu,
+}: HomeContentBaseProps) {
     const { isUnderTablet } = useDeviceSize();
     const resetSearchedKeyword = useResetRecoilState(searchedKeywordState);
     const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
@@ -62,7 +70,7 @@ function HomeContent() {
         <HomeWrapper>
             <HomeContentWrapper $isUnderTablet={isUnderTablet}>
                 <LeftSection>
-                    <HomeLnb initialMenu="1" />
+                    <HomeLnb initialMenu={initialMenu} />
                     {!isSubscriber && (
                         <AdContainer $isUnderTablet={isUnderTablet}>
                             <HomeSiderBar />
@@ -77,6 +85,7 @@ function HomeContent() {
                     <PromptListSection />
                 </ContentWrapper>
             </HomeContentWrapper>
+
             <IconWrap onClick={() => setIsVocModalOpen(true)}>
                 <Icon name={"MessageText"} color={"white"} size={30} />
             </IconWrap>
@@ -88,8 +97,6 @@ function HomeContent() {
         </HomeWrapper>
     );
 }
-
-export default HomeContent;
 
 const HomeWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox()}
@@ -115,7 +122,6 @@ const HomeContentWrapper = styled.div<{ $isUnderTablet: boolean }>`
 const ContentWrapper = styled(Wrapper)`
     max-width: 1107px;
     width: 100vw;
-    padding-top: 0;
     padding: 0 10px;
 `;
 
@@ -124,7 +130,6 @@ const SearchSectionWrapper = styled.div`
     width: 100%;
 `;
 
-/*  HomeLnb와 HomeSiderBar를 수직으로 배치 */
 const LeftSection = styled.div`
     display: flex;
     flex-direction: column;

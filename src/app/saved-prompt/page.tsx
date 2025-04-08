@@ -1,6 +1,7 @@
 "use client";
 
-import PromptListSection from "@/components/home/prompt/PromptListSection";
+import Text from "@/components/common/Text/Text";
+import PromptList from "@/components/home/prompt/PromptList";
 import HomeLnb from "@/components/lnb/HomeLnb";
 import {
     keywordState,
@@ -40,7 +41,15 @@ export default function SavedPromptPage() {
             <HomeContentWrapper $isUnderTablet={isUnderTablet}>
                 <HomeLnb initialMenu="4" />
                 <ContentWrapper>
-                    <PromptListSection viewType="starred" />
+                    <PromptList
+                        viewType="starred"
+                        searchType="total"
+                        title={
+                            <Text font="h2_20_semi" color="G_800">
+                                저장한 프롬프트
+                            </Text>
+                        }
+                    />
                 </ContentWrapper>
             </HomeContentWrapper>
         </HomeWrapper>

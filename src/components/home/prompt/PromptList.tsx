@@ -25,7 +25,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import EmptyPrompt from "./EmptyPrompt";
-import Prompt from "./Prompt";
+import PromptCardText from "./card/PromptCardText";
 
 interface PromptListProps {
     usePage?: boolean;
@@ -34,6 +34,8 @@ interface PromptListProps {
     title: React.ReactNode;
     limit?: number;
     defaultSortBy?: SortType;
+    promptType?: "text" | "image" | "video";
+    renderItem?: (item: any, index: number) => React.ReactNode;
 }
 
 const PromptList = ({
@@ -43,6 +45,8 @@ const PromptList = ({
     title,
     limit,
     defaultSortBy,
+    promptType,
+    renderItem,
 }: PromptListProps) => {
     const pathname = usePathname();
     const [sortBy, setSortBy] = useRecoilState(sortTypeState);
@@ -54,6 +58,7 @@ const PromptList = ({
         viewType: viewType,
         sortBy: defaultSortBy || sortBy,
         limit,
+        ...(promptType ? { prompt_type: promptType } : {}),
         ...(searchedKeyword ? { query: searchedKeyword } : {}),
         ...(searchCategory && searchCategory !== "total"
             ? { categories: searchCategory }
@@ -118,9 +123,11 @@ const PromptList = ({
                 )
             );
         }
+
         if (!isLoading && items.length === 0) {
             return <EmptyPrompt viewType={viewType} />;
         }
+
         return items.map((item, index) => (
             <Col
                 key={item.id}
@@ -129,17 +136,21 @@ const PromptList = ({
                 md={isPopularOrFeatured ? 24 : 8}
                 style={{ flexShrink: 0, display: "flex" }}
             >
-                <Prompt
-                    id={item.id}
-                    title={item.title}
-                    description={item.description}
-                    views={item.views}
-                    star={item.star}
-                    usages={item.usages}
-                    colored={false}
-                    index={index + 1}
-                    isMiniHeight={isPopularOrFeatured ? true : false}
-                />
+                {renderItem ? (
+                    renderItem(item, index)
+                ) : (
+                    <PromptCardText
+                        id={item.id}
+                        title={item.title}
+                        description={item.description}
+                        views={item.views}
+                        star={item.star}
+                        usages={item.usages}
+                        colored={false}
+                        index={index + 1}
+                        isMiniHeight={isPopularOrFeatured}
+                    />
+                )}
             </Col>
         ));
     };

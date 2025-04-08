@@ -1,11 +1,11 @@
 // 단일 프롬프트
 
-import theme from "@/styles/theme";
-import { useResetRecoilState } from "recoil";
-import { pocketRunState } from "@/states/pocketRunState";
-import styled from "styled-components";
-import { useRouter } from "next/navigation";
 import Icon from "@/components/common/Icon";
+import { pocketRunState } from "@/states/pocketRunState";
+import theme from "@/styles/theme";
+import { useRouter } from "next/navigation";
+import { useResetRecoilState } from "recoil";
+import styled from "styled-components";
 
 interface PromptProps {
     colored?: boolean;
@@ -19,7 +19,7 @@ interface PromptProps {
     isMiniHeight: boolean;
 }
 
-const Prompt = ({
+const PromptCardText = ({
     colored = false,
     title,
     description,
@@ -71,7 +71,7 @@ const Prompt = ({
     );
 };
 
-export default Prompt;
+export default PromptCardText;
 
 const PromptWrapper = styled.div<{ $colored: boolean; $isMiniHeight: boolean }>`
     ${({ theme }) => theme.mixins.flexBox("column", "space-between")};

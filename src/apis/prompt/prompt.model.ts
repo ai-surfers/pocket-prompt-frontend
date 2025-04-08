@@ -54,4 +54,5 @@ export type GetPromptsListParams = {
     sort_order?: "asc" | "desc";
     limit?: number;
     page?: number;
+    prompt_type?: "text" | "image" | "video";
 };
