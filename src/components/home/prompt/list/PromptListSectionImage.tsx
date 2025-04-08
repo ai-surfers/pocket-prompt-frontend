@@ -1,6 +1,6 @@
 "use client";
 
-import PromptCardImage from "../card/PromptCardImage";
+import PromptCardImage from "../ card/PromptCardImage";
 import PromptList from "../PromptList";
 import PromptListSectionBase from "./PromptListSectionBase";
 

@@ -24,8 +24,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
+import PromptCardText from "./ card/PromptCardText";
 import EmptyPrompt from "./EmptyPrompt";
-import PromptCardText from "./card/PromptCardText";
 
 interface PromptListProps {
     usePage?: boolean;
