@@ -3,7 +3,7 @@
 import { SortType, ViewType } from "@/apis/prompt/prompt.model";
 import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
 import Text from "@/components/common/Text/Text";
-import { Categories, Category } from "@/core/Prompt";
+import { Categories, Category, ImageCategories } from "@/core/Prompt";
 import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
 import {
     searchedCategoryState,
@@ -12,8 +12,8 @@ import {
 import { useDeviceSize } from "@components/DeviceContext";
 import { Flex } from "antd";
 import { usePathname } from "next/navigation";
-import React from "react";
-import { useRecoilValue } from "recoil";
+import React, { useEffect } from "react";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 
 interface PromptListSectionBaseProps {
@@ -34,6 +34,8 @@ const PromptListSectionBase = ({
     renderPromptList,
 }: PromptListSectionBaseProps) => {
     const pathname = usePathname();
+    const resetKeyword = useResetRecoilState(searchedKeywordState);
+    const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
     const { isMobile, isUnderTablet } = useDeviceSize();
@@ -42,10 +44,29 @@ const PromptListSectionBase = ({
     const { scrollLeftRef, scrollRightRef, handleScroll, currentScroll } =
         useScrollButtonControl();
 
-    const totalCategories: Category = {
-        total: { ko: "전체", en: "total", emoji: <></> },
-        ...Categories,
+    const getTotalCategories = (promptType: string): Category => {
+        if (promptType === "image") {
+            return {
+                total: { ko: "전체", en: "total", emoji: <></> },
+                ...ImageCategories,
+            };
+        }
+        return {
+            total: { ko: "전체", en: "total", emoji: <></> },
+            ...Categories,
+        };
     };
+
+    const totalCategories = getTotalCategories(promptType);
+
+    useEffect(() => {
+        if (
+            searchedCategory &&
+            !Object.keys(totalCategories).includes(searchedCategory)
+        ) {
+            resetSearchedCategory();
+        }
+    }, [promptType, searchedCategory, totalCategories]);
 
     // 키워드 검색 시
     if (searchedKeyword && pathname === `/${promptType}`) {

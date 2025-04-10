@@ -41,6 +41,7 @@ export default function HomeContentBase({
         searchedCategoryState
     );
 
+    console.log(searchedCategoryState, "searchedCategoryState");
     // voc modal open
     const [isVocModalOpen, setIsVocModalOpen] = useState(false);
 

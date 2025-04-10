@@ -1,6 +1,6 @@
 "use client";
 
-import PromptCardImage from "../ card/PromptCardImage";
+import PromptCardImage from "../card/PromptCardImage";
 import PromptList from "../PromptList";
 import PromptListSectionBase from "./PromptListSectionBase";
 
@@ -26,11 +26,11 @@ const PromptListSectionImage = () => {
                         <PromptCardImage
                             id={item.id}
                             title={item.title}
-                            author={item.author || "익명"}
                             sampleMedia={item.sample_media}
                             views={item.views}
                             star={item.star}
                             usages={item.usages}
+                            isMiniHeight={searchType === "popular"}
                         />
                     )}
                 />

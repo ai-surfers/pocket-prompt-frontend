@@ -30,6 +30,11 @@ const nextConfig = {
                 hostname: "pocket-prompt-resources-dev.s3.amazonaws.com",
                 pathname: "/**",
             },
+            {
+                protocol: "https",
+                hostname: "test.com",
+                pathname: "/**",
+            },
         ],
     },
     experimental: {
