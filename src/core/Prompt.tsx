@@ -11,6 +11,7 @@ import Etc from "@public/svg/home/Etc";
 import Fashion from "@public/svg/home/Fashion";
 import Food from "@public/svg/home/Food";
 import Language from "@public/svg/home/Language";
+import Logo from "@public/svg/home/Logo";
 import Marketing from "@public/svg/home/Marketing";
 import Object from "@public/svg/home/Object";
 import Person from "@public/svg/home/Person";
@@ -64,7 +65,7 @@ export const ImageCategories: Category = {
     },
     food: { ko: "음식", en: "food", emoji: <Food /> },
     photo: { ko: "사진", en: "photo", emoji: <Picture /> },
-    logo: { ko: "로고", en: "logo", emoji: <Art /> },
+    logo: { ko: "로고", en: "logo", emoji: <Logo /> },
     etc: { ko: "기타", en: "etc", emoji: <Etc /> },
 };
 

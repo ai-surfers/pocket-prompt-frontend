@@ -5,6 +5,7 @@ import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
 import Text from "@/components/common/Text/Text";
 import { Categories, Category, ImageCategories } from "@/core/Prompt";
 import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
+import { prevPathState } from "@/states/navigationState";
 import {
     keywordState,
     searchedCategoryState,
@@ -36,25 +37,26 @@ const PromptListSectionBase = ({
     renderPromptList,
 }: PromptListSectionBaseProps) => {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const { isMobile, isUnderTablet } = useDeviceSize();
     const limit = isUnderTablet ? 5 : 18;
 
-    const searchParams = useSearchParams();
-
+    // Recoil 상태 관련 setter & reset
     const resetKeyword = useResetRecoilState(searchedKeywordState);
     const resetCategory = useResetRecoilState(searchedCategoryState);
     const resetSort = useResetRecoilState(sortTypeState);
-
     const setKeyword = useSetRecoilState(keywordState);
     const setSearchedKeyword = useSetRecoilState(searchedKeywordState);
     const setSearchedCategory = useSetRecoilState(searchedCategoryState);
     const setSortBy = useSetRecoilState(sortTypeState);
+    const prevPath = useRecoilValue(prevPathState);
 
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
 
-    const prevPromptTypeRef = useRef<string | null>(null);
+    // Refs로 이전 프롬프트 타입과 이전 pathname을 저장
     const hasMountedRef = useRef(false);
+    const prevPromptTypeRef = useRef<string | null>(null);
 
     const { scrollLeftRef, scrollRightRef, handleScroll, currentScroll } =
         useScrollButtonControl();
@@ -74,68 +76,71 @@ const PromptListSectionBase = ({
 
     const totalCategories = getTotalCategories(promptType);
 
-    //초기화
     useEffect(() => {
-        const promptTypeFromPath = pathname.split("/")[1];
-        const isPromptPage =
-            promptTypeFromPath === "text" || promptTypeFromPath === "image";
-        const isDetailPage = pathname.includes("/prompt/");
+        const currentPathType = pathname.split("/")[1]; // "text", "image", etc
+        const isMainPage =
+            currentPathType === "text" || currentPathType === "image";
+        const isDetailPage = pathname.startsWith("/prompt/");
+        const cameFromDetail = prevPath.startsWith("/prompt/");
+        const prevPathType = prevPath.split("/")[1]; // ex. "text", "image"
 
-        const prev = prevPromptTypeRef.current;
-
-        // ✅ 첫 마운트 (새로고침 시)
+        // 첫 마운트는 아무것도 하지 않음
         if (!hasMountedRef.current) {
             hasMountedRef.current = true;
-
-            if (!isPromptPage || !isDetailPage) {
-                resetKeyword();
-                resetCategory();
-                resetSort();
-                setKeyword("");
-            }
-
-            prevPromptTypeRef.current = promptType;
             return;
         }
 
-        // ✅ promptType 변경 시 (e.g., text → image)
-        if (prev !== promptType) {
+        // ✅ 조건 1: promptType 변경 (ex. text → image)
+        if (currentPathType !== promptType) {
             resetKeyword();
             resetCategory();
             resetSort();
             setKeyword("");
+            setSearchedCategory("total");
+            setSearchedKeyword("");
+            setSortBy("usages_7_days");
+            return;
         }
 
-        // ✅ 다른 라우터로 이동 시
-        if (!isPromptPage) {
+        // ✅ 조건 2: 상세 → 같은 타입의 메인으로 뒤로가기 → 유지
+        if (cameFromDetail && prevPathType === promptType && isMainPage) {
+            return; // 상태 유지
+        }
+
+        // ✅ 조건 3: 상세/메인이 아닌 페이지 (ex. /mypage) → 초기화
+        if (!isMainPage && !isDetailPage) {
             resetKeyword();
             resetCategory();
             resetSort();
             setKeyword("");
+            setSearchedCategory("total");
+            setSearchedKeyword("");
+            setSortBy("usages_7_days");
+            return;
         }
 
-        prevPromptTypeRef.current = promptType;
-    }, [pathname]);
+        // ✅ 그 외는 모두 초기화 (ex. 직접 접근)
+        resetKeyword();
+        resetCategory();
+        resetSort();
+        setKeyword("");
+        setSearchedCategory("total");
+        setSearchedKeyword("");
+        setSortBy("usages_7_days");
+    }, [
+        pathname,
+        promptType,
+        prevPath,
+        resetKeyword,
+        resetCategory,
+        resetSort,
+        setKeyword,
+        setSearchedCategory,
+        setSearchedKeyword,
+        setSortBy,
+    ]);
 
-    //뒤로 가기용
-    useEffect(() => {
-        const keyword = searchParams.get("keyword");
-        const category = searchParams.get("category");
-        const sort = searchParams.get("sort") as SortType | null;
-
-        if (keyword) {
-            setKeyword(keyword);
-            setSearchedKeyword(keyword);
-        }
-        if (category) {
-            setSearchedCategory(category);
-        }
-        if (sort) {
-            setSortBy(sort);
-        }
-    }, [searchParams]);
-
-    // 키워드 검색 시
+    // ★ 렌더링 조건
     if (searchedKeyword && pathname === `/${promptType}`) {
         return (
             <PromptSectionContainer>
@@ -155,7 +160,6 @@ const PromptListSectionBase = ({
         );
     }
 
-    // 카테고리 칩 선택 시
     if (
         searchedCategory &&
         searchedCategory !== "total" &&
@@ -181,7 +185,6 @@ const PromptListSectionBase = ({
         );
     }
 
-    // 기본 홈 화면
     return (
         <PromptSectionContainer>
             <Flex vertical gap={63.5} justify="center">
