@@ -98,7 +98,7 @@ const PromptListSectionBase = ({
             setKeyword("");
             setSearchedCategory("total");
             setSearchedKeyword("");
-            setSortBy("usages_7_days");
+            setSortBy("created_at");
             return;
         }
 
@@ -115,7 +115,7 @@ const PromptListSectionBase = ({
             setKeyword("");
             setSearchedCategory("total");
             setSearchedKeyword("");
-            setSortBy("usages_7_days");
+            setSortBy("created_at");
             return;
         }
 
@@ -126,7 +126,7 @@ const PromptListSectionBase = ({
         setKeyword("");
         setSearchedCategory("total");
         setSearchedKeyword("");
-        setSortBy("usages_7_days");
+        setSortBy("created_at");
     }, [
         pathname,
         promptType,
