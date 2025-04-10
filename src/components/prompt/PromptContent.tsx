@@ -1,19 +1,29 @@
 "use client";
 
-import { TopSection } from "@/components/prompt/TopSection";
+import DetailPageSiderBar from "@/components/home/siderbarAd/DetailPageSiderBar";
+import { Wrapper } from "@/components/layout/LayoutClient";
 import { ExecuteSection } from "@/components/prompt/ExecuteSection";
 import { ResultSection } from "@/components/prompt/ResultSection";
-import { Flex, Result, Spin } from "antd";
-import styled from "styled-components";
+import { TopSection } from "@/components/prompt/TopSection";
 import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
-import { ErrorBoundary } from "@sentry/react";
-import { Wrapper } from "@/components/layout/LayoutClient";
+import { prevPathState } from "@/states/navigationState";
 import { useDeviceSize } from "@components/DeviceContext";
-import DetailPageSiderBar from "@/components/home/siderbarAd/DetailPageSiderBar";
+import { ErrorBoundary } from "@sentry/react";
+import { Flex, Result, Spin } from "antd";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { useSetRecoilState } from "recoil";
+import styled from "styled-components";
 
 export default function PromptContent({ promptId }: { promptId: string }) {
+    const pathname = usePathname();
     const { data, isLoading, isError } = usePromptQuery(promptId ?? "");
     const { isUnderTablet, isMobile } = useDeviceSize();
+    const setPrevPathname = useSetRecoilState(prevPathState);
+
+    useEffect(() => {
+        setPrevPathname(pathname);
+    }, [pathname]);
 
     const handleOnSelect = (value: string) => {
         alert(`${value} is Selected!`);

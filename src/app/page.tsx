@@ -1,14 +1,5 @@
-import HomeContent from "@/components/home/HomeContent";
-import { usePrefetchPromptList } from "@/hooks/prefetches/usePrefetchPromptList";
-import { usePrefetchSubscription } from "@/hooks/prefetches/usePrefetchSubscription";
-import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
-export default async function HomePage() {
-    await usePrefetchPromptList();
-
-    return (
-        <Suspense fallback={null}>
-            <HomeContent />
-        </Suspense>
-    );
+export default function Home() {
+    redirect("/text"); // 기본적으로 텍스트 프롬프트 홈으로 이동
 }

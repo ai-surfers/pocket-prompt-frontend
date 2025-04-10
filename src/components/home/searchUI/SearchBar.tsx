@@ -6,11 +6,12 @@ import {
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 const SearchBar = () => {
+    const router = useRouter();
     const [keyword, setKeyword] = useRecoilState(keywordState);
     const setSearchedKeyword = useSetRecoilState(searchedKeywordState);
     const setSearchedCategory = useSetRecoilState(searchedCategoryState);
@@ -19,12 +20,6 @@ const SearchBar = () => {
         setSearchedKeyword(keyword);
         setSearchedCategory("");
     };
-
-    useEffect(() => {
-        return () => {
-            // setSearchedKeyword("");
-        };
-    }, []);
 
     return (
         <InputWrapper>

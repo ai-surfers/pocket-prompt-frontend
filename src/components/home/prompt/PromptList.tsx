@@ -24,8 +24,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
+import PromptCardText from "./card/PromptCardText";
 import EmptyPrompt from "./EmptyPrompt";
-import Prompt from "./Prompt";
 
 interface PromptListProps {
     usePage?: boolean;
@@ -34,6 +34,8 @@ interface PromptListProps {
     title: React.ReactNode;
     limit?: number;
     defaultSortBy?: SortType;
+    promptType?: "text" | "image" | "video";
+    renderItem?: (item: any, index: number) => React.ReactNode;
 }
 
 const PromptList = ({
@@ -43,6 +45,8 @@ const PromptList = ({
     title,
     limit,
     defaultSortBy,
+    promptType,
+    renderItem,
 }: PromptListProps) => {
     const pathname = usePathname();
     const [sortBy, setSortBy] = useRecoilState(sortTypeState);
@@ -54,6 +58,7 @@ const PromptList = ({
         viewType: viewType,
         sortBy: defaultSortBy || sortBy,
         limit,
+        ...(promptType ? { prompt_type: promptType } : {}),
         ...(searchedKeyword ? { query: searchedKeyword } : {}),
         ...(searchCategory && searchCategory !== "total"
             ? { categories: searchCategory }
@@ -71,6 +76,7 @@ const PromptList = ({
     } = usePromptsListQuery(queryParams);
 
     useEffect(() => {
+        // 다른 페이지로 이동했을 때 기본 정렬 재설정
         if (pathname !== "/" && !pathname.startsWith("/prompt/")) {
             setSortBy("created_at");
         }
@@ -89,20 +95,19 @@ const PromptList = ({
         { value: "star", label: "인기 순" },
     ];
 
-    // 검색어나 카테고리가 변경되면 정렬 기준 초기화
-    // useEffect(() => {
-    //     setSortBy("created_at");
-    // }, [searchCategory, searchedKeyword]);
+    // “인기 프롬프트”일 때 정렬/페이지네이션을 숨기기 위한 플래그
+    const isPopularList = searchType === "popular";
+    const shouldShowSortAndPage = usePage && !isPopularList;
 
-    //myPage 일 때 탭 추가
+    // 페이지 내부 탭 예시(마이페이지 등)
     const [activeTab, setActiveTab] = useState<"public" | "private">("public");
-    // 각 탭들의 임시 카운트 값 (실제 데이터에 맞게 설정)
     const publicCount = 0;
     const privateCount = 0;
+
     const isPopularOrFeatured =
         searchType === "popular" || viewType === "featured";
 
-    // 콘텐츠 렌더링 분리 (로딩 중 스켈레톤, 데이터 없을 때, 데이터 있을 때)
+    // 콘텐츠 렌더링 분리 (로딩 중 / 데이터 없을 때 / 데이터 있을 때)
     const renderContent = () => {
         if (isLoading) {
             return Array.from({ length: limit ?? itemsPerPage }).map(
@@ -118,9 +123,11 @@ const PromptList = ({
                 )
             );
         }
+
         if (!isLoading && items.length === 0) {
             return <EmptyPrompt viewType={viewType} />;
         }
+
         return items.map((item, index) => (
             <Col
                 key={item.id}
@@ -129,17 +136,21 @@ const PromptList = ({
                 md={isPopularOrFeatured ? 24 : 8}
                 style={{ flexShrink: 0, display: "flex" }}
             >
-                <Prompt
-                    id={item.id}
-                    title={item.title}
-                    description={item.description}
-                    views={item.views}
-                    star={item.star}
-                    usages={item.usages}
-                    colored={false}
-                    index={index + 1}
-                    isMiniHeight={isPopularOrFeatured ? true : false}
-                />
+                {renderItem ? (
+                    renderItem(item, index)
+                ) : (
+                    <PromptCardText
+                        id={item.id}
+                        title={item.title}
+                        description={item.description}
+                        views={item.views}
+                        star={item.star}
+                        usages={item.usages}
+                        colored={false}
+                        index={index + 1}
+                        isMiniHeight={isPopularOrFeatured}
+                    />
+                )}
             </Col>
         ));
     };
@@ -148,6 +159,8 @@ const PromptList = ({
         <Flex vertical gap={20} style={{ width: "100%" }}>
             <TitleWrapper $viewType={viewType}>
                 {title}
+
+                {/* 마이페이지의 public/private 탭 */}
                 {viewType === "my" ? (
                     <TabBarContainer>
                         <MyPageContentTab
@@ -164,13 +177,13 @@ const PromptList = ({
                         </MyPageContentTab>
                     </TabBarContainer>
                 ) : (
-                    usePage &&
+                    // 인기 프롬프트가 아닐 경우에만 정렬 SelectBox 표시
+                    shouldShowSortAndPage &&
                     items.length > 1 && (
                         <SelectWrapper>
                             <Select
                                 id="prompt-sort-select"
                                 value={sortBy}
-                                // defaultValue="created_at"
                                 style={{ width: 123 }}
                                 onChange={handleSortChange}
                                 options={selectOptions}
@@ -188,7 +201,8 @@ const PromptList = ({
                 {renderContent()}
             </Row>
 
-            {usePage && items.length > 1 && (
+            {/* 인기 프롬프트가 아닐 경우에만 페이지네이션 표시 */}
+            {shouldShowSortAndPage && items.length > 1 && (
                 <div style={{ margin: "0 auto" }}>
                     <Pagination
                         current={currentPage}
@@ -233,7 +247,6 @@ const TitleWrapper = styled.div<{ $viewType: ViewType }>`
 const TabBarContainer = styled.div`
     ${({ theme }) => theme.mixins.flexBox()};
     gap: 30px;
-    /* margin-left: 60px; */
 `;
 
 const MyPageContentTab = styled.div`
