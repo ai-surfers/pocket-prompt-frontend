@@ -41,7 +41,6 @@ export default function HomeContentBase({
         searchedCategoryState
     );
 
-    console.log(searchedCategoryState, "searchedCategoryState");
     // voc modal open
     const [isVocModalOpen, setIsVocModalOpen] = useState(false);
 
@@ -59,13 +58,6 @@ export default function HomeContentBase({
         if (keyword) setKeyword(keyword);
         if (category) setSearchedCategory(category);
     }, [searchParams]);
-
-    useEffect(() => {
-        if (shouldReset) {
-            resetSearchedKeyword();
-            resetSearchedCategory();
-        }
-    }, []);
 
     return (
         <HomeWrapper>

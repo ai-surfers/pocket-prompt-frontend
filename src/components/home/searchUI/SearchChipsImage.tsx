@@ -10,18 +10,22 @@ import {
 } from "@/states/searchState";
 import Total from "@public/svg/home/Total"; // 전체 아이콘
 import { Flex } from "antd";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { usePathname, useRouter } from "next/navigation";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 const SearchChipsImage = () => {
     const [searchedCategory, setSearchedCategory] = useRecoilState(
         searchedCategoryState
     );
-    const searchedKeyword = useRecoilValue(searchedKeywordState);
+    const searchedkeyword = useRecoilValue(searchedKeywordState);
+    const router = useRouter();
+    const pathname = usePathname();
+    const setCategory = useSetRecoilState(searchedCategoryState);
     const { isUnderTablet } = useDeviceSize();
 
-    const handleChipClick = (chipValue: string) => {
-        setSearchedCategory(chipValue);
+    const handleCategoryClick = (categoryKey: string) => {
+        setCategory(categoryKey);
     };
 
     const totalImageCategories = {
@@ -36,7 +40,7 @@ const SearchChipsImage = () => {
                     key={key}
                     id={`category-button-${category.en}`}
                     data-gtm-category={category.en}
-                    onClick={() => handleChipClick(category.en)}
+                    onClick={() => handleCategoryClick(category.en)}
                     $selected={searchedCategory === category.en}
                     $mobile={isUnderTablet}
                     hierarchy="normal"

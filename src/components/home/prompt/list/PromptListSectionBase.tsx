@@ -6,14 +6,16 @@ import Text from "@/components/common/Text/Text";
 import { Categories, Category, ImageCategories } from "@/core/Prompt";
 import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
 import {
+    keywordState,
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
+import { sortTypeState } from "@/states/sortState";
 import { useDeviceSize } from "@components/DeviceContext";
 import { Flex } from "antd";
-import { usePathname } from "next/navigation";
-import React, { useEffect } from "react";
-import { useRecoilValue, useResetRecoilState } from "recoil";
+import { usePathname, useSearchParams } from "next/navigation";
+import React, { useEffect, useRef } from "react";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 interface PromptListSectionBaseProps {
@@ -34,12 +36,25 @@ const PromptListSectionBase = ({
     renderPromptList,
 }: PromptListSectionBaseProps) => {
     const pathname = usePathname();
-    const resetKeyword = useResetRecoilState(searchedKeywordState);
-    const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
-    const searchedKeyword = useRecoilValue(searchedKeywordState);
-    const searchedCategory = useRecoilValue(searchedCategoryState);
     const { isMobile, isUnderTablet } = useDeviceSize();
     const limit = isUnderTablet ? 5 : 18;
+
+    const searchParams = useSearchParams();
+
+    const resetKeyword = useResetRecoilState(searchedKeywordState);
+    const resetCategory = useResetRecoilState(searchedCategoryState);
+    const resetSort = useResetRecoilState(sortTypeState);
+
+    const setKeyword = useSetRecoilState(keywordState);
+    const setSearchedKeyword = useSetRecoilState(searchedKeywordState);
+    const setSearchedCategory = useSetRecoilState(searchedCategoryState);
+    const setSortBy = useSetRecoilState(sortTypeState);
+
+    const searchedKeyword = useRecoilValue(searchedKeywordState);
+    const searchedCategory = useRecoilValue(searchedCategoryState);
+
+    const prevPromptTypeRef = useRef<string | null>(null);
+    const hasMountedRef = useRef(false);
 
     const { scrollLeftRef, scrollRightRef, handleScroll, currentScroll } =
         useScrollButtonControl();
@@ -59,14 +74,66 @@ const PromptListSectionBase = ({
 
     const totalCategories = getTotalCategories(promptType);
 
+    //초기화
     useEffect(() => {
-        if (
-            searchedCategory &&
-            !Object.keys(totalCategories).includes(searchedCategory)
-        ) {
-            resetSearchedCategory();
+        const promptTypeFromPath = pathname.split("/")[1];
+        const isPromptPage =
+            promptTypeFromPath === "text" || promptTypeFromPath === "image";
+        const isDetailPage = pathname.includes("/prompt/");
+
+        const prev = prevPromptTypeRef.current;
+
+        // ✅ 첫 마운트 (새로고침 시)
+        if (!hasMountedRef.current) {
+            hasMountedRef.current = true;
+
+            if (!isPromptPage || !isDetailPage) {
+                resetKeyword();
+                resetCategory();
+                resetSort();
+                setKeyword("");
+            }
+
+            prevPromptTypeRef.current = promptType;
+            return;
         }
-    }, [promptType, searchedCategory, totalCategories]);
+
+        // ✅ promptType 변경 시 (e.g., text → image)
+        if (prev !== promptType) {
+            resetKeyword();
+            resetCategory();
+            resetSort();
+            setKeyword("");
+        }
+
+        // ✅ 다른 라우터로 이동 시
+        if (!isPromptPage) {
+            resetKeyword();
+            resetCategory();
+            resetSort();
+            setKeyword("");
+        }
+
+        prevPromptTypeRef.current = promptType;
+    }, [pathname]);
+
+    //뒤로 가기용
+    useEffect(() => {
+        const keyword = searchParams.get("keyword");
+        const category = searchParams.get("category");
+        const sort = searchParams.get("sort") as SortType | null;
+
+        if (keyword) {
+            setKeyword(keyword);
+            setSearchedKeyword(keyword);
+        }
+        if (category) {
+            setSearchedCategory(category);
+        }
+        if (sort) {
+            setSortBy(sort);
+        }
+    }, [searchParams]);
 
     // 키워드 검색 시
     if (searchedKeyword && pathname === `/${promptType}`) {
@@ -103,7 +170,9 @@ const PromptListSectionBase = ({
                         limit,
                         title: (
                             <Text font="h2_20_semi" color="G_800">
-                                {totalCategories[searchedCategory].ko} 프롬프트
+                                {totalCategories[searchedCategory]?.ko ??
+                                    "전체"}{" "}
+                                프롬프트
                             </Text>
                         ),
                     })}
