@@ -82,6 +82,23 @@ const PromptList = ({
     // externalItems가 있으면 그것을 사용, 없으면 쿼리된 데이터 사용
     const items = externalItems ?? queriedItems;
 
+    // Public과 Private 프롬프트 개수 계산
+    const [publicCount, setPublicCount] = useState(0);
+    const [privateCount, setPrivateCount] = useState(0);
+
+    useEffect(() => {
+        if (items && viewType === "my") {
+            const publicItems = items.filter(
+                (item) => item.visibility === "public"
+            ).length;
+            const privateItems = items.filter(
+                (item) => item.visibility === "private"
+            ).length;
+            setPublicCount(publicItems);
+            setPrivateCount(privateItems);
+        }
+    }, [items, viewType]);
+
     useEffect(() => {
         // 다른 페이지로 이동했을 때 기본 정렬 재설정
         if (pathname !== "/" && !pathname.startsWith("/prompt/")) {
@@ -108,8 +125,6 @@ const PromptList = ({
 
     // 페이지 내부 탭 예시(마이페이지 등)
     const [activeTab, setActiveTab] = useState<"public" | "private">("public");
-    const publicCount = 0;
-    const privateCount = 0;
 
     const isPopularOrFeatured =
         searchType === "popular" || viewType === "featured";
@@ -131,11 +146,21 @@ const PromptList = ({
             );
         }
 
-        if (!isLoading && items.length === 0) {
+        // viewType이 "my"일 때 탭에 따라 필터링
+        let filteredItems = items;
+        if (viewType === "my") {
+            filteredItems = items.filter((item) =>
+                activeTab === "public"
+                    ? item.visibility === "public"
+                    : item.visibility === "private"
+            );
+        }
+
+        if (!isLoading && filteredItems.length === 0) {
             return <EmptyPrompt viewType={viewType} />;
         }
 
-        return items.map((item, index) => (
+        return filteredItems.map((item, index) => (
             <Col
                 key={item.id}
                 xs={24}
@@ -225,7 +250,6 @@ const PromptList = ({
 };
 
 export default PromptList;
-
 const SkeletonBox = styled.div`
     ${({ theme }) => theme.mixins.skeleton()};
     width: 100%;
