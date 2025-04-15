@@ -12,7 +12,7 @@
  * - props에 따라 pagination, sort, tab 관리
  */
 
-import { SortType, ViewType } from "@/apis/prompt/prompt.model";
+import { PromptDetails, SortType, ViewType } from "@/apis/prompt/prompt.model";
 import usePromptsListQuery from "@/hooks/queries/prompts/usePromptsListQuery";
 import {
     searchedCategoryState,
@@ -28,6 +28,7 @@ import PromptCardText from "./card/PromptCardText";
 import EmptyPrompt from "./EmptyPrompt";
 
 interface PromptListProps {
+    items?: PromptDetails[];
     usePage?: boolean;
     searchType: "total" | "popular" | "search" | "category";
     viewType: ViewType;
@@ -39,6 +40,7 @@ interface PromptListProps {
 }
 
 const PromptList = ({
+    items: externalItems,
     searchType,
     usePage = true,
     viewType,
@@ -53,6 +55,9 @@ const PromptList = ({
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchCategory = useRecoilValue(searchedCategoryState);
 
+    // externalItems가 있으면 API 호출을 스킵
+    const shouldUseQuery = !externalItems;
+
     // 쿼리 파라미터 로직
     const queryParams = {
         viewType: viewType,
@@ -66,14 +71,16 @@ const PromptList = ({
     };
 
     const {
-        items,
+        items: queriedItems,
         totalItems,
         currentPage,
         itemsPerPage,
         handlePageChange,
         isLoading,
-        // refetch,
-    } = usePromptsListQuery(queryParams);
+    } = usePromptsListQuery(queryParams, !shouldUseQuery);
+
+    // externalItems가 있으면 그것을 사용, 없으면 쿼리된 데이터 사용
+    const items = externalItems ?? queriedItems;
 
     useEffect(() => {
         // 다른 페이지로 이동했을 때 기본 정렬 재설정
@@ -109,7 +116,7 @@ const PromptList = ({
 
     // 콘텐츠 렌더링 분리 (로딩 중 / 데이터 없을 때 / 데이터 있을 때)
     const renderContent = () => {
-        if (isLoading) {
+        if (isLoading && !externalItems) {
             return Array.from({ length: limit ?? itemsPerPage }).map(
                 (_, idx) => (
                     <Col
