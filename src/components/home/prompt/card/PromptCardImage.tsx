@@ -1,5 +1,3 @@
-// src/components/home/prompt/cards/PromptCardImage.tsx
-
 "use client";
 
 import Icon from "@/components/common/Icon";
@@ -40,25 +38,25 @@ const PromptCardImage = ({
         resetPocketRunState();
     };
 
+    const thumbnail =
+        sampleMedia && sampleMedia.length > 0 ? sampleMedia[0] : "";
+
     return (
         <Card
-            $image={sampleMedia}
+            $image={thumbnail}
             $colored={colored}
             onClick={handleClick}
             $isMiniHeight={isMiniHeight}
         >
-            {/* 아래쪽을 어둡게 만드는 그라디언트 오버레이 */}
             <GradientOverlay />
 
             <ContentWrapper>
-                {/* 타이틀 영역 */}
                 <Title>
                     <Text font="b1_18_bold" color="white">
                         {title}
                     </Text>
                 </Title>
 
-                {/* 뷰/재생/북마크 수 표시 영역 */}
                 <DetailsWrapper>
                     <Detail>
                         <Icon name="Eye" color="white" />
@@ -88,7 +86,6 @@ const Card = styled.div<{
 }>`
     position: relative;
     width: 100%;
-    /* 상황에 맞춰 높이, 비율 등을 조정하세요 */
     height: ${({ $isMiniHeight }) => ($isMiniHeight ? "133px" : "157px")};
     border-radius: 12px;
     overflow: hidden;
@@ -99,19 +96,16 @@ const Card = styled.div<{
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     &:hover {
-        /* 마우스 오버 시 살짝 올라오고 그림자 */
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 `;
 
-/** 카드 아래쪽에서 위로 올라오는 그라디언트(어두운 영역) */
 const GradientOverlay = styled.div`
     position: absolute;
     left: 0;
     bottom: 0;
     width: 100%;
-    /* 카드 높이에 비례해 조정 가능. (예: 40% ~ 50% 등) */
     height: 70%;
     background: linear-gradient(
         0deg,
@@ -120,13 +114,11 @@ const GradientOverlay = styled.div`
     );
 `;
 
-/** 카드 안쪽에 내용(텍스트/아이콘)을 담는 컨테이너 */
 const ContentWrapper = styled.div`
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    /* 내부 여백 */
     padding: 12px;
     display: flex;
     flex-direction: column;
@@ -134,26 +126,22 @@ const ContentWrapper = styled.div`
     height: 100%;
 `;
 
-/** 타이틀 영역 - 필요 시 간단한 마진 추가 */
 const Title = styled.div`
     margin-top: auto;
 `;
 
-/** 하단 아이콘/숫자 표시 영역 */
 const DetailsWrapper = styled.div`
     display: flex;
     gap: 16px;
     margin-top: 8px;
 `;
 
-/** 하나의 아이콘/숫자 묶음 */
 const Detail = styled.div`
     display: flex;
     align-items: center;
     gap: 4px;
 `;
 
-/** 숫자 텍스트 */
 const DetailText = styled.span`
     color: #fff;
     font-size: 14px;
