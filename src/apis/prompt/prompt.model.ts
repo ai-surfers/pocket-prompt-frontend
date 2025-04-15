@@ -12,7 +12,7 @@ export type PromptDetails = {
     title: string;
     description: string;
     prompt_template: string;
-    visibility: string;
+    visibility: "public" | "private";
     categories: string[];
     author_nickname: string | null;
     star: number;
