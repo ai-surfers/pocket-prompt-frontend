@@ -13,12 +13,14 @@ interface ImgUploadSectionProps {
     maxCount?: number;
     fileList: UploadFile[];
     onFileListChange?: (files: UploadFile[]) => void;
+    onFileRemove?: (file: UploadFile) => void; // 삭제 전용 핸들러 추가
 }
 
 const ImgUploadSection = ({
     maxCount = 8,
     fileList,
     onFileListChange,
+    onFileRemove,
 }: ImgUploadSectionProps) => {
     const { isUnderTablet } = useDeviceSize();
     const showToast = useToast();
@@ -50,6 +52,7 @@ const ImgUploadSection = ({
     const handleRemove = (file: UploadFile) => {
         const newList = fileList.filter((f) => f.uid !== file.uid);
         onFileListChange?.(newList);
+        onFileRemove?.(file);
     };
 
     return (
@@ -93,7 +96,6 @@ const ImgUploadSection = ({
                         }}
                         accept="image/jpeg,image/png,image/webp"
                         fileList={fileList}
-                        // onChange={handleChange}
                         style={{
                             background: "#f2f3fd",
                             border: "1.5px dashed #d6d9f9",
@@ -200,4 +202,5 @@ const DeleteBtn = styled.button`
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    z-index: 10;
 `;
