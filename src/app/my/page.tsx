@@ -6,7 +6,7 @@ import Icon from "@/components/common/Icon";
 import Input from "@/components/common/Input/Input";
 import Text from "@/components/common/Text/Text";
 import { useDeviceSize } from "@/components/DeviceContext";
-import PromptListSection from "@/components/home/prompt/PromptListSection";
+import PromptList from "@/components/home/prompt/PromptList";
 import MyLnb from "@/components/lnb/MyLnb";
 import { usePutNickname } from "@/hooks/mutations/usePutNickname";
 import useToast from "@/hooks/useToast";
@@ -229,7 +229,15 @@ const MyPage = () => {
                             justifyContent: "flex-start",
                         }}
                     >
-                        <PromptListSection viewType="my" />
+                        <PromptList
+                            viewType="my"
+                            searchType="total"
+                            title={
+                                <Text font="h2_20_semi" color="G_800">
+                                    내가 만든 프롬프트
+                                </Text>
+                            }
+                        />
                     </Flex>
                 </MyPromptWrapper>
             </ContentWrapper>

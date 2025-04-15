@@ -2,47 +2,46 @@
 
 import Text from "@/components/common/Text/Text";
 import { InputType } from "@/core/Prompt";
+import { UTM_OVER_USAGE_LIMIT_URL, UTM_TIER_LIMIT_URL } from "@/core/UtmUri";
 import {
     CreatePromptRequest,
     InputFormat,
     usePostPrompt,
 } from "@/hooks/mutations/prompts/usePostPrompt";
 import { usePutPrompt } from "@/hooks/mutations/prompts/usePutPrompt";
+import { useUploadMedia } from "@/hooks/mutations/prompts/useUploadMedia";
 import usePromptQuery from "@/hooks/queries/prompts/usePromptQuery";
+import {
+    PROMPT_KEYS,
+    PROMPT_QUERY_KEYS_FOR_PREFETCH,
+} from "@/hooks/queries/QueryKeys";
+import { useInvalidateQueryKeys } from "@/hooks/queries/useInvalidateQueryKeys";
 import useModal from "@/hooks/useModal";
 import useToast from "@/hooks/useToast";
 import { extractOptions } from "@/utils/promptUtils";
+import { useDeviceSize } from "@components/DeviceContext";
 import { zodResolver } from "@hookform/resolvers/zod";
+import ImgPromptOptionIcon from "@public/svg/prompt-new/img-prompt";
+import TextPromptOptionIcon from "@public/svg/prompt-new/text-prompt";
 import {
     defaultPromptSchema,
     promptSchema,
     PromptSchemaType,
 } from "@schema/PromptSchema";
 import { Flex, Select, UploadFile } from "antd";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { z } from "zod";
 import Button from "../common/Button/Button";
-import PreviewSection from "./PreviewSection";
-// import FormSection from "./FormSection";
-import { UTM_OVER_USAGE_LIMIT_URL, UTM_TIER_LIMIT_URL } from "@/core/UtmUri";
-import { useUploadMedia } from "@/hooks/mutations/prompts/useUploadMedia";
-import {
-    PROMPT_KEYS,
-    PROMPT_QUERY_KEYS_FOR_PREFETCH,
-} from "@/hooks/queries/QueryKeys";
-import { useInvalidateQueryKeys } from "@/hooks/queries/useInvalidateQueryKeys";
-import { useDeviceSize } from "@components/DeviceContext";
-import ImgPromptOptionIcon from "@public/svg/prompt-new/img-prompt";
-import TextPromptOptionIcon from "@public/svg/prompt-new/text-prompt";
-import Link from "next/link";
 import PromptNewLnb from "../lnb/PromptNewLnb";
 import FormFirstSection from "./FormFirstSection";
 import FormSecSection from "./FormSecSection";
 import FormThirdSecion from "./FormThirdSecion";
 import ImgUploadSection from "./ImgUploadSection";
+import PreviewSection from "./PreviewSection";
 import PromptTypeChangeModal from "./PromptTypeChangeModal";
 
 interface PromptNewPageProps {
@@ -401,7 +400,7 @@ export default function NewPromptClient({
 
             form.reset(formattedData);
 
-            // ample_media → UploadFile[] 변환
+            // sample_media → UploadFile[] 변환
             if (data.sample_media?.length > 0) {
                 const restoredFiles =
                     data.sample_media.map(convertToUploadFile);
@@ -550,9 +549,25 @@ export default function NewPromptClient({
             }
         }
 
-        // ✅ UI에 반영
+        // UI에 반영
         setImageFileList((prev) => [...prev, ...uploadedFileList]);
         setSampleMediaUrls((prev) => [...prev, ...uploadedUrls]);
+    };
+
+    const handleImageFileRemove = (file: UploadFile) => {
+        console.log("handleImageFileRemove called for file:", file);
+        // imageFileList에서 해당 파일 제거
+        const newFileList = imageFileList.filter((f) => f.uid !== file.uid);
+        setImageFileList(newFileList);
+
+        // sampleMediaUrls에서도 해당 URL 제거
+        if (file.url) {
+            const newUrls = sampleMediaUrls.filter((url) => url !== file.url);
+            setSampleMediaUrls(newUrls);
+        }
+
+        console.log("Updated imageFileList:", newFileList);
+        console.log("Updated sampleMediaUrls:", sampleMediaUrls);
     };
 
     return (
@@ -617,6 +632,7 @@ export default function NewPromptClient({
                                     maxCount={8}
                                     fileList={imageFileList}
                                     onFileListChange={handleImageFileListChange}
+                                    onFileRemove={handleImageFileRemove} // 삭제 핸들러 전달
                                 />
                             )}
                         </SecondWriteSection>
@@ -720,8 +736,6 @@ const SecondWriteSection = styled.div<{ $isUnderTablet: boolean }>`
     width: 100%;
     flex-wrap: wrap;
     gap: ${({ $isUnderTablet }) => ($isUnderTablet ? "16px" : "16px")};
-    /* padding-right: ${({ $isUnderTablet }) =>
-        $isUnderTablet ? "0px" : "150px"}; */
 `;
 
 const ThridWriteSection = styled.div<{ $isUnderTablet: boolean }>`

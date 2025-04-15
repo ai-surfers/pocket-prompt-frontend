@@ -29,14 +29,7 @@ const HomeLnb = ({ initialMenu }: HomeLnbType) => {
             key: "2",
             label: "이미지 프롬프트",
             iconType: "Image",
-            onClick: () =>
-                showToast({
-                    title: "이미지 프롬프트는 아직 준비 중인 기능이에요.",
-                    subTitle:
-                        "더 많은 프롬프트 탐색을 위해 빠르게 준비하고 있을게요!",
-                    iconName: "Timer",
-                }),
-            disabled: true,
+            route: "/image",
         },
         {
             key: "3",

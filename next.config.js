@@ -23,11 +23,17 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: "https",
-                hostname: "test-bucket-12398471203.s3.amazonaws.com",
+                hostname: "pocket-prompt-resources.s3.amazonaws.com",
+                pathname: "/**",
             },
             {
                 protocol: "https",
                 hostname: "pocket-prompt-resources-dev.s3.amazonaws.com",
+                pathname: "/**",
+            },
+            {
+                protocol: "https",
+                hostname: "test.com",
                 pathname: "/**",
             },
         ],
