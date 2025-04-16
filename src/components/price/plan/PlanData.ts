@@ -62,7 +62,7 @@ export const PLAN_DATA = {
         },
         {
             title: "포켓 프롬프트 Pro",
-            price: "₩49,900",
+            price: "₩19,900",
             period: "월",
             features: [
                 {
@@ -143,7 +143,7 @@ export const PLAN_DATA = {
         },
         {
             title: "포켓 프롬프트 Pro",
-            price: "₩499,000",
+            price: "₩199,000",
             period: "년",
             features: [
                 {

@@ -11,6 +11,12 @@ interface FeaturesType {
     detail?: string;
 }
 
+interface FeaturesType {
+    title?: string;
+    subtitle?: string;
+    detail?: string;
+}
+
 interface PlanCardProps {
     id: string;
     title: string;
@@ -33,6 +39,7 @@ export default function PlanCard({
     isHighlight,
     onClick,
 }: PlanCardProps) {
+    console.log(features);
     return (
         <StyledCard isHighlight={isHighlight}>
             <Frame>
