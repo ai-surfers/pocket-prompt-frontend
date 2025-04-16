@@ -1,15 +1,21 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import { Button, Card } from "antd";
+import { Button, Card, Flex } from "antd";
 import Text from "@/components/common/Text/Text";
 import CheckBox from "@svg/extension/CheckBox";
+
+interface FeaturesType {
+    title?: string;
+    subtitle?: string;
+    detail?: string;
+}
 
 interface PlanCardProps {
     id: string;
     title: string;
     price: string;
     period: string;
-    features: string[];
+    features: FeaturesType[];
     buttonLabel: string;
     isHighlight: boolean;
     onClick: () => void;
@@ -24,6 +30,7 @@ export default function PlanCard({
     isHighlight,
     onClick,
 }: PlanCardProps) {
+    console.log(features);
     return (
         <StyledCard isHighlight={isHighlight}>
             <Frame>
@@ -52,17 +59,57 @@ export default function PlanCard({
     );
 }
 
-const FeatureList: React.FC<{ features: string[] }> = ({ features }) => (
+const FeatureList: React.FC<{ features: FeaturesType[] }> = ({ features }) => (
     <TextContainer>
         {features.map((feature, index) => (
-            <Text
-                font="b2_16_reg"
-                color="G_500"
+            <Flex
+                justify="start"
+                align="center"
+                gap={12}
+                style={{
+                    padding: "8px",
+                    backgroundColor: "var(--gray-50, #F7F8F9)",
+                    borderRadius: "8px",
+                }}
                 key={index}
-                style={{ display: "flex", alignItems: "center", gap: "8px" }}
             >
-                <CheckBox /> {feature}
-            </Text>
+                <CheckBox />
+                <Flex vertical>
+                    <Text
+                        font="b3_14_bold"
+                        color="G_500"
+                        style={{
+                            display: "flex",
+                            alignItems: "start",
+                            gap: "8px",
+                        }}
+                    >
+                        {feature.title}
+                    </Text>
+                    <Text
+                        font="b3_14_med"
+                        color="G_500"
+                        style={{
+                            display: "flex",
+                            alignItems: "start",
+                            gap: "8px",
+                        }}
+                    >
+                        {feature.subtitle}
+                    </Text>
+                    <Text
+                        font="c1_12_reg"
+                        color="G_400"
+                        style={{
+                            display: "flex",
+                            alignItems: "start",
+                            gap: "8px",
+                        }}
+                    >
+                        {feature.detail}
+                    </Text>
+                </Flex>
+            </Flex>
         ))}
     </TextContainer>
 );
