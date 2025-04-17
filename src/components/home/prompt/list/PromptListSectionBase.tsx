@@ -5,18 +5,15 @@ import ScrollButton from "@/components/common/ScrollButton/ScrollButton";
 import Text from "@/components/common/Text/Text";
 import { Categories, Category, ImageCategories } from "@/core/Prompt";
 import useScrollButtonControl from "@/hooks/ui/useScrollButtonControl";
-import { prevPathState } from "@/states/navigationState";
 import {
-    keywordState,
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
-import { sortTypeState } from "@/states/sortState";
 import { useDeviceSize } from "@components/DeviceContext";
 import { Flex } from "antd";
-import { usePathname, useSearchParams } from "next/navigation";
-import React, { useEffect, useRef } from "react";
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
+import { usePathname } from "next/navigation";
+import React, { useMemo } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 
 interface PromptListSectionBaseProps {
@@ -28,6 +25,8 @@ interface PromptListSectionBaseProps {
         limit: number;
         title: React.ReactNode;
         sortBy?: SortType;
+        keyword?: string;
+        category?: string;
     }) => React.ReactNode;
 }
 
@@ -37,26 +36,11 @@ const PromptListSectionBase = ({
     renderPromptList,
 }: PromptListSectionBaseProps) => {
     const pathname = usePathname();
-    const searchParams = useSearchParams();
     const { isMobile, isUnderTablet } = useDeviceSize();
     const limit = isUnderTablet ? 5 : 18;
 
-    // Recoil 상태 관련 setter & reset
-    const resetKeyword = useResetRecoilState(searchedKeywordState);
-    const resetCategory = useResetRecoilState(searchedCategoryState);
-    const resetSort = useResetRecoilState(sortTypeState);
-    const setKeyword = useSetRecoilState(keywordState);
-    const setSearchedKeyword = useSetRecoilState(searchedKeywordState);
-    const setSearchedCategory = useSetRecoilState(searchedCategoryState);
-    const setSortBy = useSetRecoilState(sortTypeState);
-    const prevPath = useRecoilValue(prevPathState);
-
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
-
-    // Refs로 이전 프롬프트 타입과 이전 pathname을 저장
-    const hasMountedRef = useRef(false);
-    const prevPromptTypeRef = useRef<string | null>(null);
 
     const { scrollLeftRef, scrollRightRef, handleScroll, currentScroll } =
         useScrollButtonControl();
@@ -76,84 +60,53 @@ const PromptListSectionBase = ({
 
     const totalCategories = getTotalCategories(promptType);
 
-    useEffect(() => {
-        const currentPathType = pathname.split("/")[1]; // "text", "image", etc
-        const isMainPage =
-            currentPathType === "text" || currentPathType === "image";
-        const isDetailPage = pathname.startsWith("/prompt/");
-        const cameFromDetail = prevPath.startsWith("/prompt/");
-        const prevPathType = prevPath.split("/")[1]; // ex. "text", "image"
+    const renderKey = useMemo(
+        () => `${searchedKeyword}-${searchedCategory}-${promptType}`,
+        [searchedKeyword, searchedCategory, promptType]
+    );
 
-        // 첫 마운트는 아무것도 하지 않음
-        if (!hasMountedRef.current) {
-            hasMountedRef.current = true;
-            return;
-        }
-
-        // ✅ 조건 1: promptType 변경 (ex. text → image)
-        if (currentPathType !== promptType) {
-            resetKeyword();
-            resetCategory();
-            resetSort();
-            setKeyword("");
-            setSearchedCategory("total");
-            setSearchedKeyword("");
-            setSortBy("created_at");
-            return;
-        }
-
-        // ✅ 조건 2: 상세 → 같은 타입의 메인으로 뒤로가기 → 유지
-        if (cameFromDetail && prevPathType === promptType && isMainPage) {
-            return; // 상태 유지
-        }
-
-        // ✅ 조건 3: 상세/메인이 아닌 페이지 (ex. /mypage) → 초기화
-        if (!isMainPage && !isDetailPage) {
-            resetKeyword();
-            resetCategory();
-            resetSort();
-            setKeyword("");
-            setSearchedCategory("total");
-            setSearchedKeyword("");
-            setSortBy("created_at");
-            return;
-        }
-
-        // ✅ 그 외는 모두 초기화 (ex. 직접 접근)
-        resetKeyword();
-        resetCategory();
-        resetSort();
-        setKeyword("");
-        setSearchedCategory("total");
-        setSearchedKeyword("");
-        setSortBy("created_at");
-    }, [
-        pathname,
-        promptType,
-        prevPath,
-        resetKeyword,
-        resetCategory,
-        resetSort,
-        setKeyword,
-        setSearchedCategory,
-        setSearchedKeyword,
-        setSortBy,
-    ]);
-
-    // ★ 렌더링 조건
-    if (searchedKeyword && pathname === `/${promptType}`) {
+    if (
+        searchedKeyword &&
+        searchedCategory &&
+        searchedCategory !== "total" &&
+        pathname === `/${promptType}`
+    ) {
         return (
             <PromptSectionContainer>
-                <LargeWrapper>
+                <LargeWrapper key={renderKey}>
                     {renderPromptList({
                         searchType: "search",
                         viewType,
                         limit,
                         title: (
                             <Text font="h2_20_semi" color="G_800">
-                                검색 결과
+                                {totalCategories[searchedCategory]?.ko ??
+                                    "전체"}
+                                에서 "{searchedKeyword}" 검색 결과
                             </Text>
                         ),
+                        keyword: searchedKeyword,
+                        category: searchedCategory,
+                    })}
+                </LargeWrapper>
+            </PromptSectionContainer>
+        );
+    }
+
+    if (searchedKeyword && pathname === `/${promptType}`) {
+        return (
+            <PromptSectionContainer>
+                <LargeWrapper key={renderKey}>
+                    {renderPromptList({
+                        searchType: "search",
+                        viewType,
+                        limit,
+                        title: (
+                            <Text font="h2_20_semi" color="G_800">
+                                검색 결과: "{searchedKeyword}"
+                            </Text>
+                        ),
+                        keyword: searchedKeyword,
                     })}
                 </LargeWrapper>
             </PromptSectionContainer>
@@ -167,7 +120,7 @@ const PromptListSectionBase = ({
     ) {
         return (
             <PromptSectionContainer>
-                <LargeWrapper>
+                <LargeWrapper key={renderKey}>
                     {renderPromptList({
                         searchType: "category",
                         viewType,
@@ -179,6 +132,7 @@ const PromptListSectionBase = ({
                                 프롬프트
                             </Text>
                         ),
+                        category: searchedCategory,
                     })}
                 </LargeWrapper>
             </PromptSectionContainer>
@@ -197,30 +151,6 @@ const PromptListSectionBase = ({
                     }}
                 >
                     <SmallWrapper
-                        ref={scrollLeftRef}
-                        $isMobile={isMobile}
-                        $isFocused={currentScroll !== "right"}
-                    >
-                        {renderPromptList({
-                            searchType: "popular",
-                            viewType,
-                            limit: 3,
-                            sortBy: "usages_7_days",
-                            title: (
-                                <Text font="b1_18_semi" color="G_800">
-                                    이번 주 인기 프롬프트 TOP 3
-                                </Text>
-                            ),
-                        })}
-                        {isMobile && currentScroll === "left" && (
-                            <ScrollButton
-                                currentScroll={currentScroll}
-                                onClick={() => handleScroll()}
-                            />
-                        )}
-                    </SmallWrapper>
-
-                    <SmallWrapper
                         ref={scrollRightRef}
                         $isMobile={isMobile}
                         $isFocused={currentScroll !== "left"}
@@ -235,6 +165,24 @@ const PromptListSectionBase = ({
                             searchType: "popular",
                             viewType,
                             limit: 3,
+                            sortBy: "usages_7_days",
+                            title: (
+                                <Text font="b1_18_semi" color="G_800">
+                                    이번 주 인기 프롬프트 TOP 3
+                                </Text>
+                            ),
+                        })}
+                    </SmallWrapper>
+
+                    <SmallWrapper
+                        ref={scrollLeftRef}
+                        $isMobile={isMobile}
+                        $isFocused={currentScroll !== "right"}
+                    >
+                        {renderPromptList({
+                            searchType: "popular",
+                            viewType,
+                            limit: 3,
                             sortBy: "usages_30_days",
                             title: (
                                 <Text font="b1_18_semi" color="G_800">
@@ -242,6 +190,12 @@ const PromptListSectionBase = ({
                                 </Text>
                             ),
                         })}
+                        {isMobile && currentScroll === "left" && (
+                            <ScrollButton
+                                currentScroll={currentScroll}
+                                onClick={() => handleScroll()}
+                            />
+                        )}
                     </SmallWrapper>
                 </Flex>
 
