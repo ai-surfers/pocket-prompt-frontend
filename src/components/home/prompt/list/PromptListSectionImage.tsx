@@ -7,7 +7,13 @@ import PromptCardImage from "../card/PromptCardImage";
 import PromptList from "../PromptList";
 import PromptListSectionBase from "./PromptListSectionBase";
 
-const PromptListSectionImage = () => {
+interface PromptListSectionImageProps {
+    searchResults?: PromptDetails[];
+}
+
+const PromptListSectionImage = ({
+    searchResults,
+}: PromptListSectionImageProps) => {
     const [top7Days, setTop7Days] = useState<PromptDetails[]>([]);
     const [top30Days, setTop30Days] = useState<PromptDetails[]>([]);
     const [allPrompts, setAllPrompts] = useState<PromptDetails[]>([]);
@@ -17,18 +23,18 @@ const PromptListSectionImage = () => {
             try {
                 const type = "image";
 
-                const [weekRes, monthRes, allRes] = await Promise.all([
+                const [monthRes, weekRes, allRes] = await Promise.all([
                     getPromptsList({
                         prompt_type: type,
                         view_type: "open",
-                        sort_by: "usages_7_days",
+                        sort_by: "usages_30_days",
                         limit: 3,
                         page: 1,
                     }),
                     getPromptsList({
                         prompt_type: type,
                         view_type: "open",
-                        sort_by: "usages_30_days",
+                        sort_by: "usages_7_days",
                         limit: 9,
                         page: 1,
                     }),
@@ -41,15 +47,14 @@ const PromptListSectionImage = () => {
                     }),
                 ]);
 
-                const weekTop3 = weekRes.prompt_info_list;
-                // 이번 달 데이터에서 이번 주 TOP 3와 중복되지 않도록 필터링
-                const monthFiltered = monthRes.prompt_info_list.filter(
-                    (item) => !weekTop3.some((w) => w.id === item.id)
+                const monthTop3 = monthRes.prompt_info_list;
+                const weekFiltered = weekRes.prompt_info_list.filter(
+                    (item) => !monthTop3.some((m) => m.id === item.id)
                 );
-                const monthTop3 = monthFiltered.slice(0, 3);
+                const weekTop3 = weekFiltered.slice(0, 3);
 
-                setTop7Days(weekTop3);
                 setTop30Days(monthTop3);
+                setTop7Days(weekTop3);
                 setAllPrompts(allRes.prompt_info_list);
             } catch (err) {
                 console.error("Prompt list fetch error", err);
@@ -78,8 +83,13 @@ const PromptListSectionImage = () => {
                     sortBy === "usages_30_days"
                 ) {
                     data = top30Days;
-                } else {
+                } else if (searchType === "total") {
                     data = allPrompts;
+                } else if (
+                    searchType === "search" ||
+                    searchType === "category"
+                ) {
+                    data = searchResults || [];
                 }
 
                 return (

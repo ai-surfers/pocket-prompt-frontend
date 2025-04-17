@@ -7,7 +7,13 @@ import PromptCardText from "../card/PromptCardText";
 import PromptList from "../PromptList";
 import PromptListSectionBase from "./PromptListSectionBase";
 
-const PromptListSectionText = () => {
+interface PromptListSectionTextProps {
+    searchResults?: PromptDetails[];
+}
+
+const PromptListSectionText = ({
+    searchResults,
+}: PromptListSectionTextProps) => {
     const [top7Days, setTop7Days] = useState<PromptDetails[]>([]);
     const [top30Days, setTop30Days] = useState<PromptDetails[]>([]);
     const [allPrompts, setAllPrompts] = useState<PromptDetails[]>([]);
@@ -17,19 +23,18 @@ const PromptListSectionText = () => {
             try {
                 const type = "text";
 
-                // "이번 주", "이번 달", "전체" 프롬프트 데이터를 병렬로 가져옴
-                const [weekRes, monthRes, allRes] = await Promise.all([
+                const [monthRes, weekRes, allRes] = await Promise.all([
                     getPromptsList({
                         prompt_type: type,
                         view_type: "open",
-                        sort_by: "usages_7_days",
+                        sort_by: "usages_30_days",
                         limit: 3,
                         page: 1,
                     }),
                     getPromptsList({
                         prompt_type: type,
                         view_type: "open",
-                        sort_by: "usages_30_days",
+                        sort_by: "usages_7_days",
                         limit: 9,
                         page: 1,
                     }),
@@ -42,15 +47,14 @@ const PromptListSectionText = () => {
                     }),
                 ]);
 
-                const weekTop3 = weekRes.prompt_info_list;
-                // "이번 달" 데이터에서 "이번 주" TOP 3와 중복되지 않도록 필터링
-                const monthFiltered = monthRes.prompt_info_list.filter(
-                    (item) => !weekTop3.some((w) => w.id === item.id)
+                const monthTop3 = monthRes.prompt_info_list;
+                const weekFiltered = weekRes.prompt_info_list.filter(
+                    (item) => !monthTop3.some((m) => m.id === item.id)
                 );
-                const monthTop3 = monthFiltered.slice(0, 3);
+                const weekTop3 = weekFiltered.slice(0, 3);
 
-                setTop7Days(weekTop3);
                 setTop30Days(monthTop3);
+                setTop7Days(weekTop3);
                 setAllPrompts(allRes.prompt_info_list);
             } catch (err) {
                 console.error("Prompt list fetch error", err);
@@ -72,7 +76,6 @@ const PromptListSectionText = () => {
             }) => {
                 let data: PromptDetails[] = [];
 
-                // searchType과 sortBy에 따라 적절한 데이터 선택
                 if (searchType === "popular" && sortBy === "usages_7_days") {
                     data = top7Days;
                 } else if (
@@ -80,8 +83,13 @@ const PromptListSectionText = () => {
                     sortBy === "usages_30_days"
                 ) {
                     data = top30Days;
-                } else {
+                } else if (searchType === "total") {
                     data = allPrompts;
+                } else if (
+                    searchType === "search" ||
+                    searchType === "category"
+                ) {
+                    data = searchResults || [];
                 }
 
                 return (

@@ -3,9 +3,13 @@
 import Icon from "@/components/common/Icon";
 import Text from "@/components/common/Text/Text";
 import { pocketRunState } from "@/states/pocketRunState";
+import {
+    searchedCategoryState,
+    searchedKeywordState,
+} from "@/states/searchState";
 import theme from "@/styles/theme";
 import { useRouter } from "next/navigation";
-import { useResetRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 
 interface PromptCardImageProps {
@@ -15,7 +19,7 @@ interface PromptCardImageProps {
     star: number;
     usages: number;
     id: string;
-    sampleMedia: string;
+    sampleMedia: string[];
     isMiniHeight: boolean;
 }
 
@@ -32,9 +36,21 @@ const PromptCardImage = ({
     const pointColor = colored ? theme.colors.primary : theme.colors.G_400;
     const resetPocketRunState = useResetRecoilState(pocketRunState);
     const router = useRouter();
+    const searchedKeyword = useRecoilValue(searchedKeywordState);
+    const searchedCategory = useRecoilValue(searchedCategoryState);
 
     const handleClick = () => {
-        router.push(`/prompt/${id}`);
+        // 검색어와 카테고리가 있을 때만 쿼리 파라미터 추가
+        const query = new URLSearchParams();
+        if (searchedKeyword && searchedKeyword.trim() !== "") {
+            query.set("keyword", searchedKeyword);
+        }
+        if (searchedCategory && searchedCategory !== "total") {
+            query.set("category", searchedCategory);
+        }
+
+        const queryString = query.toString();
+        router.push(`/prompt/${id}${queryString ? `?${queryString}` : ""}`);
         resetPocketRunState();
     };
 

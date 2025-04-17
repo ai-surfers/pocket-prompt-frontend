@@ -24,6 +24,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
+import PromptCardImage from "./card/PromptCardImage";
 import PromptCardText from "./card/PromptCardText";
 import EmptyPrompt from "./EmptyPrompt";
 
@@ -170,6 +171,16 @@ const PromptList = ({
             >
                 {renderItem ? (
                     renderItem(item, index)
+                ) : promptType === "image" ? (
+                    <PromptCardImage
+                        id={item.id}
+                        title={item.title}
+                        views={item.views}
+                        star={item.star}
+                        usages={item.usages}
+                        sampleMedia={item.sample_media ?? []}
+                        isMiniHeight={isPopularOrFeatured}
+                    />
                 ) : (
                     <PromptCardText
                         id={item.id}
