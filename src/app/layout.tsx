@@ -1,16 +1,17 @@
+import ReactQueryProvider from "@/components/ReactQueryProvider";
+import RecoilProvider from "@/components/RecoilProvider";
+import GlobalModal from "@/components/common/Modal/GlobalModal";
+import Toast from "@/components/common/Toast/Toast";
+import PrevPathUpdater from "@/components/home/prompt/PrevPathUpdater";
+import LayoutClient from "@/components/layout/LayoutClient";
+import Styles from "@/styles";
+import { detectDevice } from "@/utils/deviceUtils";
+import { DeviceProvider } from "@components/DeviceContext";
 import type { Metadata } from "next";
+import localFont from "next/font/local";
+import { headers } from "next/headers";
 import Script from "next/script";
 import "./globals.css";
-import Styles from "@/styles";
-import RecoilProvider from "@/components/RecoilProvider";
-import ReactQueryProvider from "@/components/ReactQueryProvider";
-import LayoutClient from "@/components/layout/LayoutClient";
-import Toast from "@/components/common/Toast/Toast";
-import GlobalModal from "@/components/common/Modal/GlobalModal";
-import { DeviceProvider } from "@components/DeviceContext";
-import { headers } from "next/headers";
-import { detectDevice } from "@/utils/deviceUtils";
-import localFont from "next/font/local";
 
 const webUrl = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3000";
 
@@ -61,6 +62,7 @@ export default function RootLayout({
     const { isMobile, isUnderTablet } = detectDevice(
         headers().get("user-agent") || ""
     );
+
     return (
         <DeviceProvider isUnderTablet={isUnderTablet} isMobile={isMobile}>
             <html lang="ko" className={`${pretendard.variable}`}>
@@ -95,6 +97,7 @@ export default function RootLayout({
                     <Styles>
                         <ReactQueryProvider>
                             <RecoilProvider>
+                                <PrevPathUpdater />
                                 <LayoutClient>{children}</LayoutClient>
                                 <Toast />
                                 <GlobalModal />

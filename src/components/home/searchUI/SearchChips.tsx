@@ -3,39 +3,63 @@
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
 import { useDeviceSize } from "@/components/DeviceContext";
-import { ImageCategories } from "@/core/Prompt"; // 이미지 카테고리
+import { Categories, ImageCategories } from "@/core/Prompt";
 import {
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
-import Total from "@public/svg/home/Total"; // 전체 아이콘
+import Total from "@public/svg/home/Total";
 import { Flex } from "antd";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
-const SearchChipsImage = () => {
+interface SearchChipsProps {
+    promptType: "text" | "image"; // 프롬프트 타입을 prop으로 받음
+}
+
+const SearchChips = ({ promptType }: SearchChipsProps) => {
     const [searchedCategory, setSearchedCategory] = useRecoilState(
         searchedCategoryState
     );
-    const searchedkeyword = useRecoilValue(searchedKeywordState);
+    const searchedKeyword = useRecoilValue(searchedKeywordState);
     const router = useRouter();
     const pathname = usePathname();
     const setCategory = useSetRecoilState(searchedCategoryState);
     const { isUnderTablet } = useDeviceSize();
 
-    const handleCategoryClick = (categoryKey: string) => {
-        setCategory(categoryKey);
+    // 프롬프트 타입에 따라 카테고리 동적으로 선택
+    const totalCategories = {
+        total: { ko: "전체", en: "total", emoji: <Total /> },
+        ...(promptType === "image" ? ImageCategories : Categories),
     };
 
-    const totalImageCategories = {
-        total: { ko: "전체", en: "total", emoji: <Total /> },
-        ...ImageCategories,
+    const handleCategoryClick = (categoryKey: string) => {
+        setCategory(categoryKey);
+
+        // URL 파라미터 업데이트
+        const query = new URLSearchParams();
+        if (searchedKeyword && searchedKeyword.trim() !== "") {
+            query.set("keyword", searchedKeyword);
+        }
+        if (categoryKey && categoryKey !== "total") {
+            query.set("category", categoryKey);
+        }
+
+        const queryString = query.toString();
+        router.push(`${pathname}${queryString ? `?${queryString}` : ""}`);
     };
+
+    // 디버깅: searchedCategory 상태 변화 확인
+    useEffect(() => {
+        console.log("SearchChips - promptType:", promptType);
+        console.log("SearchChips - searchedCategory:", searchedCategory);
+    }, [promptType, searchedCategory]);
 
     return (
         <SearchChipsWrapper $isVisible={true}>
-            {Object.entries(totalImageCategories).map(([key, category]) => (
+            {Object.entries(totalCategories).map(([key, category]) => (
                 <StyledButton
                     key={key}
                     id={`category-button-${category.en}`}
@@ -68,7 +92,7 @@ const SearchChipsImage = () => {
     );
 };
 
-export default SearchChipsImage;
+export default SearchChips;
 
 const SearchChipsWrapper = styled.div<{ $isVisible: boolean }>`
     ${({ theme }) => theme.mixins.flexBox("row", "start", "center")};
@@ -82,8 +106,8 @@ const SearchChipsWrapper = styled.div<{ $isVisible: boolean }>`
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
 
-    opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
-    max-height: ${({ $isVisible }) => ($isVisible ? "92px" : "0px")};
+    opacity: 1;
+    max-height: 92px;
     transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
 
     &::-webkit-scrollbar {
@@ -94,6 +118,9 @@ const SearchChipsWrapper = styled.div<{ $isVisible: boolean }>`
     &::-webkit-scrollbar-track {
         border-radius: 4px;
         background: var(--gray-200, #dee0e8);
+        position: relative;
+        margin-left: calc(50vw - 30px);
+        margin-right: calc(50vw - 30px);
     }
 
     &::-webkit-scrollbar-thumb {
