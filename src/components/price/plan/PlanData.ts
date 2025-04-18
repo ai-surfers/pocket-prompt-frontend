@@ -41,8 +41,8 @@ export const PLAN_DATA = {
             planType: "lite",
         },
         {
-            title: "포켓 프롬프트 Pro",
-            price: "₩19,900",
+            title: "포켓 프롬프트 Standard",
+            price: "₩29,900",
             period: "월",
             features: [
                 {
@@ -52,6 +52,26 @@ export const PLAN_DATA = {
                 {
                     title: "이미지도 빠질 수 없겠죠?",
                     subtitle: "이미지 AI 100회, 감성부터 밈까지 OK!",
+                },
+                {
+                    subtitle: "광고 없는 쾌적한 환경",
+                },
+            ],
+            buttonLabel: "구독하기",
+            planType: "plus",
+        },
+        {
+            title: "포켓 프롬프트 Pro",
+            price: "₩49,000",
+            period: "월",
+            features: [
+                {
+                    title: "AI 전문가는 달라도 뭐가 다르네요",
+                    subtitle: "텍스트 AI 400회, 막힘 없이!",
+                },
+                {
+                    title: "이미지 걱정말고 생산하세요",
+                    subtitle: "이미지 AI 250회, 전문가라면 필요하죠",
                 },
                 {
                     subtitle: "광고 없는 쾌적한 환경",
@@ -102,8 +122,8 @@ export const PLAN_DATA = {
             planType: "lite",
         },
         {
-            title: "포켓 프롬프트 Pro",
-            price: "₩199,000",
+            title: "포켓 프롬프트 Standard",
+            price: "₩299,000",
             period: "년",
             features: [
                 {
@@ -112,7 +132,27 @@ export const PLAN_DATA = {
                 },
                 {
                     title: "이미지도 빠질 수 없겠죠?",
-                    subtitle: "이미지 AI 100회, 감성부터 밈까지 OK!",
+                    subtitle: "이미지 AI 120회, 감성부터 밈까지 OK!",
+                },
+                {
+                    subtitle: "광고 없는 쾌적한 환경",
+                },
+            ],
+            buttonLabel: "구독하기",
+            planType: "plus",
+        },
+        {
+            title: "포켓 프롬프트 Pro",
+            price: "₩499,000",
+            period: "년",
+            features: [
+                {
+                    title: "AI 전문가는 달라도 뭐가 다르네요",
+                    subtitle: "텍스트 AI 400회, 막힘 없이!",
+                },
+                {
+                    title: "이미지 걱정말고 생산하세요",
+                    subtitle: "이미지 AI 250회, 전문가라면 필요하죠",
                 },
                 {
                     subtitle: "광고 없는 쾌적한 환경",
