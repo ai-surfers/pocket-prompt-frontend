@@ -1,15 +1,17 @@
-import Image from "next/image";
-import styled from "styled-components";
+import { useDeviceSize } from "@/components/DeviceContext";
+import { HOME_BANNER_SLIDES, HOME_BANNER_SLIDES_IMAGE } from "@/core/Banner";
+import useEmblaLoop from "@/hooks/ui/useEmblaLoop";
 import {
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useRecoilValue } from "recoil";
-import { useDeviceSize } from "@/components/DeviceContext";
-import { HOME_BANNER_SLIDES } from "@/core/Banner";
-import useEmblaLoop from "@/hooks/ui/useEmblaLoop";
+import styled from "styled-components";
 
 const Banner = () => {
+    const pathname = usePathname();
     const searchedkeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
     const { isUnderTablet, isMobile } = useDeviceSize();
@@ -20,10 +22,14 @@ const Banner = () => {
         window.open(src, "_blank");
     };
 
-    const slides = HOME_BANNER_SLIDES.map((slide) => (
+    const bannerSlides =
+        pathname === "/image" ? HOME_BANNER_SLIDES_IMAGE : HOME_BANNER_SLIDES;
+
+    const slides = bannerSlides.map((slide) => (
         <Image
+            key={slide.linkSrc}
             src={isMobile ? slide.mobileImgSrc : slide.imgSrc}
-            alt="banner-ai-prompt"
+            alt="banner"
             width={isMobile ? 736 : 808}
             height={isMobile ? 320 : 124}
             style={{ borderRadius: "15px" }}

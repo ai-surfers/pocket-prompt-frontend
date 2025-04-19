@@ -34,7 +34,7 @@ export default function EditDropdown({ prompt }: EditDropdownProps) {
         {
             key: "2",
             label: (
-                <Link href={`/prompt-edit-v2/${prompt.id}`}>
+                <Link href={`/prompt-edit/${prompt.id}?type=${prompt.type}`}>
                     <Text
                         font="b3_14_med"
                         color="G_600"

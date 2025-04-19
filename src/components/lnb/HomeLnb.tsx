@@ -1,14 +1,13 @@
 "use client";
 
-import React from "react";
-import LNB, { MenuItemsType } from "../lnb";
-import { useDeviceSize } from "@components/DeviceContext";
-import Text from "@/components/common/Text/Text";
 import Icon from "@/components/common/Icon";
+import Text from "@/components/common/Text/Text";
 import useToast from "@/hooks/useToast";
-import Button from "../common/Button/Button";
-import Link from "next/link";
 import { useUser } from "@/hooks/useUser";
+import { useDeviceSize } from "@components/DeviceContext";
+import Link from "next/link";
+import Button from "../common/Button/Button";
+import LNB, { MenuItemsType } from "../lnb";
 
 interface HomeLnbType {
     initialMenu: string;
@@ -30,14 +29,7 @@ const HomeLnb = ({ initialMenu }: HomeLnbType) => {
             key: "2",
             label: "이미지 프롬프트",
             iconType: "Image",
-            onClick: () =>
-                showToast({
-                    title: "이미지 프롬프트는 아직 준비 중인 기능이에요.",
-                    subTitle:
-                        "더 많은 프롬프트 탐색을 위해 빠르게 준비하고 있을게요!",
-                    iconName: "Timer",
-                }),
-            disabled: true,
+            route: "/image",
         },
         {
             key: "3",
@@ -73,7 +65,7 @@ const HomeLnb = ({ initialMenu }: HomeLnbType) => {
     };
 
     const newPropmptButton = userData.isLogin ? (
-        <Link href="/prompt-new-v2">
+        <Link href="/prompt-new">
             <Button
                 id="register-prompt"
                 style={{ padding: "8px 12px", gap: 2 }}

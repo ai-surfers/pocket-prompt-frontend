@@ -3,7 +3,12 @@
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
 import Toggle from "@/components/common/Toggle/Toggle";
-import { AIPlatforms, Categories } from "@/core/Prompt";
+import {
+    AIPlatforms,
+    Categories,
+    ImageCategories,
+    ImgAIPlatforms,
+} from "@/core/Prompt";
 import { PromptSchemaType } from "@/schema/PromptSchema";
 import { useDeviceSize } from "@components/DeviceContext";
 import { Select } from "antd";
@@ -17,7 +22,24 @@ const CATEGORY = Object.entries(Categories).map(([key, value]) => ({
     value: key,
 }));
 
+const IMAGE_CATEGORY_OPTIONS = Object.entries(ImageCategories).map(
+    ([key, value]) => ({
+        key,
+        value: key,
+        label: (
+            <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                {value.ko}
+            </span>
+        ),
+    })
+);
+
 const AI = Object.entries(AIPlatforms).map(([key, value]) => ({
+    key: key,
+    value: value,
+}));
+
+const IMG_AI = Object.entries(ImgAIPlatforms).map(([key, value]) => ({
     key: key,
     value: value,
 }));
@@ -25,9 +47,14 @@ const AI = Object.entries(AIPlatforms).map(([key, value]) => ({
 interface FormSectionProps {
     onSubmit: () => void;
     isEdit: boolean;
+    isImagePrompt: boolean;
 }
 
-function FormThirdSecion({ onSubmit, isEdit }: FormSectionProps) {
+function FormThirdSecion({
+    onSubmit,
+    isEdit,
+    isImagePrompt,
+}: FormSectionProps) {
     const { control, watch } = useFormContext<PromptSchemaType>();
     const { isUnderTablet } = useDeviceSize();
     const promptTemplateValue = watch("prompt_template") || "";
@@ -52,7 +79,7 @@ function FormThirdSecion({ onSubmit, isEdit }: FormSectionProps) {
                                     marginTop: "8px",
                                 }}
                                 mode="multiple"
-                                options={AI}
+                                options={isImagePrompt ? IMG_AI : AI}
                                 value={field.value}
                                 onChange={field.onChange}
                             />
@@ -77,7 +104,11 @@ function FormThirdSecion({ onSubmit, isEdit }: FormSectionProps) {
                                 }}
                                 mode="multiple"
                                 maxCount={5}
-                                options={CATEGORY}
+                                options={
+                                    isImagePrompt
+                                        ? IMAGE_CATEGORY_OPTIONS
+                                        : CATEGORY
+                                }
                                 value={field.value}
                                 onChange={field.onChange}
                             />
@@ -129,6 +160,7 @@ const Box = styled.div<{ $isUnderTablet: boolean }>`
     border-radius: 16px;
     background: #fff;
     padding-right: ${({ $isUnderTablet }) => ($isUnderTablet ? "10%" : "20px")};
+    width: ${({ $isUnderTablet }) => ($isUnderTablet ? "100%" : "")};
 `;
 
 const FormWrapper = styled.form`

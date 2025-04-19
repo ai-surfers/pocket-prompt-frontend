@@ -6,7 +6,7 @@ import { PromptDetails } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
 import Text from "@/components/common/Text/Text";
-import { Categories } from "@/core/Prompt";
+import { Categories, Category, ImageCategories } from "@/core/Prompt";
 import useToast from "@/hooks/useToast";
 import { useUser } from "@/hooks/useUser";
 import { copyClipboard } from "@/utils/promptUtils";
@@ -18,7 +18,6 @@ import styled from "styled-components";
 import { Wrapper } from "../layout/LayoutClient";
 import BookmarkButton from "./BookmarkButton";
 import EditDropdown from "./EditDropdown";
-import Image from "next/image";
 import SampleImages from "./SampleImages";
 
 interface TopSectionProps {
@@ -90,13 +89,24 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
                     style={{ padding: "12px 16px 12px 12px" }}
                 >
                     <Flex gap={8}>
-                        {prompt.categories.map((cat) => (
-                            <Chip key={cat}>
-                                <Text font="b3_14_med" color="white">
-                                    {Categories[cat].ko}
-                                </Text>
-                            </Chip>
-                        ))}
+                        {prompt.categories.map((cat) => {
+                            const categoryMap: Category =
+                                prompt.type === "image"
+                                    ? ImageCategories
+                                    : Categories;
+
+                            const categoryInfo = categoryMap[cat];
+
+                            if (!categoryInfo) return null; // 잘못된 키일 경우 무시
+
+                            return (
+                                <Chip key={cat}>
+                                    <Text font="b3_14_med" color="white">
+                                        {categoryInfo.ko}
+                                    </Text>
+                                </Chip>
+                            );
+                        })}
                     </Flex>
 
                     <Flex gap={20} wrap>
@@ -136,8 +146,8 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
                         </Flex>
                     </Flex>
                 </InformationContainer>
-                {prompt.sample_images?.length > 0 && (
-                    <SampleImages sampleImages={prompt.sample_images} />
+                {prompt.sample_media?.length > 0 && (
+                    <SampleImages sampleImages={prompt.sample_media} />
                 )}
             </Wrapper>
         </TopContainer>

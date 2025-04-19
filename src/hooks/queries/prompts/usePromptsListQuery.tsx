@@ -16,15 +16,20 @@ export interface PromptQueryProps {
     query?: string;
     categories?: string;
     viewType?: ViewType;
+    prompt_type?: "text" | "image" | "video";
 }
 
-const usePromptsListQuery = ({
-    sortBy,
-    limit,
-    query,
-    categories,
-    viewType = "open",
-}: PromptQueryProps) => {
+const usePromptsListQuery = (
+    {
+        sortBy,
+        limit,
+        query,
+        categories,
+        viewType = "open",
+        prompt_type,
+    }: PromptQueryProps,
+    skip: boolean = false // skip을 별도의 매개변수로 추가
+) => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 18;
     const queryKey = PROMPT_KEYS.list({
@@ -35,6 +40,7 @@ const usePromptsListQuery = ({
         ...(limit !== undefined && { limit }),
         ...(query !== undefined && { query }),
         ...(categories !== undefined && { categories }),
+        ...(prompt_type !== undefined && { prompt_type }),
     });
 
     const { data, isLoading, refetch } = useQuery<GetPromptsListResponse>({
@@ -48,10 +54,13 @@ const usePromptsListQuery = ({
                 sort_order: "desc",
                 query: query,
                 categories: categories,
+                prompt_type: prompt_type,
             }).then((res) => res),
         staleTime: 0,
         refetchOnMount: "always",
+        enabled: !skip, // skip이 true면 쿼리를 비활성화
     });
+
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };

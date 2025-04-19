@@ -1,41 +1,58 @@
-// 단일 프롬프트
+"use client";
 
-import theme from "@/styles/theme";
-import { useResetRecoilState } from "recoil";
-import { pocketRunState } from "@/states/pocketRunState";
-import styled from "styled-components";
-import { useRouter } from "next/navigation";
 import Icon from "@/components/common/Icon";
+import Text from "@/components/common/Text/Text";
+import { pocketRunState } from "@/states/pocketRunState";
+import {
+    searchedCategoryState,
+    searchedKeywordState,
+} from "@/states/searchState";
+import theme from "@/styles/theme";
+import { useRouter } from "next/navigation";
+import { useRecoilValue, useResetRecoilState } from "recoil";
+import styled from "styled-components";
 
-interface PromptProps {
+interface PromptCardTextProps {
     colored?: boolean;
     title: string;
     description: string;
     views: number;
     star: number;
     usages: number;
-    index: number;
     id: string;
+    index?: number;
     isMiniHeight: boolean;
 }
 
-const Prompt = ({
+const PromptCardText = ({
     colored = false,
     title,
     description,
     views,
     star,
     usages,
-    index,
     id,
+    index,
     isMiniHeight,
-}: PromptProps) => {
+}: PromptCardTextProps) => {
     const pointColor = colored ? theme.colors.primary : theme.colors.G_400;
     const resetPocketRunState = useResetRecoilState(pocketRunState);
     const router = useRouter();
+    const searchedKeyword = useRecoilValue(searchedKeywordState);
+    const searchedCategory = useRecoilValue(searchedCategoryState);
 
     const handleClick = () => {
-        router.push(`/prompt/${id}`);
+        // 검색어와 카테고리가 있을 때만 쿼리 파라미터 추가
+        const query = new URLSearchParams();
+        if (searchedKeyword && searchedKeyword.trim() !== "") {
+            query.set("keyword", searchedKeyword);
+        }
+        if (searchedCategory && searchedCategory !== "total") {
+            query.set("category", searchedCategory);
+        }
+
+        const queryString = query.toString();
+        router.push(`/prompt/${id}${queryString ? `?${queryString}` : ""}`);
         resetPocketRunState();
     };
 
@@ -45,37 +62,49 @@ const Prompt = ({
             onClick={handleClick}
             $isMiniHeight={isMiniHeight}
         >
+            {/* {index && (
+                <NumberTag>
+                    <Text font="body2" color="white">
+                        {index}
+                    </Text>
+                </NumberTag>
+            )} */}
+
             {colored && <NumberTag>{index}</NumberTag>}
             <TitlesWrapper>
-                <Title $colored={colored}>{title}</Title>
-                <Subtitle $isMiniHeight={isMiniHeight}>{description}</Subtitle>
+                <Title $colored={colored}>
+                    <Text font="body1" color="G_600">
+                        {title}
+                    </Text>
+                </Title>
+                <Subtitle $isMiniHeight={isMiniHeight}>
+                    <Text font="body3" color="G_400">
+                        {description}
+                    </Text>
+                </Subtitle>
             </TitlesWrapper>
             <DetailsWrapper>
                 <Details>
-                    <Icon name="Eye" color={colored ? "primary" : "G_400"} />
-                    <Numbers color={pointColor}>{views}</Numbers>
+                    <Icon name="Eye" color="G_400" />
+                    <Numbers color={theme.colors.G_400}>{views}</Numbers>
                 </Details>
                 <Details>
-                    <Icon name="Play" color={colored ? "primary" : "G_400"} />
-                    <Numbers color={pointColor}>{usages}</Numbers>
+                    <Icon name="Play" color="G_400" />
+                    <Numbers color={theme.colors.G_400}>{usages}</Numbers>
                 </Details>
                 <Details>
-                    <Icon
-                        name="Bookmark"
-                        color={colored ? "primary" : "G_400"}
-                    />
-                    <Numbers color={pointColor}>{star}</Numbers>
+                    <Icon name="Bookmark" color="G_400" />
+                    <Numbers color={theme.colors.G_400}>{star}</Numbers>
                 </Details>
             </DetailsWrapper>
         </PromptWrapper>
     );
 };
 
-export default Prompt;
+export default PromptCardText;
 
 const PromptWrapper = styled.div<{ $colored: boolean; $isMiniHeight: boolean }>`
     ${({ theme }) => theme.mixins.flexBox("column", "space-between")};
-
     padding: 16px;
     width: 100%;
     height: ${({ $isMiniHeight }) => ($isMiniHeight ? "133px" : "157px")};
@@ -84,14 +113,12 @@ const PromptWrapper = styled.div<{ $colored: boolean; $isMiniHeight: boolean }>`
     border: 1.5px solid;
     border-color: ${({ theme, $colored }) =>
         $colored ? "#ACB3F2" : theme.colors.primary_20};
-    padding: 16px;
     gap: 9.5px;
     background-color: ${({ $colored, theme }) =>
         $colored ? "#F2F3FD" : theme.colors.white};
     position: relative;
     cursor: pointer;
     transition: box-shadow 0.3s ease;
-
     flex-shrink: 0;
 
     &:hover {
@@ -121,6 +148,10 @@ const TitlesWrapper = styled.div`
     border-bottom: 1.5px solid;
     border-color: ${({ theme }) => theme.colors.primary_20};
     overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 `;
 
 const Title = styled.div<{ $colored: boolean }>`
@@ -158,7 +189,7 @@ const Details = styled.div`
     gap: 4px;
 `;
 
-const Numbers = styled.div`
+const Numbers = styled.div<{ color: string }>`
     color: ${({ color }) => color};
     ${({ theme }) => theme.fonts.body3};
     ${({ theme }) => theme.fonts.regular};

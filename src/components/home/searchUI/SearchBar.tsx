@@ -1,31 +1,25 @@
-// import Search from "@/assets/svg/home/Search";
+"use client";
+
 import Icon from "@/components/common/Icon";
 import Input from "@/components/common/Input/Input";
-import {
-    keywordState,
-    searchedCategoryState,
-    searchedKeywordState,
-} from "@/states/searchState";
-import { useEffect } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
-const SearchBar = () => {
-    const [keyword, setKeyword] = useRecoilState(keywordState);
-    const setSearchedKeyword = useSetRecoilState(searchedKeywordState);
-    const setSearchedCategory = useSetRecoilState(searchedCategoryState);
+// TypeScript 타입 정의
+interface SearchBarProps {
+    value: string; // 검색어 값
+    onChange: (value: string) => void; // 검색어 변경 핸들러
+    onEnter: () => void; // Enter 키 입력 핸들러
+    placeholder?: string; // 플레이스홀더 (선택적)
+    id?: string; // 입력 요소 ID (선택적)
+}
 
-    const handleChange = () => {
-        setSearchedKeyword(keyword);
-        setSearchedCategory("");
-    };
-
-    useEffect(() => {
-        return () => {
-            // setSearchedKeyword("");
-        };
-    }, []);
-
+const SearchBar = ({
+    value,
+    onChange,
+    onEnter,
+    placeholder = "필요한 프롬프트를 검색해보세요",
+    id = "search-input",
+}: SearchBarProps) => {
     return (
         <InputWrapper>
             <SearchIcon>
@@ -33,11 +27,11 @@ const SearchBar = () => {
             </SearchIcon>
 
             <Input
-                id="search-input"
-                placeholder="필요한 프롬프트를 검색해보세요"
-                value={keyword}
-                onChange={setKeyword}
-                onEnter={handleChange}
+                id={id}
+                placeholder={placeholder}
+                value={value}
+                onChange={onChange}
+                onEnter={onEnter}
             />
         </InputWrapper>
     );
