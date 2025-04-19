@@ -96,7 +96,7 @@ export default function Plan() {
                             isHighlight={index !== 0}
                             isSubscribing={
                                 Number(plan.price.replace(/[₩,]/g, "")) ===
-                                    subscriptionData?.price ?? 0
+                                subscriptionData?.price
                             }
                             onClick={() => handleStartClick(plan.planType)}
                         />
