@@ -1,8 +1,9 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import { Button, Card, Flex } from "antd";
+import { Card, Flex } from "antd";
 import Text from "@/components/common/Text/Text";
 import CheckBox from "@svg/extension/CheckBox";
+import Button from "@/components/common/Button/Button";
 
 interface FeaturesType {
     title?: string;
@@ -17,6 +18,7 @@ interface PlanCardProps {
     period: string;
     features: FeaturesType[];
     buttonLabel: string;
+    isSubscribing: boolean;
     isHighlight: boolean;
     onClick: () => void;
 }
@@ -27,10 +29,10 @@ export default function PlanCard({
     period,
     features,
     buttonLabel,
+    isSubscribing,
     isHighlight,
     onClick,
 }: PlanCardProps) {
-    console.log(features);
     return (
         <StyledCard isHighlight={isHighlight}>
             <Frame>
@@ -51,9 +53,13 @@ export default function PlanCard({
                     <Divider />
                     <FeatureList features={features} />
                 </div>
-                <StartButton type="primary" onClick={onClick}>
-                    {buttonLabel}
-                </StartButton>
+                <Button
+                    hierarchy={isSubscribing ? "disabled" : "primary"}
+                    onClick={onClick}
+                    style={{ justifyContent: "center", height: "44px" }}
+                >
+                    {isSubscribing ? "사용 중" : buttonLabel}
+                </Button>
             </Frame>
         </StyledCard>
     );
@@ -139,11 +145,11 @@ const Frame = styled.div`
     justify-content: space-between;
 `;
 
-const StartButton = styled(Button)`
-    width: 100%;
-    background-color: ${({ theme }) => theme.colors.primary};
-    padding: 20px 0;
-`;
+// const StartButton = styled(Button)`
+//     width: 100%;
+//     background-color: ${({ theme }) => theme.colors.primary};
+//     padding: 20px 0;
+// `;
 
 const TextContainer = styled.div`
     display: flex;
