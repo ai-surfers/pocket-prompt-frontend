@@ -104,7 +104,7 @@ const FeatureList: React.FC<{ features: FeaturesType[] }> = ({ features }) => (
                         {feature.subtitle}
                     </Text>
                     <Text
-                        font="c1_12_reg"
+                        font="c1_12_med"
                         color="G_400"
                         style={{
                             display: "flex",
