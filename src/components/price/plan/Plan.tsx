@@ -9,14 +9,21 @@ import YearlyFreeDescription from "@svg/Price/yearly-plan-free-description.svg";
 import Text from "@components/common/Text/Text";
 import { requestBillingKey } from "@/utils/billingUtils";
 import useToast from "@/hooks/useToast";
+import { useGetSubscription } from "@/hooks/queries/payments/useGetSubscription";
 
 export default function Plan() {
     const { userData } = useUser();
     const [billingCycle, setBillingCycle] = useState("월간");
     const showToast = useToast();
 
+    const { data: subscriptionData, refetch: refetchSuscriptionData } =
+        useGetSubscription({
+            isLogin: userData.isLogin,
+        });
+
     const { mutate: subscription } = usePostPayments({
         onSuccess(res) {
+            refetchSuscriptionData();
             showToast({
                 title: "정기결제가 등록되었어요.",
                 subTitle: "",
@@ -87,6 +94,10 @@ export default function Plan() {
                             features={plan.features}
                             buttonLabel={plan.buttonLabel}
                             isHighlight={index !== 0}
+                            isSubscribing={
+                                Number(plan.price.replace(/[₩,]/g, "")) ===
+                                subscriptionData?.price
+                            }
                             onClick={() => handleStartClick(plan.planType)}
                         />
                     </AnimatedCard>

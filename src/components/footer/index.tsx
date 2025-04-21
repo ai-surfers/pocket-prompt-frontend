@@ -45,7 +45,7 @@ const Footer: React.FC = () => {
                         개인정보처리방침
                     </NavLink>
                 </NavLinks>
-                <CompanyName>레코듀 (RECORD:U)</CompanyName>
+                <CompanyName>시그마인</CompanyName>
                 <InfoSection>
                     <InfoColumn>
                         <InfoText>대표자명: 안대철</InfoText>
@@ -56,8 +56,7 @@ const Footer: React.FC = () => {
                     </InfoColumn>
                     <InfoColumn>
                         <InfoText>
-                            사업장 주소: 경기도 용인시 수지구 현암로 148, 6층
-                            2호
+                            사업장 주소: 경기도 안성시 석정2길 13-8, 102-404
                         </InfoText>
                         <InfoText>고객센터: 010-5675-1056</InfoText>
                         <InfoText>이메일: yoonkwonai@gmail.com</InfoText>

@@ -93,6 +93,16 @@ export const PocketRunModel: Record<
         value: "gpt-4o-mini",
     },
     ChatGPT: { id: "gpt-pocket-run-toggle", label: "ChatGPT", value: "gpt-4o" },
+    Claude: {
+        id: "claude-pocket-run-toggle",
+        label: "Claude",
+        value: "claude-3-7-sonnet-latest",
+    },
+    Perplexity: {
+        id: "perplexity-pocket-run-toggle",
+        label: "Perplexity",
+        value: "perplexity/sonar-pro",
+    },
 };
 
 export enum InputType {
