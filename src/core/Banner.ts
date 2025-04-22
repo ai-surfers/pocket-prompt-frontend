@@ -51,21 +51,25 @@ export const HOME_BANNER_SLIDES_IMAGE: {
     {
         imgSrc: CreateImagePrompt,
         mobileImgSrc: CreateImagePrompt,
-        linkSrc: "https://example.com/image-banner",
+        linkSrc:
+            "https://pocket-prompt.notion.site/1d8d02185fca802dacbefee6faf6473e",
     },
     {
         imgSrc: ModelPrompt,
         mobileImgSrc: ModelPrompt,
-        linkSrc: "https://example.com/image-banner",
+        linkSrc:
+            "https://pocket-prompt.notion.site/10-1d8d02185fca80f2add1c41aee0c08cd",
     },
     {
         imgSrc: AnimalPrompt,
         mobileImgSrc: AnimalPrompt,
-        linkSrc: "https://example.com/image-banner",
+        linkSrc:
+            "https://pocket-prompt.notion.site/10-1d8d02185fca804393c8d592216c7687",
     },
     {
         imgSrc: IconPrompt,
         mobileImgSrc: IconPrompt,
-        linkSrc: "https://example.com/image-banner",
+        linkSrc:
+            "https://pocket-prompt.notion.site/3D-10-1d8d02185fca805ab5f0d37d707cc29d",
     },
 ];

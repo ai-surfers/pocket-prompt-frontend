@@ -1,27 +1,85 @@
-import { Flex } from "antd";
+"use client";
+
+import { Flex, Modal } from "antd";
 import Image from "next/image";
+import { useState } from "react";
 import styled from "styled-components";
 import Text from "../common/Text/Text";
 
-const SampleImages = ({ sampleImages }: { sampleImages: string[] }) => {
+interface SampleImagesProps {
+    sampleImages: string[];
+}
+
+const SampleImages = ({ sampleImages }: SampleImagesProps) => {
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+    const handleImageClick = (imgSrc: string) => {
+        setPreviewImage(imgSrc);
+    };
+
+    const handleClosePreview = () => {
+        setPreviewImage(null);
+    };
+
     return (
-        <Flex vertical gap={8} style={{ marginTop: "40px" }}>
-            <Text font="c1_12_reg" color="G_400">
-                미리보기의 이미지들은 실제 포켓런 결과와 차이가 있을 수
-                있습니다.
-            </Text>
-            <SampleImageContainer style={{ paddingBottom: "10px" }}>
-                {sampleImages.map((imgSrc, index) => (
-                    <CustomImage
-                        key={index}
-                        src={imgSrc}
-                        alt={`sample${index}`}
-                        width={112}
-                        height={112}
+        <>
+            <Flex vertical gap={8} style={{ marginTop: "40px" }}>
+                <Text font="c1_12_reg" color="G_400">
+                    미리보기의 이미지들은 실제 포켓런 결과와 차이가 있을 수
+                    있습니다.
+                </Text>
+                <SampleImageContainer style={{ paddingBottom: "10px" }}>
+                    {sampleImages.map((imgSrc, index) => (
+                        <ImageWrapper
+                            key={index}
+                            onClick={() => handleImageClick(imgSrc)}
+                        >
+                            <CustomImage
+                                src={imgSrc}
+                                alt={`sample${index}`}
+                                width={112}
+                                height={112}
+                                style={{ objectFit: "cover" }}
+                                sizes="(max-width: 768px) 100vw, 112px"
+                            />
+                        </ImageWrapper>
+                    ))}
+                </SampleImageContainer>
+            </Flex>
+
+            <Modal
+                open={!!previewImage}
+                onCancel={handleClosePreview}
+                footer={null}
+                centered
+                width="auto"
+                styles={{
+                    body: {
+                        padding: 0,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    },
+                }}
+            >
+                {previewImage && (
+                    <PreviewImage
+                        src={previewImage}
+                        alt="Image Preview"
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        style={{
+                            width: "100%",
+                            height: "auto",
+                            maxWidth: "90vw",
+                            maxHeight: "80vh",
+                            objectFit: "contain",
+                        }}
                     />
-                ))}
-            </SampleImageContainer>
-        </Flex>
+                )}
+            </Modal>
+        </>
     );
 };
 
@@ -55,6 +113,17 @@ const SampleImageContainer = styled(Flex)`
     }
 `;
 
+const ImageWrapper = styled.div`
+    cursor: pointer;
+    flex: 0 0 auto;
+`;
+
 const CustomImage = styled(Image)`
+    border-radius: 12px;
+    width: 112px;
+    height: 112px;
+`;
+
+const PreviewImage = styled(Image)`
     border-radius: 12px;
 `;
