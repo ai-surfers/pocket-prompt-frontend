@@ -102,7 +102,7 @@ const Card = styled.div<{
 }>`
     position: relative;
     width: 100%;
-    height: ${({ $isMiniHeight }) => ($isMiniHeight ? "133px" : "157px")};
+    height: ${({ $isMiniHeight }) => ($isMiniHeight ? "133px" : "187px")};
     border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
