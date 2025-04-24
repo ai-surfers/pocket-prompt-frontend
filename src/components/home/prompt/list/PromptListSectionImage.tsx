@@ -2,6 +2,10 @@
 
 import { getPromptsList } from "@/apis/prompt/prompt";
 import { PromptDetails, SortType } from "@/apis/prompt/prompt.model";
+import {
+    searchedCategoryState,
+    searchedKeywordState,
+} from "@/states/searchState";
 import { sortTypeState } from "@/states/sortState";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
@@ -19,12 +23,31 @@ const PromptListSectionImage = ({
     const [top7Days, setTop7Days] = useState<PromptDetails[]>([]);
     const [top30Days, setTop30Days] = useState<PromptDetails[]>([]);
     const [allPrompts, setAllPrompts] = useState<PromptDetails[]>([]);
-    const sortBy = useRecoilValue(sortTypeState); // sortBy 상태를 가져옴
+    const sortBy = useRecoilValue(sortTypeState);
+    const searchedCategory = useRecoilValue(searchedCategoryState);
+    const searchedKeyword = useRecoilValue(searchedKeywordState);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const type = "image";
+
+                // "total" 섹션의 데이터를 불러올 때 카테고리와 키워드를 반영
+                const allPromptsParams: any = {
+                    prompt_type: type,
+                    view_type: "open",
+                    sort_by: sortBy ?? "created_at",
+                    limit: 50,
+                    page: 1,
+                };
+
+                // 카테고리와 키워드를 반영
+                if (searchedKeyword && searchedKeyword.trim() !== "") {
+                    allPromptsParams.query = searchedKeyword;
+                }
+                if (searchedCategory && searchedCategory !== "total") {
+                    allPromptsParams.categories = searchedCategory;
+                }
 
                 const [monthRes, weekRes, allRes] = await Promise.all([
                     getPromptsList({
@@ -41,13 +64,7 @@ const PromptListSectionImage = ({
                         limit: 9,
                         page: 1,
                     }),
-                    getPromptsList({
-                        prompt_type: type,
-                        view_type: "open",
-                        sort_by: sortBy ?? "created_at", // sortBy를 사용
-                        limit: 50,
-                        page: 1,
-                    }),
+                    getPromptsList(allPromptsParams),
                 ]);
 
                 const monthTop3 = monthRes.prompt_info_list;
@@ -65,7 +82,7 @@ const PromptListSectionImage = ({
         };
 
         fetchData();
-    }, [sortBy]); // sortBy가 변경될 때마다 데이터를 새로 불러옴
+    }, [sortBy, searchedCategory, searchedKeyword]);
 
     return (
         <PromptListSectionBase
@@ -89,12 +106,12 @@ const PromptListSectionImage = ({
                     renderSortBy === "usages_30_days"
                 ) {
                     data = top30Days;
-                } else if (searchType === "total") {
-                    data = allPrompts;
                 } else if (
-                    searchType === "search" ||
+                    searchType === "total" ||
                     searchType === "category"
                 ) {
+                    data = allPrompts; // category일 때도 allPrompts를 사용
+                } else if (searchType === "search") {
                     data = searchResults || [];
                 }
 

@@ -21,7 +21,7 @@ import {
 import { sortTypeState } from "@/states/sortState";
 import { Col, Flex, Pagination, Row, Select } from "antd";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import PromptCardImage from "./card/PromptCardImage";
@@ -59,8 +59,8 @@ const PromptList = ({
     // "popular" 섹션에서는 sortBy를 무시하고 defaultSortBy를 사용, undefined일 경우 기본값 설정
     const effectiveSortBy: SortType =
         searchType === "popular"
-            ? defaultSortBy ?? "usages_7_days" // defaultSortBy가 없으면 기본값 설정
-            : sortBy ?? "created_at"; // sortBy가 없으면 기본값 설정
+            ? defaultSortBy ?? "usages_7_days"
+            : sortBy ?? "created_at";
 
     // externalItems가 있으면 API 호출을 스킵
     const shouldUseQuery = !externalItems;
@@ -86,37 +86,40 @@ const PromptList = ({
         isLoading,
     } = usePromptsListQuery(queryParams, !shouldUseQuery);
 
-    // externalItems가 있으면 그것을 사용, 없으면 쿼리된 데이터 사용
-    const [sortedItems, setSortedItems] = useState<PromptDetails[]>(
-        externalItems ?? queriedItems
-    );
+    // 데이터 소스를 결정
+    const dataSource = externalItems ?? queriedItems ?? [];
 
-    // Sort external items locally if provided
+    // 디버깅 로그 추가
     useEffect(() => {
-        if (externalItems) {
-            const sorted = [...externalItems].sort((a, b) => {
-                if (effectiveSortBy === "created_at") {
-                    return (
-                        new Date(b.created_at).getTime() -
-                        new Date(a.created_at).getTime()
-                    );
-                } else if (effectiveSortBy === "star") {
-                    return (b.star || 0) - (a.star || 0);
-                } else if (effectiveSortBy === "relevance" && searchedKeyword) {
-                    // 관련도 정렬 로직 필요 시 구현
-                    return 0;
-                } else if (effectiveSortBy === "usages_7_days") {
-                    return (b.usages || 0) - (a.usages || 0);
-                } else if (effectiveSortBy === "usages_30_days") {
-                    return (b.usages || 0) - (a.usages || 0);
-                }
+        console.log("PromptList - externalItems:", externalItems);
+        console.log("PromptList - queriedItems:", queriedItems);
+        console.log("PromptList - dataSource:", dataSource);
+    }, [externalItems, queriedItems, dataSource]);
+
+    // 데이터 정렬 로직을 useMemo로 최적화
+    const sortedItems = useMemo(() => {
+        const itemsToSort = [...dataSource];
+        const sorted = itemsToSort.sort((a, b) => {
+            if (effectiveSortBy === "created_at") {
+                return (
+                    new Date(b.created_at).getTime() -
+                    new Date(a.created_at).getTime()
+                );
+            } else if (effectiveSortBy === "star") {
+                return (b.star || 0) - (a.star || 0);
+            } else if (effectiveSortBy === "relevance" && searchedKeyword) {
+                // 관련도 정렬 로직 필요 시 구현
                 return 0;
-            });
-            setSortedItems(sorted);
-        } else {
-            setSortedItems(queriedItems);
-        }
-    }, [externalItems, effectiveSortBy, queriedItems, searchedKeyword]);
+            } else if (effectiveSortBy === "usages_7_days") {
+                return (b.usages || 0) - (a.usages || 0);
+            } else if (effectiveSortBy === "usages_30_days") {
+                return (b.usages || 0) - (a.usages || 0);
+            }
+            return 0;
+        });
+        console.log("PromptList - sortedItems:", sorted); // 디버깅 로그 추가
+        return sorted;
+    }, [dataSource, effectiveSortBy, searchedKeyword]);
 
     // Public과 Private 프롬프트 개수 계산
     const [publicCount, setPublicCount] = useState(0);
@@ -191,6 +194,8 @@ const PromptList = ({
                     : item.visibility === "private"
             );
         }
+
+        console.log("PromptList - filteredItems:", filteredItems); // 디버깅 로그 추가
 
         if (!isLoading && filteredItems.length === 0) {
             return <EmptyPrompt viewType={viewType} />;
