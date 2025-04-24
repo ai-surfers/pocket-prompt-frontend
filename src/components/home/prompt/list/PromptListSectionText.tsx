@@ -1,8 +1,10 @@
 "use client";
 
 import { getPromptsList } from "@/apis/prompt/prompt";
-import { PromptDetails } from "@/apis/prompt/prompt.model";
+import { PromptDetails, SortType } from "@/apis/prompt/prompt.model";
+import { sortTypeState } from "@/states/sortState";
 import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 import PromptCardText from "../card/PromptCardText";
 import PromptList from "../PromptList";
 import PromptListSectionBase from "./PromptListSectionBase";
@@ -17,6 +19,7 @@ const PromptListSectionText = ({
     const [top7Days, setTop7Days] = useState<PromptDetails[]>([]);
     const [top30Days, setTop30Days] = useState<PromptDetails[]>([]);
     const [allPrompts, setAllPrompts] = useState<PromptDetails[]>([]);
+    const sortBy = useRecoilValue(sortTypeState); // sortBy 상태를 가져옴
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,7 +44,7 @@ const PromptListSectionText = ({
                     getPromptsList({
                         prompt_type: type,
                         view_type: "open",
-                        sort_by: "created_at",
+                        sort_by: sortBy ?? "created_at", // sortBy를 사용
                         limit: 50,
                         page: 1,
                     }),
@@ -62,7 +65,7 @@ const PromptListSectionText = ({
         };
 
         fetchData();
-    }, []);
+    }, [sortBy]); // sortBy가 변경될 때마다 데이터를 새로 불러옴
 
     return (
         <PromptListSectionBase
@@ -72,15 +75,18 @@ const PromptListSectionText = ({
                 viewType,
                 limit,
                 title,
-                sortBy,
+                sortBy: renderSortBy,
             }) => {
                 let data: PromptDetails[] = [];
 
-                if (searchType === "popular" && sortBy === "usages_7_days") {
+                if (
+                    searchType === "popular" &&
+                    renderSortBy === "usages_7_days"
+                ) {
                     data = top7Days;
                 } else if (
                     searchType === "popular" &&
-                    sortBy === "usages_30_days"
+                    renderSortBy === "usages_30_days"
                 ) {
                     data = top30Days;
                 } else if (searchType === "total") {
@@ -99,7 +105,7 @@ const PromptListSectionText = ({
                         viewType={viewType}
                         title={title}
                         limit={limit}
-                        defaultSortBy={sortBy}
+                        defaultSortBy={renderSortBy as SortType}
                         items={data}
                         renderItem={(item, index) => (
                             <PromptCardText

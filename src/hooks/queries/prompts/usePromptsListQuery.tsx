@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 export interface PromptQueryProps {
-    sortBy: SortType;
+    sortBy?: SortType; // sortBy를 선택적으로 변경
     limit?: number;
     query?: string;
     categories?: string;
@@ -28,7 +28,7 @@ const usePromptsListQuery = (
         viewType = "open",
         prompt_type,
     }: PromptQueryProps,
-    skip: boolean = false // skip을 별도의 매개변수로 추가
+    skip: boolean = false
 ) => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 18;
@@ -36,7 +36,7 @@ const usePromptsListQuery = (
         viewType,
         currentPage,
         itemsPerPage,
-        sortBy,
+        sortBy: sortBy ?? "created_at", // sortBy가 undefined일 경우 기본값 설정
         ...(limit !== undefined && { limit }),
         ...(query !== undefined && { query }),
         ...(categories !== undefined && { categories }),
@@ -48,7 +48,7 @@ const usePromptsListQuery = (
         queryFn: () =>
             getPromptsList({
                 view_type: viewType,
-                sort_by: sortBy,
+                sort_by: sortBy ?? "created_at", // sortBy가 undefined일 경우 기본값 설정
                 page: currentPage,
                 limit: limit ? limit : itemsPerPage,
                 sort_order: "desc",
@@ -58,7 +58,7 @@ const usePromptsListQuery = (
             }).then((res) => res),
         staleTime: 0,
         refetchOnMount: "always",
-        enabled: !skip, // skip이 true면 쿼리를 비활성화
+        enabled: !skip,
     });
 
     const handlePageChange = (page: number) => {

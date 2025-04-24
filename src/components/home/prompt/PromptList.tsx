@@ -56,13 +56,19 @@ const PromptList = ({
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchCategory = useRecoilValue(searchedCategoryState);
 
+    // "popular" 섹션에서는 sortBy를 무시하고 defaultSortBy를 사용, undefined일 경우 기본값 설정
+    const effectiveSortBy: SortType =
+        searchType === "popular"
+            ? defaultSortBy ?? "usages_7_days" // defaultSortBy가 없으면 기본값 설정
+            : sortBy ?? "created_at"; // sortBy가 없으면 기본값 설정
+
     // externalItems가 있으면 API 호출을 스킵
     const shouldUseQuery = !externalItems;
 
     // 쿼리 파라미터 로직
     const queryParams = {
         viewType: viewType,
-        sortBy: defaultSortBy || sortBy,
+        sortBy: effectiveSortBy,
         limit,
         ...(promptType ? { prompt_type: promptType } : {}),
         ...(searchedKeyword ? { query: searchedKeyword } : {}),
@@ -81,24 +87,53 @@ const PromptList = ({
     } = usePromptsListQuery(queryParams, !shouldUseQuery);
 
     // externalItems가 있으면 그것을 사용, 없으면 쿼리된 데이터 사용
-    const items = externalItems ?? queriedItems;
+    const [sortedItems, setSortedItems] = useState<PromptDetails[]>(
+        externalItems ?? queriedItems
+    );
+
+    // Sort external items locally if provided
+    useEffect(() => {
+        if (externalItems) {
+            const sorted = [...externalItems].sort((a, b) => {
+                if (effectiveSortBy === "created_at") {
+                    return (
+                        new Date(b.created_at).getTime() -
+                        new Date(a.created_at).getTime()
+                    );
+                } else if (effectiveSortBy === "star") {
+                    return (b.star || 0) - (a.star || 0);
+                } else if (effectiveSortBy === "relevance" && searchedKeyword) {
+                    // 관련도 정렬 로직 필요 시 구현
+                    return 0;
+                } else if (effectiveSortBy === "usages_7_days") {
+                    return (b.usages || 0) - (a.usages || 0);
+                } else if (effectiveSortBy === "usages_30_days") {
+                    return (b.usages || 0) - (a.usages || 0);
+                }
+                return 0;
+            });
+            setSortedItems(sorted);
+        } else {
+            setSortedItems(queriedItems);
+        }
+    }, [externalItems, effectiveSortBy, queriedItems, searchedKeyword]);
 
     // Public과 Private 프롬프트 개수 계산
     const [publicCount, setPublicCount] = useState(0);
     const [privateCount, setPrivateCount] = useState(0);
 
     useEffect(() => {
-        if (items && viewType === "my") {
-            const publicItems = items.filter(
+        if (sortedItems && viewType === "my") {
+            const publicItems = sortedItems.filter(
                 (item) => item.visibility === "public"
             ).length;
-            const privateItems = items.filter(
+            const privateItems = sortedItems.filter(
                 (item) => item.visibility === "private"
             ).length;
             setPublicCount(publicItems);
             setPrivateCount(privateItems);
         }
-    }, [items, viewType]);
+    }, [sortedItems, viewType]);
 
     useEffect(() => {
         // 다른 페이지로 이동했을 때 기본 정렬 재설정
@@ -148,9 +183,9 @@ const PromptList = ({
         }
 
         // viewType이 "my"일 때 탭에 따라 필터링
-        let filteredItems = items;
+        let filteredItems = sortedItems;
         if (viewType === "my") {
-            filteredItems = items.filter((item) =>
+            filteredItems = sortedItems.filter((item) =>
                 activeTab === "public"
                     ? item.visibility === "public"
                     : item.visibility === "private"
@@ -222,7 +257,7 @@ const PromptList = ({
                 ) : (
                     // 인기 프롬프트가 아닐 경우에만 정렬 SelectBox 표시
                     shouldShowSortAndPage &&
-                    items.length > 1 && (
+                    sortedItems.length > 1 && (
                         <SelectWrapper>
                             <Select
                                 id="prompt-sort-select"
@@ -245,7 +280,7 @@ const PromptList = ({
             </Row>
 
             {/* 인기 프롬프트가 아닐 경우에만 페이지네이션 표시 */}
-            {shouldShowSortAndPage && items.length > 1 && (
+            {shouldShowSortAndPage && sortedItems.length > 1 && (
                 <div style={{ margin: "0 auto" }}>
                     <Pagination
                         current={currentPage}
@@ -261,6 +296,7 @@ const PromptList = ({
 };
 
 export default PromptList;
+
 const SkeletonBox = styled.div`
     ${({ theme }) => theme.mixins.skeleton()};
     width: 100%;
