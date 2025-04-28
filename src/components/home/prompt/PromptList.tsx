@@ -1,35 +1,13 @@
-/**
- * @component PromptList
- * @description 프롬프트 리스트 api 결과를 보여 주고, pagination, sort, tab을 관리하는 컴포넌트.
- *
- * @props {boolean} usePage - 페이지네이션 사용 여부. 기본값은 true.
- * @props {"total" | "popular" | "search" | "category"} searchType - API 요청 시 사용할 검색 타입을 결정.
- * @props {ViewType} viewType - API 요청할 viewType을 결정. ("open" | "starred" | "my") -> 검색어의 경우에는 "open".
- * @props {React.ReactNode} title - 리스트 상단에 표시할 타이틀 컴포넌트.
- *
- * @features
- * - 프롬프트 종류에 따라 api 요청
- * - props에 따라 pagination, sort, tab 관리
- */
-
 import { PromptDetails, SortType, ViewType } from "@/apis/prompt/prompt.model";
 import usePromptsListQuery from "@/hooks/queries/prompts/usePromptsListQuery";
-import {
-    searchedCategoryState,
-    searchedKeywordState,
-} from "@/states/searchState";
-import { sortTypeState } from "@/states/sortState";
-import { Col, Flex, Pagination, Row, Select } from "antd";
-import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { usePromptList } from "@/hooks/ui/usePromptList";
+import { Col, Flex, Pagination, Row } from "antd";
 import styled from "styled-components";
-import PromptCardImage from "./card/PromptCardImage";
-import PromptCardText from "./card/PromptCardText";
+import SortSelect from "../searchUI/SortSelect";
 import EmptyPrompt from "./EmptyPrompt";
 
 interface PromptListProps {
-    items?: PromptDetails[];
+    items?: PromptDetails[]; // ✅ optional로 변경
     usePage?: boolean;
     searchType: "total" | "popular" | "search" | "category";
     viewType: ViewType;
@@ -37,7 +15,7 @@ interface PromptListProps {
     limit?: number;
     defaultSortBy?: SortType;
     promptType?: "text" | "image" | "video";
-    renderItem?: (item: any, index: number) => React.ReactNode;
+    renderItem: (item: any, index: number) => React.ReactNode;
 }
 
 const PromptList = ({
@@ -51,31 +29,7 @@ const PromptList = ({
     promptType,
     renderItem,
 }: PromptListProps) => {
-    const pathname = usePathname();
-    const [sortBy, setSortBy] = useRecoilState(sortTypeState);
-    const searchedKeyword = useRecoilValue(searchedKeywordState);
-    const searchCategory = useRecoilValue(searchedCategoryState);
-
-    // "popular" 섹션에서는 sortBy를 무시하고 defaultSortBy를 사용, undefined일 경우 기본값 설정
-    const effectiveSortBy: SortType =
-        searchType === "popular"
-            ? defaultSortBy ?? "usages_7_days"
-            : sortBy ?? "created_at";
-
-    // externalItems가 있으면 API 호출을 스킵
-    const shouldUseQuery = !externalItems;
-
-    // 쿼리 파라미터 로직
-    const queryParams = {
-        viewType: viewType,
-        sortBy: effectiveSortBy,
-        limit,
-        ...(promptType ? { prompt_type: promptType } : {}),
-        ...(searchedKeyword ? { query: searchedKeyword } : {}),
-        ...(searchCategory && searchCategory !== "total"
-            ? { categories: searchCategory }
-            : {}),
-    };
+    const isUsingExternalItems = !!externalItems; // ✅
 
     const {
         items: queriedItems,
@@ -84,100 +38,49 @@ const PromptList = ({
         itemsPerPage,
         handlePageChange,
         isLoading,
-    } = usePromptsListQuery(queryParams, !shouldUseQuery);
+    } = usePromptsListQuery(
+        {
+            viewType,
+            sortBy: defaultSortBy,
+            limit,
+            prompt_type: promptType,
+        },
+        isUsingExternalItems // ✅ 외부 데이터 있으면 쿼리 skip
+    );
 
-    // 데이터 소스를 결정
+    // ✅ 데이터 소스 결정
     const dataSource = externalItems ?? queriedItems ?? [];
 
-    // 디버깅 로그 추가
-    useEffect(() => {
-        console.log("PromptList - externalItems:", externalItems);
-        console.log("PromptList - queriedItems:", queriedItems);
-        console.log("PromptList - dataSource:", dataSource);
-    }, [externalItems, queriedItems, dataSource]);
+    const {
+        sortedItems,
+        effectiveSortBy,
+        activeTab,
+        setActiveTab,
+        publicCount,
+        privateCount,
+    } = usePromptList({
+        items: dataSource,
+        searchType,
+        viewType,
+        defaultSortBy,
+    });
 
-    // 데이터 정렬 로직을 useMemo로 최적화
-    const sortedItems = useMemo(() => {
-        const itemsToSort = [...dataSource];
-        const sorted = itemsToSort.sort((a, b) => {
-            if (effectiveSortBy === "created_at") {
-                return (
-                    new Date(b.created_at).getTime() -
-                    new Date(a.created_at).getTime()
-                );
-            } else if (effectiveSortBy === "star") {
-                return (b.star || 0) - (a.star || 0);
-            } else if (effectiveSortBy === "relevance" && searchedKeyword) {
-                // 관련도 정렬 로직 필요 시 구현
-                return 0;
-            } else if (effectiveSortBy === "usages_7_days") {
-                return (b.usages || 0) - (a.usages || 0);
-            } else if (effectiveSortBy === "usages_30_days") {
-                return (b.usages || 0) - (a.usages || 0);
-            }
-            return 0;
-        });
-        console.log("PromptList - sortedItems:", sorted); // 디버깅 로그 추가
-        return sorted;
-    }, [dataSource, effectiveSortBy, searchedKeyword]);
-
-    // Public과 Private 프롬프트 개수 계산
-    const [publicCount, setPublicCount] = useState(0);
-    const [privateCount, setPrivateCount] = useState(0);
-
-    useEffect(() => {
-        if (sortedItems && viewType === "my") {
-            const publicItems = sortedItems.filter(
-                (item) => item.visibility === "public"
-            ).length;
-            const privateItems = sortedItems.filter(
-                (item) => item.visibility === "private"
-            ).length;
-            setPublicCount(publicItems);
-            setPrivateCount(privateItems);
-        }
-    }, [sortedItems, viewType]);
-
-    useEffect(() => {
-        // 다른 페이지로 이동했을 때 기본 정렬 재설정
-        if (pathname !== "/" && !pathname.startsWith("/prompt/")) {
-            setSortBy("created_at");
-        }
-    }, [pathname, setSortBy]);
-
-    const handleSortChange = (value: SortType) => {
-        setSortBy(value);
-    };
-
-    // Select Box 옵션 구성
-    const selectOptions = [
-        { value: "created_at", label: "최신 순" },
-        ...(searchedKeyword
-            ? [{ value: "relevance", label: "관련도 순" }]
-            : []),
-        { value: "star", label: "인기 순" },
-    ];
-
-    // “인기 프롬프트”일 때 정렬/페이지네이션을 숨기기 위한 플래그
     const isPopularList = searchType === "popular";
     const shouldShowSortAndPage = usePage && !isPopularList;
-
-    // 페이지 내부 탭 예시(마이페이지 등)
-    const [activeTab, setActiveTab] = useState<"public" | "private">("public");
-
     const isPopularOrFeatured =
         searchType === "popular" || viewType === "featured";
 
-    // 콘텐츠 렌더링 분리 (로딩 중 / 데이터 없을 때 / 데이터 있을 때)
     const renderContent = () => {
-        if (isLoading && !externalItems) {
+        if (isUsingExternalItems === false && isLoading) {
+            // ✅ 외부 데이터 없고 로딩중일 때만 스켈레톤
             return Array.from({ length: limit ?? itemsPerPage }).map(
                 (_, idx) => (
                     <Col
-                        key={idx}
+                        key={`skeleton-${idx}`}
                         xs={24}
                         sm={isPopularOrFeatured ? 24 : 12}
                         md={isPopularOrFeatured ? 24 : 8}
+                        style={{ flexShrink: 0, display: "flex" }}
                     >
                         <SkeletonBox />
                     </Col>
@@ -185,23 +88,11 @@ const PromptList = ({
             );
         }
 
-        // viewType이 "my"일 때 탭에 따라 필터링
-        let filteredItems = sortedItems;
-        if (viewType === "my") {
-            filteredItems = sortedItems.filter((item) =>
-                activeTab === "public"
-                    ? item.visibility === "public"
-                    : item.visibility === "private"
-            );
-        }
-
-        console.log("PromptList - filteredItems:", filteredItems); // 디버깅 로그 추가
-
-        if (!isLoading && filteredItems.length === 0) {
+        if (!isLoading && sortedItems.length === 0) {
             return <EmptyPrompt viewType={viewType} />;
         }
 
-        return filteredItems.map((item, index) => (
+        return sortedItems.map((item, index) => (
             <Col
                 key={item.id}
                 xs={24}
@@ -209,31 +100,7 @@ const PromptList = ({
                 md={isPopularOrFeatured ? 24 : 8}
                 style={{ flexShrink: 0, display: "flex" }}
             >
-                {renderItem ? (
-                    renderItem(item, index)
-                ) : promptType === "image" ? (
-                    <PromptCardImage
-                        id={item.id}
-                        title={item.title}
-                        views={item.views}
-                        star={item.star}
-                        usages={item.usages}
-                        sampleMedia={item.sample_media ?? []}
-                        isMiniHeight={isPopularOrFeatured}
-                    />
-                ) : (
-                    <PromptCardText
-                        id={item.id}
-                        title={item.title}
-                        description={item.description}
-                        views={item.views}
-                        star={item.star}
-                        usages={item.usages}
-                        colored={false}
-                        index={index + 1}
-                        isMiniHeight={isPopularOrFeatured}
-                    />
-                )}
+                {renderItem(item, index)}
             </Col>
         ));
     };
@@ -243,7 +110,7 @@ const PromptList = ({
             <TitleWrapper $viewType={viewType}>
                 {title}
 
-                {/* 마이페이지의 public/private 탭 */}
+                {/* 마이페이지 탭 */}
                 {viewType === "my" ? (
                     <TabBarContainer>
                         <MyPageContentTab
@@ -260,18 +127,9 @@ const PromptList = ({
                         </MyPageContentTab>
                     </TabBarContainer>
                 ) : (
-                    // 인기 프롬프트가 아닐 경우에만 정렬 SelectBox 표시
                     shouldShowSortAndPage &&
                     sortedItems.length > 1 && (
-                        <SelectWrapper>
-                            <Select
-                                id="prompt-sort-select"
-                                value={sortBy}
-                                style={{ width: 123 }}
-                                onChange={handleSortChange}
-                                options={selectOptions}
-                            />
-                        </SelectWrapper>
+                        <SortSelect effectiveSortBy={effectiveSortBy} />
                     )
                 )}
             </TitleWrapper>
@@ -284,7 +142,7 @@ const PromptList = ({
                 {renderContent()}
             </Row>
 
-            {/* 인기 프롬프트가 아닐 경우에만 페이지네이션 표시 */}
+            {/* ✅ 페이지네이션은 외부 items 없을 때만 */}
             {shouldShowSortAndPage && sortedItems.length > 1 && (
                 <div style={{ margin: "0 auto" }}>
                     <Pagination

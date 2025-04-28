@@ -1,146 +1,170 @@
 "use client";
 
-import { getPromptsList } from "@/apis/prompt/prompt";
-import { PromptDetails, SortType } from "@/apis/prompt/prompt.model";
+import { PromptDetails } from "@/apis/prompt/prompt.model";
+import Text from "@/components/common/Text/Text";
+import { Categories, ImageCategories } from "@/core/Prompt";
 import {
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
-import { sortTypeState } from "@/states/sortState";
-import { useEffect, useState } from "react";
+import { Col, Row } from "antd";
 import { useRecoilValue } from "recoil";
+import styled from "styled-components";
 import PromptCardText from "../card/PromptCardText";
 import PromptList from "../PromptList";
-import PromptListSectionBase from "./PromptListSectionBase";
+
+interface PromptData {
+    top7Days: PromptDetails[];
+    top30Days: PromptDetails[];
+    allPrompts: PromptDetails[];
+}
 
 interface PromptListSectionTextProps {
+    promptData: PromptData;
     searchResults?: PromptDetails[];
 }
 
 const PromptListSectionText = ({
+    promptData,
     searchResults,
 }: PromptListSectionTextProps) => {
-    const [top7Days, setTop7Days] = useState<PromptDetails[]>([]);
-    const [top30Days, setTop30Days] = useState<PromptDetails[]>([]);
-    const [allPrompts, setAllPrompts] = useState<PromptDetails[]>([]);
-    const sortBy = useRecoilValue(sortTypeState);
-    const searchedCategory = useRecoilValue(searchedCategoryState);
+    const { top7Days, top30Days, allPrompts } = promptData;
+
     const searchedKeyword = useRecoilValue(searchedKeywordState);
+    const searchedCategory = useRecoilValue(searchedCategoryState);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const type = "text";
+    const top7 = top7Days.slice(0, 3);
+    const top7Ids = new Set(top7.map((item) => item.id));
+    const top30 = top30Days.filter((item) => !top7Ids.has(item.id)).slice(0, 3);
 
-                // "total" 섹션의 데이터를 불러올 때 카테고리와 키워드를 반영
-                const allPromptsParams: any = {
-                    prompt_type: type,
-                    view_type: "open",
-                    sort_by: sortBy ?? "created_at",
-                    limit: 50,
-                    page: 1,
-                };
+    const promptType: "text" | "image" = "text";
 
-                // 카테고리와 키워드를 반영
-                if (searchedKeyword && searchedKeyword.trim() !== "") {
-                    allPromptsParams.query = searchedKeyword;
-                }
-                if (searchedCategory && searchedCategory !== "total") {
-                    allPromptsParams.categories = searchedCategory;
-                }
+    const categoryKoName =
+        promptType === "text"
+            ? Categories[searchedCategory]?.ko
+            : ImageCategories[searchedCategory]?.ko;
 
-                const [monthRes, weekRes, allRes] = await Promise.all([
-                    getPromptsList({
-                        prompt_type: type,
-                        view_type: "open",
-                        sort_by: "usages_30_days",
-                        limit: 3,
-                        page: 1,
-                    }),
-                    getPromptsList({
-                        prompt_type: type,
-                        view_type: "open",
-                        sort_by: "usages_7_days",
-                        limit: 9,
-                        page: 1,
-                    }),
-                    getPromptsList(allPromptsParams),
-                ]);
+    const isSearching =
+        !!searchedKeyword || (searchedCategory && searchedCategory !== "total");
 
-                const monthTop3 = monthRes.prompt_info_list;
-                const weekFiltered = weekRes.prompt_info_list.filter(
-                    (item) => !monthTop3.some((m) => m.id === item.id)
-                );
-                const weekTop3 = weekFiltered.slice(0, 3);
+    // 검색 타이틀 구성
+    let titleText = "전체 프롬프트";
 
-                setTop30Days(monthTop3);
-                setTop7Days(weekTop3);
-                setAllPrompts(allRes.prompt_info_list);
-            } catch (err) {
-                console.error("Prompt list fetch error", err);
-            }
-        };
-
-        fetchData();
-    }, [sortBy, searchedCategory, searchedKeyword]);
+    if (searchedKeyword && searchedCategory && searchedCategory !== "total") {
+        titleText = `${categoryKoName}에서 "${searchedKeyword}" 검색 결과`;
+    } else if (searchedKeyword) {
+        titleText = `검색 결과: "${searchedKeyword}"`;
+    } else if (searchedCategory && searchedCategory !== "total") {
+        titleText = `${categoryKoName} 프롬프트`;
+    }
 
     return (
-        <PromptListSectionBase
-            promptType="text"
-            renderPromptList={({
-                searchType,
-                viewType,
-                limit,
-                title,
-                sortBy: renderSortBy,
-            }) => {
-                let data: PromptDetails[] = [];
-
-                if (
-                    searchType === "popular" &&
-                    renderSortBy === "usages_7_days"
-                ) {
-                    data = top7Days;
-                } else if (
-                    searchType === "popular" &&
-                    renderSortBy === "usages_30_days"
-                ) {
-                    data = top30Days;
-                } else if (
-                    searchType === "total" ||
-                    searchType === "category"
-                ) {
-                    data = allPrompts; // category일 때도 allPrompts를 사용
-                } else if (searchType === "search") {
-                    data = searchResults || [];
-                }
-
-                return (
-                    <PromptList
-                        promptType="text"
-                        searchType={searchType}
-                        viewType={viewType}
-                        title={title}
-                        limit={limit}
-                        defaultSortBy={renderSortBy as SortType}
-                        items={data}
-                        renderItem={(item, index) => (
-                            <PromptCardText
-                                id={item.id}
-                                title={item.title}
-                                description={item.description}
-                                views={item.views}
-                                star={item.star}
-                                usages={item.usages}
-                                index={index + 1}
-                                isMiniHeight={searchType === "popular"}
+        <>
+            {/* 인기 프롬프트 (주간/월간) - 검색 시 부드럽게 사라짐 */}
+            <FadeContainer visible={!isSearching}>
+                <Row gutter={[24, 24]} style={{ marginBottom: "32px" }}>
+                    <Col xs={24} md={12}>
+                        <BackgroundBox>
+                            <PromptList
+                                promptType="text"
+                                searchType="popular"
+                                viewType="open"
+                                title={
+                                    <Text font="h2_20_semi">
+                                        이번 주 인기 프롬프트 TOP 3
+                                    </Text>
+                                }
+                                limit={3}
+                                defaultSortBy="usages_7_days"
+                                items={top7}
+                                renderItem={(item, index) => (
+                                    <PromptCardText
+                                        id={item.id}
+                                        title={item.title}
+                                        description={item.description}
+                                        views={item.views}
+                                        star={item.star}
+                                        usages={item.usages}
+                                        index={index + 1}
+                                        isMiniHeight={true}
+                                    />
+                                )}
                             />
-                        )}
+                        </BackgroundBox>
+                    </Col>
+
+                    <Col xs={24} md={12}>
+                        <BackgroundBox>
+                            <PromptList
+                                promptType="text"
+                                searchType="popular"
+                                viewType="open"
+                                title={
+                                    <Text font="h2_20_semi">
+                                        이번 달 인기 프롬프트 TOP 3
+                                    </Text>
+                                }
+                                limit={3}
+                                defaultSortBy="usages_30_days"
+                                items={top30}
+                                renderItem={(item, index) => (
+                                    <PromptCardText
+                                        id={item.id}
+                                        title={item.title}
+                                        description={item.description}
+                                        views={item.views}
+                                        star={item.star}
+                                        usages={item.usages}
+                                        index={index + 1}
+                                        isMiniHeight={true}
+                                    />
+                                )}
+                            />
+                        </BackgroundBox>
+                    </Col>
+                </Row>
+            </FadeContainer>
+
+            {/* 전체 프롬프트 or 검색 결과 */}
+            <PromptList
+                promptType="text"
+                searchType={searchResults ? "search" : "total"}
+                viewType="open"
+                title={<Text font="h2_20_semi">{titleText}</Text>}
+                limit={18}
+                defaultSortBy="created_at"
+                items={searchResults ? searchResults : undefined}
+                renderItem={(item, index) => (
+                    <PromptCardText
+                        id={item.id}
+                        title={item.title}
+                        description={item.description}
+                        views={item.views}
+                        star={item.star}
+                        usages={item.usages}
+                        index={index + 1}
+                        isMiniHeight={false}
                     />
-                );
-            }}
-        />
+                )}
+            />
+        </>
     );
 };
 
 export default PromptListSectionText;
+
+const FadeContainer = styled.div<{ visible: boolean }>`
+    opacity: ${({ visible }) => (visible ? 1 : 0)};
+    height: ${({ visible }) => (visible ? "auto" : "0")};
+    overflow: hidden;
+    transition: opacity 0.4s ease, height 0.4s ease;
+`;
+
+const BackgroundBox = styled.div`
+    background-color: ${({ theme }) => theme.colors.primary_10};
+    border-radius: 8px;
+    padding: 20px 16px 16px 16px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+`;
