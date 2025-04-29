@@ -1,6 +1,3 @@
-// src/app/prompt/[promptType]/page.tsx
-"use client";
-
 import HomeContentBase from "@/components/home/HomeContentBase";
 import { usePrefetchPromptList } from "@/hooks/prefetches/usePrefetchPromptList";
 import { Suspense } from "react";

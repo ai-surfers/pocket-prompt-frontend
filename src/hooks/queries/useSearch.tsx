@@ -31,10 +31,14 @@ export const useSearch = (promptType: "text" | "image") => {
     // Local
     const [searchResults, setSearchResults] = useState<PromptDetails[]>();
     const [isLoading, setIsLoading] = useState(false);
+    const [isInitialized, setIsInitialized] = useState(false); // 초기화 완료 여부
 
-    // “첫 사용” 플래그
+    // 새로고침 감지를 위한 플래그
     const initializedRef = useRef(false);
 
+    /**
+     * 1) 새로고침 시 초기화 및 URL 동기화
+     */
     useEffect(() => {
         if (initializedRef.current) return;
 
@@ -48,15 +52,15 @@ export const useSearch = (promptType: "text" | "image") => {
         }
 
         if (navType === "reload" || navType === "navigate") {
-            // ✨ 새로고침/직접 주소창 진입인 경우: 완전 초기화
+            // 새로고침 또는 직접 진입 시: Recoil 상태 즉시 초기화
             setKeyword("");
             setSearchedKeyword("");
             setSearchedCategory("total");
             setSearchResults(undefined);
-            // URL 에 남아있을 수 있는 ?keyword=&category= 를 지웁니다
+            // URL에 남아있을 수 있는 ?keyword=&category= 제거
             router.replace(pathname, { scroll: false });
         } else {
-            // ✨ 뒤로/앞으로(=detail → list) 복귀인 경우: URL 에서 읽어와서 복원
+            // 뒤로/앞으로 가기 시: URL에서 상태 복원
             const kw = searchParams.get("keyword") || "";
             const cat = searchParams.get("category") || "total";
             setKeyword(kw);
@@ -65,16 +69,54 @@ export const useSearch = (promptType: "text" | "image") => {
         }
 
         initializedRef.current = true;
-        // 최초 한 번만 실행
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        setIsInitialized(true); // 초기화 완료 표시
+    }, [
+        pathname,
+        router,
+        searchParams,
+        setKeyword,
+        setSearchedKeyword,
+        setSearchedCategory,
+    ]);
 
-    // 검색어·카테고리가 바뀔 때마다 실제 호출
+    /**
+     * 2) URL 쿼리가 바뀔 때마다 Recoil 상태 동기화
+     */
     useEffect(() => {
+        // 초기화가 완료된 이후에만 URL 동기화 수행
+        if (!isInitialized) return;
+
+        const kw = searchParams.get("keyword") || "";
+        const cat = searchParams.get("category") || "total";
+
+        setKeyword(kw);
+        setSearchedKeyword(kw);
+        setSearchedCategory(cat);
+
+        // 검색이 초기 상태(total)라면 결과 비우기
+        if (!kw && cat === "total") {
+            setSearchResults(undefined);
+        }
+    }, [
+        searchParams,
+        setKeyword,
+        setSearchedKeyword,
+        setSearchedCategory,
+        isInitialized,
+    ]);
+
+    /**
+     * 3) Recoil의 keyword/category가 바뀔 때마다 실제 API 호출
+     */
+    useEffect(() => {
+        // 초기화가 완료된 이후에만 API 호출 수행
+        if (!isInitialized) return;
+
         if (!keyword && searchedCategory === "total") {
             setSearchResults(undefined);
             return;
         }
+
         let mounted = true;
         setIsLoading(true);
         getPromptsList({
@@ -96,21 +138,29 @@ export const useSearch = (promptType: "text" | "image") => {
             .finally(() => {
                 if (mounted) setIsLoading(false);
             });
+
         return () => {
             mounted = false;
         };
-    }, [keyword, searchedCategory, promptType, sortBy, isUnderTablet]);
+    }, [
+        keyword,
+        searchedCategory,
+        promptType,
+        sortBy,
+        isUnderTablet,
+        isInitialized,
+    ]);
 
-    // 사용자가 엔터 or 카테고리 클릭 했을 때
+    /**
+     * 4) 사용자가 직접 검색(엔터 / 카테고리 클릭) 시
+     *    → URL에만 반영 (2)번 Effect가 Recoil 동기화)
+     */
     const handleSearch = (newKeyword: string, newCategory: string) => {
-        setKeyword(newKeyword);
-        setSearchedKeyword(newKeyword);
-        setSearchedCategory(newCategory);
-        // URL 에도 반영
         const qp = new URLSearchParams();
         if (newKeyword) qp.set("keyword", newKeyword);
         if (newCategory && newCategory !== "total")
             qp.set("category", newCategory);
+
         router.push(`${pathname}?${qp.toString()}`);
     };
 
@@ -121,5 +171,6 @@ export const useSearch = (promptType: "text" | "image") => {
         handleSearch,
         promptType,
         isLoading,
+        isInitialized,
     };
 };

@@ -130,7 +130,6 @@ export default function PromptListSection({
                 viewType="open"
                 title={<Text font="h2_20_semi">{titleText}</Text>}
                 limit={18}
-                defaultSortBy="created_at"
                 items={searchResults}
                 renderItem={(item, idx) => (
                     <Card promptType={promptType} {...item} index={idx + 1} />

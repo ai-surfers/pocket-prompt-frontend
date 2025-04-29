@@ -14,6 +14,7 @@ import { useUser } from "@/hooks/useUser";
 import { useDeviceSize } from "@components/DeviceContext";
 import Icon from "@components/common/Icon";
 import { Wrapper } from "@components/layout/LayoutClient";
+import { Spin } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
 import SearchSection from "./SearchSection";
@@ -37,7 +38,7 @@ export default function HomeContentBase({
 }: HomeContentBaseProps) {
     const [isVocModalOpen, setIsVocModalOpen] = useState(false);
     const promptData = usePromptData(promptType);
-    const { searchResults, isLoading } = useSearch(promptType);
+    const { searchResults, isLoading, isInitialized } = useSearch(promptType);
     const { isUnderTablet } = useDeviceSize();
     const { userData } = useUser();
     const { data: userPaymentData } = useGetSubscription({
@@ -45,6 +46,14 @@ export default function HomeContentBase({
     });
     const isSubscriber =
         userData.isLogin && userPaymentData?.subscription_status === "active";
+
+    if (!isInitialized) {
+        return (
+            <Centered>
+                <Spin size="large" />
+            </Centered>
+        );
+    }
 
     return (
         <HomeWrapper>
@@ -87,6 +96,11 @@ const HomeWrapper = styled.div`
     width: 100vw;
     background-color: white;
     position: relative;
+`;
+
+const Centered = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("row", "center", "center")};
+    height: 80vh;
 `;
 
 const HomeContentWrapper = styled.div<{ $isUnderTablet: boolean }>`

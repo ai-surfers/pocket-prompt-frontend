@@ -15,9 +15,15 @@ import { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
-export default function PromptContent({ promptId }: { promptId: string }) {
+export default function PromptContent({
+    promptType,
+    promptId,
+}: {
+    promptType: "text" | "image";
+    promptId: string;
+}) {
     const pathname = usePathname();
-    const { data, isLoading, isError } = usePromptQuery(promptId ?? "");
+    const { data, isLoading, isError } = usePromptQuery(promptId);
     const { isUnderTablet, isMobile } = useDeviceSize();
     const setPrevPathname = useSetRecoilState(prevPathState);
 

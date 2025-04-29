@@ -42,14 +42,19 @@ const PromptCardImage = ({
     const searchedCategory = useRecoilValue(searchedCategoryState);
 
     const handleClick = () => {
-        const qp = new URLSearchParams();
-        if (searchedKeyword) qp.set("keyword", searchedKeyword);
-        if (searchedCategory && searchedCategory !== "total") {
-            qp.set("category", searchedCategory);
-        }
-        const qs = qp.toString() ? `?${qp.toString()}` : "";
+        // 1) promptType 과 id 를 모두 경로에 포함
+        let href = `/prompt/${promptType}/${id}`;
 
-        router.push(`/prompt/${id}${qs}`);
+        const params = new URLSearchParams();
+        if (searchedKeyword) params.set("keyword", searchedKeyword);
+        if (searchedCategory && searchedCategory !== "total")
+            params.set("category", searchedCategory);
+
+        if ([...params].length) {
+            href += `?${params.toString()}`;
+        }
+
+        router.push(href);
         resetPocketRunState();
     };
 
