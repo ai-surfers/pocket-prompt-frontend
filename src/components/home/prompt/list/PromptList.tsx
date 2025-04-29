@@ -1,9 +1,9 @@
+// src/components/home/prompt/PromptList.tsx
 "use client";
 
 import { PromptDetails, SortType, ViewType } from "@/apis/prompt/prompt.model";
 import { usePromptsListQuery } from "@/hooks/queries/prompts/usePromptsListQuery";
-
-import { useSearch } from "@/hooks/queries/usetenSearch";
+import { useSearch } from "@/hooks/queries/useSearch";
 import { usePromptList } from "@/hooks/ui/usePromptList";
 import { sortTypeState } from "@/states/sortState";
 import { Col, Flex, Pagination, Row } from "antd";
@@ -69,7 +69,19 @@ export default function PromptList({
     );
 
     // 데이터 소스 결정
-    const dataSource = searchType === "popular" ? popularItems! : fetchedItems;
+    const dataSource =
+        searchType === "popular"
+            ? popularItems!.map((item) => ({
+                  ...item,
+                  sampleMedia: item.sample_media,
+              }))
+            : fetchedItems.map((item) => ({
+                  ...item,
+                  sampleMedia: item.sample_media,
+              }));
+
+    // 디버깅: dataSource 출력
+    console.log("PromptList - dataSource:", dataSource);
 
     // 정렬·탭·카운트 훅
     const {
@@ -110,17 +122,20 @@ export default function PromptList({
         if (!isFetching && sortedItems.length === 0) {
             return <EmptyPrompt viewType={viewType} />;
         }
-        return sortedItems.map((item, idx) => (
-            <Col
-                key={item.id}
-                xs={24}
-                sm={isPopularList ? 24 : 12}
-                md={isPopularList ? 24 : 8}
-                style={{ flexShrink: 0, display: "flex" }}
-            >
-                {renderItem(item, idx)}
-            </Col>
-        ));
+        return sortedItems.map((item, idx) => {
+            console.log("PromptList - renderItem item:", item); // item 디버깅
+            return (
+                <Col
+                    key={item.id}
+                    xs={24}
+                    sm={isPopularList ? 24 : 12}
+                    md={isPopularList ? 24 : 8}
+                    style={{ flexShrink: 0, display: "flex" }}
+                >
+                    {renderItem(item, idx)}
+                </Col>
+            );
+        });
     };
 
     return (

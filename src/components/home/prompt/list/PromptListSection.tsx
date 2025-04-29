@@ -65,6 +65,12 @@ export default function PromptListSection({
         titleText = `${categoryKoName} 프롬프트`;
     }
 
+    // searchResults 데이터 매핑
+    const mappedSearchResults = searchResults?.map((item) => ({
+        ...item,
+        sampleMedia: item.sample_media,
+    }));
+
     return (
         <>
             <FadeContainer visible={!isSearching}>
@@ -94,7 +100,7 @@ export default function PromptListSection({
                             />
                         </BackgroundBox>
                     </Col>
-                    {/* 인기 30일 (구조 동일) */}
+                    {/* 인기 30일 */}
                     <Col xs={24} md={12}>
                         <BackgroundBox>
                             <PromptList
@@ -123,15 +129,13 @@ export default function PromptListSection({
             </FadeContainer>
 
             {/* 전체 or 검색 결과 */}
-
             <PromptList
                 promptType={promptType}
                 searchType={searchResults ? "search" : "total"}
                 viewType="open"
                 title={<Text font="h2_20_semi">{titleText}</Text>}
                 limit={18}
-                defaultSortBy="created_at"
-                items={searchResults}
+                items={mappedSearchResults} // 매핑된 데이터 전달
                 renderItem={(item, idx) => (
                     <Card promptType={promptType} {...item} index={idx + 1} />
                 )}
