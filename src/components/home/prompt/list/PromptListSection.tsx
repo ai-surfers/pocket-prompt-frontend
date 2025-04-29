@@ -33,12 +33,13 @@ type Props = {
 export default function PromptListSection({
     promptData,
     searchResults,
-    config: { promptType, categoriesMap, PopularCard, Card },
+    config,
     isLoading = false,
 }: Props) {
+    const { promptType, categoriesMap, PopularCard, Card } = config;
     const { top7Days, top30Days } = promptData;
 
-    // popular
+    // 인기 7일
     const top7 = top7Days.slice(0, 3);
     const top7Ids = new Set(top7.map((p) => p.id));
     const top30 = top30Days.filter((p) => !top7Ids.has(p.id)).slice(0, 3);
@@ -92,6 +93,7 @@ export default function PromptListSection({
                                 items={top7}
                                 renderItem={(item, idx) => (
                                     <PopularCard
+                                        promptType={promptType}
                                         {...item}
                                         index={idx + 1}
                                         isMiniHeight
@@ -117,6 +119,7 @@ export default function PromptListSection({
                                 items={top30}
                                 renderItem={(item, idx) => (
                                     <PopularCard
+                                        promptType={promptType}
                                         {...item}
                                         index={idx + 1}
                                         isMiniHeight
