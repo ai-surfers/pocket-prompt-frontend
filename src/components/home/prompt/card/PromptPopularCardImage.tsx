@@ -1,3 +1,4 @@
+// src/components/home/prompt/card/PromptPopularCardImage.tsx
 "use client";
 
 import Icon from "@/components/common/Icon";
@@ -9,6 +10,7 @@ import {
 } from "@/states/searchState";
 import theme from "@/styles/theme";
 import { useRouter } from "next/navigation";
+import { useState } from "react"; // useState 추가
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 
@@ -19,7 +21,7 @@ interface PromptCardImageWithTextProps {
     star: number;
     usages: number;
     id: string;
-    imageUrl: string;
+    sampleMedia: string[];
     isMiniHeight?: boolean;
 }
 
@@ -30,7 +32,7 @@ const PromptPopularCardImage = ({
     star,
     usages,
     id,
-    imageUrl,
+    sampleMedia,
     isMiniHeight = false,
 }: PromptCardImageWithTextProps) => {
     const resetPocketRunState = useResetRecoilState(pocketRunState);
@@ -38,8 +40,10 @@ const PromptPopularCardImage = ({
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
 
+    // 디버깅: sampleMedia 출력
+    console.log("sampleMedia:", sampleMedia);
+
     const handleClick = () => {
-        // 검색어와 카테고리가 있을 때만 쿼리 파라미터 추가
         const query = new URLSearchParams();
         if (searchedKeyword && searchedKeyword.trim() !== "") {
             query.set("keyword", searchedKeyword);
@@ -53,11 +57,27 @@ const PromptPopularCardImage = ({
         resetPocketRunState();
     };
 
+    // thumbnail 계산 및 기본 이미지 설정
+    const [thumbnail, setThumbnail] = useState(
+        sampleMedia && sampleMedia.length > 0 && sampleMedia[0]
+            ? sampleMedia[0]
+            : "" // 기본 이미지
+    );
+
+    // 이미지 로딩 에러 처리
+    const handleImageError = () => {
+        setThumbnail("");
+    };
+
     return (
-        <PromptWrapper onClick={handleClick} $isMiniHeight={isMiniHeight}>
+        <PromptWrapper onClick={handleClick}>
             {/* 이미지 영역 */}
             <ImageWrapper>
-                <PromptImage src={imageUrl} alt={title} />
+                <PromptImage
+                    src={thumbnail}
+                    alt={title}
+                    onError={handleImageError}
+                />
             </ImageWrapper>
 
             {/* 텍스트 영역 */}
@@ -68,7 +88,7 @@ const PromptPopularCardImage = ({
                             {title}
                         </Text>
                     </Title>
-                    <Subtitle $isMiniHeight={isMiniHeight}>
+                    <Subtitle>
                         <Text font="body3" color="G_400">
                             {description}
                         </Text>
@@ -97,20 +117,18 @@ const PromptPopularCardImage = ({
 
 export default PromptPopularCardImage;
 
-const PromptWrapper = styled.div<{ $isMiniHeight: boolean }>`
-    ${({ theme }) => theme.mixins.flexBox("column")};
-    padding: 16px;
+const PromptWrapper = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("row")}; // 가로 배치로 변경
     width: 100%;
-    height: ${({ $isMiniHeight }) =>
-        $isMiniHeight ? "200px" : "240px"}; // 이미지 포함 높이 조정
+    min-height: 120px; // 최소 높이 설정
     box-sizing: border-box;
     border-radius: 12px;
     border: 1.5px solid ${({ theme }) => theme.colors.primary_20};
     background-color: ${({ theme }) => theme.colors.white};
-    gap: 12px;
     cursor: pointer;
     transition: box-shadow 0.3s ease;
     flex-shrink: 0;
+    position: relative;
 
     &:hover {
         box-shadow: 0px 0px 64px 0px rgba(117, 128, 234, 0.18);
@@ -118,36 +136,33 @@ const PromptWrapper = styled.div<{ $isMiniHeight: boolean }>`
 `;
 
 const ImageWrapper = styled.div`
-    width: 100%;
-    height: 120px; // 이미지 높이 설정
-    border-radius: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 130px;
+    height: 100%;
+    border-radius: 12px 0 0 12px;
     overflow: hidden;
 `;
 
 const PromptImage = styled.img`
     width: 100%;
     height: 100%;
-    object-fit: cover; // 이미지가 잘리지 않도록 조정
+    object-fit: cover;
 `;
 
 const ContentWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox("column", "space-between")};
     flex: 1;
-    gap: 9.5px;
+    margin-left: 142px; // 이미지 너비(130px) + 간격(12px)
+    padding: 16px;
+    padding-left: 0;
+    gap: 8px;
 `;
 
 const TitlesWrapper = styled.div`
     width: 100%;
     flex: 1;
-    box-sizing: content-box;
-    padding-bottom: 15.5px;
-    border-bottom: 1.5px solid;
-    border-color: ${({ theme }) => theme.colors.primary_20};
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
 `;
 
 const Title = styled.div`
@@ -160,10 +175,7 @@ const Title = styled.div`
     margin-bottom: 8px;
 `;
 
-const Subtitle = styled.div<{ $isMiniHeight: boolean }>`
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: ${({ $isMiniHeight }) => ($isMiniHeight ? 1 : 2)};
+const Subtitle = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-word;
@@ -173,7 +185,7 @@ const Subtitle = styled.div<{ $isMiniHeight: boolean }>`
 `;
 
 const DetailsWrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row", "flex-end")};
+    ${({ theme }) => theme.mixins.flexBox("row", "flex-start")};
     width: 100%;
     height: 21px;
     gap: 20px;

@@ -1,3 +1,4 @@
+// src/components/home/prompt/card/PromptCardImage.tsx
 "use client";
 
 import Icon from "@/components/common/Icon";
@@ -41,8 +42,10 @@ const PromptCardImage = ({
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
 
+    // 디버깅: sampleMedia 출력
+    console.log("PromptCardImage - sampleMedia:", sampleMedia);
+
     const handleClick = () => {
-        // 1) promptType 과 id 를 모두 경로에 포함
         let href = `/prompt/${promptType}/${id}`;
 
         const params = new URLSearchParams();
@@ -58,8 +61,11 @@ const PromptCardImage = ({
         resetPocketRunState();
     };
 
+    // thumbnail 계산 및 기본 이미지 설정
     const thumbnail =
-        sampleMedia && sampleMedia.length > 0 ? sampleMedia[0] : "";
+        sampleMedia && sampleMedia.length > 0 && sampleMedia[0]
+            ? sampleMedia[0]
+            : "https://via.placeholder.com/150"; // 기본 이미지 설정
 
     return (
         <Card
@@ -106,7 +112,6 @@ const Card = styled.div<{
 }>`
     position: relative;
     width: 100%;
-    /* height: ${({ $isMiniHeight }) => ($isMiniHeight ? "133px" : "187px")}; */
     height: ${({ $isMiniHeight }) => ($isMiniHeight ? "133px" : "157px")};
     border-radius: 12px;
     overflow: hidden;
@@ -152,7 +157,7 @@ const Title = styled.div`
 `;
 
 const DetailsWrapper = styled.div`
-    display: flex;
+    ${({ theme }) => theme.mixins.flexBox("row", "flex-end")};
     gap: 16px;
     margin-top: 8px;
 `;

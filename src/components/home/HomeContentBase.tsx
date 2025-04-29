@@ -100,6 +100,8 @@ const HomeWrapper = styled.div`
 
 const Centered = styled.div`
     ${({ theme }) => theme.mixins.flexBox("row", "center", "center")};
+
+    width: 100vw;
     height: 80vh;
 `;
 
