@@ -1,3 +1,4 @@
+import AiClubBanner from "@img/banner/banner-ai-club-mobile.png";
 import AIBannerMobile from "@img/banner/banner-ai-prompt-mobile.png";
 import AIBanner from "@img/banner/banner-ai-prompt.png";
 import BlogBannerMobile from "@img/banner/banner-blog-mobile.png";
@@ -36,6 +37,13 @@ export const HOME_BANNER_SLIDES: {
         mobileImgSrc: BlogBannerMobile,
         linkSrc:
             "https://pocket-prompt.notion.site/10-1bbd02185fca8086b375ec5e23d0d521",
+    },
+
+    {
+        imgSrc: AiClubBanner,
+        mobileImgSrc: AiClubBanner,
+        linkSrc:
+            "https://ai-start-club.oopy.io/?utm_source=pocket-prompt&utm_medium=referral&utm_campaign=pocket-prompt-web-banner-7th-gen",
     },
     // TODO: 재미 프롬프트 배너 추후 추가 예정
     // {
