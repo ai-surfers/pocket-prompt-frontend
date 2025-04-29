@@ -12,8 +12,8 @@ export type PromptDetails = {
     title: string;
     description: string;
     prompt_template: string;
-    visibility: "public" | "private";
-    categories: string[];
+    visibility?: "public" | "private";
+    categories?: string[];
     author_nickname: string | null;
     star: number;
     usages: number;
@@ -22,6 +22,8 @@ export type PromptDetails = {
     user_input_format: PromptInputField[];
     is_starred_by_user: boolean;
     sample_media: string[];
+    usages_7_days?: number;
+    usages_30_days?: number;
 };
 
 export type PaginationInfo = {

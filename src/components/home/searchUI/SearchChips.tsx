@@ -11,88 +11,73 @@ import {
 import Total from "@public/svg/home/Total";
 import { Flex } from "antd";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 
 interface SearchChipsProps {
-    promptType: "text" | "image"; // 프롬프트 타입을 prop으로 받음
+    promptType: "text" | "image";
 }
 
-const SearchChips = ({ promptType }: SearchChipsProps) => {
+export default function SearchChips({ promptType }: SearchChipsProps) {
     const [searchedCategory, setSearchedCategory] = useRecoilState(
         searchedCategoryState
     );
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const router = useRouter();
     const pathname = usePathname();
-    const setCategory = useSetRecoilState(searchedCategoryState);
     const { isUnderTablet } = useDeviceSize();
 
-    // 프롬프트 타입에 따라 카테고리 동적으로 선택
+    // 텍스트/이미지별 카테고리 맵
     const totalCategories = {
         total: { ko: "전체", en: "total", emoji: <Total /> },
         ...(promptType === "image" ? ImageCategories : Categories),
     };
 
     const handleCategoryClick = (categoryKey: string) => {
-        setCategory(categoryKey);
+        setSearchedCategory(categoryKey);
 
-        // URL 파라미터 업데이트
+        // URL 파라미터에 키워드·카테고리 설정
         const query = new URLSearchParams();
-        if (searchedKeyword && searchedKeyword.trim() !== "") {
-            query.set("keyword", searchedKeyword);
-        }
-        if (categoryKey && categoryKey !== "total") {
-            query.set("category", categoryKey);
-        }
+        if (searchedKeyword) query.set("keyword", searchedKeyword);
+        if (categoryKey !== "total") query.set("category", categoryKey);
 
-        const queryString = query.toString();
-        router.push(`${pathname}${queryString ? `?${queryString}` : ""}`);
+        router.push(
+            `${pathname}${query.toString() ? `?${query.toString()}` : ""}`
+        );
     };
 
-    // 디버깅: searchedCategory 상태 변화 확인
-    useEffect(() => {
-        console.log("SearchChips - promptType:", promptType);
-        console.log("SearchChips - searchedCategory:", searchedCategory);
-    }, [promptType, searchedCategory]);
-
     return (
-        <SearchChipsWrapper $isVisible={true}>
-            {Object.entries(totalCategories).map(([key, category]) => (
+        <SearchChipsWrapper $isVisible>
+            {Object.entries(totalCategories).map(([key, cat]) => (
                 <StyledButton
                     key={key}
-                    id={`category-button-${category.en}`}
-                    data-gtm-category={category.en}
-                    onClick={() => handleCategoryClick(category.en)}
-                    $selected={searchedCategory === category.en}
+                    id={`category-button-${cat.en}`}
+                    data-gtm-category={cat.en}
+                    onClick={() => handleCategoryClick(cat.en)}
+                    $selected={searchedCategory === cat.en}
                     $mobile={isUnderTablet}
                     hierarchy="normal"
                 >
                     <Flex vertical justify="center" align="center">
-                        {category.emoji && (
-                            <span style={{ fontSize: "20px" }}>
-                                {category.emoji}
-                            </span>
+                        {cat.emoji && (
+                            <span style={{ fontSize: 20 }}>{cat.emoji}</span>
                         )}
                         <Text
                             font={isUnderTablet ? "c1_12_semi" : "c1_12_reg"}
                             color={
-                                searchedCategory === category.en
+                                searchedCategory === cat.en
                                     ? "primary"
                                     : "G_400"
                             }
                         >
-                            {category.ko}
+                            {cat.ko}
                         </Text>
                     </Flex>
                 </StyledButton>
             ))}
         </SearchChipsWrapper>
     );
-};
-
-export default SearchChips;
+}
 
 const SearchChipsWrapper = styled.div<{ $isVisible: boolean }>`
     ${({ theme }) => theme.mixins.flexBox("row", "start", "center")};

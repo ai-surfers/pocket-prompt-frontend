@@ -23,13 +23,13 @@ const HomeLnb = ({ initialMenu }: HomeLnbType) => {
             key: "1",
             label: "텍스트 프롬프트",
             iconType: "TextBlock",
-            route: "/",
+            route: "/prompt/text",
         },
         {
             key: "2",
             label: "이미지 프롬프트",
             iconType: "Image",
-            route: "/image",
+            route: "/prompt/image",
         },
         {
             key: "3",

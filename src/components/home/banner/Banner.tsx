@@ -23,7 +23,9 @@ const Banner = () => {
     };
 
     const bannerSlides =
-        pathname === "/image" ? HOME_BANNER_SLIDES_IMAGE : HOME_BANNER_SLIDES;
+        pathname === "/prompt/image"
+            ? HOME_BANNER_SLIDES_IMAGE
+            : HOME_BANNER_SLIDES;
 
     const slides = bannerSlides.map((slide) => (
         <Image
