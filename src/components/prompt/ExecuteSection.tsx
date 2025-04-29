@@ -5,11 +5,17 @@ import Text from "@/components/common/Text/Text";
 import Textarea from "@/components/common/Textarea/Textarea";
 import { PocketRunModel } from "@/core/Prompt";
 import { UTM_OVER_USAGE_LIMIT_URL, UTM_TIER_LIMIT_URL } from "@/core/UtmUri";
+import useImgPocketRun from "@/hooks/mutations/pocketRun/useImgPocketRun"; // 추가
 import usePocketRun from "@/hooks/mutations/pocketRun/usePocketRun";
 import useModal from "@/hooks/useModal";
 import useToast from "@/hooks/useToast";
 import { useUser } from "@/hooks/useUser";
-import { pocketRunLoadingState, pocketRunState } from "@/states/pocketRunState";
+import {
+    imgPocketRunLoadingState,
+    imgPocketRunState,
+    pocketRunLoadingState,
+    pocketRunState,
+} from "@/states/pocketRunState";
 import { copyClipboard, populateTemplate } from "@/utils/promptUtils";
 import { Flex } from "antd";
 import Link from "next/link";
@@ -25,12 +31,15 @@ interface ExecuteSectionProps {
     template: string;
     inputs: PromptInputField[];
     promptId: string;
+    promptType: "text" | "image";
 }
 
 export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
     inputs,
     template,
     promptId,
+    promptType,
+    onSelect,
 }) => {
     const form = useForm();
     const { control, formState, watch } = form;
@@ -49,8 +58,13 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
         }
     };
 
-    const [pocketRunRes, setPocketRunRes] = useRecoilState(pocketRunState);
-    const setPocketRunLoading = useSetRecoilState(pocketRunLoadingState);
+    // promptType에 따라 Recoil 상태 선택
+    const [runState, setRunState] = useRecoilState(
+        promptType === "text" ? pocketRunState : imgPocketRunState
+    );
+    const setRunLoading = useSetRecoilState(
+        promptType === "text" ? pocketRunLoadingState : imgPocketRunLoadingState
+    );
 
     const [hasChanged, setHasChanged] = useState(false);
     const prevFormValues = useRef<Record<string, string>>({});
@@ -59,10 +73,12 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
     const showToast = useToast();
     const { openModal, closeModal } = useModal();
 
-    const { mutate: pocketRun, isPending } = usePocketRun({
+    const { mutate: runMutation, isPending } = (
+        promptType === "text" ? usePocketRun : useImgPocketRun
+    )({
         onSuccess: (res) => {
             // 로딩중으로 표시되고 있는 결과란 컴포넌트에 pocketRun 결과값 주입
-            setPocketRunRes((prevState) => {
+            setRunState((prevState) => {
                 const newState = [...prevState];
                 newState[prevState.length - 1] = res;
                 return newState;
@@ -145,11 +161,8 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                     ),
                 });
 
-                // 로딩중인 포켓런 결과 컴포넌트가 남아있지 않도록 함
-                if (pocketRunRes.length > 1) {
-                    setPocketRunRes((prevState) => {
-                        return prevState.slice(0, -1);
-                    });
+                if (runState.length > 1) {
+                    setRunState((prevState) => prevState.slice(0, -1));
                 }
             }
         },
@@ -183,7 +196,8 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                         });
                         return;
                     }
-                    pocketRun(
+
+                    runMutation(
                         {
                             promptId: promptId ?? "",
                             context: values,
@@ -192,7 +206,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                         { onSuccess: () => {} }
                     );
                     // pocketRun 실행되기 전 로딩 화면에 model, context 입력을 위해 form 데이터 사용하여 pocketRunRes 업데이트
-                    setPocketRunRes((prevState) => {
+                    setRunState((prevState) => {
                         if (prevState[0].response === "") {
                             // pocketRunRes에 요소가 처음 업데이트 되는 경우 새 배열로 setPocketRunRes
                             return [
@@ -227,8 +241,8 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
     };
 
     useEffect(() => {
-        setPocketRunLoading(isPending);
-    }, [isPending, setPocketRunLoading]);
+        setRunLoading(isPending);
+    }, [isPending, setRunLoading]);
 
     useEffect(() => {
         // 최초 포켓런이 아니고 입력값 변경이 있었을 때 포켓런 실행하기 버튼 string 바꾸는 로직
@@ -236,12 +250,12 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
             return formValues[key] !== prevFormValues.current[key];
         });
 
-        if (hasFormChanged && pocketRunRes[0].model !== "") {
+        if (hasFormChanged && runState[0].model !== "") {
             setHasChanged(true);
         }
 
         prevFormValues.current = formValues;
-    }, [formValues, pocketRunRes.length]);
+    }, [formValues, runState]);
 
     return (
         <>
