@@ -105,6 +105,32 @@ export const PocketRunModel: Record<
     },
 };
 
+export const PocketRunImageModel: Record<
+    string,
+    { id: string; label: string; value: string }
+> = {
+    Basic: {
+        id: "flux-schnell-pocket-run-toggle",
+        label: "기본 모델",
+        value: "black-forest-labs/flux-schnell",
+    },
+    // FluxSchnell: {
+    //     id: "flux-schnell-pocket-run-toggle",
+    //     label: "Flux Schnell",
+    //     value: "black-forest-labs/flux-schnell",
+    // },
+    FluxPro: {
+        id: "flux-1-1-pro-pocket-run-toggle",
+        label: "Flux 1.1 Pro",
+        value: "black-forest-labs/flux-1.1-pro",
+    },
+    Imagen3: {
+        id: "imagen-3-pocket-run-toggle",
+        label: "Imagen 3",
+        value: "google/imagen-3",
+    },
+};
+
 export enum InputType {
     TEXT = "text",
     LONGTEXT = "longtext",

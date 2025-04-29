@@ -49,6 +49,16 @@ interface PromptNewPageProps {
     promptId?: string;
 }
 
+type PromptTypeMap = {
+    "텍스트 프롬프트": "text";
+    "이미지 프롬프트": "image";
+};
+
+const typeMap: PromptTypeMap = {
+    "텍스트 프롬프트": "text",
+    "이미지 프롬프트": "image",
+};
+
 export default function NewPromptClient({
     isEdit,
     promptId,
@@ -197,7 +207,8 @@ export default function NewPromptClient({
                 iconName: "TickCircle",
             });
             form.reset(defaultPromptSchema);
-            router.replace(`/prompt/${res.data.prompt_id}`);
+            const newType = typeMap[contentBy as keyof typeof typeMap];
+            router.replace(`/prompt/${newType}/${res.data.prompt_id}`);
         },
         onError(e) {
             const utmUrl =
@@ -321,7 +332,8 @@ export default function NewPromptClient({
                 subTitle: "",
                 iconName: "TickCircle",
             });
-            router.replace(`/prompt/${res.data.prompt_id}`);
+            const newType = typeMap[contentBy as keyof typeof typeMap];
+            router.replace(`/prompt/${newType}/${res.data.prompt_id}`);
         },
         onError(e) {
             console.error("Failed", e);
@@ -342,16 +354,6 @@ export default function NewPromptClient({
                         placeholder: "",
                     })
                 );
-
-                type PromptTypeMap = {
-                    "텍스트 프롬프트": "text";
-                    "이미지 프롬프트": "image";
-                };
-
-                const typeMap: PromptTypeMap = {
-                    "텍스트 프롬프트": "text",
-                    "이미지 프롬프트": "image",
-                };
 
                 const promptData: CreatePromptRequest = {
                     ...input,

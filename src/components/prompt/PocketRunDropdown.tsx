@@ -1,10 +1,11 @@
-import Logo from "@svg/Logo";
 import Button from "@/components/common/Button/Button";
 import Text from "@/components/common/Text/Text";
-import { PocketRunModel } from "@/core/Prompt";
+import { PocketRunImageModel, PocketRunModel } from "@/core/Prompt";
+import Logo from "@svg/Logo";
 import { Dropdown, Flex, MenuProps } from "antd";
 
 interface PocketRunDropdownProps {
+    promptType: "text" | "image";
     id: string;
     disabled: boolean;
     onSelect: (platform: string) => void;
@@ -12,6 +13,7 @@ interface PocketRunDropdownProps {
 }
 
 export default function PocketRunDropdown({
+    promptType,
     disabled,
     onSelect,
     secondRun = false,
@@ -20,7 +22,10 @@ export default function PocketRunDropdown({
         onSelect(key);
     };
 
-    const items: MenuProps["items"] = Object.entries(PocketRunModel).map(
+    const sourceModel =
+        promptType === "image" ? PocketRunImageModel : PocketRunModel;
+
+    const items: MenuProps["items"] = Object.entries(sourceModel).map(
         ([key, value]) => {
             return {
                 key: key,

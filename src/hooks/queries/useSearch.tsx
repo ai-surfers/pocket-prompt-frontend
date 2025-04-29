@@ -1,4 +1,3 @@
-// src/hooks/queries/useSearch.ts
 "use client";
 
 import { getPromptsList } from "@/apis/prompt/prompt";
@@ -31,18 +30,17 @@ export const useSearch = (promptType: "text" | "image") => {
     // Local
     const [searchResults, setSearchResults] = useState<PromptDetails[]>();
     const [isLoading, setIsLoading] = useState(false);
-    const [isInitialized, setIsInitialized] = useState(false); // 초기화 완료 여부
+    const [isInitialized, setIsInitialized] = useState(false);
 
-    // 새로고침 감지를 위한 플래그
+    // 새로고침 감지 플래그
     const initializedRef = useRef(false);
 
     /**
-     * 1) 새로고침 시 초기화 및 URL 동기화
+     * 1) 페이지 초기화 및 새로고침 처리
      */
     useEffect(() => {
         if (initializedRef.current) return;
 
-        // 브라우저 네비게이션 타입 확인
         let navType: string = "navigate";
         if (typeof performance !== "undefined") {
             const [entry] = performance.getEntriesByType(
@@ -51,16 +49,15 @@ export const useSearch = (promptType: "text" | "image") => {
             navType = entry?.type || "navigate";
         }
 
-        if (navType === "reload" || navType === "navigate") {
-            // 새로고침 또는 직접 진입 시: Recoil 상태 즉시 초기화
+        if (navType === "reload") {
+            // 새로고침 시 초기화
             setKeyword("");
             setSearchedKeyword("");
             setSearchedCategory("total");
             setSearchResults(undefined);
-            // URL에 남아있을 수 있는 ?keyword=&category= 제거
             router.replace(pathname, { scroll: false });
         } else {
-            // 뒤로/앞으로 가기 시: URL에서 상태 복원
+            // 뒤로/앞으로 가기 또는 최초 진입 시 URL에서 상태 복원
             const kw = searchParams.get("keyword") || "";
             const cat = searchParams.get("category") || "total";
             setKeyword(kw);
@@ -69,7 +66,7 @@ export const useSearch = (promptType: "text" | "image") => {
         }
 
         initializedRef.current = true;
-        setIsInitialized(true); // 초기화 완료 표시
+        setIsInitialized(true);
     }, [
         pathname,
         router,
@@ -80,38 +77,36 @@ export const useSearch = (promptType: "text" | "image") => {
     ]);
 
     /**
-     * 2) URL 쿼리가 바뀔 때마다 Recoil 상태 동기화
+     * 2) URL 쿼리 변경 시 상태 동기화
      */
     useEffect(() => {
-        // 초기화가 완료된 이후에만 URL 동기화 수행
-        if (!isInitialized) return;
-
         const kw = searchParams.get("keyword") || "";
         const cat = searchParams.get("category") || "total";
 
-        setKeyword(kw);
-        setSearchedKeyword(kw);
-        setSearchedCategory(cat);
+        // 상태가 변경된 경우에만 업데이트
+        if (kw !== keyword || cat !== searchedCategory) {
+            setKeyword(kw);
+            setSearchedKeyword(kw);
+            setSearchedCategory(cat);
+        }
 
-        // 검색이 초기 상태(total)라면 결과 비우기
+        // 검색이 초기 상태라면 결과 비우기
         if (!kw && cat === "total") {
             setSearchResults(undefined);
         }
     }, [
         searchParams,
+        keyword,
+        searchedCategory,
         setKeyword,
         setSearchedKeyword,
         setSearchedCategory,
-        isInitialized,
     ]);
 
     /**
-     * 3) Recoil의 keyword/category가 바뀔 때마다 실제 API 호출
+     * 3) Recoil 상태 변경 시 API 호출
      */
     useEffect(() => {
-        // 초기화가 완료된 이후에만 API 호출 수행
-        if (!isInitialized) return;
-
         if (!keyword && searchedCategory === "total") {
             setSearchResults(undefined);
             return;
@@ -142,18 +137,10 @@ export const useSearch = (promptType: "text" | "image") => {
         return () => {
             mounted = false;
         };
-    }, [
-        keyword,
-        searchedCategory,
-        promptType,
-        sortBy,
-        isUnderTablet,
-        isInitialized,
-    ]);
+    }, [keyword, searchedCategory, promptType, sortBy, isUnderTablet]);
 
     /**
-     * 4) 사용자가 직접 검색(엔터 / 카테고리 클릭) 시
-     *    → URL에만 반영 (2)번 Effect가 Recoil 동기화)
+     * 4) 검색 실행 및 URL 업데이트
      */
     const handleSearch = (newKeyword: string, newCategory: string) => {
         const qp = new URLSearchParams();
@@ -161,7 +148,21 @@ export const useSearch = (promptType: "text" | "image") => {
         if (newCategory && newCategory !== "total")
             qp.set("category", newCategory);
 
-        router.push(`${pathname}?${qp.toString()}`);
+        router.push(`${pathname}?${qp.toString()}`, { scroll: false });
+    };
+
+    /**
+     * 5) 상세 페이지로 이동 (쿼리 파라미터 유지)
+     */
+    const navigateToDetail = (promptId: string) => {
+        const qp = new URLSearchParams();
+        if (keyword) qp.set("keyword", keyword);
+        if (searchedCategory && searchedCategory !== "total")
+            qp.set("category", searchedCategory);
+
+        router.push(`/prompt/${promptType}/${promptId}?${qp.toString()}`, {
+            scroll: false,
+        });
     };
 
     return {
@@ -169,6 +170,7 @@ export const useSearch = (promptType: "text" | "image") => {
         searchedCategory,
         searchResults,
         handleSearch,
+        navigateToDetail,
         promptType,
         isLoading,
         isInitialized,
