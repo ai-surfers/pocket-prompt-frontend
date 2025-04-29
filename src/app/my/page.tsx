@@ -66,17 +66,17 @@ const MyPage = () => {
     }, [resetUserState, setUser]);
 
     useEffect(() => {
-        if (!isInitialized) {
-            setIsInitialized(true);
-            getUserData();
-        }
+        // 마운트 시: 유저 데이터 한 번만 가져오기
+        setIsInitialized(true);
+        getUserData();
 
+        // 언마운트 시: 검색 상태 초기화
         return () => {
             setKeyword("");
             setSearchedKeyword("");
             setSearchedCategory("");
         };
-    }, [isInitialized, getUserData]);
+    }, []);
 
     // 닉네임 변경
     const { mutate: updateNickname } = usePutNickname({
