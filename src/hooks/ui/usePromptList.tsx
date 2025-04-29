@@ -1,26 +1,17 @@
-// @/hooks/usePromptList.ts
 import { PromptDetails, SortType, ViewType } from "@/apis/prompt/prompt.model";
-import { searchedKeywordState } from "@/states/searchState";
 import { sortTypeState } from "@/states/sortState";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRecoilValue } from "recoil";
 
-interface UsePromptListProps {
-    items: PromptDetails[];
-    searchType: "total" | "popular" | "search" | "category";
-    viewType: ViewType;
-    defaultSortBy?: SortType;
-}
-
-export const usePromptList = ({
-    items,
-    searchType,
-    viewType,
-    defaultSortBy,
-}: UsePromptListProps) => {
+export function usePromptList(
+    items: PromptDetails[],
+    promptType: string,
+    searchType: "total" | "popular" | "search" | "category",
+    viewType: ViewType,
+    defaultSortBy?: SortType
+) {
     const sortBy = useRecoilValue(sortTypeState);
-    const searchedKeyword = useRecoilValue(searchedKeywordState);
-    const effectiveSortBy: SortType =
+    const effectiveSort: SortType =
         searchType === "popular"
             ? defaultSortBy ?? "usages_7_days"
             : sortBy ?? "created_at";
@@ -29,53 +20,55 @@ export const usePromptList = ({
     const [publicCount, setPublicCount] = useState(0);
     const [privateCount, setPrivateCount] = useState(0);
 
-    const sortedItems = useMemo(() => {
-        const itemsToSort = [...items];
-        const sorted = itemsToSort.sort((a, b) => {
-            if (effectiveSortBy === "created_at") {
-                return (
-                    new Date(b.created_at).getTime() -
-                    new Date(a.created_at).getTime()
-                );
-            } else if (effectiveSortBy === "star") {
-                return (b.star || 0) - (a.star || 0);
-            } else if (effectiveSortBy === "relevance" && searchedKeyword) {
-                return 0;
-            } else if (
-                effectiveSortBy === "usages_7_days" ||
-                effectiveSortBy === "usages_30_days"
-            ) {
-                return (b.usages || 0) - (a.usages || 0);
+    const sorted = useMemo(() => {
+        const clone = [...items];
+        return clone.sort((a, b) => {
+            switch (effectiveSort) {
+                case "created_at":
+                    return (
+                        new Date(b.created_at).getTime() -
+                        new Date(a.created_at).getTime()
+                    );
+                case "star":
+                    return (b.star || 0) - (a.star || 0);
+                case "usages_7_days":
+                case "usages_30_days":
+                    return (b.usages || 0) - (a.usages || 0);
+                default:
+                    return 0;
             }
-            return 0;
         });
+    }, [items, effectiveSort]);
 
+    const filtered = useMemo(
+        () =>
+            viewType === "my"
+                ? sorted.filter((i) =>
+                      activeTab === "public"
+                          ? i.visibility === "public"
+                          : i.visibility === "private"
+                  )
+                : sorted,
+        [sorted, viewType, activeTab]
+    );
+
+    useEffect(() => {
         if (viewType === "my") {
-            const publicItems = sorted.filter(
-                (item) => item.visibility === "public"
-            ).length;
-            const privateItems = sorted.filter(
-                (item) => item.visibility === "private"
-            ).length;
-            setPublicCount(publicItems);
-            setPrivateCount(privateItems);
+            setPublicCount(
+                sorted.filter((i) => i.visibility === "public").length
+            );
+            setPrivateCount(
+                sorted.filter((i) => i.visibility === "private").length
+            );
         }
-
-        return viewType === "my"
-            ? sorted.filter((item) =>
-                  activeTab === "public"
-                      ? item.visibility === "public"
-                      : item.visibility === "private"
-              )
-            : sorted;
-    }, [items, effectiveSortBy, searchedKeyword, viewType, activeTab]);
+    }, [sorted, viewType]);
 
     return {
-        sortedItems,
-        effectiveSortBy,
+        filtered,
+        effectiveSort,
         activeTab,
         setActiveTab,
         publicCount,
         privateCount,
     };
-};
+}

@@ -1,122 +1,125 @@
+// src/hooks/queries/useSearch.ts
+"use client";
+
 import { getPromptsList } from "@/apis/prompt/prompt";
-import { PromptDetails } from "@/apis/prompt/prompt.model";
+import type { PromptDetails } from "@/apis/prompt/prompt.model";
 import {
     keywordState,
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
+import { sortTypeState } from "@/states/sortState";
 import { useDeviceSize } from "@components/DeviceContext";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
+import { useEffect, useRef, useState } from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-export const useSearch = () => {
+export const useSearch = (promptType: "text" | "image") => {
     const { isUnderTablet } = useDeviceSize();
+    const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    const router = useRouter();
 
+    // Recoil
     const [keyword, setKeyword] = useRecoilState(keywordState);
     const [searchedCategory, setSearchedCategory] = useRecoilState(
         searchedCategoryState
     );
     const setSearchedKeyword = useSetRecoilState(searchedKeywordState);
-    const resetSearchedKeyword = useResetRecoilState(searchedKeywordState);
-    const resetSearchedCategory = useResetRecoilState(searchedCategoryState);
-    const [searchResults, setSearchResults] = useState<
-        PromptDetails[] | undefined
-    >(undefined);
-    // 초기화 플래그: 새로고침 시에만 초기화 수행
-    const [isInitialLoad, setIsInitialLoad] = useState(true);
+    const sortBy = useRecoilValue(sortTypeState);
 
-    const promptType = pathname.includes("image") ? "image" : "text";
+    // Local
+    const [searchResults, setSearchResults] = useState<PromptDetails[]>();
+    const [isLoading, setIsLoading] = useState(false);
 
-    const fetchSearchData = async (keyword: string, category: string) => {
-        try {
-            const params: any = {
-                prompt_type: promptType,
-                view_type: "open",
-                limit: isUnderTablet ? 5 : 18,
-                page: 1,
-            };
+    // “첫 사용” 플래그
+    const initializedRef = useRef(false);
 
-            if (keyword) params.query = keyword;
-            if (category && category !== "total") params.category = category;
-
-            const res = await getPromptsList(params);
-            const filteredResults =
-                category && category !== "total"
-                    ? res.prompt_info_list.filter((item: PromptDetails) =>
-                          item.categories.includes(category)
-                      )
-                    : res.prompt_info_list;
-
-            setSearchResults(filteredResults);
-        } catch (err) {
-            setSearchResults([]);
-        }
-    };
-
-    // 초기화 로직: 새로고침 시에만 실행
     useEffect(() => {
-        if (isInitialLoad) {
-            // 새로고침 시 URL 파라미터가 있으면 초기화
-            if (searchParams.get("keyword") || searchParams.get("category")) {
-                setKeyword("");
-                setSearchedKeyword("");
-                setSearchedCategory("total");
-                setSearchResults(undefined);
-                router.replace(pathname); // URL 쿼리 파라미터 제거
-            }
-            setIsInitialLoad(false); // 초기 로드 완료
-        }
-    }, [isInitialLoad, pathname, router, searchParams]);
+        if (initializedRef.current) return;
 
-    // 검색 파라미터 처리: 초기 로드 후에만 실행
-    useEffect(() => {
-        if (isInitialLoad) return; // 초기 로드 중에는 실행하지 않음
-
-        const keywordParam = searchParams.get("keyword");
-        const categoryParam = searchParams.get("category");
-
-        // 상세 페이지에서 돌아왔을 때 검색어와 카테고리 유지
-        if (keywordParam !== null && keywordParam !== keyword) {
-            setKeyword(keywordParam);
-            setSearchedKeyword(keywordParam);
-        }
-        if (categoryParam !== null && categoryParam !== searchedCategory) {
-            setSearchedCategory(categoryParam || "total");
+        // 브라우저 네비게이션 타입 확인
+        let navType: string = "navigate";
+        if (typeof performance !== "undefined") {
+            const [entry] = performance.getEntriesByType(
+                "navigation"
+            ) as PerformanceNavigationTiming[];
+            navType = entry?.type || "navigate";
         }
 
-        // 검색 실행 조건
-        if (keywordParam || (categoryParam && categoryParam !== "total")) {
-            fetchSearchData(keywordParam || "", categoryParam || "total");
-        } else {
+        if (navType === "reload" || navType === "navigate") {
+            // ✨ 새로고침/직접 주소창 진입인 경우: 완전 초기화
+            setKeyword("");
+            setSearchedKeyword("");
+            setSearchedCategory("total");
             setSearchResults(undefined);
+            // URL 에 남아있을 수 있는 ?keyword=&category= 를 지웁니다
+            router.replace(pathname, { scroll: false });
+        } else {
+            // ✨ 뒤로/앞으로(=detail → list) 복귀인 경우: URL 에서 읽어와서 복원
+            const kw = searchParams.get("keyword") || "";
+            const cat = searchParams.get("category") || "total";
+            setKeyword(kw);
+            setSearchedKeyword(kw);
+            setSearchedCategory(cat);
         }
-    }, [searchParams, pathname, isInitialLoad]);
 
+        initializedRef.current = true;
+        // 최초 한 번만 실행
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // 검색어·카테고리가 바뀔 때마다 실제 호출
+    useEffect(() => {
+        if (!keyword && searchedCategory === "total") {
+            setSearchResults(undefined);
+            return;
+        }
+        let mounted = true;
+        setIsLoading(true);
+        getPromptsList({
+            prompt_type: promptType,
+            view_type: "open",
+            query: keyword || undefined,
+            categories:
+                searchedCategory !== "total" ? searchedCategory : undefined,
+            limit: isUnderTablet ? 5 : 18,
+            page: 1,
+            sort_by: sortBy,
+        })
+            .then((res) => {
+                if (mounted) setSearchResults(res.prompt_info_list);
+            })
+            .catch(() => {
+                if (mounted) setSearchResults([]);
+            })
+            .finally(() => {
+                if (mounted) setIsLoading(false);
+            });
+        return () => {
+            mounted = false;
+        };
+    }, [keyword, searchedCategory, promptType, sortBy, isUnderTablet]);
+
+    // 사용자가 엔터 or 카테고리 클릭 했을 때
     const handleSearch = (newKeyword: string, newCategory: string) => {
-        const query = new URLSearchParams();
-        if (newKeyword) query.set("keyword", newKeyword);
-        if (newCategory && newCategory !== "total")
-            query.set("category", newCategory);
-
-        router.push(
-            `${pathname}${query.toString() ? `?${query.toString()}` : ""}`
-        );
         setKeyword(newKeyword);
         setSearchedKeyword(newKeyword);
         setSearchedCategory(newCategory);
+        // URL 에도 반영
+        const qp = new URLSearchParams();
+        if (newKeyword) qp.set("keyword", newKeyword);
+        if (newCategory && newCategory !== "total")
+            qp.set("category", newCategory);
+        router.push(`${pathname}?${qp.toString()}`);
     };
 
     return {
-        keyword: isInitialLoad ? "" : keyword,
-        searchedCategory: isInitialLoad ? "total" : searchedCategory,
+        keyword,
+        searchedCategory,
         searchResults,
         handleSearch,
         promptType,
-        resetSearchedKeyword,
-        resetSearchedCategory,
+        isLoading,
     };
 };

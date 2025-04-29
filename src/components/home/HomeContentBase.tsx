@@ -2,11 +2,14 @@
 
 import { PromptDetails } from "@/apis/prompt/prompt.model";
 import VocModal from "@/components/home/VocModal";
+
+import { promptConfigs } from "@/components/home/prompt/promptConfig";
 import HomeSiderBar from "@/components/home/siderbarAd/HomeSiderBar";
 import HomeLnb from "@/components/lnb/HomeLnb";
 import { usePromptData } from "@/hooks/mutations/prompts/usePromptData";
-import { useSearch } from "@/hooks/queries/UseSearch";
 import { useGetSubscription } from "@/hooks/queries/payments/useGetSubscription";
+
+import { useSearch } from "@/hooks/queries/useSearch";
 import { useUser } from "@/hooks/useUser";
 import { useDeviceSize } from "@components/DeviceContext";
 import Icon from "@components/common/Icon";
@@ -15,6 +18,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import SearchSection from "./SearchSection";
 import Banner from "./banner/Banner";
+import PromptListSection from "./prompt/list/PromptListSection";
 
 interface PromptData {
     top7Days: PromptDetails[];
@@ -23,17 +27,22 @@ interface PromptData {
 }
 
 type HomeContentBaseProps = {
-    PromptListSection: React.ComponentType<{
-        promptData: PromptData;
-        searchResults?: PromptDetails[];
-    }>;
+    promptType: "text" | "image";
     initialMenu: string;
 };
 
 export default function HomeContentBase({
-    PromptListSection,
+    promptType,
     initialMenu,
 }: HomeContentBaseProps) {
+    // 1) 이 두 훅은 무조건 최상단에서 호출되어야 합니다
+    const [isVocModalOpen, setIsVocModalOpen] = useState(false);
+    const promptData = usePromptData(promptType);
+
+    // 그 다음에 검색 훅
+    const { searchResults, isLoading } = useSearch(promptType);
+
+    // 그리고 나머지 훅들
     const { isUnderTablet } = useDeviceSize();
     const { userData } = useUser();
     const { data: userPaymentData } = useGetSubscription({
@@ -41,10 +50,8 @@ export default function HomeContentBase({
     });
     const isSubscriber =
         userData.isLogin && userPaymentData?.subscription_status === "active";
-    const [isVocModalOpen, setIsVocModalOpen] = useState(false);
-    const { searchResults, promptType } = useSearch();
-    const promptData = usePromptData(promptType as "image" | "text");
 
+    // 3) 로딩이 끝난 뒤에 실제 UI 렌더
     return (
         <HomeWrapper>
             <HomeContentWrapper $isUnderTablet={isUnderTablet}>
@@ -58,17 +65,17 @@ export default function HomeContentBase({
                 </LeftSection>
                 <ContentWrapper>
                     <Banner />
-                    <SearchSectionWrapper>
-                        <SearchSection />
-                    </SearchSectionWrapper>
+                    <SearchSection promptType={promptType} />
                     <PromptListSection
                         promptData={promptData}
                         searchResults={searchResults}
+                        config={promptConfigs[promptType]}
+                        isLoading={isLoading}
                     />
                 </ContentWrapper>
             </HomeContentWrapper>
             <IconWrap onClick={() => setIsVocModalOpen(true)}>
-                <Icon name={"MessageText"} color={"white"} size={30} />
+                <Icon name="MessageText" color="white" size={30} />
             </IconWrap>
             <VocModal
                 isOpen={isVocModalOpen}
@@ -77,6 +84,7 @@ export default function HomeContentBase({
         </HomeWrapper>
     );
 }
+
 const HomeWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox()}
     gap: 40px;

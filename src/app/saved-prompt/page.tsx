@@ -1,7 +1,7 @@
 "use client";
 
 import Text from "@/components/common/Text/Text";
-import PromptList from "@/components/home/prompt/PromptList";
+import PromptList from "@/components/home/prompt/list/PromptList";
 import HomeLnb from "@/components/lnb/HomeLnb";
 import {
     keywordState,

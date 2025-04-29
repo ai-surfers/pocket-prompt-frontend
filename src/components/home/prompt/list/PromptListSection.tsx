@@ -1,8 +1,8 @@
+// src/components/home/prompt/PromptListSection.tsx
 "use client";
 
 import { PromptDetails } from "@/apis/prompt/prompt.model";
 import Text from "@/components/common/Text/Text";
-import { Categories, ImageCategories } from "@/core/Prompt";
 import {
     searchedCategoryState,
     searchedKeywordState,
@@ -10,39 +10,46 @@ import {
 import { Col, Row } from "antd";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import PromptCardText from "../card/PromptCardText";
-import PromptList from "../PromptList";
+import PromptList from "./PromptList";
 
-interface PromptData {
-    top7Days: PromptDetails[];
-    top30Days: PromptDetails[];
-    allPrompts: PromptDetails[];
+export interface PromptSectionConfig {
+    promptType: "text" | "image";
+    categoriesMap: Record<string, { ko: string; emoji?: React.ReactNode }>;
+    PopularCard: React.ComponentType<any>;
+    Card: React.ComponentType<any>;
 }
 
-interface PromptListSectionTextProps {
-    promptData: PromptData;
+type Props = {
+    promptData: {
+        top7Days: PromptDetails[];
+        top30Days: PromptDetails[];
+        allPrompts: PromptDetails[];
+    };
     searchResults?: PromptDetails[];
-}
+    config: PromptSectionConfig;
+    isLoading?: boolean;
+};
 
-const PromptListSectionText = ({
+export default function PromptListSection({
     promptData,
     searchResults,
-}: PromptListSectionTextProps) => {
-    const { top7Days, top30Days, allPrompts } = promptData;
+    config: { promptType, categoriesMap, PopularCard, Card },
+    isLoading = false,
+}: Props) {
+    const { top7Days, top30Days } = promptData;
+
+    // popular
+    const top7 = top7Days.slice(0, 3);
+    const top7Ids = new Set(top7.map((p) => p.id));
+    const top30 = top30Days.filter((p) => !top7Ids.has(p.id)).slice(0, 3);
 
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
 
-    const top7 = top7Days.slice(0, 3);
-    const top7Ids = new Set(top7.map((item) => item.id));
-    const top30 = top30Days.filter((item) => !top7Ids.has(item.id)).slice(0, 3);
-
-    const promptType: "text" | "image" = "text";
-
     const categoryKoName =
-        promptType === "text"
-            ? Categories[searchedCategory]?.ko
-            : ImageCategories[searchedCategory]?.ko;
+        searchedCategory === "total"
+            ? "전체"
+            : categoriesMap[searchedCategory]?.ko || "전체";
 
     const isSearching =
         !!searchedKeyword || (searchedCategory && searchedCategory !== "total");
@@ -60,13 +67,13 @@ const PromptListSectionText = ({
 
     return (
         <>
-            {/* 인기 프롬프트 (주간/월간) - 검색 시 부드럽게 사라짐 */}
             <FadeContainer visible={!isSearching}>
                 <Row gutter={[24, 24]} style={{ marginBottom: "32px" }}>
+                    {/* 인기 7일 */}
                     <Col xs={24} md={12}>
                         <BackgroundBox>
                             <PromptList
-                                promptType="text"
+                                promptType={promptType}
                                 searchType="popular"
                                 viewType="open"
                                 title={
@@ -77,26 +84,21 @@ const PromptListSectionText = ({
                                 limit={3}
                                 defaultSortBy="usages_7_days"
                                 items={top7}
-                                renderItem={(item, index) => (
-                                    <PromptCardText
-                                        id={item.id}
-                                        title={item.title}
-                                        description={item.description}
-                                        views={item.views}
-                                        star={item.star}
-                                        usages={item.usages}
-                                        index={index + 1}
-                                        isMiniHeight={true}
+                                renderItem={(item, idx) => (
+                                    <PopularCard
+                                        {...item}
+                                        index={idx + 1}
+                                        isMiniHeight
                                     />
                                 )}
                             />
                         </BackgroundBox>
                     </Col>
-
+                    {/* 인기 30일 (구조 동일) */}
                     <Col xs={24} md={12}>
                         <BackgroundBox>
                             <PromptList
-                                promptType="text"
+                                promptType={promptType}
                                 searchType="popular"
                                 viewType="open"
                                 title={
@@ -107,16 +109,11 @@ const PromptListSectionText = ({
                                 limit={3}
                                 defaultSortBy="usages_30_days"
                                 items={top30}
-                                renderItem={(item, index) => (
-                                    <PromptCardText
-                                        id={item.id}
-                                        title={item.title}
-                                        description={item.description}
-                                        views={item.views}
-                                        star={item.star}
-                                        usages={item.usages}
-                                        index={index + 1}
-                                        isMiniHeight={true}
+                                renderItem={(item, idx) => (
+                                    <PopularCard
+                                        {...item}
+                                        index={idx + 1}
+                                        isMiniHeight
                                     />
                                 )}
                             />
@@ -125,33 +122,21 @@ const PromptListSectionText = ({
                 </Row>
             </FadeContainer>
 
-            {/* 전체 프롬프트 or 검색 결과 */}
+            {/* 전체 or 검색 결과 */}
+
             <PromptList
-                promptType="text"
+                promptType={promptType}
                 searchType={searchResults ? "search" : "total"}
                 viewType="open"
                 title={<Text font="h2_20_semi">{titleText}</Text>}
                 limit={18}
                 defaultSortBy="created_at"
-                items={searchResults ? searchResults : undefined}
-                renderItem={(item, index) => (
-                    <PromptCardText
-                        id={item.id}
-                        title={item.title}
-                        description={item.description}
-                        views={item.views}
-                        star={item.star}
-                        usages={item.usages}
-                        index={index + 1}
-                        isMiniHeight={false}
-                    />
-                )}
+                items={searchResults}
+                renderItem={(item, idx) => <Card {...item} index={idx + 1} />}
             />
         </>
     );
-};
-
-export default PromptListSectionText;
+}
 
 const FadeContainer = styled.div<{ visible: boolean }>`
     opacity: ${({ visible }) => (visible ? 1 : 0)};
@@ -162,9 +147,14 @@ const FadeContainer = styled.div<{ visible: boolean }>`
 
 const BackgroundBox = styled.div`
     background-color: ${({ theme }) => theme.colors.primary_10};
-    border-radius: 8px;
-    padding: 20px 16px 16px 16px;
+    border-radius: 12px;
+    padding: 16px;
     height: 100%;
     display: flex;
     flex-direction: column;
+`;
+
+const Centered = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("row", "center", "center")};
+    height: 80vh;
 `;

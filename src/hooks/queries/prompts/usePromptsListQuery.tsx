@@ -1,83 +1,81 @@
+// src/hooks/queries/prompts/usePromptsListQuery.ts
 "use client";
 
 import { getPromptsList } from "@/apis/prompt/prompt";
-import {
+import type {
     GetPromptsListResponse,
+    PromptDetails,
     SortType,
     ViewType,
 } from "@/apis/prompt/prompt.model";
-import { PROMPT_KEYS } from "@/hooks/queries/QueryKeys";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-export interface PromptQueryProps {
-    sortBy?: SortType; // sortBy를 선택적으로 변경
-    limit?: number;
+interface Params {
+    promptType: "text" | "image" | "video";
     query?: string;
     categories?: string;
     viewType?: ViewType;
-    prompt_type?: "text" | "image" | "video";
+    limit?: number;
+    sortBy?: SortType;
 }
 
-const usePromptsListQuery = (
+export function usePromptsListQuery(
     {
-        sortBy,
-        limit,
+        promptType,
         query,
         categories,
         viewType = "open",
-        prompt_type,
-    }: PromptQueryProps,
-    skip: boolean = false
-) => {
+        limit = 18,
+        sortBy = "created_at",
+    }: Params,
+    skip = false
+) {
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 18;
-    const queryKey = PROMPT_KEYS.list({
-        viewType,
-        currentPage,
-        itemsPerPage,
-        sortBy: sortBy ?? "created_at", // sortBy가 undefined일 경우 기본값 설정
-        ...(limit !== undefined && { limit }),
-        ...(query !== undefined && { query }),
-        ...(categories !== undefined && { categories }),
-        ...(prompt_type !== undefined && { prompt_type }),
-    });
+    const itemsPerPage = limit;
 
-    const { data, isLoading, refetch } = useQuery<GetPromptsListResponse>({
-        queryKey: queryKey,
+    // 1) 세 가지 인자를 받는 오버로드를 명시적으로 사용
+    const { data, isLoading, isFetching } = useQuery<
+        GetPromptsListResponse,
+        Error
+    >({
+        // ··· (1) queryKey
+        queryKey: [
+            "prompts",
+            promptType,
+            { query, categories, viewType, currentPage, itemsPerPage, sortBy },
+        ],
+        // ··· (2) queryFn
         queryFn: () =>
             getPromptsList({
+                prompt_type: promptType,
                 view_type: viewType,
-                sort_by: sortBy ?? "created_at", // sortBy가 undefined일 경우 기본값 설정
+                query,
+                categories: categories === "total" ? undefined : categories,
                 page: currentPage,
-                limit: limit ? limit : itemsPerPage,
+                limit: itemsPerPage,
+                sort_by: sortBy,
                 sort_order: "desc",
-                query: query,
-                categories: categories,
-                prompt_type: prompt_type,
-            }).then((res) => res),
-        staleTime: 0,
-        refetchOnMount: "always",
+            }),
+        // ··· (3) options
         enabled: !skip,
+        placeholderData: undefined,
+        staleTime: 1000,
     });
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    };
+    const handlePageChange = (page: number) => setCurrentPage(page);
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [sortBy]);
+    }, [sortBy, query, categories]);
 
     return {
-        items: data?.prompt_info_list || [],
-        totalItems: data?.page_meta_data.total_count || 0,
-        isLoading,
+        items: data?.prompt_info_list ?? ([] as PromptDetails[]),
+        totalItems: data?.page_meta_data.total_count ?? 0,
+        isLoading, // 첫 로드 전용
+        isFetching, // 모든 재요청(페이징, 정렬, 검색) 전용
         currentPage,
         itemsPerPage,
         handlePageChange,
-        refetch,
     };
-};
-
-export default usePromptsListQuery;
+}

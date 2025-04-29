@@ -1,85 +1,101 @@
+"use client";
+
 import { PromptDetails, SortType, ViewType } from "@/apis/prompt/prompt.model";
-import usePromptsListQuery from "@/hooks/queries/prompts/usePromptsListQuery";
+import { usePromptsListQuery } from "@/hooks/queries/prompts/usePromptsListQuery";
+import { useSearch } from "@/hooks/queries/useSearch"; // ← 추가
 import { usePromptList } from "@/hooks/ui/usePromptList";
+import { sortTypeState } from "@/states/sortState";
 import { Col, Flex, Pagination, Row } from "antd";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import SortSelect from "../searchUI/SortSelect";
-import EmptyPrompt from "./EmptyPrompt";
+import SortSelect from "../../searchUI/SortSelect";
+import EmptyPrompt from "../EmptyPrompt";
 
 interface PromptListProps {
-    items?: PromptDetails[]; // ✅ optional로 변경
-    usePage?: boolean;
+    promptType: "text" | "image";
     searchType: "total" | "popular" | "search" | "category";
     viewType: ViewType;
     title: React.ReactNode;
     limit?: number;
     defaultSortBy?: SortType;
-    promptType?: "text" | "image" | "video";
-    renderItem: (item: any, index: number) => React.ReactNode;
+    items?: PromptDetails[]; // for popular only
+    renderItem: (item: PromptDetails, index: number) => React.ReactNode;
 }
 
-const PromptList = ({
-    items: externalItems,
+export default function PromptList({
+    promptType,
     searchType,
-    usePage = true,
     viewType,
     title,
-    limit,
+    limit = 18,
     defaultSortBy,
-    promptType,
+    items: popularItems,
     renderItem,
-}: PromptListProps) => {
-    const isUsingExternalItems = !!externalItems; // ✅
+}: PromptListProps) {
+    const sortBy = useRecoilValue(sortTypeState);
+
+    // 🕵️‍♂️ 검색 키워드·카테고리
+    const { keyword, searchedCategory } = useSearch(promptType);
+
+    // ✅ 검색·전체일 때만 서버 호출, 인기(popuplar)면 skip
+    const skipFetch = searchType === "popular";
 
     const {
-        items: queriedItems,
+        items: fetchedItems,
         totalItems,
         currentPage,
         itemsPerPage,
         handlePageChange,
-        isLoading,
+        isFetching,
     } = usePromptsListQuery(
         {
+            promptType,
             viewType,
-            sortBy: defaultSortBy,
             limit,
-            prompt_type: promptType,
+            sortBy: defaultSortBy ?? sortBy,
+            // 검색 중이라면 query·categories 전달
+            query: searchType === "search" ? keyword : undefined,
+            categories:
+                searchType === "search" && searchedCategory !== "total"
+                    ? searchedCategory
+                    : undefined,
         },
-        isUsingExternalItems // ✅ 외부 데이터 있으면 쿼리 skip
+        skipFetch
     );
 
-    // ✅ 데이터 소스 결정
-    const dataSource = externalItems ?? queriedItems ?? [];
+    // 인기일 때만 popularItems, 그 외는 fetchedItems 사용
+    const dataSource = searchType === "popular" ? popularItems! : fetchedItems;
 
+    // 훅으로 정렬·탭·카운트 처리
     const {
-        sortedItems,
-        effectiveSortBy,
+        filtered: sortedItems,
+        effectiveSort,
         activeTab,
         setActiveTab,
         publicCount,
         privateCount,
-    } = usePromptList({
-        items: dataSource,
+    } = usePromptList(
+        dataSource,
+        promptType,
         searchType,
         viewType,
-        defaultSortBy,
-    });
+        defaultSortBy
+    );
 
     const isPopularList = searchType === "popular";
-    const shouldShowSortAndPage = usePage && !isPopularList;
-    const isPopularOrFeatured =
-        searchType === "popular" || viewType === "featured";
+    const showSortAndPage =
+        viewType !== "my" && !isPopularList && sortedItems.length > 1;
 
     const renderContent = () => {
-        if (isUsingExternalItems === false && isLoading) {
-            // ✅ 외부 데이터 없고 로딩중일 때만 스켈레톤
+        // 1) 검색/전체 모드이고 fetch 중이면 Skeleton
+        if (searchType !== "popular" && isFetching) {
             return Array.from({ length: limit ?? itemsPerPage }).map(
                 (_, idx) => (
                     <Col
-                        key={`skeleton-${idx}`}
+                        key={idx}
                         xs={24}
-                        sm={isPopularOrFeatured ? 24 : 12}
-                        md={isPopularOrFeatured ? 24 : 8}
+                        sm={isPopularList ? 24 : 12}
+                        md={isPopularList ? 24 : 8}
                         style={{ flexShrink: 0, display: "flex" }}
                     >
                         <SkeletonBox />
@@ -88,19 +104,18 @@ const PromptList = ({
             );
         }
 
-        if (!isLoading && sortedItems.length === 0) {
+        if (!isFetching && sortedItems.length === 0) {
             return <EmptyPrompt viewType={viewType} />;
         }
-
-        return sortedItems.map((item, index) => (
+        return sortedItems.map((item, idx) => (
             <Col
                 key={item.id}
                 xs={24}
-                sm={isPopularOrFeatured ? 24 : 12}
-                md={isPopularOrFeatured ? 24 : 8}
+                sm={isPopularList ? 24 : 12}
+                md={isPopularList ? 24 : 8}
                 style={{ flexShrink: 0, display: "flex" }}
             >
-                {renderItem(item, index)}
+                {renderItem(item, idx)}
             </Col>
         ));
     };
@@ -109,8 +124,6 @@ const PromptList = ({
         <Flex vertical gap={20} style={{ width: "100%" }}>
             <TitleWrapper $viewType={viewType}>
                 {title}
-
-                {/* 마이페이지 탭 */}
                 {viewType === "my" ? (
                     <TabBarContainer>
                         <MyPageContentTab
@@ -127,28 +140,22 @@ const PromptList = ({
                         </MyPageContentTab>
                     </TabBarContainer>
                 ) : (
-                    shouldShowSortAndPage &&
-                    sortedItems.length > 1 && (
-                        <SortSelect effectiveSortBy={effectiveSortBy} />
+                    showSortAndPage && (
+                        <SortSelect effectiveSortBy={effectiveSort} />
                     )
                 )}
             </TitleWrapper>
 
-            <Row
-                gutter={[16, 16]}
-                align="stretch"
-                style={{ display: "flex", alignItems: "stretch" }}
-            >
+            <Row gutter={[16, 16]} align="stretch" style={{ display: "flex" }}>
                 {renderContent()}
             </Row>
 
-            {/* ✅ 페이지네이션은 외부 items 없을 때만 */}
-            {shouldShowSortAndPage && sortedItems.length > 1 && (
+            {showSortAndPage && (
                 <div style={{ margin: "0 auto" }}>
                     <Pagination
                         current={currentPage}
                         pageSize={itemsPerPage}
-                        total={totalItems || 0}
+                        total={totalItems}
                         onChange={handlePageChange}
                         showSizeChanger={false}
                     />
@@ -156,22 +163,13 @@ const PromptList = ({
             )}
         </Flex>
     );
-};
-
-export default PromptList;
-
+}
 const SkeletonBox = styled.div`
     ${({ theme }) => theme.mixins.skeleton()};
     width: 100%;
     flex: 1;
     height: 157px;
     border-radius: 8px;
-`;
-
-const SelectWrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row", "end")};
-    width: 100%;
-    flex: 1;
 `;
 
 const TitleWrapper = styled.div<{ $viewType: ViewType }>`
@@ -182,7 +180,7 @@ const TitleWrapper = styled.div<{ $viewType: ViewType }>`
             $viewType === "my" ? "start" : "center"
         )};
     width: 100%;
-    ${({ $viewType }) => $viewType === "my" && "gap: 10px;"};
+    ${({ $viewType }) => $viewType === "my" && "gap: 10px;"}
 `;
 
 const TabBarContainer = styled.div`
