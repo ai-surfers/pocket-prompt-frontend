@@ -1,3 +1,4 @@
+// src/components/home/prompt/card/PromptCardImage.tsx
 "use client";
 
 import Icon from "@/components/common/Icon";
@@ -13,6 +14,7 @@ import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 
 interface PromptCardImageProps {
+    promptType: "image";
     colored?: boolean;
     title: string;
     views: number;
@@ -24,6 +26,7 @@ interface PromptCardImageProps {
 }
 
 const PromptCardImage = ({
+    promptType,
     colored = false,
     title,
     views,
@@ -39,23 +42,30 @@ const PromptCardImage = ({
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
 
+    // 디버깅: sampleMedia 출력
+    console.log("PromptCardImage - sampleMedia:", sampleMedia);
+
     const handleClick = () => {
-        // 검색어와 카테고리가 있을 때만 쿼리 파라미터 추가
-        const query = new URLSearchParams();
-        if (searchedKeyword && searchedKeyword.trim() !== "") {
-            query.set("keyword", searchedKeyword);
-        }
-        if (searchedCategory && searchedCategory !== "total") {
-            query.set("category", searchedCategory);
+        let href = `/prompt/${promptType}/${id}`;
+
+        const params = new URLSearchParams();
+        if (searchedKeyword) params.set("keyword", searchedKeyword);
+        if (searchedCategory && searchedCategory !== "total")
+            params.set("category", searchedCategory);
+
+        if ([...params].length) {
+            href += `?${params.toString()}`;
         }
 
-        const queryString = query.toString();
-        router.push(`/prompt/${id}${queryString ? `?${queryString}` : ""}`);
+        router.push(href);
         resetPocketRunState();
     };
 
+    // thumbnail 계산 및 기본 이미지 설정
     const thumbnail =
-        sampleMedia && sampleMedia.length > 0 ? sampleMedia[0] : "";
+        sampleMedia && sampleMedia.length > 0 && sampleMedia[0]
+            ? sampleMedia[0]
+            : "https://via.placeholder.com/150"; // 기본 이미지 설정
 
     return (
         <Card
@@ -102,7 +112,7 @@ const Card = styled.div<{
 }>`
     position: relative;
     width: 100%;
-    height: ${({ $isMiniHeight }) => ($isMiniHeight ? "133px" : "187px")};
+    height: ${({ $isMiniHeight }) => ($isMiniHeight ? "133px" : "157px")};
     border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
@@ -147,7 +157,7 @@ const Title = styled.div`
 `;
 
 const DetailsWrapper = styled.div`
-    display: flex;
+    ${({ theme }) => theme.mixins.flexBox("row", "flex-end")};
     gap: 16px;
     margin-top: 8px;
 `;

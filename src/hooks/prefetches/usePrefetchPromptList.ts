@@ -1,3 +1,5 @@
+"use server";
+
 import { getPromptsList } from "@/apis/prompt/prompt";
 import serverQueryClient from "@/apis/serverQueryClient";
 import {

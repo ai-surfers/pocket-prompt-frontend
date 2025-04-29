@@ -1,7 +1,9 @@
 "use client";
 
 import Text from "@/components/common/Text/Text";
-import PromptList from "@/components/home/prompt/PromptList";
+import PromptCardImage from "@/components/home/prompt/card/PromptCardImage";
+import PromptCardText from "@/components/home/prompt/card/PromptCardText";
+import PromptList from "@/components/home/prompt/list/PromptList";
 import HomeLnb from "@/components/lnb/HomeLnb";
 import {
     keywordState,
@@ -48,6 +50,34 @@ export default function SavedPromptPage() {
                             <Text font="h2_20_semi" color="G_800">
                                 저장한 프롬프트
                             </Text>
+                        }
+                        // renderItem 에서 item.type 에 따라 카드 컴포넌트 선택
+                        renderItem={(item, idx) =>
+                            item.type === "image" ? (
+                                <PromptCardImage
+                                    promptType="image"
+                                    key={item.id}
+                                    id={item.id}
+                                    title={item.title}
+                                    sampleMedia={item.sample_media}
+                                    views={item.views}
+                                    star={item.star}
+                                    usages={item.usages}
+                                    isMiniHeight={false}
+                                />
+                            ) : (
+                                <PromptCardText
+                                    promptType="text"
+                                    key={item.id}
+                                    id={item.id}
+                                    title={item.title}
+                                    description={item.description}
+                                    views={item.views}
+                                    star={item.star}
+                                    usages={item.usages}
+                                    isMiniHeight={false}
+                                />
+                            )
                         }
                     />
                 </ContentWrapper>

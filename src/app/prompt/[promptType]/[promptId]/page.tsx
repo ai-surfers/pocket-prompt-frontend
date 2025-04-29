@@ -1,17 +1,19 @@
 import PromptContent from "@/components/prompt/PromptContent";
 import { prefetchPrompt } from "@/hooks/prefetches/usePrefetchPrompt";
-import React from "react";
 
 export interface PromptPageProps {
-    params: { promptId: string };
+    params: {
+        promptType: "text" | "image";
+        promptId: string;
+    };
 }
 
 const PromptPage = async ({ params }: PromptPageProps) => {
-    const { promptId } = params;
+    const { promptType, promptId } = params;
 
-    await prefetchPrompt(promptId);
+    await prefetchPrompt(promptType, promptId);
 
-    return <PromptContent promptId={promptId} />;
+    return <PromptContent promptType={promptType} promptId={promptId} />;
 };
 
 export default PromptPage;

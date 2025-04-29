@@ -13,6 +13,7 @@ import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 
 interface PromptCardTextProps {
+    promptType: "text";
     colored?: boolean;
     title: string;
     description: string;
@@ -25,6 +26,7 @@ interface PromptCardTextProps {
 }
 
 const PromptCardText = ({
+    promptType,
     colored = false,
     title,
     description,
@@ -42,17 +44,19 @@ const PromptCardText = ({
     const searchedCategory = useRecoilValue(searchedCategoryState);
 
     const handleClick = () => {
-        // 검색어와 카테고리가 있을 때만 쿼리 파라미터 추가
-        const query = new URLSearchParams();
-        if (searchedKeyword && searchedKeyword.trim() !== "") {
-            query.set("keyword", searchedKeyword);
-        }
-        if (searchedCategory && searchedCategory !== "total") {
-            query.set("category", searchedCategory);
+        // 1) promptType 과 id 를 모두 경로에 포함
+        let href = `/prompt/${promptType}/${id}`;
+
+        const params = new URLSearchParams();
+        if (searchedKeyword) params.set("keyword", searchedKeyword);
+        if (searchedCategory && searchedCategory !== "total")
+            params.set("category", searchedCategory);
+
+        if ([...params].length) {
+            href += `?${params.toString()}`;
         }
 
-        const queryString = query.toString();
-        router.push(`/prompt/${id}${queryString ? `?${queryString}` : ""}`);
+        router.push(href);
         resetPocketRunState();
     };
 
