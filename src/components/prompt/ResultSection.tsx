@@ -1,18 +1,34 @@
+import Button from "@/components/common/Button/Button";
+import Icon from "@/components/common/Icon";
 import Text from "@/components/common/Text/Text";
-import { pocketRunLoadingState, pocketRunState } from "@/states/pocketRunState";
-import { Dropdown, Flex, MenuProps, Spin } from "antd";
+import { PocketRunImageModel, PocketRunModel } from "@/core/Prompt";
+import useToast from "@/hooks/useToast";
+import {
+    imgPocketRunLoadingState,
+    imgPocketRunState,
+    pocketRunLoadingState,
+    pocketRunState,
+} from "@/states/pocketRunState";
+import { copyClipboard } from "@/utils/promptUtils";
 import { LoadingOutlined } from "@ant-design/icons";
+import { Dropdown, Flex, MenuProps, Spin } from "antd";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import Icon from "@/components/common/Icon";
-import { copyClipboard } from "@/utils/promptUtils";
-import Button from "@/components/common/Button/Button";
-import { PocketRunModel } from "@/core/Prompt";
-import useToast from "@/hooks/useToast";
 
-export const ResultSection: React.FC = () => {
-    const pocketRunRes = useRecoilValue(pocketRunState);
-    const pocketRunLoading = useRecoilValue(pocketRunLoadingState);
+interface ResultSectionProps {
+    promptType: "text" | "image";
+}
+
+export const ResultSection: React.FC<ResultSectionProps> = ({ promptType }) => {
+    // 텍스트/이미지에 따라 Recoil 상태와 로딩 상태 분기
+    const resultList = useRecoilValue(
+        promptType === "image" ? imgPocketRunState : pocketRunState
+    );
+    const isLoading = useRecoilValue(
+        promptType === "image"
+            ? imgPocketRunLoadingState
+            : pocketRunLoadingState
+    );
 
     const showToast = useToast();
 
@@ -30,36 +46,35 @@ export const ResultSection: React.FC = () => {
             });
     };
 
-    const items = (value: string): MenuProps["items"] => {
-        if (!value) {
-            return [
-                {
-                    label: "Invalid Value",
-                    key: "0",
-                },
-            ];
-        }
-        return [
-            {
-                label: (
-                    <Text
-                        font="b3_14_reg"
-                        color="G_500"
-                        style={{ width: "100%" }}
-                    >
-                        {value}
-                    </Text>
-                ),
-                key: "0",
-                style: { pointerEvents: "none", width: "100%" },
-            },
-        ];
-    };
+    const items = (value: string): MenuProps["items"] =>
+        value
+            ? [
+                  {
+                      label: (
+                          <Text
+                              font="b3_14_reg"
+                              color="G_500"
+                              style={{ width: "100%" }}
+                          >
+                              {value}
+                          </Text>
+                      ),
+                      key: "0",
+                      style: { pointerEvents: "none", width: "100%" },
+                  },
+              ]
+            : [
+                  {
+                      label: "Invalid Value",
+                      key: "0",
+                  },
+              ];
 
     return (
         <Flex vertical gap={16} style={{ height: "100%" }}>
             <Text font="h2_20_semi">포켓런 결과</Text>
-            {!pocketRunLoading && pocketRunRes[0].response.length === 0 ? (
+
+            {!isLoading && resultList[0].response.length === 0 ? (
                 <EmptyBox>
                     <Text font="b2_16_semi">아직 포켓런 결과가 없어요!</Text>
                     <Text font="b3_14_reg" color="G_400">
@@ -68,126 +83,137 @@ export const ResultSection: React.FC = () => {
                     </Text>
                 </EmptyBox>
             ) : (
-                pocketRunRes.map((res, index) => (
-                    <div key={`pocketRun${index}`}>
-                        <Text font="b1_18_semi" color="G_800">
-                            {index + 1}차 결과
-                        </Text>
-                        <ChipWrapper>
-                            <ModelChip key={index}>
-                                <Text
-                                    font="b3_14_reg"
-                                    color="G_500"
-                                    style={{ whiteSpace: "nowrap" }}
-                                >
-                                    {
-                                        Object.values(PocketRunModel).find(
-                                            (model) => model.value === res.model
-                                        )?.label
-                                    }
-                                </Text>
-                            </ModelChip>
-                            <DropdownWrapper>
-                                {Object.entries(res.context).map(
-                                    ([key, value]) => (
-                                        <Dropdown
-                                            key={key}
-                                            menu={{ items: items(value) || [] }}
-                                            trigger={["click"]}
-                                            overlayStyle={{
-                                                width: "150px",
-                                                height: "auto",
-                                                whiteSpace: "break-spaces",
-                                                overflow: "visible",
-                                            }}
-                                        >
-                                            <DropdownButton
-                                                id={`dropdown-button-${key}-${index}`}
-                                            >
-                                                <Text
-                                                    font="b3_14_semi"
-                                                    color="G_600"
-                                                    style={{
-                                                        whiteSpace: "nowrap",
-                                                        overflow: "hidden",
-                                                        textOverflow:
-                                                            "ellipsis",
-                                                    }}
-                                                >
-                                                    {key}
-                                                </Text>
-                                                <Icon
-                                                    name="ArrowDown2"
-                                                    size={16}
-                                                    color="G_300"
-                                                ></Icon>
-                                            </DropdownButton>
-                                        </Dropdown>
-                                    )
-                                )}
-                            </DropdownWrapper>
-                        </ChipWrapper>
+                resultList.map((res, index) => {
+                    // 모델 레이블도 분기
+                    const modelRecord =
+                        promptType === "image"
+                            ? PocketRunImageModel
+                            : PocketRunModel;
+                    const label = Object.values(modelRecord).find(
+                        (m) => m.value === res.model
+                    )?.label;
 
-                        {index === pocketRunRes.length - 1 &&
-                        pocketRunLoading ? (
-                            <LoadingBox>
-                                <Spin
-                                    indicator={
-                                        <LoadingOutlined
-                                            style={{
-                                                fontSize: 36,
-                                                marginBottom: 16,
-                                            }}
-                                            spin
-                                        />
-                                    }
-                                />
-                                <Text font="b1_18_semi">
-                                    포켓런 결과를 불러오고 있어요
-                                </Text>
-                                <Text font="b3_14_reg">
-                                    최상의 결과를 불러올게요! 잠시만
-                                    기다려주세요
-                                </Text>
-                            </LoadingBox>
-                        ) : (
-                            <>
-                                <Box>
+                    return (
+                        <div key={`pocketRun${index}`}>
+                            <Text font="b1_18_semi" color="G_800">
+                                {index + 1}차 결과
+                            </Text>
+
+                            <ChipWrapper>
+                                <ModelChip key={index}>
                                     <Text
-                                        font="b2_16_med"
-                                        color={"G_700"}
-                                        key={index}
-                                        markdown={true}
+                                        font="b3_14_reg"
+                                        color="G_500"
+                                        style={{ whiteSpace: "nowrap" }}
                                     >
-                                        {res.response}
+                                        {label}
                                     </Text>
-                                </Box>
-                                <Button
-                                    id={`copy-result-button-${index}`}
-                                    onClick={() =>
-                                        handleClickCopy(res.response)
-                                    }
-                                    width="143px"
-                                    size={44}
-                                    suffix={
-                                        <Icon
-                                            name="Copy"
-                                            size={20}
-                                            color="primary_100"
-                                        />
-                                    }
-                                    style={{
-                                        padding: "8px 12px 8px 16px",
-                                        margin: "auto 0 auto auto",
-                                    }}
-                                    hierarchy="normal"
-                                >
-                                    결과 복사하기
-                                </Button>
-                            </>
-                        )}
-                    </div>
-                ))
+                                </ModelChip>
+
+                                <DropdownWrapper>
+                                    {Object.entries(res.context).map(
+                                        ([key, value]) => (
+                                            <Dropdown
+                                                key={key}
+                                                menu={{
+                                                    items: items(value) || [],
+                                                }}
+                                                trigger={["click"]}
+                                                overlayStyle={{
+                                                    width: "150px",
+                                                    height: "auto",
+                                                    whiteSpace: "break-spaces",
+                                                    overflow: "visible",
+                                                }}
+                                            >
+                                                <DropdownButton
+                                                    id={`dropdown-button-${key}-${index}`}
+                                                >
+                                                    <Text
+                                                        font="b3_14_semi"
+                                                        color="G_600"
+                                                        style={{
+                                                            whiteSpace:
+                                                                "nowrap",
+                                                            overflow: "hidden",
+                                                            textOverflow:
+                                                                "ellipsis",
+                                                        }}
+                                                    >
+                                                        {key}
+                                                    </Text>
+                                                    <Icon
+                                                        name="ArrowDown2"
+                                                        size={16}
+                                                        color="G_300"
+                                                    />
+                                                </DropdownButton>
+                                            </Dropdown>
+                                        )
+                                    )}
+                                </DropdownWrapper>
+                            </ChipWrapper>
+
+                            {index === resultList.length - 1 && isLoading ? (
+                                <LoadingBox>
+                                    <Spin
+                                        indicator={
+                                            <LoadingOutlined
+                                                style={{
+                                                    fontSize: 36,
+                                                    marginBottom: 16,
+                                                }}
+                                                spin
+                                            />
+                                        }
+                                    />
+                                    <Text font="b1_18_semi">
+                                        포켓런 결과를 불러오고 있어요
+                                    </Text>
+                                    <Text font="b3_14_reg">
+                                        최상의 결과를 불러올게요! 잠시만
+                                        기다려주세요
+                                    </Text>
+                                </LoadingBox>
+                            ) : (
+                                <>
+                                    <Box>
+                                        <Text
+                                            font="b2_16_med"
+                                            color={"G_700"}
+                                            key={index}
+                                            markdown={true}
+                                        >
+                                            {res.response}
+                                        </Text>
+                                    </Box>
+                                    <Button
+                                        id={`copy-result-button-${index}`}
+                                        onClick={() =>
+                                            handleClickCopy(res.response)
+                                        }
+                                        width="143px"
+                                        size={44}
+                                        suffix={
+                                            <Icon
+                                                name="Copy"
+                                                size={20}
+                                                color="primary_100"
+                                            />
+                                        }
+                                        style={{
+                                            padding: "8px 12px 8px 16px",
+                                            margin: "auto 0 auto auto",
+                                        }}
+                                        hierarchy="normal"
+                                    >
+                                        결과 복사하기
+                                    </Button>
+                                </>
+                            )}
+                        </div>
+                    );
+                })
             )}
         </Flex>
     );
@@ -213,6 +239,7 @@ const Box = styled.div`
     flex-direction: column;
     gap: 8px;
     margin: 8px 0 12px 0;
+    flex-direction: column;
 `;
 
 const LoadingBox = styled.div`
@@ -224,7 +251,6 @@ const LoadingBox = styled.div`
     margin: 8px 0 12px 0;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
 `;
 
 const ChipWrapper = styled.div`

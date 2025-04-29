@@ -10,6 +10,7 @@ import { useDeviceSize } from "@/components/DeviceContext";
 import PromptCardImage from "@/components/home/prompt/card/PromptCardImage";
 import PromptCardText from "@/components/home/prompt/card/PromptCardText";
 import PromptList from "@/components/home/prompt/list/PromptList";
+
 import MyLnb from "@/components/lnb/MyLnb";
 import { usePutNickname } from "@/hooks/mutations/usePutNickname";
 import useToast from "@/hooks/useToast";

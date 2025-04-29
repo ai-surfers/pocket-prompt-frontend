@@ -10,7 +10,7 @@ import { prevPathState } from "@/states/navigationState";
 import { useDeviceSize } from "@components/DeviceContext";
 import { ErrorBoundary } from "@sentry/react";
 import { Flex, Result, Spin } from "antd";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -23,13 +23,18 @@ export default function PromptContent({
     promptId: string;
 }) {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const { data, isLoading, isError } = usePromptQuery(promptId);
     const { isUnderTablet, isMobile } = useDeviceSize();
     const setPrevPathname = useSetRecoilState(prevPathState);
 
     useEffect(() => {
-        setPrevPathname(pathname);
-    }, [pathname]);
+        // 쿼리 파라미터를 포함한 전체 URL 저장
+        const fullPath = `${pathname}${
+            searchParams.toString() ? `?${searchParams.toString()}` : ""
+        }`;
+        setPrevPathname(fullPath);
+    }, [pathname, searchParams, setPrevPathname]);
 
     const handleOnSelect = (value: string) => {
         alert(`${value} is Selected!`);
@@ -81,6 +86,7 @@ export default function PromptContent({
                     {/* 프롬프트 사용하기 */}
                     <BoxContainer>
                         <ExecuteSection
+                            promptType={promptType}
                             onSelect={handleOnSelect}
                             inputs={data?.user_input_format || []}
                             template={data?.prompt_template || ""}
@@ -90,7 +96,7 @@ export default function PromptContent({
 
                     {/* 포켓런 결과 */}
                     <BoxContainer>
-                        <ResultSection />
+                        <ResultSection promptType={promptType} />
                     </BoxContainer>
 
                     <AdContainer $isUnderTablet={isUnderTablet}>
@@ -126,7 +132,6 @@ const BoxContainer = styled.div`
     border-radius: 16px;
     background-color: ${({ theme }) => theme.colors.white};
     padding: 20px;
-
     @media (min-width: 1080px) {
         &:nth-child(1) {
             flex: 3.5;
