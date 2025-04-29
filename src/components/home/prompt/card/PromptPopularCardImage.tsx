@@ -15,6 +15,7 @@ import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 
 interface PromptCardImageWithTextProps {
+    promptType: "text" | "image";
     title: string;
     description: string;
     views: number;
@@ -26,6 +27,7 @@ interface PromptCardImageWithTextProps {
 }
 
 const PromptPopularCardImage = ({
+    promptType,
     title,
     description,
     views,
@@ -40,23 +42,21 @@ const PromptPopularCardImage = ({
     const searchedKeyword = useRecoilValue(searchedKeywordState);
     const searchedCategory = useRecoilValue(searchedCategoryState);
 
-    // 디버깅: sampleMedia 출력
-    console.log("sampleMedia:", sampleMedia);
-
     const handleClick = () => {
-        const query = new URLSearchParams();
-        if (searchedKeyword && searchedKeyword.trim() !== "") {
-            query.set("keyword", searchedKeyword);
-        }
-        if (searchedCategory && searchedCategory !== "total") {
-            query.set("category", searchedCategory);
+        let href = `/prompt/${promptType}/${id}`;
+
+        const params = new URLSearchParams();
+        if (searchedKeyword) params.set("keyword", searchedKeyword);
+        if (searchedCategory && searchedCategory !== "total")
+            params.set("category", searchedCategory);
+
+        if ([...params].length) {
+            href += `?${params.toString()}`;
         }
 
-        const queryString = query.toString();
-        router.push(`/prompt/${id}${queryString ? `?${queryString}` : ""}`);
+        router.push(href);
         resetPocketRunState();
     };
-
     // thumbnail 계산 및 기본 이미지 설정
     const [thumbnail, setThumbnail] = useState(
         sampleMedia && sampleMedia.length > 0 && sampleMedia[0]
@@ -70,7 +70,7 @@ const PromptPopularCardImage = ({
     };
 
     return (
-        <PromptWrapper onClick={handleClick}>
+        <PromptWrapper onClick={handleClick} $isMiniHeight={isMiniHeight}>
             {/* 이미지 영역 */}
             <ImageWrapper>
                 <PromptImage
@@ -88,7 +88,7 @@ const PromptPopularCardImage = ({
                             {title}
                         </Text>
                     </Title>
-                    <Subtitle>
+                    <Subtitle $isMiniHeight={isMiniHeight}>
                         <Text font="body3" color="G_400">
                             {description}
                         </Text>
@@ -117,10 +117,12 @@ const PromptPopularCardImage = ({
 
 export default PromptPopularCardImage;
 
-const PromptWrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row")}; // 가로 배치로 변경
+const PromptWrapper = styled.div<{ $isMiniHeight: boolean }>`
+    ${({ theme }) => theme.mixins.flexBox("row")};
     width: 100%;
-    min-height: 120px; // 최소 높이 설정
+    min-height: 120px;
+    height: ${({ $isMiniHeight }) =>
+        $isMiniHeight ? "150px" : "240px"}; // 이미지 포함 높이 조정
     box-sizing: border-box;
     border-radius: 12px;
     border: 1.5px solid ${({ theme }) => theme.colors.primary_20};
@@ -154,15 +156,26 @@ const PromptImage = styled.img`
 const ContentWrapper = styled.div`
     ${({ theme }) => theme.mixins.flexBox("column", "space-between")};
     flex: 1;
-    margin-left: 142px; // 이미지 너비(130px) + 간격(12px)
+    margin-left: 142px;
     padding: 16px;
     padding-left: 0;
     gap: 8px;
+    height: 90%;
 `;
 
 const TitlesWrapper = styled.div`
     width: 100%;
+
     flex: 1;
+    box-sizing: content-box;
+    padding-bottom: 15.5px;
+    border-bottom: 1.5px solid;
+    border-color: ${({ theme }) => theme.colors.primary_20};
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 `;
 
 const Title = styled.div`
@@ -175,7 +188,10 @@ const Title = styled.div`
     margin-bottom: 8px;
 `;
 
-const Subtitle = styled.div`
+const Subtitle = styled.div<{ $isMiniHeight: boolean }>`
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: ${({ $isMiniHeight }) => ($isMiniHeight ? 1 : 2)};
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-word;
@@ -185,7 +201,7 @@ const Subtitle = styled.div`
 `;
 
 const DetailsWrapper = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row", "flex-start")};
+    ${({ theme }) => theme.mixins.flexBox("row", "flex-end")};
     width: 100%;
     height: 21px;
     gap: 20px;
