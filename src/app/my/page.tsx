@@ -107,6 +107,7 @@ const MyPage = () => {
         if (item.type === "image") {
             return (
                 <PromptCardImage
+                    promptType="image"
                     id={item.id}
                     title={item.title}
                     sampleMedia={item.sample_media ?? []}
@@ -120,13 +121,14 @@ const MyPage = () => {
 
         return (
             <PromptCardText
+                promptType="text"
                 id={item.id}
                 title={item.title}
                 description={item.description ?? ""}
                 views={item.views}
                 star={item.star}
                 usages={item.usages}
-                isMiniHeight={true}
+                isMiniHeight={false}
             />
         );
     };
@@ -269,7 +271,6 @@ const MyPage = () => {
 
 export default MyPage;
 
-// 스타일은 변경 없음
 const Container = styled.div<{ $isUnderTablet: boolean }>`
     width: 100%;
     padding-top: 52px;

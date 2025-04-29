@@ -132,7 +132,9 @@ export default function PromptListSection({
                 limit={18}
                 defaultSortBy="created_at"
                 items={searchResults}
-                renderItem={(item, idx) => <Card {...item} index={idx + 1} />}
+                renderItem={(item, idx) => (
+                    <Card promptType={promptType} {...item} index={idx + 1} />
+                )}
             />
         </>
     );

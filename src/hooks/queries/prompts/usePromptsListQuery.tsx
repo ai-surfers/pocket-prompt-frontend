@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 interface Params {
-    promptType: "text" | "image" | "video";
+    promptType?: "text" | "image";
     query?: string;
     categories?: string;
     viewType?: ViewType;
@@ -48,7 +48,8 @@ export function usePromptsListQuery(
         // ··· (2) queryFn
         queryFn: () =>
             getPromptsList({
-                prompt_type: promptType,
+                // promptType 이 있을 때만 prompt_type 키를 추가
+                ...(promptType ? { prompt_type: promptType } : {}),
                 view_type: viewType,
                 query,
                 categories: categories === "total" ? undefined : categories,

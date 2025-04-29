@@ -2,23 +2,24 @@
 
 import { PromptDetails, SortType, ViewType } from "@/apis/prompt/prompt.model";
 import { usePromptsListQuery } from "@/hooks/queries/prompts/usePromptsListQuery";
-import { useSearch } from "@/hooks/queries/useSearch"; // ← 추가
+import { useSearch } from "@/hooks/queries/useSearch";
 import { usePromptList } from "@/hooks/ui/usePromptList";
 import { sortTypeState } from "@/states/sortState";
 import { Col, Flex, Pagination, Row } from "antd";
+import React from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import SortSelect from "../../searchUI/SortSelect";
 import EmptyPrompt from "../EmptyPrompt";
 
 interface PromptListProps {
-    promptType: "text" | "image";
+    promptType?: "text" | "image";
     searchType: "total" | "popular" | "search" | "category";
     viewType: ViewType;
     title: React.ReactNode;
     limit?: number;
     defaultSortBy?: SortType;
-    items?: PromptDetails[]; // for popular only
+    items?: PromptDetails[]; // 인기 프롬프트용
     renderItem: (item: PromptDetails, index: number) => React.ReactNode;
 }
 
@@ -33,27 +34,30 @@ export default function PromptList({
     renderItem,
 }: PromptListProps) {
     const sortBy = useRecoilValue(sortTypeState);
+    const effectivePromptType = promptType;
 
-    // 🕵️‍♂️ 검색 키워드·카테고리
-    const { keyword, searchedCategory } = useSearch(promptType);
+    // 검색어·카테고리
+    const { keyword, searchedCategory } = useSearch(
+        effectivePromptType ?? "text"
+    );
 
-    // ✅ 검색·전체일 때만 서버 호출, 인기(popuplar)면 skip
+    // 인기일 때만 API 호출 스킵
     const skipFetch = searchType === "popular";
 
+    // 서버 데이터 패칭
     const {
-        items: fetchedItems,
-        totalItems,
+        items: fetchedItems = [],
+        totalItems = 0,
         currentPage,
         itemsPerPage,
         handlePageChange,
-        isFetching,
+        isLoading: isFetching,
     } = usePromptsListQuery(
         {
-            promptType,
+            ...(effectivePromptType ? { promptType: effectivePromptType } : {}),
             viewType,
             limit,
             sortBy: defaultSortBy ?? sortBy,
-            // 검색 중이라면 query·categories 전달
             query: searchType === "search" ? keyword : undefined,
             categories:
                 searchType === "search" && searchedCategory !== "total"
@@ -63,10 +67,10 @@ export default function PromptList({
         skipFetch
     );
 
-    // 인기일 때만 popularItems, 그 외는 fetchedItems 사용
+    // 데이터 소스 결정
     const dataSource = searchType === "popular" ? popularItems! : fetchedItems;
 
-    // 훅으로 정렬·탭·카운트 처리
+    // 정렬·탭·카운트 훅
     const {
         filtered: sortedItems,
         effectiveSort,
@@ -76,7 +80,7 @@ export default function PromptList({
         privateCount,
     } = usePromptList(
         dataSource,
-        promptType,
+        effectivePromptType ?? "text",
         searchType,
         viewType,
         defaultSortBy
@@ -86,24 +90,22 @@ export default function PromptList({
     const showSortAndPage =
         viewType !== "my" && !isPopularList && sortedItems.length > 1;
 
+    // 콘텐츠 렌더링
     const renderContent = () => {
-        // 1) 검색/전체 모드이고 fetch 중이면 Skeleton
-        if (searchType !== "popular" && isFetching) {
-            return Array.from({ length: limit ?? itemsPerPage }).map(
-                (_, idx) => (
-                    <Col
-                        key={idx}
-                        xs={24}
-                        sm={isPopularList ? 24 : 12}
-                        md={isPopularList ? 24 : 8}
-                        style={{ flexShrink: 0, display: "flex" }}
-                    >
-                        <SkeletonBox />
-                    </Col>
-                )
-            );
+        if (!isPopularList && isFetching) {
+            // 검색/전체 모드에서만 스켈레톤
+            return Array.from({ length: limit }).map((_, idx) => (
+                <Col
+                    key={idx}
+                    xs={24}
+                    sm={isPopularList ? 24 : 12}
+                    md={isPopularList ? 24 : 8}
+                    style={{ flexShrink: 0, display: "flex" }}
+                >
+                    <SkeletonBox />
+                </Col>
+            ));
         }
-
         if (!isFetching && sortedItems.length === 0) {
             return <EmptyPrompt viewType={viewType} />;
         }
@@ -151,19 +153,19 @@ export default function PromptList({
             </Row>
 
             {showSortAndPage && (
-                <div style={{ margin: "0 auto" }}>
-                    <Pagination
-                        current={currentPage}
-                        pageSize={itemsPerPage}
-                        total={totalItems}
-                        onChange={handlePageChange}
-                        showSizeChanger={false}
-                    />
-                </div>
+                <Pagination
+                    current={currentPage}
+                    pageSize={itemsPerPage}
+                    total={totalItems}
+                    onChange={handlePageChange}
+                    showSizeChanger={false}
+                    style={{ margin: "0 auto" }}
+                />
             )}
         </Flex>
     );
 }
+
 const SkeletonBox = styled.div`
     ${({ theme }) => theme.mixins.skeleton()};
     width: 100%;

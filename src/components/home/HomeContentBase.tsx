@@ -35,14 +35,9 @@ export default function HomeContentBase({
     promptType,
     initialMenu,
 }: HomeContentBaseProps) {
-    // 1) 이 두 훅은 무조건 최상단에서 호출되어야 합니다
     const [isVocModalOpen, setIsVocModalOpen] = useState(false);
     const promptData = usePromptData(promptType);
-
-    // 그 다음에 검색 훅
     const { searchResults, isLoading } = useSearch(promptType);
-
-    // 그리고 나머지 훅들
     const { isUnderTablet } = useDeviceSize();
     const { userData } = useUser();
     const { data: userPaymentData } = useGetSubscription({
@@ -51,7 +46,6 @@ export default function HomeContentBase({
     const isSubscriber =
         userData.isLogin && userPaymentData?.subscription_status === "active";
 
-    // 3) 로딩이 끝난 뒤에 실제 UI 렌더
     return (
         <HomeWrapper>
             <HomeContentWrapper $isUnderTablet={isUnderTablet}>

@@ -13,6 +13,7 @@ import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 
 interface PromptCardImageProps {
+    promptType: "image";
     colored?: boolean;
     title: string;
     views: number;
@@ -24,6 +25,7 @@ interface PromptCardImageProps {
 }
 
 const PromptCardImage = ({
+    promptType,
     colored = false,
     title,
     views,
@@ -40,17 +42,14 @@ const PromptCardImage = ({
     const searchedCategory = useRecoilValue(searchedCategoryState);
 
     const handleClick = () => {
-        // 검색어와 카테고리가 있을 때만 쿼리 파라미터 추가
-        const query = new URLSearchParams();
-        if (searchedKeyword && searchedKeyword.trim() !== "") {
-            query.set("keyword", searchedKeyword);
-        }
+        const qp = new URLSearchParams();
+        if (searchedKeyword) qp.set("keyword", searchedKeyword);
         if (searchedCategory && searchedCategory !== "total") {
-            query.set("category", searchedCategory);
+            qp.set("category", searchedCategory);
         }
+        const qs = qp.toString() ? `?${qp.toString()}` : "";
 
-        const queryString = query.toString();
-        router.push(`/prompt/${id}${queryString ? `?${queryString}` : ""}`);
+        router.push(`/prompt/${id}${qs}`);
         resetPocketRunState();
     };
 
@@ -102,7 +101,8 @@ const Card = styled.div<{
 }>`
     position: relative;
     width: 100%;
-    height: ${({ $isMiniHeight }) => ($isMiniHeight ? "133px" : "187px")};
+    /* height: ${({ $isMiniHeight }) => ($isMiniHeight ? "133px" : "187px")}; */
+    height: ${({ $isMiniHeight }) => ($isMiniHeight ? "133px" : "157px")};
     border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
