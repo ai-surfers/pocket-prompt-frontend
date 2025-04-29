@@ -1,11 +1,12 @@
+// src/components/prompt/ExecuteSection.tsx
 import { PromptInputField } from "@/apis/prompt/prompt.model";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
 import Text from "@/components/common/Text/Text";
 import Textarea from "@/components/common/Textarea/Textarea";
-import { PocketRunModel } from "@/core/Prompt";
+import { PocketRunImageModel, PocketRunModel } from "@/core/Prompt";
 import { UTM_OVER_USAGE_LIMIT_URL, UTM_TIER_LIMIT_URL } from "@/core/UtmUri";
-import useImgPocketRun from "@/hooks/mutations/pocketRun/useImgPocketRun"; // 추가
+import useImgPocketRun from "@/hooks/mutations/pocketRun/useImgPocketRun";
 import usePocketRun from "@/hooks/mutations/pocketRun/usePocketRun";
 import useModal from "@/hooks/useModal";
 import useToast from "@/hooks/useToast";
@@ -26,8 +27,8 @@ import FormItem from "../promptNew/Form/FormItem";
 import PocketRunDropdown from "./PocketRunDropdown";
 import PromptTemplateModal from "./PromptTemplateModal";
 
-interface ExecuteSectionProps {
-    onSelect: (value: string) => void;
+export interface ExecuteSectionProps {
+    onSelect: (platform: string) => void;
     template: string;
     inputs: PromptInputField[];
     promptId: string;
@@ -53,9 +54,8 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                 iconName: "TickCircle",
             });
             return;
-        } else {
-            setIsPromptTemplateOpen(true);
         }
+        setIsPromptTemplateOpen(true);
     };
 
     // promptType에 따라 Recoil 상태 선택
@@ -69,6 +69,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
     const [hasChanged, setHasChanged] = useState(false);
     const prevFormValues = useRef<Record<string, string>>({});
     const formValues = watch();
+
     const { userData } = useUser();
     const showToast = useToast();
     const { openModal, closeModal } = useModal();
@@ -85,85 +86,116 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
             });
         },
         onError: (err) => {
-            if (
-                err.response?.data?.detail ===
-                    "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요." ||
-                err.response?.data?.detail ===
-                    "무료 사용자는 고급 모델을 사용할 수 없습니다. 유료 플랜으로 업그레이드해 주세요."
-            ) {
-                const utmUrl =
-                    err.message ===
-                    "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요."
-                        ? UTM_OVER_USAGE_LIMIT_URL
-                        : UTM_TIER_LIMIT_URL;
+            const detail = err.response?.data?.detail;
 
-                const handleClickPriceInProduction = () => {
-                    window.location.href = utmUrl;
-                };
+            switch (detail) {
+                case "과도한 사용으로 인해 일시적으로 고급 모델 사용이 제한되었습니다. 내일 다시 시도해 주세요.":
+                    if (err.response?.status === 429) {
+                        showToast({
+                            title: "사용 제한",
+                            subTitle:
+                                "과도한 사용으로 인해 일시적으로 고급 모델 사용이 제한되었습니다. 내일 다시 시도해 주세요.",
+                            iconName: "ArchiveSlash",
+                        });
 
-                openModal({
-                    title: "포켓런 한도에 도달했어요",
-                    content: (
-                        <Text font="b3_14_reg" color="G_700">
-                            {err.response?.data?.detail ===
-                            "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요."
-                                ? "플랜 한도를 초과하였어요. 플랜을 업그레이드해 주세요."
-                                : "무료 사용자는 고급 모델을 사용할 수 없어요. 유료 플랜으로 업그레이드해 주세요."}
-                        </Text>
-                    ),
-                    footer: (
-                        <Flex
-                            style={{ width: "100%", paddingTop: "20px" }}
-                            gap={16}
-                        >
-                            <Button
-                                id="modal-close-button"
-                                hierarchy="default"
-                                style={{ flex: 1, justifyContent: "center" }}
-                                onClick={closeModal}
+                        if (runState.length > 1) {
+                            setRunState((prevState) => prevState.slice(0, -1));
+                        }
+                    }
+                    break;
+
+                case "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요.":
+                case "무료 사용자는 고급 모델을 사용할 수 없습니다. 유료 플랜으로 업그레이드해 주세요.":
+                    const utmUrl =
+                        err.message ===
+                        "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요."
+                            ? UTM_OVER_USAGE_LIMIT_URL
+                            : UTM_TIER_LIMIT_URL;
+
+                    const handleClickPriceInProduction = () => {
+                        window.location.href = utmUrl;
+                    };
+
+                    openModal({
+                        title: "포켓런 한도에 도달했어요",
+                        content: (
+                            <Text font="b3_14_reg" color="G_700">
+                                {err.response?.data?.detail ===
+                                "플랜 한도를 초과하였습니다. 플랜을 업그레이드해 주세요."
+                                    ? "플랜 한도를 초과하였어요. 플랜을 업그레이드해 주세요."
+                                    : "무료 사용자는 고급 모델을 사용할 수 없어요. 유료 플랜으로 업그레이드해 주세요."}
+                            </Text>
+                        ),
+                        footer: (
+                            <Flex
+                                style={{ width: "100%", paddingTop: "20px" }}
+                                gap={16}
                             >
-                                닫기
-                            </Button>
-                            {
-                                // 운영 환경일 때만 utm 경로로 이동
-                                process.env.APP_ENV === "production" ? (
-                                    <Button
-                                        id="advanced-model-explore-plans"
-                                        style={{
-                                            flex: 1,
-                                            justifyContent: "center",
-                                        }}
-                                        onClick={() => {
-                                            closeModal();
-                                            handleClickPriceInProduction();
-                                        }}
-                                    >
-                                        플랜 둘러보기
-                                    </Button>
-                                ) : (
-                                    // 개발환경 일때는 일반 경로로 이동
-                                    <Link href="/price">
+                                <Button
+                                    id="modal-close-button"
+                                    hierarchy="default"
+                                    style={{
+                                        flex: 1,
+                                        justifyContent: "center",
+                                    }}
+                                    onClick={closeModal}
+                                >
+                                    닫기
+                                </Button>
+                                {
+                                    // 운영 환경일 때만 utm 경로로 이동
+                                    process.env.APP_ENV === "production" ? (
                                         <Button
+                                            id="advanced-model-explore-plans"
                                             style={{
                                                 flex: 1,
                                                 justifyContent: "center",
                                             }}
                                             onClick={() => {
                                                 closeModal();
+                                                handleClickPriceInProduction();
                                             }}
                                         >
                                             플랜 둘러보기
                                         </Button>
-                                    </Link>
-                                )
-                            }
-                        </Flex>
-                    ),
-                });
+                                    ) : (
+                                        // 개발환경 일때는 일반 경로로 이동
+                                        <Link href="/price">
+                                            <Button
+                                                style={{
+                                                    flex: 1,
+                                                    justifyContent: "center",
+                                                }}
+                                                onClick={() => {
+                                                    closeModal();
+                                                }}
+                                            >
+                                                플랜 둘러보기
+                                            </Button>
+                                        </Link>
+                                    )
+                                }
+                            </Flex>
+                        ),
+                    });
 
-                if (runState.length > 1) {
-                    setRunState((prevState) => prevState.slice(0, -1));
-                }
+                    if (runState.length > 1) {
+                        setRunState((prevState) => prevState.slice(0, -1));
+                    }
+                    break;
+
+                default:
+                    // 예상치 못한 에러 처리 (필요 시)
+                    showToast({
+                        title: "오류 발생",
+                        subTitle:
+                            "알 수 없는 오류가 발생했습니다. 다시 시도해 주세요.",
+                        iconName: "ArchiveSlash",
+                    });
+                    if (runState.length > 1) {
+                        setRunState((prevState) => prevState.slice(0, -1));
+                    }
+                    break;
             }
         },
     });
@@ -173,20 +205,16 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
             async (values: Record<string, string>) => {
                 if (!platform) {
                     const prompt = populateTemplate(template, values);
-
                     copyClipboard(prompt)
-                        .then(() => {
+                        .then(() =>
                             showToast({
                                 title: "프롬프트 복사가 완료되었어요.",
                                 subTitle:
                                     "복사된 프롬프트를 AI 플랫폼에 붙여넣기하여 사용해주세요.",
                                 iconName: "CopySuccess",
-                            });
-                        })
-                        .catch((err) => {
-                            console.error("클립보드 복사 실패:", err);
-                            alert("클립보드 복사에 실패했습니다.");
-                        });
+                            })
+                        )
+                        .catch(() => alert("클립보드 복사에 실패했습니다."));
                 } else {
                     if (!userData.isLogin) {
                         showToast({
@@ -197,16 +225,28 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                         return;
                     }
 
+                    // promptType에 따른 모델 레코드 선택
+                    const modelRecord =
+                        promptType === "image"
+                            ? PocketRunImageModel
+                            : PocketRunModel;
+                    const modelValue = modelRecord[platform].value;
+
                     runMutation(
                         {
-                            promptId: promptId ?? "",
+                            promptId,
                             context: values,
-                            model: PocketRunModel[platform].value,
+                            model: modelValue,
                         },
                         { onSuccess: () => {} }
                     );
                     // pocketRun 실행되기 전 로딩 화면에 model, context 입력을 위해 form 데이터 사용하여 pocketRunRes 업데이트
                     setRunState((prevState) => {
+                        const entry = {
+                            response: "",
+                            context: values,
+                            model: modelValue,
+                        };
                         if (prevState[0].response === "") {
                             // pocketRunRes에 요소가 처음 업데이트 되는 경우 새 배열로 setPocketRunRes
                             return [
@@ -253,7 +293,6 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
         if (hasFormChanged && runState[0].model !== "") {
             setHasChanged(true);
         }
-
         prevFormValues.current = formValues;
     }, [formValues, runState]);
 
@@ -263,7 +302,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                 <Flex
                     justify="space-between"
                     align="center"
-                    style={{ marginBottom: "30px" }}
+                    style={{ marginBottom: 30 }}
                 >
                     <Text font="b1_18_semi">프롬프트 사용하기</Text>
                     <Text
@@ -282,7 +321,7 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                 </Flex>
 
                 <form>
-                    <Flex vertical gap={24} style={{ marginBottom: "80px" }}>
+                    <Flex vertical gap={24} style={{ marginBottom: 80 }}>
                         {inputs.map((input) => (
                             <FormItem
                                 title={input.name}
@@ -329,12 +368,12 @@ export const ExecuteSection: React.FC<ExecuteSectionProps> = ({
                                 }
                             />
                         }
-                        style={{ padding: "12px" }}
+                        style={{ padding: 12 }}
                         onClick={() => handleClickSubmit()}
                     />
-
                     <PocketRunDropdown
                         id="pocket-run-dropdown"
+                        promptType={promptType}
                         disabled={!formState.isValid || isPending}
                         onSelect={handleClickSubmit}
                         secondRun={hasChanged}
