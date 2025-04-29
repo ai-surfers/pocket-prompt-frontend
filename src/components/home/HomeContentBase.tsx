@@ -9,7 +9,7 @@ import HomeLnb from "@/components/lnb/HomeLnb";
 import { usePromptData } from "@/hooks/mutations/prompts/usePromptData";
 import { useGetSubscription } from "@/hooks/queries/payments/useGetSubscription";
 
-import { useSearch } from "@/hooks/queries/useSearch";
+import { useSearch } from "@/hooks/queries/usetenSearch";
 import { useUser } from "@/hooks/useUser";
 import { useDeviceSize } from "@components/DeviceContext";
 import Icon from "@components/common/Icon";
