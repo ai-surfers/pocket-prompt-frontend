@@ -2,7 +2,8 @@
 
 import { PromptDetails, SortType, ViewType } from "@/apis/prompt/prompt.model";
 import { usePromptsListQuery } from "@/hooks/queries/prompts/usePromptsListQuery";
-import { useSearch } from "@/hooks/queries/useSearch";
+
+import { useSearch } from "@/hooks/queries/usetenSearch";
 import { usePromptList } from "@/hooks/ui/usePromptList";
 import { sortTypeState } from "@/states/sortState";
 import { Col, Flex, Pagination, Row } from "antd";

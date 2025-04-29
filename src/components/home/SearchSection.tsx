@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearch } from "@/hooks/queries/useSearch";
+import { useSearch } from "@/hooks/queries/usetenSearch";
 import { useDeviceSize } from "@components/DeviceContext";
 import { useEffect, useState } from "react";
 import styled from "styled-components";

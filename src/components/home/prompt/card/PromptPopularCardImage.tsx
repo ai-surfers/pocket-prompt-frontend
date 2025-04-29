@@ -19,7 +19,7 @@ interface PromptCardImageWithTextProps {
     star: number;
     usages: number;
     id: string;
-    imageUrl: string; // 이미지 URL 추가
+    imageUrl: string;
     isMiniHeight?: boolean;
 }
 
