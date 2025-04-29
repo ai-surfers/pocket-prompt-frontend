@@ -89,7 +89,7 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
                     style={{ padding: "12px 16px 12px 12px" }}
                 >
                     <Flex gap={8}>
-                        {prompt.categories.map((cat) => {
+                        {(prompt.categories ?? []).map((cat) => {
                             const categoryMap: Category =
                                 prompt.type === "image"
                                     ? ImageCategories
