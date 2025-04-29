@@ -1,4 +1,4 @@
-import AiClubBanner from "@img/banner/banner-ai-club-mobile.png";
+import AiClubBanner from "@img/banner/banner-ai-club.png";
 import AIBannerMobile from "@img/banner/banner-ai-prompt-mobile.png";
 import AIBanner from "@img/banner/banner-ai-prompt.png";
 import BlogBannerMobile from "@img/banner/banner-blog-mobile.png";
