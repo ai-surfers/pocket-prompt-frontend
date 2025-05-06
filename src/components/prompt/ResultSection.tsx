@@ -175,41 +175,53 @@ export const ResultSection: React.FC<ResultSectionProps> = ({ promptType }) => {
                                         기다려주세요
                                     </Text>
                                 </LoadingBox>
-                            ) : (
-                                <>
-                                    <Box>
-                                        <Text
-                                            font="b2_16_med"
-                                            color={"G_700"}
-                                            key={index}
-                                            markdown={true}
-                                        >
-                                            {res.response}
-                                        </Text>
-                                    </Box>
-                                    <Button
-                                        id={`copy-result-button-${index}`}
-                                        onClick={() =>
-                                            handleClickCopy(res.response)
-                                        }
-                                        width="143px"
-                                        size={44}
-                                        suffix={
-                                            <Icon
-                                                name="Copy"
-                                                size={20}
-                                                color="primary_100"
-                                            />
-                                        }
+                            ) : promptType === "image" ? (
+                                <ImageBox>
+                                    <img
+                                        src={res.response}
+                                        alt={`result-${index}`}
                                         style={{
-                                            padding: "8px 12px 8px 16px",
-                                            margin: "auto 0 auto auto",
+                                            maxWidth: "100%",
+                                            borderRadius: 8,
                                         }}
-                                        hierarchy="normal"
+                                    />
+                                </ImageBox>
+                            ) : (
+                                <Box>
+                                    <Text
+                                        font="b2_16_med"
+                                        color={"G_700"}
+                                        key={index}
+                                        markdown={true}
                                     >
-                                        결과 복사하기
-                                    </Button>
-                                </>
+                                        {res.response}
+                                    </Text>
+                                </Box>
+                            )}
+
+                            {!isLoading && (
+                                <Button
+                                    id={`copy-result-button-${index}`}
+                                    onClick={() =>
+                                        handleClickCopy(res.response)
+                                    }
+                                    width="143px"
+                                    size={44}
+                                    suffix={
+                                        <Icon
+                                            name="Copy"
+                                            size={20}
+                                            color="primary_100"
+                                        />
+                                    }
+                                    style={{
+                                        padding: "8px 12px 8px 16px",
+                                        margin: "auto 0 auto auto",
+                                    }}
+                                    hierarchy="normal"
+                                >
+                                    결과 복사하기
+                                </Button>
                             )}
                         </div>
                     );
@@ -240,6 +252,15 @@ const Box = styled.div`
     gap: 8px;
     margin: 8px 0 12px 0;
     flex-direction: column;
+`;
+
+const ImageBox = styled.div`
+    width: 100%;
+    padding: 16px;
+    background: ${({ theme }) => theme.colors.G_50};
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
 `;
 
 const LoadingBox = styled.div`
