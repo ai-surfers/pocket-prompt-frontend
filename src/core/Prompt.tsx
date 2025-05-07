@@ -129,6 +129,11 @@ export const PocketRunImageModel: Record<
         label: "Imagen 3",
         value: "google/imagen-3",
     },
+    DallE: {
+        id: "dall-e-3-pocket-run-toggle",
+        label: "dall-e",
+        value: "dall-e-3",
+    },
 };
 
 export enum InputType {

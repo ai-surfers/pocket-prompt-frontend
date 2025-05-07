@@ -11,7 +11,9 @@ import {
 } from "@/states/pocketRunState";
 import { copyClipboard } from "@/utils/promptUtils";
 import { LoadingOutlined } from "@ant-design/icons";
-import { Dropdown, Flex, MenuProps, Spin } from "antd";
+import { Dropdown, Flex, MenuProps, Modal, Spin } from "antd";
+import Image from "next/image";
+import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 
@@ -20,7 +22,6 @@ interface ResultSectionProps {
 }
 
 export const ResultSection: React.FC<ResultSectionProps> = ({ promptType }) => {
-    // 텍스트/이미지에 따라 Recoil 상태와 로딩 상태 분기
     const resultList = useRecoilValue(
         promptType === "image" ? imgPocketRunState : pocketRunState
     );
@@ -29,6 +30,9 @@ export const ResultSection: React.FC<ResultSectionProps> = ({ promptType }) => {
             ? imgPocketRunLoadingState
             : pocketRunLoadingState
     );
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
+    const [isImageLoading, setIsImageLoading] = useState<boolean>(false);
+    const [imageKey, setImageKey] = useState(0);
 
     const showToast = useToast();
 
@@ -46,6 +50,17 @@ export const ResultSection: React.FC<ResultSectionProps> = ({ promptType }) => {
             });
     };
 
+    const handleImageClick = (imgSrc: string) => {
+        setIsImageLoading(true);
+        setPreviewImage(imgSrc);
+        setImageKey((prev) => prev + 1);
+    };
+
+    const handleClosePreview = () => {
+        setPreviewImage(null);
+        setIsImageLoading(false);
+    };
+
     const items = (value: string): MenuProps["items"] =>
         value
             ? [
@@ -54,7 +69,7 @@ export const ResultSection: React.FC<ResultSectionProps> = ({ promptType }) => {
                           <Text
                               font="b3_14_reg"
                               color="G_500"
-                              style={{ width: "100%" }}
+                              style={{ width: "100%", whiteSpace: "normal" }}
                           >
                               {value}
                           </Text>
@@ -74,7 +89,7 @@ export const ResultSection: React.FC<ResultSectionProps> = ({ promptType }) => {
         <Flex vertical gap={16} style={{ height: "100%" }}>
             <Text font="h2_20_semi">포켓런 결과</Text>
 
-            {!isLoading && resultList[0].response.length === 0 ? (
+            {!isLoading && resultList[0]?.response.length === 0 ? (
                 <EmptyBox>
                     <Text font="b2_16_semi">아직 포켓런 결과가 없어요!</Text>
                     <Text font="b3_14_reg" color="G_400">
@@ -84,7 +99,6 @@ export const ResultSection: React.FC<ResultSectionProps> = ({ promptType }) => {
                 </EmptyBox>
             ) : (
                 resultList.map((res, index) => {
-                    // 모델 레이블도 분기
                     const modelRecord =
                         promptType === "image"
                             ? PocketRunImageModel
@@ -94,7 +108,7 @@ export const ResultSection: React.FC<ResultSectionProps> = ({ promptType }) => {
                     )?.label;
 
                     return (
-                        <div key={`pocketRun${index}`}>
+                        <ResultCard key={`pocketRun${index}`}>
                             <Text font="b1_18_semi" color="G_800">
                                 {index + 1}차 결과
                             </Text>
@@ -120,10 +134,10 @@ export const ResultSection: React.FC<ResultSectionProps> = ({ promptType }) => {
                                                 }}
                                                 trigger={["click"]}
                                                 overlayStyle={{
-                                                    width: "150px",
-                                                    height: "auto",
-                                                    whiteSpace: "break-spaces",
-                                                    overflow: "visible",
+                                                    width: "fit-content",
+                                                    maxHeight: "150px",
+                                                    whiteSpace: "normal",
+                                                    overflow: "auto",
                                                 }}
                                             >
                                                 <DropdownButton
@@ -176,13 +190,18 @@ export const ResultSection: React.FC<ResultSectionProps> = ({ promptType }) => {
                                     </Text>
                                 </LoadingBox>
                             ) : promptType === "image" ? (
-                                <ImageBox>
+                                <ImageBox
+                                    onClick={() =>
+                                        handleImageClick(res.response)
+                                    }
+                                >
                                     <img
                                         src={res.response}
                                         alt={`result-${index}`}
                                         style={{
-                                            maxWidth: "100%",
-                                            borderRadius: 8,
+                                            width: "100%",
+                                            height: "100%",
+                                            objectFit: "cover",
                                         }}
                                     />
                                 </ImageBox>
@@ -199,7 +218,7 @@ export const ResultSection: React.FC<ResultSectionProps> = ({ promptType }) => {
                                 </Box>
                             )}
 
-                            {!isLoading && (
+                            {!isLoading && promptType !== "image" && (
                                 <Button
                                     id={`copy-result-button-${index}`}
                                     onClick={() =>
@@ -223,13 +242,77 @@ export const ResultSection: React.FC<ResultSectionProps> = ({ promptType }) => {
                                     결과 복사하기
                                 </Button>
                             )}
-                        </div>
+                        </ResultCard>
                     );
                 })
             )}
+            <Modal
+                open={!!previewImage}
+                onCancel={handleClosePreview}
+                footer={null}
+                centered
+                width="auto"
+                styles={{
+                    body: {
+                        padding: 0,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        minHeight: "200px",
+                    },
+                }}
+            >
+                {previewImage && (
+                    <>
+                        {/* {isImageLoading && (
+                            <Spin
+                                indicator={
+                                    <LoadingOutlined
+                                        style={{
+                                            fontSize: 36,
+                                            position: "absolute",
+                                        }}
+                                        spin
+                                    />
+                                }
+                            />
+                        )} */}
+                        <PreviewImage
+                     key={`preview-${imageKey}`}
+                            src={previewImage}
+                            alt="Image Preview"
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            style={{
+                                width: "100%",
+                                height: "auto",
+                                maxWidth: "90vw",
+                                maxHeight: "80vh",
+                                objectFit: "contain",
+                                visibility: isImageLoading
+                                    ? "hidden"
+                                    : "visible",
+                            }}
+                            onLoad={() => setIsImageLoading(false)}
+                        />
+                    </>
+                )}
+            </Modal>
         </Flex>
     );
 };
+
+const ResultCard = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background: var(--white, #fff);
+    border-radius: 12px;
+    border: 1px solid var(--gray-100, #f1f2f6);
+    margin-bottom: 16px;
+`;
 
 const EmptyBox = styled.div`
     ${({ theme }) => theme.mixins.flexBox("column", "center", "center")};
@@ -255,16 +338,19 @@ const Box = styled.div`
 `;
 
 const ImageBox = styled.div`
-    width: 100%;
-    padding: 16px;
-    background: ${({ theme }) => theme.colors.G_50};
+    width: 200px;
+    height: 200px;
     border-radius: 8px;
     display: flex;
     justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    border: 1.5px solid var(--primary-20, #e3e6fb);
 `;
 
 const LoadingBox = styled.div`
     display: flex;
+    flex-direction: column;
     border-radius: 8px;
     background: var(--gray-50, #f7f8f9);
     width: 100%;
@@ -272,6 +358,7 @@ const LoadingBox = styled.div`
     margin: 8px 0 12px 0;
     justify-content: center;
     align-items: center;
+    gap: 8px;
 `;
 
 const ChipWrapper = styled.div`
@@ -279,7 +366,8 @@ const ChipWrapper = styled.div`
     display: flex;
     flex-direction: row;
     gap: 8px;
-    margin-top: 4px;
+    align-items: center;
+    box-sizing: border-box;
 `;
 
 const ModelChip = styled.div`
@@ -295,22 +383,29 @@ const ModelChip = styled.div`
 
 const DropdownWrapper = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 8px;
-    width: 100%;
-    overflow: hidden;
+    flex-wrap: wrap;
+    width: calc(100% - 93px);
+    box-sizing: border-box;
 `;
 
 const DropdownButton = styled.button`
     display: flex;
     height: 36px;
     padding: 8px 12px;
+    box-sizing: border-box;
     justify-content: space-between;
     align-items: center;
-    flex-shrink: 0;
     border-radius: 8px;
     border: 1px solid var(--gray-100, #f1f2f6);
     background: var(--white, #fff);
+    flex: 1;
+    max-width: calc(50% - 4px);
     overflow: hidden;
     text-overflow: ellipsis;
+`;
+
+const PreviewImage = styled(Image)`
+    border-radius: 12px;
 `;
