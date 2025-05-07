@@ -36,6 +36,16 @@ const nextConfig = {
                 hostname: "test.com",
                 pathname: "/**",
             },
+            {
+                protocol: "https",
+                hostname: "oaidalleapiprodscus.blob.core.windows.net",
+                pathname: "/private/**",
+            },
+            {
+                protocol: "https",
+                hostname: "replicate.delivery",
+                pathname: "/**",
+            },
         ],
     },
     experimental: {
