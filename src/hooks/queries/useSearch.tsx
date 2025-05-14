@@ -3,7 +3,6 @@
 import { getPromptsList } from "@/apis/prompt/prompt";
 import type { PromptDetails } from "@/apis/prompt/prompt.model";
 import {
-    keywordState,
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
@@ -20,7 +19,6 @@ export const useSearch = (promptType: "text" | "image") => {
     const searchParams = useSearchParams();
 
     // Recoil
-    const [keyword, setKeyword] = useRecoilState(keywordState);
     const [searchedCategory, setSearchedCategory] = useRecoilState(
         searchedCategoryState
     );
@@ -50,17 +48,13 @@ export const useSearch = (promptType: "text" | "image") => {
         }
 
         if (navType === "reload") {
-            // 새로고침 시 초기화
-            setKeyword("");
             setSearchedKeyword("");
             setSearchedCategory("total");
             setSearchResults(undefined);
             router.replace(pathname, { scroll: false });
         } else {
-            // 뒤로/앞으로 가기 또는 최초 진입 시 URL에서 상태 복원
             const kw = searchParams.get("keyword") || "";
             const cat = searchParams.get("category") || "total";
-            setKeyword(kw);
             setSearchedKeyword(kw);
             setSearchedCategory(cat);
         }
@@ -71,7 +65,6 @@ export const useSearch = (promptType: "text" | "image") => {
         pathname,
         router,
         searchParams,
-        setKeyword,
         setSearchedKeyword,
         setSearchedCategory,
     ]);
@@ -83,31 +76,33 @@ export const useSearch = (promptType: "text" | "image") => {
         const kw = searchParams.get("keyword") || "";
         const cat = searchParams.get("category") || "total";
 
-        // 상태가 변경된 경우에만 업데이트
-        if (kw !== keyword || cat !== searchedCategory) {
-            setKeyword(kw);
+        if (kw !== searchParams.get("keyword") || cat !== searchedCategory) {
             setSearchedKeyword(kw);
             setSearchedCategory(cat);
         }
 
-        // 검색이 초기 상태라면 결과 비우기
         if (!kw && cat === "total") {
             setSearchResults(undefined);
         }
     }, [
         searchParams,
-        keyword,
         searchedCategory,
-        setKeyword,
         setSearchedKeyword,
         setSearchedCategory,
     ]);
 
     /**
-     * 3) Recoil 상태 변경 시 API 호출
+     * 3) 검색 실행 및 URL 업데이트
      */
-    useEffect(() => {
-        if (!keyword && searchedCategory === "total") {
+    const handleSearch = (newKeyword: string, newCategory: string) => {
+        const qp = new URLSearchParams();
+        if (newKeyword) qp.set("keyword", newKeyword);
+        if (newCategory && newCategory !== "total")
+            qp.set("category", newCategory);
+
+        router.push(`${pathname}?${qp.toString()}`, { scroll: false });
+
+        if (!newKeyword && newCategory === "total") {
             setSearchResults(undefined);
             return;
         }
@@ -115,17 +110,21 @@ export const useSearch = (promptType: "text" | "image") => {
         let mounted = true;
         setIsLoading(true);
         getPromptsList({
-            prompt_type: promptType,
-            view_type: "open",
-            query: keyword || undefined,
-            categories:
-                searchedCategory !== "total" ? searchedCategory : undefined,
+            view_type: "starred",
+            query: newKeyword || undefined,
+            categories: newCategory !== "total" ? newCategory : undefined,
             limit: isUnderTablet ? 5 : 18,
             page: 1,
             sort_by: sortBy,
+            prompt_type: promptType,
         })
             .then((res) => {
-                if (mounted) setSearchResults(res.prompt_info_list);
+                if (mounted) {
+                    const filteredResults = res.prompt_info_list.filter(
+                        (item) => item.type === promptType
+                    );
+                    setSearchResults(filteredResults);
+                }
             })
             .catch(() => {
                 if (mounted) setSearchResults([]);
@@ -137,26 +136,15 @@ export const useSearch = (promptType: "text" | "image") => {
         return () => {
             mounted = false;
         };
-    }, [keyword, searchedCategory, promptType, sortBy, isUnderTablet]);
-
-    /**
-     * 4) 검색 실행 및 URL 업데이트
-     */
-    const handleSearch = (newKeyword: string, newCategory: string) => {
-        const qp = new URLSearchParams();
-        if (newKeyword) qp.set("keyword", newKeyword);
-        if (newCategory && newCategory !== "total")
-            qp.set("category", newCategory);
-
-        router.push(`${pathname}?${qp.toString()}`, { scroll: false });
     };
 
     /**
-     * 5) 상세 페이지로 이동 (쿼리 파라미터 유지)
+     * 4) 상세 페이지로 이동
      */
     const navigateToDetail = (promptId: string) => {
         const qp = new URLSearchParams();
-        if (keyword) qp.set("keyword", keyword);
+        if (searchParams.get("keyword"))
+            qp.set("keyword", searchParams.get("keyword")!);
         if (searchedCategory && searchedCategory !== "total")
             qp.set("category", searchedCategory);
 
@@ -166,7 +154,6 @@ export const useSearch = (promptType: "text" | "image") => {
     };
 
     return {
-        keyword,
         searchedCategory,
         searchResults,
         handleSearch,

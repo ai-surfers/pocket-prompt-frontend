@@ -8,7 +8,8 @@ export function usePromptList(
     promptType: string,
     searchType: "total" | "popular" | "search" | "category",
     viewType: ViewType,
-    defaultSortBy?: SortType
+    defaultSortBy?: SortType,
+    activeTab?: "public" | "private" | "text" | "image"
 ) {
     const sortBy = useRecoilValue(sortTypeState);
     const effectiveSort: SortType =
@@ -16,9 +17,10 @@ export function usePromptList(
             ? defaultSortBy ?? "usages_7_days"
             : sortBy ?? "created_at";
 
-    const [activeTab, setActiveTab] = useState<"public" | "private">("public");
     const [publicCount, setPublicCount] = useState(0);
     const [privateCount, setPrivateCount] = useState(0);
+    const [textCount, setTextCount] = useState(0);
+    const [imageCount, setImageCount] = useState(0);
 
     const sorted = useMemo(() => {
         const clone = [...items];
@@ -40,17 +42,20 @@ export function usePromptList(
         });
     }, [items, effectiveSort]);
 
-    const filtered = useMemo(
-        () =>
-            viewType === "my"
-                ? sorted.filter((i) =>
-                      activeTab === "public"
-                          ? i.visibility === "public"
-                          : i.visibility === "private"
-                  )
-                : sorted,
-        [sorted, viewType, activeTab]
-    );
+    const filtered = useMemo(() => {
+        if (viewType === "my" && activeTab) {
+            return sorted.filter((i) =>
+                activeTab === "public"
+                    ? i.visibility === "public"
+                    : i.visibility === "private"
+            );
+        } else if (viewType === "starred" && activeTab) {
+            return sorted.filter((i) =>
+                activeTab === "text" ? i.type === "text" : i.type === "image"
+            );
+        }
+        return sorted;
+    }, [sorted, viewType, activeTab]);
 
     useEffect(() => {
         if (viewType === "my") {
@@ -60,15 +65,18 @@ export function usePromptList(
             setPrivateCount(
                 sorted.filter((i) => i.visibility === "private").length
             );
+        } else if (viewType === "starred") {
+            setTextCount(sorted.filter((i) => i.type === "text").length);
+            setImageCount(sorted.filter((i) => i.type === "image").length);
         }
     }, [sorted, viewType]);
 
     return {
         filtered,
         effectiveSort,
-        activeTab,
-        setActiveTab,
         publicCount,
         privateCount,
+        textCount,
+        imageCount,
     };
 }
