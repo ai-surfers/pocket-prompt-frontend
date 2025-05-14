@@ -1,9 +1,7 @@
-// src/components/home/prompt/PromptList.tsx
 "use client";
 
 import { PromptDetails, SortType, ViewType } from "@/apis/prompt/prompt.model";
 import { usePromptsListQuery } from "@/hooks/queries/prompts/usePromptsListQuery";
-import { useSearch } from "@/hooks/queries/useSearch";
 import { usePromptList } from "@/hooks/ui/usePromptList";
 import { sortTypeState } from "@/states/sortState";
 import { Col, Flex, Pagination, Row } from "antd";
@@ -17,11 +15,15 @@ interface PromptListProps {
     promptType?: "text" | "image";
     searchType: "total" | "popular" | "search" | "category";
     viewType: ViewType;
-    title: React.ReactNode;
+    title?: React.ReactNode;
     limit?: number;
     defaultSortBy?: SortType;
-    items?: PromptDetails[]; // 인기 프롬프트용
+    items?: PromptDetails[];
     renderItem: (item: PromptDetails, index: number) => React.ReactNode;
+    keyword?: string;
+    searchedCategory?: string;
+    activeTab?: "text" | "image" | "public" | "private";
+    setActiveTab?: (tab: "text" | "image" | "public" | "private") => void;
 }
 
 export default function PromptList({
@@ -33,16 +35,14 @@ export default function PromptList({
     defaultSortBy,
     items: popularItems,
     renderItem,
+    keyword,
+    searchedCategory,
+    activeTab,
+    setActiveTab,
 }: PromptListProps) {
     const sortBy = useRecoilValue(sortTypeState);
     const effectivePromptType = promptType;
 
-    // 검색어·카테고리
-    const { keyword, searchedCategory } = useSearch(
-        effectivePromptType ?? "text"
-    );
-
-    // 인기일 때만 API 호출 스킵
     const skipFetch = searchType === "popular";
 
     // 서버 데이터 패칭
@@ -80,23 +80,20 @@ export default function PromptList({
                   sampleMedia: item.sample_media,
               }));
 
-    // 디버깅: dataSource 출력
-    console.log("PromptList - dataSource:", dataSource);
-
-    // 정렬·탭·카운트 훅
     const {
         filtered: sortedItems,
         effectiveSort,
-        activeTab,
-        setActiveTab,
         publicCount,
         privateCount,
+        textCount,
+        imageCount,
     } = usePromptList(
         dataSource,
         effectivePromptType ?? "text",
         searchType,
         viewType,
-        defaultSortBy
+        defaultSortBy,
+        activeTab
     );
 
     const isPopularList = searchType === "popular";
@@ -106,7 +103,6 @@ export default function PromptList({
     // 콘텐츠 렌더링
     const renderContent = () => {
         if (!isPopularList && isFetching) {
-            // 검색/전체 모드에서만 스켈레톤
             return Array.from({ length: limit }).map((_, idx) => (
                 <Col
                     key={idx}
@@ -123,7 +119,6 @@ export default function PromptList({
             return <EmptyPrompt viewType={viewType} />;
         }
         return sortedItems.map((item, idx) => {
-            console.log("PromptList - renderItem item:", item); // item 디버깅
             return (
                 <Col
                     key={item.id}
@@ -142,7 +137,7 @@ export default function PromptList({
         <Flex vertical gap={20} style={{ width: "100%" }}>
             <TitleWrapper $viewType={viewType}>
                 {title}
-                {viewType === "my" ? (
+                {viewType === "my" && activeTab && setActiveTab && (
                     <TabBarContainer>
                         <MyPageContentTab
                             className={activeTab === "public" ? "active" : ""}
@@ -157,10 +152,26 @@ export default function PromptList({
                             Private <CountText>{privateCount}개</CountText>
                         </MyPageContentTab>
                     </TabBarContainer>
-                ) : (
-                    showSortAndPage && (
-                        <SortSelect effectiveSortBy={effectiveSort} />
-                    )
+                )}
+                {viewType === "starred" && activeTab && setActiveTab && (
+                    <TabBarContainer>
+                        <MyPageContentTab
+                            className={activeTab === "text" ? "active" : ""}
+                            onClick={() => setActiveTab("text")}
+                        >
+                            텍스트 프롬프트 <CountText>{textCount}개</CountText>
+                        </MyPageContentTab>
+                        <MyPageContentTab
+                            className={activeTab === "image" ? "active" : ""}
+                            onClick={() => setActiveTab("image")}
+                        >
+                            이미지 프롬프트{" "}
+                            <CountText>{imageCount}개</CountText>
+                        </MyPageContentTab>
+                    </TabBarContainer>
+                )}
+                {showSortAndPage && (
+                    <SortSelect effectiveSortBy={effectiveSort} />
                 )}
             </TitleWrapper>
 

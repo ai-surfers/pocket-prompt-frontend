@@ -4,9 +4,11 @@ import Text from "@/components/common/Text/Text";
 import PromptCardImage from "@/components/home/prompt/card/PromptCardImage";
 import PromptCardText from "@/components/home/prompt/card/PromptCardText";
 import PromptList from "@/components/home/prompt/list/PromptList";
+import SearchBar from "@/components/home/searchUI/SearchBar";
 import HomeLnb from "@/components/lnb/HomeLnb";
+import { useSearch } from "@/hooks/queries/useSearch";
+import { useUser } from "@/hooks/useUser";
 import {
-    keywordState,
     searchedCategoryState,
     searchedKeywordState,
 } from "@/states/searchState";
@@ -18,7 +20,10 @@ import styled from "styled-components";
 export default function SavedPromptPage() {
     const { isUnderTablet } = useDeviceSize();
     const [isInitialized, setIsInitialized] = useState(false);
-    const [keyword, setKeyword] = useRecoilState(keywordState);
+    const { userData } = useUser();
+    const [activeTab, setActiveTab] = useState<"text" | "image">("text");
+    const [keyword, setKeyword] = useState("");
+
     const [searchedKeyword, setSearchedKeyword] =
         useRecoilState(searchedKeywordState);
     const [searchedCategory, setSearchedCategory] = useRecoilState(
@@ -28,30 +33,54 @@ export default function SavedPromptPage() {
     useEffect(() => {
         setIsInitialized(true);
         return () => {
-            setKeyword("");
             setSearchedKeyword("");
-            setSearchedCategory("");
         };
     }, []);
 
+    const { handleSearch, searchResults, isLoading } = useSearch(activeTab);
+
     if (!isInitialized) {
-        return null; // hydration 에러 방지
+        return null;
     }
+
+    const onChangeKeyword = (value: string) => {
+        setKeyword(value);
+    };
+
+    const onEnter = () => {
+        handleSearch(keyword, searchedCategory);
+    };
 
     return (
         <HomeWrapper>
             <HomeContentWrapper $isUnderTablet={isUnderTablet}>
                 <HomeLnb initialMenu="4" />
                 <ContentWrapper>
+                    <TitileWrap>
+                        <Text font="h1_24_bold" color="primary_100">
+                            💾 {userData.user?.nickname}
+                        </Text>
+                        <Text font="h1_24_bold">님이 저장한 프롬프트</Text>
+                    </TitileWrap>
+
+                    <SearchBar
+                        value={keyword}
+                        onChange={onChangeKeyword}
+                        onEnter={onEnter}
+                        placeholder="필요한 프롬프트를 검색해보세요"
+                        id="search-input"
+                    />
                     <PromptList
                         viewType="starred"
-                        searchType="total"
-                        title={
-                            <Text font="h2_20_semi" color="G_800">
-                                저장한 프롬프트
-                            </Text>
-                        }
-                        // renderItem 에서 item.type 에 따라 카드 컴포넌트 선택
+                        searchType={searchResults ? "search" : "total"}
+                        keyword={keyword}
+                        searchedCategory={searchedCategory}
+                        activeTab={activeTab}
+                        setActiveTab={(tab) => {
+                            if (tab === "text" || tab === "image") {
+                                setActiveTab(tab);
+                            }
+                        }}
                         renderItem={(item, idx) =>
                             item.type === "image" ? (
                                 <PromptCardImage
@@ -79,6 +108,7 @@ export default function SavedPromptPage() {
                                 />
                             )
                         }
+                        items={searchResults}
                     />
                 </ContentWrapper>
             </HomeContentWrapper>
@@ -114,4 +144,11 @@ const ContentWrapper = styled.div`
     width: 100vw;
     padding: 0 10px;
     padding-top: 0;
+`;
+
+const TitileWrap = styled.div`
+    ${({ theme }) => theme.mixins.flexBox("row", "", "center")};
+    width: 100%;
+    margin-bottom: 20px;
+    gap: 5px;
 `;

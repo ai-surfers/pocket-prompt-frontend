@@ -1,4 +1,3 @@
-// src/components/home/prompt/PromptListSection.tsx
 "use client";
 
 import { PromptDetails } from "@/apis/prompt/prompt.model";
@@ -131,14 +130,15 @@ export default function PromptListSection({
                 </Row>
             </FadeContainer>
 
-            {/* 전체 or 검색 결과 */}
             <PromptList
                 promptType={promptType}
                 searchType={searchResults ? "search" : "total"}
                 viewType="open"
                 title={<Text font="h2_20_semi">{titleText}</Text>}
                 limit={18}
-                items={mappedSearchResults} // 매핑된 데이터 전달
+                keyword={searchedKeyword}
+                searchedCategory={searchedCategory}
+                items={mappedSearchResults}
                 renderItem={(item, idx) => (
                     <Card promptType={promptType} {...item} index={idx + 1} />
                 )}
@@ -161,9 +161,4 @@ const BackgroundBox = styled.div`
     height: 100%;
     display: flex;
     flex-direction: column;
-`;
-
-const Centered = styled.div`
-    ${({ theme }) => theme.mixins.flexBox("row", "center", "center")};
-    height: 80vh;
 `;
