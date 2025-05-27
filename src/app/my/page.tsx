@@ -246,7 +246,7 @@ const MyPage = () => {
                 <MyPromptWrapper>
                     <Flex
                         style={{
-                            padding: "41px 40px",
+                            padding: "41px 0px",
                             width: "100%",
                             maxWidth: "1083px",
                             flexWrap: "wrap",
@@ -273,7 +273,7 @@ const MyPage = () => {
 export default MyPage;
 
 const Container = styled.div<{ $isUnderTablet: boolean }>`
-    width: 100%;
+    width: 80%;
     padding-top: 52px;
     padding-left: ${({ $isUnderTablet }) => ($isUnderTablet ? "0px" : "36px")};
     ${({ theme, $isUnderTablet }) =>
