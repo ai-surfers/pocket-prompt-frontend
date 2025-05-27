@@ -30,14 +30,16 @@ export default function SavedPromptPage() {
         searchedCategoryState
     );
 
+    const { handleSearch, searchResults, isLoading } = useSearch(activeTab);
+
     useEffect(() => {
         setIsInitialized(true);
         return () => {
             setSearchedKeyword("");
+            setSearchedCategory("total");
+            setKeyword("");
         };
-    }, []);
-
-    const { handleSearch, searchResults, isLoading } = useSearch(activeTab);
+    }, [setSearchedKeyword, setSearchedCategory]);
 
     if (!isInitialized) {
         return null;
@@ -48,6 +50,7 @@ export default function SavedPromptPage() {
     };
 
     const onEnter = () => {
+        setSearchedKeyword(keyword);
         handleSearch(keyword, searchedCategory);
     };
 
@@ -73,12 +76,16 @@ export default function SavedPromptPage() {
                     <PromptList
                         viewType="starred"
                         searchType={searchResults ? "search" : "total"}
-                        keyword={keyword}
+                        keyword={searchedKeyword}
                         searchedCategory={searchedCategory}
                         activeTab={activeTab}
                         setActiveTab={(tab) => {
                             if (tab === "text" || tab === "image") {
                                 setActiveTab(tab);
+                                // 탭 변경 시 검색 초기화
+                                setKeyword("");
+                                setSearchedKeyword("");
+                                handleSearch("", searchedCategory);
                             }
                         }}
                         renderItem={(item, idx) =>
@@ -109,6 +116,7 @@ export default function SavedPromptPage() {
                             )
                         }
                         items={searchResults}
+                        isLoading={isLoading}
                     />
                 </ContentWrapper>
             </HomeContentWrapper>

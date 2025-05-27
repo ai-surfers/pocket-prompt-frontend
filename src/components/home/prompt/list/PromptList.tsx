@@ -24,9 +24,10 @@ interface PromptListProps {
     searchedCategory?: string;
     activeTab?: "text" | "image" | "public" | "private";
     setActiveTab?: (tab: "text" | "image" | "public" | "private") => void;
+    isLoading?: boolean;
 }
 
-export default function PromptList({
+const PromptList = ({
     promptType,
     searchType,
     viewType,
@@ -39,7 +40,8 @@ export default function PromptList({
     searchedCategory,
     activeTab,
     setActiveTab,
-}: PromptListProps) {
+    isLoading: externalIsLoading, // 외부에서 전달된 isLoading
+}: PromptListProps) => {
     const sortBy = useRecoilValue(sortTypeState);
     const effectivePromptType = promptType;
 
@@ -71,15 +73,16 @@ export default function PromptList({
     // 데이터 소스 결정
     const dataSource =
         searchType === "popular"
-            ? popularItems!.map((item) => ({
+            ? popularItems?.map((item) => ({
                   ...item,
                   sampleMedia: item.sample_media,
-              }))
+              })) ?? []
             : fetchedItems.map((item) => ({
                   ...item,
                   sampleMedia: item.sample_media,
               }));
 
+    // usePromptList로 데이터 필터링 및 정렬
     const {
         filtered: sortedItems,
         effectiveSort,
@@ -97,15 +100,15 @@ export default function PromptList({
     );
 
     const isPopularList = searchType === "popular";
-    const showSortAndPage =
-        viewType !== "my" && !isPopularList && sortedItems.length > 1;
+    const showSortAndPage = viewType !== "my" && !isPopularList;
 
     // 콘텐츠 렌더링
     const renderContent = () => {
-        if (!isPopularList && isFetching) {
+        // 외부 isLoading 또는 내부 isFetching이 true일 때 로딩 UI 표시
+        if (externalIsLoading || (!isPopularList && isFetching)) {
             return Array.from({ length: limit }).map((_, idx) => (
                 <Col
-                    key={idx}
+                    key={`skeleton-${idx}`}
                     xs={24}
                     sm={isPopularList ? 24 : 12}
                     md={isPopularList ? 24 : 8}
@@ -115,22 +118,20 @@ export default function PromptList({
                 </Col>
             ));
         }
-        if (!isFetching && sortedItems.length === 0) {
+        if (!externalIsLoading && !isFetching && sortedItems.length === 0) {
             return <EmptyPrompt viewType={viewType} />;
         }
-        return sortedItems.map((item, idx) => {
-            return (
-                <Col
-                    key={item.id}
-                    xs={24}
-                    sm={isPopularList ? 24 : 12}
-                    md={isPopularList ? 24 : 8}
-                    style={{ flexShrink: 0, display: "flex" }}
-                >
-                    {renderItem(item, idx)}
-                </Col>
-            );
-        });
+        return sortedItems.map((item, idx) => (
+            <Col
+                key={item.id}
+                xs={24}
+                sm={isPopularList ? 24 : 12}
+                md={isPopularList ? 24 : 8}
+                style={{ flexShrink: 0, display: "flex" }}
+            >
+                {renderItem(item, idx)}
+            </Col>
+        ));
     };
 
     return (
@@ -191,7 +192,9 @@ export default function PromptList({
             )}
         </Flex>
     );
-}
+};
+
+export default React.memo(PromptList);
 
 const SkeletonBox = styled.div`
     ${({ theme }) => theme.mixins.skeleton()};
