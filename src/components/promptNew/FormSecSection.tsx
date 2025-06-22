@@ -12,18 +12,10 @@ import FormItem from "./Form/FormItem";
 
 interface FormSectionProps {
     isEdit: boolean;
-    promptTemplate: string;
-    setSelectedTitle: (selectedText: string) => void;
-    setSelectedDescription: (selectedText: string) => void;
     goToNextTab: () => void;
 }
 
-function FormSecSection({
-    isEdit,
-    goToNextTab,
-    setSelectedTitle,
-    setSelectedDescription,
-}: FormSectionProps) {
+function FormSecSection({ isEdit, goToNextTab }: FormSectionProps) {
     const {
         control,
         setValue,
@@ -40,12 +32,10 @@ function FormSecSection({
         promptTitleValue.length > 0 && promptDescriptionValue.length > 0;
 
     const handleSelectTitle = (selectedText: string) => {
-        setSelectedTitle(selectedText);
         setValue("title", selectedText);
     };
 
     const handleSelectDescription = (selectedText: string) => {
-        setSelectedDescription(selectedText);
         setValue("description", selectedText);
     };
 
