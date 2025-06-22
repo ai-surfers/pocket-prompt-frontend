@@ -68,10 +68,6 @@ export default function NewPromptClient({
     // LNB 탭으로 관리
     const [activeTab, setActiveTab] = useState("1");
     const [promptTemplate, setPromptTemplate] = useState("");
-    const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
-    const [selectedDescription, setSelectedDescription] = useState<
-        string | null
-    >(null);
 
     const { isUnderTablet } = useDeviceSize();
     const [isClient, setIsClient] = useState(false);
@@ -140,8 +136,6 @@ export default function NewPromptClient({
             // 나머지 상태도 초기화
             setImageFileList([]);
             setSampleMediaUrls([]);
-            setSelectedTitle(null);
-            setSelectedDescription(null);
         }
 
         setIsChangeModalOpen(false);
@@ -358,8 +352,8 @@ export default function NewPromptClient({
                 const promptData: CreatePromptRequest = {
                     ...input,
                     type: typeMap[contentBy as keyof typeof typeMap],
-                    title: selectedTitle || input.title,
-                    description: selectedDescription || input.description,
+                    title: input.title,
+                    description: input.description,
                     visibility: input.visibility.toLowerCase(),
                     user_input_format: user_input_formats,
                     categories: input.categories || [],
@@ -626,8 +620,6 @@ export default function NewPromptClient({
                                 isEdit={isEdit}
                                 goToNextTab={goToNextTab}
                                 promptTemplate={promptTemplate}
-                                setSelectedTitle={setSelectedTitle}
-                                setSelectedDescription={setSelectedDescription}
                             />
                             {contentBy === "이미지 프롬프트" && (
                                 <ImgUploadSection
