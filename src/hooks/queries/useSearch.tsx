@@ -10,7 +10,7 @@ import { sortTypeState } from "@/states/sortState";
 import { useDeviceSize } from "@components/DeviceContext";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 export const useSearch = (promptType: "text" | "image") => {
     const { isUnderTablet } = useDeviceSize();
@@ -22,7 +22,8 @@ export const useSearch = (promptType: "text" | "image") => {
     const [searchedCategory, setSearchedCategory] = useRecoilState(
         searchedCategoryState
     );
-    const setSearchedKeyword = useSetRecoilState(searchedKeywordState);
+    const [searchedKeyword, setSearchedKeyword] =
+        useRecoilState(searchedKeywordState);
     const sortBy = useRecoilValue(sortTypeState);
 
     // Local
@@ -139,6 +140,7 @@ export const useSearch = (promptType: "text" | "image") => {
     };
 
     return {
+        keyword: searchedKeyword,
         searchedCategory,
         searchResults,
         handleSearch,
