@@ -23,16 +23,16 @@ const pretendard = localFont({
 });
 
 export const defaultMetadata: Metadata = {
-    title: "포켓 프롬프트 - ChatGPT 프롬프트 모음 | AI 프롬프트 템플릿 저장소",
+    title: "포켓 프롬프트 - ChatGPT 프롬프트 모음 | AI 프롬프트 사이트",
     keywords:
-        "ChatGPT 프롬프트, AI 프롬프트 템플릿, 프롬프트 엔지니어링, 프롬프트 모음, AI 활용법, 프롬프트 저장, 프롬프트 공유, ChatGPT 활용, Claude 프롬프트",
+        "ChatGPT 프롬프트, AI 프롬프트 사이트, AI 프롬프트, 프롬프트 엔지니어링, AI 프롬프트 모음, AI 활용법",
     description:
         "ChatGPT, Claude 등 AI 프롬프트 작성이 어려우신가요? 검증된 프롬프트 템플릿을 저장하고 바로 사용하세요!",
     icons: {
         icon: `${webUrl}/img/logo_white_square.png`,
     },
     openGraph: {
-        title: "포켓 프롬프트 - ChatGPT 프롬프트 모음 | AI 프롬프트 템플릿 저장소",
+        title: "포켓 프롬프트 - ChatGPT 프롬프트 모음 | AI 프롬프트 사이트",
         description:
             "ChatGPT, Claude 등 AI 프롬프트 작성이 어려우신가요? 검증된 프롬프트 템플릿을 저장하고 바로 사용하세요!",
         url: webUrl,
@@ -47,7 +47,7 @@ export const defaultMetadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "포켓 프롬프트 - ChatGPT 프롬프트 모음 | AI 프롬프트 템플릿 저장소",
+        title: "포켓 프롬프트 - ChatGPT 프롬프트 모음 | AI 프롬프트 사이트",
         description:
             "ChatGPT, Claude 등 AI 프롬프트 작성이 어려우신가요? 검증된 프롬프트 템플릿을 저장하고 바로 사용하세요!",
         images: [`${webUrl}/img/shared-thumbnail.png`],
@@ -60,7 +60,7 @@ export default function RootLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
     const { isMobile, isUnderTablet } = detectDevice(
-        headers().get("user-agent") || ""
+        headers().get("user-agent") || "",
     );
 
     return (
