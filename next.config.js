@@ -73,6 +73,22 @@ const nextConfig = {
         NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
         SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
     },
+    async headers() {
+        if (process.env.APP_ENV !== "production") {
+            return [
+                {
+                    source: "/:path*",
+                    headers: [
+                        {
+                            key: "X-Robots-Tag",
+                            value: "noindex, nofollow, noarchive",
+                        },
+                    ],
+                },
+            ];
+        }
+        return [];
+    },
 };
 
 module.exports = nextConfig;

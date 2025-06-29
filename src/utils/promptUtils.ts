@@ -35,3 +35,17 @@ export function populateTemplate(
 export function copyClipboard(text: string) {
     return navigator.clipboard.writeText(text);
 }
+
+/**
+ * 현재 주소에서 쿼리 문자열과 해시를 제거한 주소를 반환하는 함수
+ * @param href 현재 url
+ * @returns 쿼리가 제거된 url
+ */
+export function getShareUrl(href: string): string {
+    try {
+        const url = new URL(href);
+        return `${url.origin}${url.pathname}`;
+    } catch {
+        return href;
+    }
+}
