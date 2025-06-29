@@ -27,9 +27,7 @@ export const useSearch = (promptType: "text" | "image") => {
     const sortBy = useRecoilValue(sortTypeState);
 
     // Local
-    const [searchResults, setSearchResults] = useState<
-        PromptDetails[] | undefined
-    >(undefined);
+    const [searchResults, setSearchResults] = useState<PromptDetails[]>();
     const [isLoading, setIsLoading] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
 
@@ -60,10 +58,6 @@ export const useSearch = (promptType: "text" | "image") => {
             const cat = searchParams.get("category") || "total";
             setSearchedKeyword(kw);
             setSearchedCategory(cat);
-            if (kw || cat !== "total") {
-                // 초기 검색 실행
-                handleSearch(kw, cat);
-            }
         }
 
         initializedRef.current = true;
@@ -77,7 +71,29 @@ export const useSearch = (promptType: "text" | "image") => {
     ]);
 
     /**
-     * 2) 검색 실행 및 URL 업데이트
+     * 2) URL 쿼리 변경 시 상태 동기화
+     */
+    useEffect(() => {
+        const kw = searchParams.get("keyword") || "";
+        const cat = searchParams.get("category") || "total";
+
+        if (kw !== searchParams.get("keyword") || cat !== searchedCategory) {
+            setSearchedKeyword(kw);
+            setSearchedCategory(cat);
+        }
+
+        if (!kw && cat === "total") {
+            setSearchResults(undefined);
+        }
+    }, [
+        searchParams,
+        searchedCategory,
+        setSearchedKeyword,
+        setSearchedCategory,
+    ]);
+
+    /**
+     * 3) 검색 실행 및 URL 업데이트
      */
     const handleSearch = (newKeyword: string, newCategory: string) => {
         const qp = new URLSearchParams();
@@ -89,7 +105,6 @@ export const useSearch = (promptType: "text" | "image") => {
 
         if (!newKeyword && newCategory === "total") {
             setSearchResults(undefined);
-            setIsLoading(false);
             return;
         }
 
@@ -125,7 +140,7 @@ export const useSearch = (promptType: "text" | "image") => {
     };
 
     /**
-     * 3) 상세 페이지로 이동
+     * 4) 상세 페이지로 이동
      */
     const navigateToDetail = (promptId: string) => {
         const qp = new URLSearchParams();

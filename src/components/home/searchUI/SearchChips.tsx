@@ -87,14 +87,13 @@ const SearchChipsWrapper = styled.div<{ $isVisible: boolean }>`
     overflow-y: hidden;
     width: 100%;
     height: 100%;
-    padding: 5px 0;
+    padding-bottom: 10px;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
 
     opacity: 1;
     max-height: 92px;
     transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
-    margin-bottom: 10px;
 
     &::-webkit-scrollbar {
         height: 4px;
@@ -105,7 +104,6 @@ const SearchChipsWrapper = styled.div<{ $isVisible: boolean }>`
         border-radius: 4px;
         background: var(--gray-200, #dee0e8);
         position: relative;
-
         margin-left: calc(50vw - 30px);
         margin-right: calc(50vw - 30px);
     }
@@ -119,7 +117,6 @@ const SearchChipsWrapper = styled.div<{ $isVisible: boolean }>`
 const StyledButton = styled(Button)<{ $selected: boolean; $mobile: boolean }>`
     width: 60px;
     height: 80px;
-    margin-bottom: 10px; /* 버튼과 스크롤바 사이 여백 추가 */
     background-color: ${({ $selected, theme }) =>
         $selected ? theme.colors.primary_10 : theme.colors.G_50};
     border: ${({ $selected, theme }) =>
