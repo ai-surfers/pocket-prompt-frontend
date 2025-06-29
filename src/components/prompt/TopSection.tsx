@@ -30,7 +30,8 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
     const { isMobile } = useDeviceSize();
 
     const handleShare = () => {
-        const url = getShareUrl(window.location.href);
+        const baseUrl = getShareUrl(window.location.href);
+        const url = `${baseUrl}?utm_source=prompt_share_btn&utm_medium=share&utm_campaign=prompt_share&utm_term=${prompt.id}`;
         copyClipboard(url)
             .then(() => {
                 showToast({
