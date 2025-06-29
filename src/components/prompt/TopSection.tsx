@@ -9,7 +9,7 @@ import Text from "@/components/common/Text/Text";
 import { Categories, Category, ImageCategories } from "@/core/Prompt";
 import useToast from "@/hooks/useToast";
 import { useUser } from "@/hooks/useUser";
-import { copyClipboard } from "@/utils/promptUtils";
+import { copyClipboard, getShareUrl } from "@/utils/promptUtils";
 import { formatDate, formatNumber } from "@/utils/textUtils";
 import { useDeviceSize } from "@components/DeviceContext";
 import { Flex } from "antd";
@@ -30,7 +30,7 @@ export const TopSection = ({ prompt }: TopSectionProps) => {
     const { isMobile } = useDeviceSize();
 
     const handleShare = () => {
-        const url = window.location.href;
+        const url = getShareUrl(window.location.href);
         copyClipboard(url)
             .then(() => {
                 showToast({
