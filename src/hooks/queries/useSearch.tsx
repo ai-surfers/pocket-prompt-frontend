@@ -80,6 +80,8 @@ export const useSearch = (promptType: "text" | "image") => {
      * 2) 검색 실행 및 URL 업데이트
      */
     const handleSearch = (newKeyword: string, newCategory: string) => {
+        setSearchedKeyword(newKeyword);
+        setSearchedCategory(newCategory);
         const qp = new URLSearchParams();
         if (newKeyword) qp.set("keyword", newKeyword);
         if (newCategory && newCategory !== "total")
