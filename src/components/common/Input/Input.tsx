@@ -25,9 +25,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             onChange(inputValue);
         };
 
-        // IME composition awareness
         const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.nativeEvent.isComposing) return;
             if (e.key === "Enter" && onEnter) {
                 onEnter();
             }
