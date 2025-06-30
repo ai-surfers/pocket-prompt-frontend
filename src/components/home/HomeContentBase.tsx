@@ -38,7 +38,14 @@ export default function HomeContentBase({
 }: HomeContentBaseProps) {
     const [isVocModalOpen, setIsVocModalOpen] = useState(false);
     const promptData = usePromptData(promptType);
-    const { searchResults, isLoading, isInitialized } = useSearch(promptType);
+    const {
+        searchResults,
+        isLoading,
+        isInitialized,
+        handleSearch,
+        keyword,
+        searchedCategory,
+    } = useSearch(promptType);
     const { isUnderTablet } = useDeviceSize();
     const { userData } = useUser();
     const { data: userPaymentData } = useGetSubscription({
@@ -68,7 +75,12 @@ export default function HomeContentBase({
                 </LeftSection>
                 <ContentWrapper>
                     <Banner />
-                    <SearchSection promptType={promptType} />
+                    <SearchSection
+                        promptType={promptType}
+                        handleSearch={handleSearch}
+                        keyword={keyword}
+                        searchedCategory={searchedCategory}
+                    />
                     <PromptListSection
                         promptData={promptData}
                         searchResults={searchResults}

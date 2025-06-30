@@ -1,7 +1,5 @@
 "use client";
 
-import { useSearch } from "@/hooks/queries/useSearch";
-import { useDeviceSize } from "@components/DeviceContext";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import SearchBar from "./searchUI/SearchBar";
@@ -9,18 +7,17 @@ import SearchChips from "./searchUI/SearchChips";
 
 interface SearchSectionProps {
     promptType: "text" | "image";
+    handleSearch: (keyword: string, category: string) => void;
+    keyword: string;
+    searchedCategory: string;
 }
 
-export default function SearchSection({ promptType }: SearchSectionProps) {
-    const { isUnderTablet } = useDeviceSize();
-    const {
-        keyword,
-        searchedCategory,
-        handleSearch,
-        searchResults,
-        isLoading,
-    } = useSearch(promptType);
-
+export default function SearchSection({
+    promptType,
+    handleSearch,
+    keyword,
+    searchedCategory,
+}: SearchSectionProps) {
     // 로컬 인풋 상태
     const [localKeyword, setLocalKeyword] = useState(keyword);
     useEffect(() => {
