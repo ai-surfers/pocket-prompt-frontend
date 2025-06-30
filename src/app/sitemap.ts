@@ -6,7 +6,6 @@ export const dynamic = "force-static";
 
 const WEB_URL =
     process.env.NEXT_PUBLIC_WEB_URL || "https://www.pocket-prompt.com";
-const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
 
 interface Prompt {
     id: string;
