@@ -40,41 +40,17 @@ export const useSearch = (promptType: "text" | "image") => {
      * 1) 페이지 초기화 및 새로고침 처리
      */
     useEffect(() => {
-        if (initializedRef.current) return;
-
-        let navType: string = "navigate";
-        if (typeof performance !== "undefined") {
-            const [entry] = performance.getEntriesByType(
-                "navigation"
-            ) as PerformanceNavigationTiming[];
-            navType = entry?.type || "navigate";
-        }
-
-        if (navType === "reload") {
-            setSearchedKeyword("");
-            setSearchedCategory("total");
-            setSearchResults(undefined);
-            router.replace(pathname, { scroll: false });
+        const kw = searchParams.get("keyword") || "";
+        const cat = searchParams.get("category") || "total";
+        setSearchedKeyword(kw);
+        setSearchedCategory(cat);
+        if (kw || cat !== "total") {
+            handleSearch(kw, cat);
         } else {
-            const kw = searchParams.get("keyword") || "";
-            const cat = searchParams.get("category") || "total";
-            setSearchedKeyword(kw);
-            setSearchedCategory(cat);
-            if (kw || cat !== "total") {
-                // 초기 검색 실행
-                handleSearch(kw, cat);
-            }
+            setSearchResults(undefined);
         }
-
-        initializedRef.current = true;
         setIsInitialized(true);
-    }, [
-        pathname,
-        router,
-        searchParams,
-        setSearchedKeyword,
-        setSearchedCategory,
-    ]);
+    }, [searchParams]);
 
     /**
      * 2) 검색 실행 및 URL 업데이트
