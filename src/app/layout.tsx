@@ -60,7 +60,7 @@ export default function RootLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
     const { isMobile, isUnderTablet } = detectDevice(
-        headers().get("user-agent") || "",
+        headers().get("user-agent") || ""
     );
 
     return (
@@ -83,6 +83,11 @@ export default function RootLayout({
                         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3373210774302054"
                         crossOrigin="anonymous"
                     />
+                    {/* Naver Search Advisor */}
+                    <meta
+                        name="naver-site-verification"
+                        content="d443f76797693978bd171adda208aedfcef580e7"
+                    />
                 </head>
                 <body>
                     {/* Google Tag Manager (noscript) */}
@@ -104,15 +109,6 @@ export default function RootLayout({
                             </RecoilProvider>
                         </ReactQueryProvider>
                     </Styles>
-                    {/* Naver Analytics */}
-                    <script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
-                    <script type="text/javascript">
-                    if(!wcs_add) var wcs_add = {};
-                    wcs_add["wa"] = "1f17898a6b2ef3";
-                    if(window.wcs) {
-                      wcs_do();
-                    }
-                    </script>
                 </body>
             </html>
         </DeviceProvider>
