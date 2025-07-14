@@ -104,6 +104,15 @@ export default function RootLayout({
                             </RecoilProvider>
                         </ReactQueryProvider>
                     </Styles>
+                    {/* Naver Analytics */}
+                    <script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
+                    <script type="text/javascript">
+                    if(!wcs_add) var wcs_add = {};
+                    wcs_add["wa"] = "1f17898a6b2ef3";
+                    if(window.wcs) {
+                      wcs_do();
+                    }
+                    </script>
                 </body>
             </html>
         </DeviceProvider>
