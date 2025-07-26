@@ -78,7 +78,7 @@ export const AIPlatforms = {
 
 export const ImgAIPlatforms = {
     DallE: "Dall-E",
-    imageFX: "imageFX",
+    ImageFX: "ImageFX",
     Midjourney: "Midjourney",
     Flux: "Flux",
 };
